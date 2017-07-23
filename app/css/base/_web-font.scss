@@ -1,0 +1,87 @@
+/*--------------------------------------------------------------
+- Fonts Web
+--------------------------------------------------------------*/
+
+@font-face {
+    font-family: 'thai_sans_literegular';
+    src: url('../fonts/thaisan/thaisanslite_r1-webfont.eot');
+    src: url('../fonts/thaisan/thaisanslite_r1-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/thaisan/thaisanslite_r1-webfont.woff') format('woff'), url('../fonts/thaisan/thaisanslite_r1-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DB Helvethaica X 45 Li';
+    src: url('../fonts/db/DBHelvethaicaX-45Li.eot');
+    src: url('../fonts/db/DBHelvethaicaX-45Li.eot?#iefix') format('embedded-opentype'), url('../fonts/db/DBHelvethaicaX-45Li.woff') format('woff'), url('../fonts/db/DBHelvethaicaX-45Li.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'robotobold';
+    src: url('../fonts/roboto/roboto-bold-webfont.woff2') format('woff2'), url('../fonts/roboto/roboto-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+$f-12:12px;
+$f-14:14px;
+$f-16:16px;
+$f-18:18px;
+$f-20:20px;
+$f-22:22px;
+$f-24:24px;
+$f-26:26px;
+// Class
+.f-12 {
+    font-size: $f-12;
+}
+
+.f-14 {
+    font-size: $f-14;
+}
+
+.f-16 {
+    font-size: $f-16;
+}
+
+.f-18 {
+    font-size: $f-18;
+}
+
+.f-20 {
+    font-size: $f-20;
+}
+
+.f-22 {
+    font-size: $f-22;
+}
+
+.f-24 {
+    font-size: $f-24;
+}
+
+.f-26 {
+    font-size: $f-26;
+}
+
+.font-title-big {
+    font-size: 24px;
+}
+
+.font-title {
+    font-size: 20px;
+}
+
+.font-desc-big {
+    font-size: 18px;
+}
+
+.font-desc {
+    font-size: 16px;
+}
+
+.font-desc-small {
+    font-size: 14px;
+}

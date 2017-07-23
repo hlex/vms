@@ -1,3 +1,6 @@
+# Sass Cache
+*.sass-cache
+
 # Logs
 logs
 *.log

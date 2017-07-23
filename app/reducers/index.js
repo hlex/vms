@@ -1,11 +1,17 @@
 // @flow
 import { combineReducers } from 'redux';
 import { routerReducer as router } from 'react-router-redux';
-import counter from './counter';
+import products from './products';
+import promotionSets from './promotionSets';
+import masterapp from './masterapp';
+import masterdata from './masterdata';
 
 const rootReducer = combineReducers({
-  counter,
   router,
+  masterapp,
+  masterdata,
+  products,
+  promotionSets,
 });
 
 export default rootReducer;

@@ -1,0 +1,12 @@
+$a-tags: 'a, a:active, a:hover, a:visited';
+$a-tags-hover: 'a:active, a:hover';
+#{$a-tags} {
+    display: inline-block;
+    color: #181818;
+    text-decoration: none;
+    @include transition(.1s);
+}
+
+#{$a-tags-hover} {
+    color: #ee6a8d;
+}

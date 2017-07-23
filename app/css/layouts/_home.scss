@@ -1,0 +1,52 @@
+.homepage .nav-panel {
+    background-color: $yellow;
+}
+
+.homepage .menu-slider {
+    padding: 30px 0;
+    .slick-prev:before,
+    .slick-next:before {
+        background-size: 150%;
+        width: 50px;
+        height: 50px;
+    }
+    .slick-prev:before {
+        background-position: 0px;
+    }
+
+    .slick-next:before {
+        background-position: -30px;
+    }
+    .slick-prev,
+    .slick-next {
+        width: 50px;
+        height: 50px;
+        top: 126px;
+    }
+    .item {
+        position: relative;
+    }
+    .item .fix-rows {
+        width: 100%;
+        padding: 0 15px;
+    }
+    .item .box {
+        display: block;
+        width: 100%;
+        height: 220px;
+        color: #fff;
+        border: 3px solid #fff;
+        text-align: center;
+        border-radius: 10px;
+    }
+    .item .title {
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        bottom: 0;
+        font-weight: bold;
+        z-index: 1;
+    }
+}
