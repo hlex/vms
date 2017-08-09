@@ -17,13 +17,11 @@ import MasterappSelector from '../selectors/masterapp';
 // ======================================================
 import { createTcpClient } from '../apis/tcp';
 
-const mapStateToProps = state => {
-  return {
-    location: state.router.location,
-    baseURL: MasterappSelector.getBaseURL(state.masterapp),
-    tcp: MasterappSelector.getTcp(state.masterapp),
-  };
-};
+const mapStateToProps = state => ({
+  location: state.router.location,
+  baseURL: MasterappSelector.getBaseURL(state.masterapp),
+  tcp: MasterappSelector.getTcp(state.masterapp),
+});
 
 const actions = {
   ...ApplicationActions,
@@ -37,22 +35,22 @@ class App extends Component {
     tcp: Object,
     baseURL: string,
     location: Object,
-    changePage: Function,
+    backToHome: Function,
     initTcpClient: Function
   };
 
   componentWillMount = () => {
     const { tcp: { ip, port }, initTcpClient } = this.props;
     initTcpClient(createTcpClient(ip, port));
-  }
+  };
 
   render() {
-    const { changePage, baseURL, location } = this.props;
+    const { backToHome, baseURL, location } = this.props;
     console.log('App@render', this.props);
     return (
       <div className="smart-vending-machine-app">
         {location.pathname}
-        <Layout.Header backToHome={() => changePage('')} baseURL={baseURL} />
+        <Layout.Header backToHome={backToHome} baseURL={baseURL} />
         {this.props.children}
         <Layout.Footer />
       </div>

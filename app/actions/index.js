@@ -4,6 +4,8 @@ import {
   RECEIVED_SENSOR_INFORMATION,
   RECEIVED_CASH,
   RECEIVED_CASH_COMPLETELY,
+  PRODUCT_DROP_SUCCESS,
+  RESET_PAYMENT_REDUCER,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -12,7 +14,6 @@ export const receivedSensorInformation = (data) => {
     data,
   };
 };
-
 
 export const receivedCash = (data) => {
   return {
@@ -27,6 +28,12 @@ export const receivedCashCompletely = () => {
   };
 };
 
+export const productDropSuccess = () => {
+  return {
+    type: PRODUCT_DROP_SUCCESS,
+  };
+};
+
 export const selectProduct = (itemId) => {
   return {
     type: SELECT_PRODUCT,
@@ -38,5 +45,11 @@ export const initTcpClient = (tcpClient) => {
   return {
     type: INIT_TCP_CLIENT,
     tcpClient
+  };
+};
+
+export const resetPaymentReducer = () => {
+  return {
+    type: RESET_PAYMENT_REDUCER,
   };
 };

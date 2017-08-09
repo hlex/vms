@@ -38,16 +38,19 @@ class PaymentPage extends Component {
   };
 
   componentDidMount = () => {
-    const { receivedCashCompletely } = this.props;
+    const { receivedCashCompletely, productDrop } = this.props;
     setTimeout(() => {
       receivedCashCompletely();
     }, 5000);
+    setTimeout(() => {
+      productDrop();
+    }, 10000);
   }
 
   renderContent = () => {
-    const { back, isLoading } = this.props;
+    const { back, isLoading, isFinish } = this.props;
     // const isFinish = true;
-    // if (isFinish) return <Thankyou />;
+    if (isFinish) return <Thankyou />;
     if (isLoading) return <Loading />;
     return <PaymentConfirmation back={back} />;
   }
