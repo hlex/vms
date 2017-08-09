@@ -1,12 +1,24 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class ProductTitle extends Component {
+
+  static propTypes = {
+    title: PropTypes.string,
+    bgImage: PropTypes.string,
+  }
+
+  static defaultProps = {
+    title: 'ซื้อเครื่องดื่ม/ขนม',
+    bgImage: 'images/product-full.png',
+  }
+
   render() {
-    const bgImage = 'images/product-full.png';
+    const { title, bgImage } = this.props;
     return (
       <div className="promotion-title">
         <div className="_center">
-          <h1>ซื้อเครื่องดื่ม/ขนม</h1>
+          <h1>{title}</h1>
         </div>
         <div
           className="bg-img"

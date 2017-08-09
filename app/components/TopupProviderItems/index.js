@@ -17,6 +17,7 @@ const productSettings = {
   autoplaySpeed: 10000,
   nextArrow: false,
   prevArrow: false,
+  arrows: false,
 };
 
 const path = 'http://localhost:8888/vms/html-v2';
@@ -76,24 +77,28 @@ class TopupProviderItems extends Component {
             <div className="product-items" key={cuid()} style={{ height: `${height}px` }}>
               <div className="box-wrapper">
                 <div className="box-slick">
-                  {
-                    _.map(_.get(topupProviderItems, index, []), (topupProviderItem) => {
-                      return (
-                        <a
-                          className="box"
-                          key={cuid()}
-                          onClick={() =>
-                                this.handleClickItem('/product/promotionSet', topupProviderItem.id)}
-                        >
-                          <div className="item">
-                            <div className="photo-item">
-                              <img alt="" src="images/operation-ais.png" />
-                            </div>
-                          </div>
-                        </a>
-                      );
-                    })
-                  }
+                  <div className="topup-row">
+                    <div className="flex-rows">
+                      {
+                        _.map(_.get(topupProviderItems, index, []), (topupProviderItem) => {
+                          return (
+                            <a
+                              className="box"
+                              key={cuid()}
+                              onClick={() =>
+                                    this.handleClickItem('/topup/inputMSISDN', topupProviderItem)}
+                            >
+                              <div className="item">
+                                <div className="photo-item">
+                                  <img alt="" src={`${baseURL}/${topupProviderItem.src}`} />
+                                </div>
+                              </div>
+                            </a>
+                          );
+                        })
+                      }
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

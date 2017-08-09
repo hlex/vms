@@ -38,6 +38,13 @@ export const productDrop = () => dispatch => {
   dispatch(Actions.productDropSuccess());
 };
 
+export const selectTopupProvider = (context, topupProvider) => {
+  return (dispatch) => {
+    dispatch(changePage(context));
+    dispatch(Actions.selectTopupProvider(topupProvider));
+  }
+}
+
 export const receivedDataFromServer = data => dispatch => {
     // classify data
   if (data.sensor) {
@@ -46,4 +53,11 @@ export const receivedDataFromServer = data => dispatch => {
   if (data.action === 2 && data.msg === '20') {
     dispatch(Actions.receivedCash(data));
   }
+};
+
+export const confirmMobileTopupMSISDN = (MSISDN) => {
+  return (dispatch) => {
+    dispatch(changePage('/topup/selectTopupValue'));
+    dispatch(Actions.confirmMobileTopupMSISDN(MSISDN));
+  };
 };

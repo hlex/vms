@@ -5,7 +5,6 @@
   position: relative;
   height: 592px;
 }
-
 .subheader-wrapper {
   height: 350px;
   background-color: $yellow;
@@ -27,6 +26,11 @@
   padding: 30px 40px;
   @extend .content-height;
   background-color: $yellow4;
+}
+.content-long-wrapper {
+  height: 1192px;
+  padding: 0 40px 30px;
+  background-color: $yellow;
 }
 // ======================================================
 // Content Wrapper

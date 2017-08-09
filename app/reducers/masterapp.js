@@ -39,7 +39,7 @@ const initialState = {
   temp: 25, // celcius
 };
 
-export default function masterapp(state = initialState, action) {
+export default (state = initialState, action) => {
   switch (action.type) {
     case RECEIVED_SENSOR_INFORMATION:
       return {
@@ -54,4 +54,4 @@ export default function masterapp(state = initialState, action) {
     default:
       return state;
   }
-}
+};

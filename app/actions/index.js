@@ -6,6 +6,8 @@ import {
   RECEIVED_CASH_COMPLETELY,
   PRODUCT_DROP_SUCCESS,
   RESET_PAYMENT_REDUCER,
+  SELECT_MOBILE_TOPUP_PROVIDER,
+  CONFIRM_MOBILE_TOPUP_MSISDN,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -51,5 +53,19 @@ export const initTcpClient = (tcpClient) => {
 export const resetPaymentReducer = () => {
   return {
     type: RESET_PAYMENT_REDUCER,
+  };
+};
+
+export const selectTopupProvider = (topupProvider) => {
+  return {
+    type: SELECT_MOBILE_TOPUP_PROVIDER,
+    topupProvider
+  };
+};
+
+export const confirmMobileTopupMSISDN = (MSISDN) => {
+  return {
+    type: CONFIRM_MOBILE_TOPUP_MSISDN,
+    MSISDN,
   };
 };

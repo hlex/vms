@@ -8,6 +8,8 @@ import Layout from './Layout';
 import Loading from './Loading';
 import Thankyou from './Thankyou';
 import TopupProviderItems from './TopupProviderItems';
+import InputWithPad from './InputWithPad';
+import Jumbotron from './Jumbotron';
 
 export {
   PaymentConfirmation,
@@ -20,4 +22,6 @@ export {
   Loading,
   Thankyou,
   TopupProviderItems,
+  InputWithPad,
+  Jumbotron,
 };

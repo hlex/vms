@@ -11,6 +11,7 @@ import { Layout, TopupProviderItems } from '../../../components';
 // Selectors
 // ======================================================
 import MasterappSelector from '../../../selectors/masterapp';
+import MasterdataSelector from '../../../selectors/masterdata';
 // ======================================================
 // Actions
 // ======================================================
@@ -20,6 +21,7 @@ import * as Actions from './actions';
 const mapStateToProps = (state) => {
   return {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
+    topupProviders: MasterdataSelector.getTopupProviders(state.masterdata),
   };
 };
 
@@ -35,19 +37,7 @@ const mapDispatchToProps = (dispatch) => {
 
 class TopupProviderSelectionPage extends Component {
   render() {
-    const { baseURL } = this.props;
-    const topupProviderItems = [
-      {
-        id: 1,
-        src: 'images/operation-ais.png',
-        name: 'AIS',
-      },
-      {
-        id: 2,
-        src: 'images/operation-ais.png',
-        name: 'AIS',
-      }
-    ];
+    const { baseURL, topupProviders, selectTopupProvider } = this.props;
     return (
       <div>
         <Layout.Subheader>
@@ -73,10 +63,10 @@ class TopupProviderSelectionPage extends Component {
           </div>
         </Layout.Subheader>
         <TopupProviderItems
-          items={topupProviderItems}
+          items={topupProviders}
           itemPerPage={6}
-          height={792}
-          onClick={() => console.log('!')}
+          height={842}
+          onClickItem={selectTopupProvider}
           baseURL={baseURL}
         />
       </div>
