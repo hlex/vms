@@ -4887,13 +4887,15 @@ i.home {
   background-size: 100%;
   vertical-align: middle; }
 
+.content-height, .content-wrapper, .content-grid-wrapper {
+  position: relative;
+  height: 592px; }
+
 .subheader-wrapper {
   height: 350px;
   background-color: #ffd800; }
 
 .content-wrapper {
-  position: relative;
-  height: 592px;
   padding: 40px 80px 20px 80px;
   background-color: #ffd800; }
 
@@ -4903,6 +4905,10 @@ i.home {
   .title-wrapper .bg-img {
     background-position: center center;
     background-repeat: no-repeat; }
+
+.content-grid-wrapper {
+  padding: 30px 40px;
+  background-color: #ffc800; }
 
 .content-wrapper h2 {
   font-weight: 700;
@@ -4940,6 +4946,7 @@ i.home {
     list-style: none; }
   .subheader-wrapper .title-section .item {
     display: inline-block;
+    vertical-align: top;
     width: 50%; }
 
 .subheader-wrapper .title-section .item.how-to-list li {

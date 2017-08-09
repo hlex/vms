@@ -1,14 +1,18 @@
 // ======================================================
 // Layout
 // ======================================================
+.content-height {
+  position: relative;
+  height: 592px;
+}
+
 .subheader-wrapper {
   height: 350px;
   background-color: $yellow;
 }
 .content-wrapper {
-  position: relative;
-  height: 592px;
   padding: 40px 80px 20px 80px;
+  @extend .content-height;
   background-color: $yellow;
 }
 .title-wrapper {
@@ -18,6 +22,11 @@
     background-position: center center;
     background-repeat: no-repeat;
   }
+}
+.content-grid-wrapper {
+  padding: 30px 40px;
+  @extend .content-height;
+  background-color: $yellow4;
 }
 // ======================================================
 // Content Wrapper
@@ -75,6 +84,7 @@
   }
   .item {
     display: inline-block;
+    vertical-align: top;
     width: 50%;
   }
   .item.how-to-list {

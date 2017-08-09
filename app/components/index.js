@@ -7,6 +7,7 @@ import SummaryList from './SummaryList';
 import Layout from './Layout';
 import Loading from './Loading';
 import Thankyou from './Thankyou';
+import TopupProviderItems from './TopupProviderItems';
 
 export {
   PaymentConfirmation,
@@ -18,4 +19,5 @@ export {
   Layout,
   Loading,
   Thankyou,
+  TopupProviderItems,
 };
