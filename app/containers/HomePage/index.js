@@ -5,18 +5,19 @@ import { connect } from 'react-redux';
 import Slider from 'react-slick';
 import moment from 'moment';
 import cuid from 'cuid';
-
 // ======================================================
 // Components
 // ======================================================
-import ProductItems from '../../components/ProductItems';
-
+import { ProductItems } from '../../components';
 // ======================================================
 // Actions
 // ======================================================
 import * as ApplicationActions from '../../actions/applicationActions';
 import * as Actions from './actions';
-
+// ======================================================
+// Selectors
+// ======================================================
+import MasterappSelector from '../../selectors/masterapp';
 // ======================================================
 // Slick
 // ======================================================
@@ -36,7 +37,8 @@ const mapStateToProps = state => ({
   navMenus: state.masterapp.navMenus,
   products: state.products,
   promotionSets: state.promotionSets,
-  baseURL: state.masterapp.baseURL,
+  baseURL: MasterappSelector.getBaseURL(state.masterapp),
+  temp: MasterappSelector.getTemp(state.masterapp),
 });
 
 const actions = {
@@ -55,6 +57,7 @@ class HomePage extends Component {
     changePage: PropTypes.func.isRequired,
     selectProduct: PropTypes.func.isRequired,
     baseURL: PropTypes.string.isRequired,
+    temp: PropTypes.number,
   };
 
   static defaultProps = {
@@ -62,10 +65,11 @@ class HomePage extends Component {
     products: [],
     promotionSets: [],
     events: [],
+    temp: 35,
   };
 
   render() {
-    console.log('Homepage', this.props);
+    console.log('HomePage@render', this.props);
     const {
       navMenus,
       products,
@@ -74,6 +78,7 @@ class HomePage extends Component {
       changePage,
       selectProduct,
       baseURL,
+      temp,
     } = this.props;
     return (
       <div className="homepage">
@@ -85,7 +90,7 @@ class HomePage extends Component {
             <div className="title">
               <h1>กรุณาเลือกรายการ</h1>
             </div>
-            <div className="item temperature">กรุงเทพฯ 35 C</div>
+            <div className="item temperature">{`กรุงเทพฯ ${temp} C`}</div>
           </div>
           <div className="menu-slider">
             <Slider ref={c => (this.slider = c)} {...navMenuSettings}>

@@ -1,0 +1,69 @@
+
+.summary-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    .item {
+        display: flex;
+        margin: 0 20px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .item p {
+        font-size: 34px;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.summary-list .item .circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    font-size: 50px;
+    color: #fff;
+    line-height: 150px;
+    font-weight: 700;
+    text-align: center;
+    &.blue {
+        background: rgba(55,198,250,1);
+        background: -moz-linear-gradient(top, rgba(55,198,250,1) 0%, rgba(55,198,250,1) 16%, rgba(0,120,219,1) 100%);
+        background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(55,198,250,1)), color-stop(16%, rgba(55,198,250,1)), color-stop(100%, rgba(0,120,219,1)));
+        background: -webkit-linear-gradient(top, rgba(55,198,250,1) 0%, rgba(55,198,250,1) 16%, rgba(0,120,219,1) 100%);
+        background: -o-linear-gradient(top, rgba(55,198,250,1) 0%, rgba(55,198,250,1) 16%, rgba(0,120,219,1) 100%);
+        background: -ms-linear-gradient(top, rgba(55,198,250,1) 0%, rgba(55,198,250,1) 16%, rgba(0,120,219,1) 100%);
+        background: linear-gradient(to bottom, rgba(55,198,250,1) 0%, rgba(55,198,250,1) 16%, rgba(0,120,219,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#37c6fa', endColorstr='#0078db', GradientType=0 );
+        -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+        -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+    }
+    &.purple {
+        background: rgba(124, 134, 255, 1);
+        background: -moz-linear-gradient(top, rgba(124, 134, 255, 1) 0%, rgba(124, 134, 255, 1) 16%, rgba(118, 28, 201, 1) 100%);
+        background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(124, 134, 255, 1)), color-stop(16%, rgba(124, 134, 255, 1)), color-stop(100%, rgba(118, 28, 201, 1)));
+        background: -webkit-linear-gradient(top, rgba(124, 134, 255, 1) 0%, rgba(124, 134, 255, 1) 16%, rgba(118, 28, 201, 1) 100%);
+        background: -o-linear-gradient(top, rgba(124, 134, 255, 1) 0%, rgba(124, 134, 255, 1) 16%, rgba(118, 28, 201, 1) 100%);
+        background: -ms-linear-gradient(top, rgba(124, 134, 255, 1) 0%, rgba(124, 134, 255, 1) 16%, rgba(118, 28, 201, 1) 100%);
+        background: linear-gradient(to bottom, rgba(124, 134, 255, 1) 0%, rgba(124, 134, 255, 1) 16%, rgba(118, 28, 201, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7c86ff', endColorstr='#761cc9', GradientType=0);
+        -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+        -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    }
+    &.green {
+        background: rgba(79, 251, 159, 1);
+        background: -moz-linear-gradient(top, rgba(79, 251, 159, 1) 0%, rgba(79, 251, 159, 1) 16%, rgba(5, 159, 162, 1) 100%);
+        background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(79, 251, 159, 1)), color-stop(16%, rgba(79, 251, 159, 1)), color-stop(100%, rgba(5, 159, 162, 1)));
+        background: -webkit-linear-gradient(top, rgba(79, 251, 159, 1) 0%, rgba(79, 251, 159, 1) 16%, rgba(5, 159, 162, 1) 100%);
+        background: -o-linear-gradient(top, rgba(79, 251, 159, 1) 0%, rgba(79, 251, 159, 1) 16%, rgba(5, 159, 162, 1) 100%);
+        background: -ms-linear-gradient(top, rgba(79, 251, 159, 1) 0%, rgba(79, 251, 159, 1) 16%, rgba(5, 159, 162, 1) 100%);
+        background: linear-gradient(to bottom, rgba(79, 251, 159, 1) 0%, rgba(79, 251, 159, 1) 16%, rgba(5, 159, 162, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4ffb9f', endColorstr='#059fa2', GradientType=0);
+        -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+        -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    }
+}

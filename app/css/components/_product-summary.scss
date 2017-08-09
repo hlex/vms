@@ -1,0 +1,55 @@
+.product-summary {
+    h2 {
+        position: relative;
+        font-weight: bold;
+        font-size: 50px;
+        padding-bottom: 0;
+        line-height: 1.2;
+    }
+    .panel {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.product-summary .input-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    p {
+        margin: 0;
+    }
+    small {
+        font-size: 24px;
+        color: $brown;
+    }
+    .input-with-keyboard {
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        font-size: 44px;
+        color: $black;
+        border: 2px solid $blue;
+        height: 60px;
+        width: 400px;
+        border-radius: 10px;
+        background-color: $white;
+    }
+}
+
+.product-summary .action {
+    margin-top: 25px;
+    p {
+        margin: 0;
+        padding: 0;
+    }
+    .submit-button {
+        margin: 0 auto;
+        align-items: baseline;
+    }
+    .pt {
+        font-size: 40px;
+        margin: 0 5px;
+    }
+}

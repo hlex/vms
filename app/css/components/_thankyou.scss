@@ -1,0 +1,53 @@
+.thankyou {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    .title {
+        text-align: center;
+    }
+    .title span {
+        font-size: 80px;
+        font-weight: 700;
+        position: relative;
+    }
+    .title .icon {
+        position: absolute;
+        top: -30px;
+        right: -70px;
+    }
+    .icon img {
+        max-width: 60px;
+    }
+}
+
+.thankyou .cash-return-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    p {
+      margin: 0;
+      padding: 0;
+      font-size: 34px;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+}
+
+.box-with-bg {
+    text-align: center;
+    padding: 30px 60px;
+    width: 700px;
+    border-radius: 10px;
+    &.yellow {
+        background-color: $yellow3;
+    }
+    p {
+        margin: 0;
+        padding: 0;
+        font-weight: 700;
+        font-size: 34px;
+    }
+}

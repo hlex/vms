@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 // ======================================================
 // Components
 // ======================================================
-import ProductItems from '../../../components/ProductItems';
+import { Layout, ProductItems } from '../../../components';
 
 // ======================================================
 // Actions
@@ -50,7 +50,25 @@ class ProductSelectionPage extends Component {
     const { products, promotionSets, selectProduct, back, baseURL } = this.props;
     return (
       <div>
-        ProductSelectionPage
+        <Layout.Subheader>
+          <div className="title-section">
+            <div className="title">
+              <span>เล่นกิจกรรมรับส่วนลด</span>
+            </div>
+            <hr />
+            <div className="how-to-box">
+              <h2>ขั้นตอน</h2>
+              <ul className="item how-to-list">
+                <li><span className="num-list">1</span><span>เลือกกิจกรรมโดยสัมผัสหน้าจอ</span></li>
+                <li><span className="num-list">2</span><span>เล่นกิจกรรมตามที่กำหนด</span></li>
+                <li><span className="num-list">3</span><span>รับรหัสส่วนลดในช่องทางที่แจ้ง</span></li>
+                <li><span className="num-list">4</span><span>ใช้ซื้อทันทีหรือครั้งต่อไป</span></li>
+              </ul>
+              <ul className="item">
+              </ul>
+            </div>
+          </div>
+        </Layout.Subheader>
         <ProductItems
           promotionSets={promotionSets}
           products={products}

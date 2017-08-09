@@ -12,12 +12,9 @@
 
 .vms-header .header {
     .tooltip {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-    .tooltip > span {
-
+      display: flex;
+      flex-direction: row;
+      align-items: center;
     }
     .tooltip > i {
       width: 60px;
@@ -32,8 +29,8 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  > span {
-    font-style: bold;
+  > h2 > span {
+    font-weight: bold;
   }
   > i {
     width: 60px;

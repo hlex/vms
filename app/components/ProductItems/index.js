@@ -79,7 +79,6 @@ class ProductItems extends Component {
       back,
       baseURL,
     } = this.props;
-
     // ======================================================
     // Items
     // ======================================================
@@ -89,8 +88,6 @@ class ProductItems extends Component {
     const pageRange = _.range(slickTotalPage);
     const promotionItems = _.map(pageRange, index => getPaginatedItems(promotionSets, index + 1, promotionSetPerPage).data);
     const productItems = _.map(pageRange, index => getPaginatedItems(products, index + 1, productPerPage).data);
-    console.log(slickTotalPage, promotionItems, productItems);
-
     return (
       <div style={{ position: 'relative' }}>
         <Slider ref={c => (this.slider = c)} {...productSettings}>
@@ -105,7 +102,7 @@ class ProductItems extends Component {
                           className="box"
                           key={cuid()}
                           onClick={() =>
-                                this.handleClickItem('product/promotionSet', promotion.id)}
+                                this.handleClickItem('/product/promotionSet', promotion.id)}
                         >
                           <div className="item">
                             <div className="combo">
@@ -132,7 +129,7 @@ class ProductItems extends Component {
                         <a
                           className="box"
                           key={cuid()}
-                          onClick={() => this.handleClickItem('product/single', product.id)}
+                          onClick={() => this.handleClickItem('/product/single', product.id)}
                         >
                           <div className="item">
                             <img className="" alt="" src={`${baseURL}/${product.image}`} />

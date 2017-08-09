@@ -4,28 +4,54 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 // ======================================================
+// Components
+// ======================================================
+import { Layout, ProductSummary, PromotionSetTitle } from '../../../components';
+
+// ======================================================
 // Actions
 // ======================================================
 import * as ApplicationActions from '../../../actions/applicationActions';
 import * as Actions from './actions';
 
-const mapStateToProps = (state) => {
-  return state;
-};
+const mapStateToProps = state => state;
 
 const actions = {
   ...ApplicationActions,
   ...Actions,
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(actions, dispatch);
-};
-
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 class PromotionSetPage extends Component {
+
+  static propTypes = {
+    back: PropTypes.func,
+    submitProduct: PropTypes.func,
+  }
+
+  static defaultProps = {
+    back: () => console.log('back'),
+    submitProduct: () => console.log('submitProduct'),
+  }
+
   render() {
-    return <div />;
+    const { back, submitProduct } = this.props;
+    return (
+      <div>
+        <Layout.Title>
+          <PromotionSetTitle />
+        </Layout.Title>
+        <Layout.Content>
+          <ProductSummary
+            productPrice={'50'}
+            discountAmount={'5'}
+            back={back}
+            onSubmit={submitProduct}
+          />
+        </Layout.Content>
+      </div>
+    );
   }
 }
 

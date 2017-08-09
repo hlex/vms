@@ -1,3 +1,15 @@
+import { INIT_TCP_CLIENT, RECEIVED_SENSOR_INFORMATION } from '../actions/actionTypes';
+
+const initialTcp = process.env.NODE_ENV !== 'production'
+? {
+  ip: '127.0.0.1',
+  port: 1337,
+}
+: {
+  ip: '192.168.1.41',
+  port: 8080,
+};
+
 const initialState = {
   navMenus: [
     {
@@ -22,10 +34,23 @@ const initialState = {
     },
   ],
   baseURL: 'http://localhost:8888/vms/html-v2',
+  tcp: initialTcp,
+  tcpClient: {},
+  temp: 25, // celcius
 };
 
 export default function masterapp(state = initialState, action) {
   switch (action.type) {
+    case RECEIVED_SENSOR_INFORMATION:
+      return {
+        ...state,
+        temp: _.get(action, 'data.msg.temp', state.temp),
+      };
+    case INIT_TCP_CLIENT:
+      return {
+        ...state,
+        tcpClient: action.tcpClient
+      };
     default:
       return state;
   }

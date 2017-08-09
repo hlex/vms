@@ -1,7 +1,21 @@
-import Header from './Header';
-import Footer from './Footer';
+import PaymentConfirmation from './PaymentConfirmation';
+import ProductItems from './ProductItems';
+import ProductSummary from './ProductSummary';
+import ProductTitle from './ProductTitle';
+import PromotionSetTitle from './PromotionSetTitle';
+import SummaryList from './SummaryList';
+import Layout from './Layout';
+import Loading from './Loading';
+import Thankyou from './Thankyou';
 
 export {
-  Header,
-  Footer
+  PaymentConfirmation,
+  ProductItems,
+  ProductSummary,
+  ProductTitle,
+  PromotionSetTitle,
+  SummaryList,
+  Layout,
+  Loading,
+  Thankyou,
 };

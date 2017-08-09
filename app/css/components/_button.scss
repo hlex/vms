@@ -71,6 +71,26 @@
     background: $purple;
   }
 
+  &.blue{
+    width: 460px;
+    height: 80px;
+    border-radius: 40px;
+    font-size: 40px;
+    color: $white;
+    border: 3px solid #fff;
+    background: rgba(55,198,250,1);
+    background: -moz-linear-gradient(top, rgba(55,198,250,1) 0%, rgba(55,198,250,1) 16%, rgba(0,120,219,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(55,198,250,1)), color-stop(16%, rgba(55,198,250,1)), color-stop(100%, rgba(0,120,219,1)));
+    background: -webkit-linear-gradient(top, rgba(55,198,250,1) 0%, rgba(55,198,250,1) 16%, rgba(0,120,219,1) 100%);
+    background: -o-linear-gradient(top, rgba(55,198,250,1) 0%, rgba(55,198,250,1) 16%, rgba(0,120,219,1) 100%);
+    background: -ms-linear-gradient(top, rgba(55,198,250,1) 0%, rgba(55,198,250,1) 16%, rgba(0,120,219,1) 100%);
+    background: linear-gradient(to bottom, rgba(55,198,250,1) 0%, rgba(55,198,250,1) 16%, rgba(0,120,219,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#37c6fa', endColorstr='#0078db', GradientType=0 );
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+  }
+
   &.red{
     $color: #fff;
     color: $color;
@@ -93,14 +113,14 @@
     &:hover{background-color: $green3;color: $color;}
     &:active, &.active{background-color: $green1;}
   }
-  &.blue{
-    $color: #fff;
-    color: $color;
-    background-color: $blue2;
-    &.disable, &:disabled{opacity: 0.3;cursor: no-drop;}
-    &:hover{background-color: $blue3;color: $color;}
-    &:active, &.active{background-color: $blue1;}
-  }
+  // &.blue{
+  //   $color: #fff;
+  //   color: $color;
+  //   background-color: $blue2;
+  //   &.disable, &:disabled{opacity: 0.3;cursor: no-drop;}
+  //   &:hover{background-color: $blue3;color: $color;}
+  //   &:active, &.active{background-color: $blue1;}
+  // }
   &.gray{
     $color: #fff;
     color: $color;

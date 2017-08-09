@@ -1,0 +1,111 @@
+// ======================================================
+// Layout
+// ======================================================
+.subheader-wrapper {
+  height: 350px;
+  background-color: $yellow;
+}
+.content-wrapper {
+  position: relative;
+  height: 592px;
+  padding: 40px 80px 20px 80px;
+  background-color: $yellow;
+}
+.title-wrapper {
+  height: 590px;
+  background-color: $yellow;
+  .bg-img {
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+}
+// ======================================================
+// Content Wrapper
+// ======================================================
+.content-wrapper {
+  h2 {
+    font-weight: 700;
+    font-size: 50px;
+  }
+}
+
+// ======================================================
+// Title Wrapper
+// ======================================================
+.title-wrapper .product-combo-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img:first-child {
+    max-width: 380px;
+    width: 100%;
+  }
+  img:last-child {
+    max-width: 380px;
+    width: 100%;
+  }
+  span {
+    width: 90px;
+    height: 90px;
+    background: url(../images/icon-plus.png) no-repeat center center;
+    z-index: 2;
+  }
+}
+// ======================================================
+// Subheader Wrapper
+// ======================================================
+.subheader-wrapper .title-section {
+  padding: 5px 40px;
+  .title {
+    text-align: center;
+  }
+  .title span {
+    font-size: 76px;
+    font-weight: 700;
+  }
+  .how-to-box {
+
+  }
+  h2 {
+    padding-top: 10px;
+    font-weight: bold;
+  }
+  ul.item {
+    @include clearul();
+  }
+  .item {
+    display: inline-block;
+    width: 50%;
+  }
+  .item.how-to-list {
+
+  }
+}
+.subheader-wrapper .title-section .item.how-to-list {
+  li {
+    margin: 2px 0;
+    font-size: 30px;
+  }
+  .num-list {
+    margin-right: 10px;
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    background: rgba(124,135,255,1);
+    background: -moz-linear-gradient(left, rgba(124,135,255,1) 0%, rgba(182,109,255,1) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(124,135,255,1)), color-stop(100%, rgba(182,109,255,1)));
+    background: -webkit-linear-gradient(left, rgba(124,135,255,1) 0%, rgba(182,109,255,1) 100%);
+    background: -o-linear-gradient(left, rgba(124,135,255,1) 0%, rgba(182,109,255,1) 100%);
+    background: -ms-linear-gradient(left, rgba(124,135,255,1) 0%, rgba(182,109,255,1) 100%);
+    background: linear-gradient(to right, rgba(124,135,255,1) 0%, rgba(182,109,255,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7c87ff', endColorstr='#b66dff', GradientType=1 );
+    border-radius: 90px;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+  }
+}

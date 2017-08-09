@@ -7,7 +7,11 @@ import rootReducer from '../reducers';
 import * as counterActions from '../actions/counter';
 import type { counterStateType } from '../reducers/counter';
 
-const history = createHashHistory();
+// const history = createHashHistory();
+const history = createHashHistory({
+  hashType: 'slash',
+  getUserConfirmation: (message, callback) => callback(window.confirm(message))
+});
 
 const configureStore = (initialState?: counterStateType) => {
   // Redux Configuration

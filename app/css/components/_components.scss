@@ -1,3 +1,6 @@
+// ======================================================
+// Default
+// ======================================================
 @import "box-message";
 @import "button";
 @import "link";
@@ -5,3 +8,16 @@
 @import "text-label";
 @import "title-hgroup";
 @import "icon";
+// ======================================================
+// Layout
+// ======================================================
+@import "layout";
+@import "horizontal-line";
+// ======================================================
+// Page components
+// ======================================================
+@import "product-summary";
+@import "payment-confirmation";
+@import "summary-list";
+@import "loading";
+@import "thankyou";

@@ -3,21 +3,27 @@ import React, { Component } from 'react';
 import type { Children } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Header, Footer } from '../components';
-
+import { Layout } from '../components';
 // ======================================================
 // Actions
 // ======================================================
 import * as ApplicationActions from '../actions/applicationActions';
-
 // ======================================================
 // Selectors
 // ======================================================
 import MasterappSelector from '../selectors/masterapp';
+// ======================================================
+// APIs
+// ======================================================
+import { createTcpClient } from '../apis/tcp';
 
-const mapStateToProps = state => ({
-  baseURL: MasterappSelector.getBaseURL(state.masterapp),
-});
+const mapStateToProps = state => {
+  return {
+    location: state.router.location,
+    baseURL: MasterappSelector.getBaseURL(state.masterapp),
+    tcp: MasterappSelector.getTcp(state.masterapp),
+  };
+};
 
 const actions = {
   ...ApplicationActions,
@@ -27,16 +33,28 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 class App extends Component {
   props: {
-    children: Children
+    children: Children,
+    tcp: Object,
+    baseURL: string,
+    location: Object,
+    changePage: Function,
+    initTcpClient: Function
   };
 
+  componentWillMount = () => {
+    const { tcp: { ip, port }, initTcpClient } = this.props;
+    initTcpClient(createTcpClient(ip, port));
+  }
+
   render() {
-    const { changePage, baseURL } = this.props;
+    const { changePage, baseURL, location } = this.props;
+    console.log('App@render', this.props);
     return (
       <div className="smart-vending-machine-app">
-        <Header backToHome={() => changePage('')} baseURL={baseURL} />
+        {location.pathname}
+        <Layout.Header backToHome={() => changePage('')} baseURL={baseURL} />
         {this.props.children}
-        <Footer />
+        <Layout.Footer />
       </div>
     );
   }
