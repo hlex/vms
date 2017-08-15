@@ -6,6 +6,7 @@ import {
   RECEIVED_CASH_COMPLETELY,
   PRODUCT_DROP_SUCCESS,
   RESET_PAYMENT_REDUCER,
+  CLEAR_PAYMENT_AMOUNT,
   SELECT_MOBILE_TOPUP_PROVIDER,
   CONFIRM_MOBILE_TOPUP_MSISDN,
 } from './actionTypes';
@@ -36,10 +37,10 @@ export const productDropSuccess = () => {
   };
 };
 
-export const selectProduct = (itemId) => {
+export const selectProduct = (item) => {
   return {
     type: SELECT_PRODUCT,
-    itemId
+    item
   };
 };
 
@@ -53,6 +54,12 @@ export const initTcpClient = (tcpClient) => {
 export const resetPaymentReducer = () => {
   return {
     type: RESET_PAYMENT_REDUCER,
+  };
+};
+
+export const clearPaymentAmount = () => {
+  return {
+    type: CLEAR_PAYMENT_AMOUNT,
   };
 };
 

@@ -5,13 +5,14 @@ import Summarylist from '../SummaryList';
 
 class PaymentConfirmation extends Component {
 
-  handleBack = () => {
-    const { back } = this.props;
-    back();
+  static propTypes = {
+    baseURL: PropTypes.string.isRequired,
+    summaryList: PropTypes.arrayOf(PropTypes.shape({})),
+    back: PropTypes.func,
   }
 
-  render() {
-    const summarylist = [
+  static defaultProps = {
+    summaryList: [
       {
         text: 'ยอดชำระสุทธิ',
         color: 'blue',
@@ -22,14 +23,24 @@ class PaymentConfirmation extends Component {
         color: 'green',
         amount: '20',
       },
-    ];
+    ],
+    back: () => console.log('back'),
+  }
+
+  handleBack = () => {
+    const { back } = this.props;
+    back();
+  }
+
+  render() {
+    const { baseURL, summaryList } = this.props;
     return (
       <div className="payment-confirmation">
         <div className="row">
           <div className="D-8">
             <h2>ยืนยันชำระเงินค่าสินค้า</h2>
             <hr />
-            <Summarylist items={summarylist} />
+            <Summarylist items={summaryList} />
             <hr />
             <div className="_center">
               <h3>กรุณาหยอดเหรียญหรือธนบัตร</h3>
@@ -39,13 +50,13 @@ class PaymentConfirmation extends Component {
                 <div className="coin">
                   <div className="list">
                     <div className="item">
-                      <img src="images/coin-1.png" alt="" />
+                      <img src={`${baseURL}/images/coin-1.png`} alt="" />
                     </div>
                     <div className="item">
-                      <img src="images/coin-5.png" alt="" />
+                      <img src={`${baseURL}/images/coin-5.png`} alt="" />
                     </div>
                     <div className="item">
-                      <img src="images/coin-10.png" alt="" />
+                      <img src={`${baseURL}/images/coin-10.png`} alt="" />
                     </div>
                   </div>
                   <span className="hint-message">1, 5, 10 เท่านั้น</span>
@@ -53,16 +64,16 @@ class PaymentConfirmation extends Component {
                 <div className="banknote">
                   <div className="list">
                     <div className="item">
-                      <img src="images/banknote-20.png" alt="" />
+                      <img src={`${baseURL}/images/banknote-20.png`} alt="" />
                     </div>
                     <div className="item">
-                      <img src="images/banknote-50.png" alt="" />
+                      <img src={`${baseURL}/images/banknote-50.png`} alt="" />
                     </div>
                     <div className="item">
-                      <img src="images/banknote-100.png" alt="" />
+                      <img src={`${baseURL}/images/banknote-100.png`} alt="" />
                     </div>
                   </div>
-                  <span className="hint-message">1, 5, 10 เท่านั้น</span>
+                  <span className="hint-message">20, 50, 100 เท่านั้น</span>
                 </div>
               </div>
             </div>
@@ -70,7 +81,7 @@ class PaymentConfirmation extends Component {
           <div className="D-4">
             <div className="insert-cash-box">
               <div className="insert-cash-sign">
-                <img src="images/icon-point-left.png" alt="" />
+                <img src={`${baseURL}/images/icon-point-left.png`} alt="" />
               </div>
               <h4>หยอดเงิน</h4>
               <div className="error">

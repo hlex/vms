@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Thankyou extends Component {
+
+  static propTypes = {
+    baseURL: PropTypes.string.isRequired,
+  }
+
   render() {
+    const { baseURL } = this.props;
     return (
       <div className="thankyou">
         <div className="title">
           <span>
             ขอบคุณค่ะ
-            <span className="icon"><img src="images/icon-thank.png" alt="" /></span>
+            <span className="icon"><img src={`${baseURL}/images/icon-thank.png`} alt="" /></span>
           </span>
         </div>
         <div className="box-with-bg yellow">
@@ -16,7 +23,7 @@ class Thankyou extends Component {
         <div className="cash-return-box">
           <p>เชิญรับเงินทอนและสินค้าช่องด้านล่าง</p>
           <div className="cash-return-sign">
-            <img src="images/icon-point-down.png" alt="" />
+            <img src={`${baseURL}/images/icon-point-down.png`} alt="" />
           </div>
         </div>
       </div>

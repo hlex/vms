@@ -102,7 +102,7 @@ class ProductItems extends Component {
                           className="box"
                           key={cuid()}
                           onClick={() =>
-                                this.handleClickItem('/product/promotionSet', promotion.id)}
+                                this.handleClickItem('/product/promotionSet', promotion)}
                         >
                           <div className="item">
                             <div className="combo">
@@ -129,7 +129,7 @@ class ProductItems extends Component {
                         <a
                           className="box"
                           key={cuid()}
-                          onClick={() => this.handleClickItem('/product/single', product.id)}
+                          onClick={() => this.handleClickItem('/product/single', product)}
                         >
                           <div className="item">
                             <img className="" alt="" src={`${baseURL}/${product.image}`} />

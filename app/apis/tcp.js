@@ -1,22 +1,9 @@
 
 import net from 'net';
-import store from '../index.js';
+import TcpClient from '../models/TcpClient';
+import store from '../index';
 import * as ApplicationActions from '../actions/applicationActions';
 import { verifyServerResponseData } from '../helpers/tcp';
-
-class TcpClient {
-  client;
-  constructor(client) {
-    this.client = client;
-  }
-  send(data) {
-    if (typeof data === 'string') {
-      this.client.write(data);
-    } else {
-      this.client.write(JSON.stringify(data));
-    }
-  }
-}
 
 export const createTcpClient = (ip, port) => {
   const client = new net.Socket();

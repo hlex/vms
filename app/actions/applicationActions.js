@@ -1,5 +1,18 @@
 import { push, goBack } from 'react-router-redux';
-import * as Actions from './index.js';
+import * as Actions from './index';
+
+// ======================================================
+// Selectors
+// ======================================================
+import RootSelector from '../selectors/root';
+import MasterappSelector from '../selectors/masterapp';
+import PaymentSelector from '../selectors/payment';
+import OrderSelector from '../selectors/order';
+
+// ======================================================
+// Helpers
+// ======================================================
+import { isInsertCash, isProductDropSuccess } from '../helpers/tcp';
 
 export const backToHome = () => dispatch => {
   dispatch(changePage(''));
@@ -17,9 +30,12 @@ export const changePage = context => dispatch => {
   dispatch(push(context));
 };
 
-export const selectProduct = (context, itemId) => dispatch => {
+export const selectProduct = (context, item) => dispatch => {
   dispatch(changePage(context));
-  dispatch(Actions.selectProduct(itemId));
+  // ======================================================
+  // Select Product
+  // ======================================================
+  dispatch(Actions.selectProduct(item));
 };
 
 export const submitProduct = () => dispatch => {
@@ -30,28 +46,50 @@ export const initTcpClient = tcpClient => dispatch => {
   dispatch(Actions.initTcpClient(tcpClient));
 };
 
+export const productDropSuccess = () => dispatch => {
+  dispatch(Actions.productDropSuccess());
+};
+
 export const receivedCashCompletely = () => dispatch => {
   dispatch(Actions.receivedCashCompletely());
 };
 
-export const productDrop = () => dispatch => {
-  dispatch(Actions.productDropSuccess());
+export const productDrop = () => (dispatch, getState) => {
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.send({
+    action: 1,
+    msg: '11', // row * col
+  });
 };
 
 export const selectTopupProvider = (context, topupProvider) => {
   return (dispatch) => {
     dispatch(changePage(context));
     dispatch(Actions.selectTopupProvider(topupProvider));
-  }
-}
+  };
+};
 
-export const receivedDataFromServer = data => dispatch => {
-    // classify data
+export const receivedDataFromServer = data => (dispatch, getState) => {
+  console.log('receivedDataFromServer', data);
+  // classify data
   if (data.sensor) {
     dispatch(Actions.receivedSensorInformation(data));
   }
-  if (data.action === 2 && data.msg === '20') {
+  if (isInsertCash(data)) {
     dispatch(Actions.receivedCash(data));
+    const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
+    const totalAmount = OrderSelector.getOrderTotalAmount(getState().order);
+    if (currentCash >= totalAmount) {
+      // return and choose product
+      setTimeout(() => {
+        dispatch(receivedCashCompletely());
+        dispatch(productDrop());
+      }, 1000);
+    }
+  }
+  if (isProductDropSuccess(data)) {
+    dispatch(productDropSuccess());
+    dispatch(cashChange());
   }
 };
 
@@ -59,5 +97,18 @@ export const confirmMobileTopupMSISDN = (MSISDN) => {
   return (dispatch) => {
     dispatch(changePage('/topup/selectTopupValue'));
     dispatch(Actions.confirmMobileTopupMSISDN(MSISDN));
+  };
+};
+
+export const cashChange = () => {
+  return (dispatch, getState) => {
+    const cashReturnTotalAmount = RootSelector.getCashReturnAmount(getState());
+    const client = MasterappSelector.getTcpClient(getState().masterapp);
+    client.send({
+      action: '2',
+      msg: `${cashReturnTotalAmount}`,
+      mode: 'coin',
+    });
+    dispatch(Actions.clearPaymentAmount());
   };
 };

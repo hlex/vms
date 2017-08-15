@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 class Loading extends Component {
 
   static propTypes = {
+    baseURL: PropTypes.string.isRequired,
     text: PropTypes.string,
   }
 
@@ -12,10 +13,10 @@ class Loading extends Component {
   }
 
   render() {
-    const { text } = this.props;
+    const { text, baseURL } = this.props;
     return (
       <div className="loading">
-        <img src="images/loading.gif" alt="" />
+        <img src={`${baseURL}/images/loading.gif`} alt="" />
         <h3>{text}</h3>
       </div>
     );

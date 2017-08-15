@@ -23,13 +23,34 @@ if (process.env.NODE_ENV !== 'production') {
           },
         }),
       );
-    }, 5000);
+    }, 20000);
+    setInterval(() => {
+      socket.write(
+        JSON.stringify({
+          action: 2,
+          msg: 50,
+        }),
+      );
+    }, 10000);
     socket.on('data', data => {
       // ======================================================
       // Received data from client.write
       // ======================================================
       const dataChunk = data.toString('utf8');
       console.log('Server: I got your data = ', dataChunk);
+      const objectData = JSON.parse(dataChunk);
+      if (objectData.action === 1 && objectData.msg !== 'failed') {
+        console.log('drop product');
+        setTimeout(() => {
+          socket.write(
+            JSON.stringify({
+              action: 1,
+              result: 'success',
+              description: '',
+            }),
+          );
+        }, 5000);
+      }
     });
     socket.on('error', err => {
       console.error(err);

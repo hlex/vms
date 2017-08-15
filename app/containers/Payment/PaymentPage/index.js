@@ -14,11 +14,19 @@ import { Layout, PromotionSetTitle, PaymentConfirmation, Loading, Thankyou } fro
 import * as ApplicationActions from '../../../actions/applicationActions';
 import * as Actions from './actions';
 
+// ======================================================
+// Selectors
+// ======================================================
+import RootSelector from '../../../selectors/root';
+import MasterappSelector from '../../../selectors/masterapp';
+
 const mapStateToProps = state => {
   return {
-    ...state.payment
-  }
-}
+    ...state.payment,
+    baseURL: MasterappSelector.getBaseURL(state.masterapp),
+    summaryList: RootSelector.getPaymentSummaryList(state),
+  };
+};
 
 const actions = {
   ...ApplicationActions,
@@ -29,30 +37,29 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 class PaymentPage extends Component {
   static propTypes = {
+    baseURL: PropTypes.string.isRequired,
+    summaryList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    isFinish: PropTypes.bool.isRequired,
+    isLoading: PropTypes.bool.isRequired,
     back: PropTypes.func,
   };
 
   static defaultProps = {
     back: () => console.log('back'),
-    submitProduct: () => console.log('submitProduct'),
   };
 
-  componentDidMount = () => {
-    const { receivedCashCompletely, productDrop } = this.props;
-    setTimeout(() => {
-      receivedCashCompletely();
-    }, 5000);
-    setTimeout(() => {
-      productDrop();
-    }, 10000);
-  }
-
   renderContent = () => {
-    const { back, isLoading, isFinish } = this.props;
+    const { baseURL, back, isLoading, isFinish, summaryList } = this.props;
     // const isFinish = true;
-    if (isFinish) return <Thankyou />;
-    if (isLoading) return <Loading />;
-    return <PaymentConfirmation back={back} />;
+    if (isFinish) return <Thankyou baseURL={baseURL} />;
+    if (isLoading) return <Loading baseURL={baseURL} />;
+    return (
+      <PaymentConfirmation
+        baseURL={baseURL}
+        summaryList={summaryList}
+        back={back}
+      />
+    );
   }
 
   render() {

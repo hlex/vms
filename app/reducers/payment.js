@@ -6,11 +6,13 @@ import {
   RECEIVED_CASH_COMPLETELY,
   PRODUCT_DROP_SUCCESS,
   RESET_PAYMENT_REDUCER,
+  CLEAR_PAYMENT_AMOUNT,
 } from '../actions/actionTypes';
 
 const initialState = {
   isLoading: false,
   isFinish: false,
+  amount: 0,
 };
 const getInitialState = () => {
   return {
@@ -24,7 +26,10 @@ export default function products(state = getInitialState(), action: actionType) 
     case RESET_PAYMENT_REDUCER:
       return getInitialState();
     case RECEIVED_CASH:
-      return state;
+      return {
+        ...state,
+        amount: state.amount + Number(action.data.msg),
+      };
     case RECEIVED_CASH_COMPLETELY:
       return {
         ...state,
@@ -34,6 +39,11 @@ export default function products(state = getInitialState(), action: actionType) 
       return {
         ...state,
         isFinish: true,
+      };
+    case CLEAR_PAYMENT_AMOUNT:
+      return {
+        ...state,
+        amount: 0,
       };
     default:
       return state;

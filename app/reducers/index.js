@@ -7,6 +7,7 @@ import payment from './payment';
 import masterapp from './masterapp';
 import masterdata from './masterdata';
 import mobileTopup from './mobileTopup';
+import order from './order';
 
 const rootReducer = combineReducers({
   router,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   promotionSets,
   payment,
   mobileTopup,
+  order,
 });
 
 export default rootReducer;

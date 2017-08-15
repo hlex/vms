@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const verifyServerResponseData = (data) => {
   /*
     "{
@@ -8,5 +10,21 @@ export const verifyServerResponseData = (data) => {
       }
     }"
   */
+  return true;
+};
+
+export const isInsertCash = (data) => {
+  const action = _.get(data, 'action');
+  const amount = Number(_.get(data, 'msg', ''));
+  if (!action) return false;
+  if (action !== 2 || amount <= 0) return false;
+  return true;
+};
+
+export const isProductDropSuccess = (data) => {
+  const action = _.get(data, 'action');
+  const result = _.get(data, 'result', '').toUpperCase();
+  if (!action) return false;
+  if (action !== 1 || result !== 'SUCCESS') return false;
   return true;
 };
