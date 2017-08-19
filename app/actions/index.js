@@ -9,6 +9,7 @@ import {
   CLEAR_PAYMENT_AMOUNT,
   SELECT_MOBILE_TOPUP_PROVIDER,
   CONFIRM_MOBILE_TOPUP_MSISDN,
+  RECEIVED_CASH_REMAINING,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -74,5 +75,12 @@ export const confirmMobileTopupMSISDN = (MSISDN) => {
   return {
     type: CONFIRM_MOBILE_TOPUP_MSISDN,
     MSISDN,
+  };
+};
+
+export const getCashRemaining = (data) => {
+  return {
+    type: RECEIVED_CASH_REMAINING,
+    data,
   };
 };

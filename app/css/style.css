@@ -5328,6 +5328,28 @@ hr {
     margin: 0;
     margin-bottom: 15px; }
 
+.development-toolbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: black;
+  padding: 10px 0; }
+  .development-toolbar ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center; }
+  .development-toolbar ul li {
+    background-color: #fff;
+    padding: 0 25px;
+    text-align: center; }
+  .development-toolbar ul li a {
+    color: #000; }
+
 .select-mobile-topup-value {
   position: relative; }
   .select-mobile-topup-value .page-container {

@@ -32,10 +32,10 @@ export const createTcpClient = (ip, port) => {
   // ======================================================
   // Test Calling
   // ======================================================
-  tcpClient.send({
-    action: 3,
-    msg: '0',
-  });
+  // tcpClient.send({
+  //   action: 3,
+  //   msg: '0',
+  // });
 
   return tcpClient;
 };

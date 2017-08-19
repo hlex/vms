@@ -24,14 +24,14 @@ if (process.env.NODE_ENV !== 'production') {
         }),
       );
     }, 20000);
-    setInterval(() => {
-      socket.write(
-        JSON.stringify({
-          action: 2,
-          msg: 50,
-        }),
-      );
-    }, 10000);
+    // setInterval(() => {
+    //   socket.write(
+    //     JSON.stringify({
+    //       action: 2,
+    //       msg: 50,
+    //     }),
+    //   );
+    // }, 10000);
     socket.on('data', data => {
       // ======================================================
       // Received data from client.write
@@ -39,8 +39,11 @@ if (process.env.NODE_ENV !== 'production') {
       const dataChunk = data.toString('utf8');
       console.log('Server: I got your data = ', dataChunk);
       const objectData = JSON.parse(dataChunk);
+      // ======================================================
+      // Declare Protocols
+      // ======================================================
       if (objectData.action === 1 && objectData.msg !== 'failed') {
-        console.log('drop product');
+        console.log('Server: Drop product');
         setTimeout(() => {
           socket.write(
             JSON.stringify({
@@ -50,6 +53,29 @@ if (process.env.NODE_ENV !== 'production') {
             }),
           );
         }, 5000);
+      }
+      if (objectData.action === 2 && objectData.mode === 'remain') {
+        console.log('Server: Cash remaining');
+        socket.write(
+          JSON.stringify({
+            action: 2,
+            result: 'success',
+            remain: {
+              baht1: 3,
+              bath5: 5,
+              baht: 10,
+            },
+          }),
+        );
+      }
+      // insert coin
+      if (objectData.action === 999) {
+        socket.write(
+          JSON.stringify({
+            action: 2,
+            msg: Number(objectData.msg),
+          }),
+        );
       }
     });
     socket.on('error', err => {

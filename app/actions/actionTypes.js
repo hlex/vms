@@ -7,6 +7,7 @@ export const RESET_PAYMENT_REDUCER = 'RESET_PAYMENT_REDUCER';
 export const CLEAR_PAYMENT_AMOUNT = 'CLEAR_PAYMENT_AMOUNT';
 export const SELECT_MOBILE_TOPUP_PROVIDER = 'SELECT_TOPUP_PROVIDER';
 export const CONFIRM_MOBILE_TOPUP_MSISDN = 'CONFIRM_MOBILE_TOPUP_MSISDN';
+export const RECEIVED_CASH_REMAINING = 'RECEIVED_CASH_REMAINING';
 // ======================================================
 // TCP
 // ======================================================

@@ -7,12 +7,14 @@ import {
   PRODUCT_DROP_SUCCESS,
   RESET_PAYMENT_REDUCER,
   CLEAR_PAYMENT_AMOUNT,
+  RECEIVED_CASH_REMAINING,
 } from '../actions/actionTypes';
 
 const initialState = {
   isLoading: false,
   isFinish: false,
   amount: 0,
+  remain: {},
 };
 const getInitialState = () => {
   return {
@@ -45,6 +47,11 @@ export default function products(state = getInitialState(), action: actionType) 
         ...state,
         amount: 0,
       };
+    case RECEIVED_CASH_REMAINING:
+      return {
+        ...state,
+        remain: action.data.remain
+      }
     default:
       return state;
   }

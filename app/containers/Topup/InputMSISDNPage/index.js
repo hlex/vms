@@ -19,10 +19,13 @@ import * as Actions from './actions';
 // ======================================================
 // Selectors
 // ======================================================
+import MasterappSelector from '../../../selectors/masterapp';
 import MobileTopupSelectors from '../../../selectors/mobileTopup';
+import OrderSelector from '../../../selectors/order';
 
 const mapStateToProps = (state) => {
   return {
+    baseURL: MasterappSelector.getBaseURL(state.masterapp),
     banner: MobileTopupSelectors.getBannerSrc(state.mobileTopup),
   };
 };
@@ -40,24 +43,26 @@ const mapDispatchToProps = (dispatch) => {
 class InputMSISDNPage extends Component {
 
   static propTypes = {
+    baseURL: PropTypes.string.isRequired,
     banner: PropTypes.string.isRequired,
     confirmMobileTopupMSISDN: PropTypes.func.isRequired,
   }
 
   render() {
     console.log('InputMSISDNPage', this.props);
-    const { banner, confirmMobileTopupMSISDN } = this.props;
+    const { baseURL, banner, confirmMobileTopupMSISDN } = this.props;
     return (
       <div className="input-msisdn">
         <Layout.Title>
           <ProductTitle
             title={'เติมเงินมือถือ'}
             bgImage={banner}
+            baseURL={baseURL}
           />
         </Layout.Title>
         <Layout.Content>
           <div className="input-msisdn-box">
-            <div className="content">
+            <div className="content _center">
               <p>ท่านเลือกเครือข่าย AIS one2call</p>
               <h2>ใส่เบอร์มือถือที่ต้องการเติมเงิน</h2>
               <div className="input-box">

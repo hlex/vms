@@ -36,6 +36,18 @@ const mapDispatchToProps = (dispatch) => {
 
 
 class TopupProviderSelectionPage extends Component {
+
+  static propTypes = {
+    baseURL: PropTypes.string.isRequired,
+    topupProviders: PropTypes.arrayOf(PropTypes.shape({})),
+    selectTopupProvider: PropTypes.func,
+  }
+
+  static defaultProps = {
+    topupProviders: [],
+    selectTopupProvider: () => console.log('selectTopupProvider'),
+  }
+
   render() {
     const { baseURL, topupProviders, selectTopupProvider } = this.props;
     return (

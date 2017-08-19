@@ -14,7 +14,17 @@ import { Layout, ProductSummary, PromotionSetTitle } from '../../../components';
 import * as ApplicationActions from '../../../actions/applicationActions';
 import * as Actions from './actions';
 
-const mapStateToProps = state => state;
+// ======================================================
+// Selectors
+// ======================================================
+import MasterappSelector from '../../../selectors/masterapp';
+import OrderSelector from '../../../selectors/order';
+
+const mapStateToProps = (state) => {
+  return {
+    baseURL: MasterappSelector.getBaseURL(state.masterapp),
+  };
+};
 
 const actions = {
   ...ApplicationActions,
@@ -26,6 +36,7 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 class PromotionSetPage extends Component {
 
   static propTypes = {
+    baseURL: PropTypes.string.isRequired,
     back: PropTypes.func,
     submitProduct: PropTypes.func,
   }
@@ -36,11 +47,13 @@ class PromotionSetPage extends Component {
   }
 
   render() {
-    const { back, submitProduct } = this.props;
+    const { baseURL, back, submitProduct } = this.props;
     return (
       <div>
         <Layout.Title>
-          <PromotionSetTitle />
+          <PromotionSetTitle
+            baseURL={baseURL}
+          />
         </Layout.Title>
         <Layout.Content>
           <ProductSummary

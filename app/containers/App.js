@@ -45,7 +45,7 @@ class App extends Component {
   };
 
   render() {
-    const { backToHome, baseURL, location } = this.props;
+    const { backToHome, baseURL, location, insetCoin } = this.props;
     console.log('App@render', this.props);
     return (
       <div className="smart-vending-machine-app">
@@ -53,6 +53,19 @@ class App extends Component {
         <Layout.Header backToHome={backToHome} baseURL={baseURL} />
         {this.props.children}
         <Layout.Footer />
+        {
+          process.env.NODE_ENV !== 'production' &&
+          <div className="development-toolbar">
+            <ul>
+              <li><a onClick={() => insetCoin(1)}>1B</a></li>
+              <li><a onClick={() => insetCoin(5)}>5B</a></li>
+              <li><a onClick={() => insetCoin(10)}>10B</a></li>
+              <li><a onClick={() => insetCoin(20)}>20B</a></li>
+              <li><a onClick={() => insetCoin(50)}>50B</a></li>
+              <li><a onClick={() => insetCoin(100)}>100B</a></li>
+            </ul>
+          </div>
+        }
       </div>
     );
   }

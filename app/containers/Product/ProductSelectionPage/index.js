@@ -74,7 +74,7 @@ class ProductSelectionPage extends Component {
           products={products}
           promotionSetPerPage={3}
           productPerPage={20}
-          onClickItem={(context, itemId) => selectProduct(context, itemId)}
+          onClickItem={(context, item) => selectProduct(context, item)}
           height={1450}
           hasBackButton
           back={back}

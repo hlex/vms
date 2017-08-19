@@ -1,0 +1,23 @@
+.development-toolbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: black;
+  padding: 10px 0;
+  ul {
+    @include clearul();
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+  ul li {
+    background-color: #fff;
+    padding: 0 25px;
+    text-align: center;
+  }
+  ul li a {
+    color: #000;
+  }
+}

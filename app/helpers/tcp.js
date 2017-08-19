@@ -28,3 +28,12 @@ export const isProductDropSuccess = (data) => {
   if (action !== 1 || result !== 'SUCCESS') return false;
   return true;
 };
+
+export const isGetCashRemaining = (data) => {
+  const action = _.get(data, 'action');
+  const result = _.get(data, 'result', '').toUpperCase();
+  const remain = _.get(data, 'remain');
+  if (!action || !remain) return false;
+  if (action !== 2 || result !== 'SUCCESS') return false;
+  return true;
+};

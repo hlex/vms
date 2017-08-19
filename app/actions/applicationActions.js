@@ -12,7 +12,11 @@ import OrderSelector from '../selectors/order';
 // ======================================================
 // Helpers
 // ======================================================
-import { isInsertCash, isProductDropSuccess } from '../helpers/tcp';
+import {
+  isInsertCash,
+  isProductDropSuccess,
+  isGetCashRemaining
+} from '../helpers/tcp';
 
 export const backToHome = () => dispatch => {
   dispatch(changePage(''));
@@ -72,11 +76,20 @@ export const selectTopupProvider = (context, topupProvider) => {
 export const receivedDataFromServer = data => (dispatch, getState) => {
   console.log('receivedDataFromServer', data);
   // classify data
+  // ======================================================
+  // SENSOR
+  // ======================================================
   if (data.sensor) {
     dispatch(Actions.receivedSensorInformation(data));
   }
+  // ======================================================
+  // CASH
+  // ======================================================
   if (isInsertCash(data)) {
     dispatch(Actions.receivedCash(data));
+    dispatch(getCashRemaining());
+    const cashRemaining = PaymentSelector.getCashRemaining(getState().payment);
+    console.log('Cash Remaining:', cashRemaining);
     const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
     const totalAmount = OrderSelector.getOrderTotalAmount(getState().order);
     if (currentCash >= totalAmount) {
@@ -87,6 +100,12 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       }, 1000);
     }
   }
+  if (isGetCashRemaining(data)) {
+    dispatch(Actions.getCashRemaining(data));
+  }
+  // ======================================================
+  // DROP PRODUCT
+  // ======================================================
   if (isProductDropSuccess(data)) {
     dispatch(productDropSuccess());
     dispatch(cashChange());
@@ -105,10 +124,33 @@ export const cashChange = () => {
     const cashReturnTotalAmount = RootSelector.getCashReturnAmount(getState());
     const client = MasterappSelector.getTcpClient(getState().masterapp);
     client.send({
-      action: '2',
+      action: 2,
       msg: `${cashReturnTotalAmount}`,
       mode: 'coin',
     });
     dispatch(Actions.clearPaymentAmount());
+  };
+};
+
+export const getCashRemaining = () => {
+  return (dispatch, getState) => {
+    const client = MasterappSelector.getTcpClient(getState().masterapp);
+    client.send({
+      action: 2,
+      mode: 'remain',
+    });
+  };
+};
+
+// ======================================================
+// Dev
+// ======================================================
+export const insetCoin = (value) => {
+  return (dispatch, getState) => {
+    const client = MasterappSelector.getTcpClient(getState().masterapp);
+    client.send({
+      action: 999,
+      msg: value,
+    });
   };
 };
