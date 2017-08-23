@@ -6,6 +6,7 @@ const initModal = () => {
   return {
     collectPoint: false,
     contentError: false,
+    productDropError: false,
   };
 };
 

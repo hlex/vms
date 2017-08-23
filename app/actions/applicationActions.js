@@ -15,7 +15,11 @@ import OrderSelector from '../selectors/order';
 import {
   isInsertCash,
   isProductDropSuccess,
+  isProductDropFail,
   isGetCashRemaining,
+  needToChangeCash,
+  isCashChangeSuccess,
+  isCashChangeFail,
   verifyCanChangeCoin,
 } from '../helpers/tcp';
 
@@ -84,42 +88,61 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
   // SENSOR
   // ======================================================
   if (data.sensor) {
+    console.log('%c App getSensor:', appLog, data);
     dispatch(Actions.receivedSensorInformation(data));
-  }
-  // ======================================================
-  // CASH
-  // ======================================================
-  if (isInsertCash(data)) {
+  } else if (isInsertCash(data)) {
+    console.log('%c App insertCoin:', appLog, data);
+    // ======================================================
+    // CASH
+    // ======================================================
     dispatch(Actions.receivedCash(data));
-    dispatch(getCashRemaining());
-    const cashRemaining = PaymentSelector.getCashRemaining(getState().payment);
-    console.log('%c App Cash Remaining:', appLog, cashRemaining);
+    // dispatch(getCashRemaining());
+    // const cashRemaining = PaymentSelector.getCashRemaining(getState().payment);
     const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
     const totalAmount = OrderSelector.getOrderTotalAmount(getState().order);
-    const cashReturnTotalAmount = RootSelector.getCashReturnAmount(getState());
+    // const cashReturnTotalAmount = RootSelector.getCashReturnAmount(getState());
+    console.log('%c App isInsertCash:', appLog, currentCash, totalAmount);
     if (currentCash >= totalAmount) {
-      const canChangeCoin = verifyCanChangeCoin(cashRemaining, cashReturnTotalAmount);
-      console.log('%c App canChangeCoin', appLog, cashRemaining, cashReturnTotalAmount, canChangeCoin);
-      if (canChangeCoin) {
+      if (needToChangeCash(totalAmount, currentCash)) {
+        // change
+        console.log('%c App cashChange', appLog);
+        setTimeout(() => {
+          dispatch(cashChange());
+        }, 1000);
+      } else {
+        // no change
+        console.log('%c App productDrop', appLog);
         setTimeout(() => {
           dispatch(receivedCashCompletely());
           dispatch(productDrop());
         }, 1000);
-      } else {
-        // error and cashChangeAll
-        dispatch(Actions.showModal('contentError'));
       }
     }
-  }
-  if (isGetCashRemaining(data)) {
-    dispatch(Actions.getCashRemaining(data));
-  }
-  // ======================================================
-  // DROP PRODUCT
-  // ======================================================
-  if (isProductDropSuccess(data)) {
+  } else if (isCashChangeSuccess(data)) {
+    console.log('%c App cashChange success:', appLog, data);
+    // drop product
+    setTimeout(() => {
+      dispatch(receivedCashCompletely());
+      dispatch(productDrop());
+    }, 1000);
+  } else if (isCashChangeFail(data)) {
+    console.log('%c App cashChange fail:', appLog, data);
+    // popup
+    dispatch(Actions.showModal('cashChangeError'));
+  } else if (isProductDropSuccess(data)) {
+    console.log('%c App productDrop success:', appLog, data);
+    // ======================================================
+    // DROP PRODUCT SUCCESS
+    // ======================================================
     dispatch(productDropSuccess());
-    dispatch(cashChange());
+  } else if (isProductDropFail(data)) {
+    console.log('%c App productDrop fail:', appLog, data);
+    // return cash eql product price
+    dispatch(cashChangeAll());
+    dispatch(Actions.showModal('productDropError'));
+  } else {
+    console.log('%c App Do nothing:', appLog, data);
+    // Do Nothing
   }
 };
 
@@ -187,7 +210,7 @@ export const insetCoin = (value) => {
 export const cancelPayment = () => {
   return (dispatch) => {
     dispatch(backToHome());
-    dispatch(cashChangeAll());
+    // dispatch(cashChangeAll()); // ปล่อยให้มันกินตังค์ไปก่อน
     dispatch(hideAllModal());
   };
 };

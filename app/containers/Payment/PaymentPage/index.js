@@ -48,17 +48,11 @@ class PaymentPage extends Component {
     isFinish: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
     back: PropTypes.func,
-    getCashRemaining: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     back: () => console.log('back'),
   };
-
-  componentDidMount = () => {
-    const { getCashRemaining } = this.props;
-    getCashRemaining();
-  }
 
   renderContent = () => {
     const { baseURL, back, isLoading, isFinish, summaryList } = this.props;

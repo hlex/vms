@@ -96,15 +96,28 @@ if (process.env.NODE_ENV !== 'production') {
       // ======================================================
       if (objectData.action === 1 && objectData.msg !== 'failed') {
         console.log('%c Server: Drop product', serverLog, data);
-        setTimeout(() => {
-          socket.write(
-            JSON.stringify({
-              action: 1,
-              result: 'success',
-              description: '',
-            }),
-          );
-        }, 2000);
+        const successPercent = (Math.random() * 10) + 1;
+        if (successPercent >= 8) {
+          setTimeout(() => {
+            socket.write(
+              JSON.stringify({
+                action: 1,
+                result: 'success',
+                description: 'Item XX delivered',
+              }),
+            );
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            socket.write(
+              JSON.stringify({
+                action: 1,
+                result: 'fail',
+                description: 'Item delivered failed',
+              }),
+            );
+          }, 2000);
+        }
       }
       if (objectData.action === 2 && objectData.mode === 'coin') {
         console.log('%c Server: Cash Change', serverLog, Number(objectData.msg), changeCoin(Number(objectData.msg)));
