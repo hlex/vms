@@ -4,9 +4,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 // ======================================================
+// Containers
+// ======================================================
+import Layout from '../../Layout';
+
+// ======================================================
 // Components
 // ======================================================
-import { Layout, PromotionSetTitle, PaymentConfirmation, Loading, Thankyou } from '../../../components';
+import { PromotionSetTitle, PaymentConfirmation, Loading, Thankyou } from '../../../components';
 
 // ======================================================
 // Actions
@@ -25,6 +30,7 @@ const mapStateToProps = state => {
     ...state.payment,
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     summaryList: RootSelector.getPaymentSummaryList(state),
+    modal: state.modal,
   };
 };
 
@@ -69,7 +75,7 @@ class PaymentPage extends Component {
   }
 
   render() {
-    const { baseURL } = this.props;
+    const { baseURL, modal } = this.props;
     return (
       <div>
         <Layout.Title>

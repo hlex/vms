@@ -15,8 +15,12 @@ import OrderSelector from '../selectors/order';
 import {
   isInsertCash,
   isProductDropSuccess,
-  isGetCashRemaining
+  isGetCashRemaining,
+  verifyCanChangeCoin,
 } from '../helpers/tcp';
+
+
+const appLog = 'background: #000; color: #fff';
 
 export const backToHome = () => dispatch => {
   dispatch(changePage(''));
@@ -74,7 +78,7 @@ export const selectTopupProvider = (context, topupProvider) => {
 };
 
 export const receivedDataFromServer = data => (dispatch, getState) => {
-  console.log('receivedDataFromServer', data);
+  console.log('%c App Received: ', 'background: #000; color: #fff', data);
   // classify data
   // ======================================================
   // SENSOR
@@ -89,15 +93,22 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
     dispatch(Actions.receivedCash(data));
     dispatch(getCashRemaining());
     const cashRemaining = PaymentSelector.getCashRemaining(getState().payment);
-    console.log('Cash Remaining:', cashRemaining);
+    console.log('%c App Cash Remaining:', appLog, cashRemaining);
     const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
     const totalAmount = OrderSelector.getOrderTotalAmount(getState().order);
+    const cashReturnTotalAmount = RootSelector.getCashReturnAmount(getState());
     if (currentCash >= totalAmount) {
-      // return and choose product
-      setTimeout(() => {
-        dispatch(receivedCashCompletely());
-        dispatch(productDrop());
-      }, 1000);
+      const canChangeCoin = verifyCanChangeCoin(cashRemaining, cashReturnTotalAmount);
+      console.log('%c App canChangeCoin', appLog, cashRemaining, cashReturnTotalAmount, canChangeCoin);
+      if (canChangeCoin) {
+        setTimeout(() => {
+          dispatch(receivedCashCompletely());
+          dispatch(productDrop());
+        }, 1000);
+      } else {
+        // error and cashChangeAll
+        dispatch(Actions.showModal('contentError'));
+      }
     }
   }
   if (isGetCashRemaining(data)) {
@@ -119,15 +130,33 @@ export const confirmMobileTopupMSISDN = (MSISDN) => {
   };
 };
 
-export const cashChange = () => {
+export const cashChangeAll = () => {
   return (dispatch, getState) => {
-    const cashReturnTotalAmount = RootSelector.getCashReturnAmount(getState());
+    const cashReturnTotalAmount = OrderSelector.getOrderTotalAmount(getState());
     const client = MasterappSelector.getTcpClient(getState().masterapp);
     client.send({
       action: 2,
       msg: `${cashReturnTotalAmount}`,
       mode: 'coin',
     });
+    dispatch(Actions.clearPaymentAmount());
+  };
+};
+
+export const cashChange = () => {
+  return (dispatch, getState) => {
+    const cashReturnTotalAmount = RootSelector.getCashReturnAmount(getState());
+    // ======================================================
+    // if cashReturn > 0 then call api to return cash
+    // ======================================================
+    if (cashReturnTotalAmount > 0) {
+      const client = MasterappSelector.getTcpClient(getState().masterapp);
+      client.send({
+        action: 2,
+        msg: `${cashReturnTotalAmount}`,
+        mode: 'coin',
+      });
+    }
     dispatch(Actions.clearPaymentAmount());
   };
 };
@@ -152,5 +181,19 @@ export const insetCoin = (value) => {
       action: 999,
       msg: value,
     });
+  };
+};
+
+export const cancelPayment = () => {
+  return (dispatch) => {
+    dispatch(backToHome());
+    dispatch(cashChangeAll());
+    dispatch(hideAllModal());
+  };
+};
+
+export const hideAllModal = () => {
+  return (dispatch) => {
+    dispatch(Actions.hideAllModal());
   };
 };

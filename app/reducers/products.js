@@ -11,7 +11,7 @@ type actionType = {
 const productGenerator = number => _.map(_.range(number), index => ({
   id: index + 1,
   name: cuid(),
-  price: 45,
+  price: '45',
   isSoldout: false,
   image: `images/product-${index + 1}.png`,
 }));

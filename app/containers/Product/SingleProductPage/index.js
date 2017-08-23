@@ -25,6 +25,7 @@ const mapStateToProps = (state) => {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     product: OrderSelector.getSingleProduct(state.order),
     productPrice: OrderSelector.getSingleProductPrice(state.order),
+    modal: state.modal,
   };
 };
 
@@ -43,6 +44,7 @@ class SingleProductPage extends Component {
     productPrice: PropTypes.number,
     back: PropTypes.func,
     submitProduct: PropTypes.func,
+    modal: PropTypes.shape({}).isRequired,
   }
 
   static defaultProps = {
@@ -59,6 +61,7 @@ class SingleProductPage extends Component {
       productPrice,
       back,
       submitProduct,
+      modal,
     } = this.props;
     return (
       <div>
@@ -67,10 +70,12 @@ class SingleProductPage extends Component {
             baseURL={baseURL}
           />
         </Layout.Title>
-        <Layout.Content>
+        <Layout.Content
+          modal={modal}
+        >
           <ProductSummary
             productPrice={productPrice}
-            discountAmount={'0'}
+            discountAmount={0}
             back={back}
             onSubmit={submitProduct}
           />

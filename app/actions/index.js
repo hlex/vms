@@ -10,6 +10,9 @@ import {
   SELECT_MOBILE_TOPUP_PROVIDER,
   CONFIRM_MOBILE_TOPUP_MSISDN,
   RECEIVED_CASH_REMAINING,
+  SHOW_MODAL,
+  HIDE_MODAL,
+  HIDE_ALL_MODAL,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -82,5 +85,26 @@ export const getCashRemaining = (data) => {
   return {
     type: RECEIVED_CASH_REMAINING,
     data,
+  };
+};
+
+export const showModal = (modalName, data) => {
+  return {
+    type: SHOW_MODAL,
+    name: modalName,
+    data,
+  };
+};
+
+export const hideModal = (modalName) => {
+  return {
+    type: HIDE_MODAL,
+    name: modalName
+  };
+};
+
+export const hideAllModal = () => {
+  return {
+    type: HIDE_ALL_MODAL
   };
 };

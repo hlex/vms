@@ -8,6 +8,7 @@ import masterapp from './masterapp';
 import masterdata from './masterdata';
 import mobileTopup from './mobileTopup';
 import order from './order';
+import modal from './modal';
 
 const rootReducer = combineReducers({
   router,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   payment,
   mobileTopup,
   order,
+  modal,
 });
 
 export default rootReducer;

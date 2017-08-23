@@ -10,6 +10,7 @@ import Thankyou from './Thankyou';
 import TopupProviderItems from './TopupProviderItems';
 import InputWithPad from './InputWithPad';
 import Jumbotron from './Jumbotron';
+import Modal from './Modal';
 
 export {
   PaymentConfirmation,
@@ -24,4 +25,5 @@ export {
   TopupProviderItems,
   InputWithPad,
   Jumbotron,
+  Modal,
 };

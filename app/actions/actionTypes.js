@@ -8,6 +8,9 @@ export const CLEAR_PAYMENT_AMOUNT = 'CLEAR_PAYMENT_AMOUNT';
 export const SELECT_MOBILE_TOPUP_PROVIDER = 'SELECT_TOPUP_PROVIDER';
 export const CONFIRM_MOBILE_TOPUP_MSISDN = 'CONFIRM_MOBILE_TOPUP_MSISDN';
 export const RECEIVED_CASH_REMAINING = 'RECEIVED_CASH_REMAINING';
+export const SHOW_MODAL = 'SHOW_MODAL';
+export const HIDE_MODAL = 'HIDE_MODAL';
+export const HIDE_ALL_MODAL = 'HIDE_ALL_MODAL';
 // ======================================================
 // TCP
 // ======================================================

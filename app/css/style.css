@@ -5194,125 +5194,127 @@ hr {
     border-radius: 10px;
     background-color: #fff; }
 
-.input-with-pad .input {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 15px;
-  font-size: 44px;
-  color: #181818;
-  border: 2px solid #0077DB;
-  height: 60px;
-  width: 400px;
-  border-radius: 10px;
-  background-color: #fff; }
-.input-with-pad .overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(24, 24, 24, 0.1); }
-.input-with-pad .pads-number {
-  display: none;
-  position: absolute;
-  width: 290px;
-  padding: 10px;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 4px;
-  background: #329ffb;
-  border-radius: 10px;
-  z-index: 99;
-  -webkit-box-shadow: 0px 10px 35px -5px rgba(0, 0, 0, 0.42);
-  -moz-box-shadow: 0px 10px 35px -5px rgba(0, 0, 0, 0.42);
-  box-shadow: 0px 10px 35px -5px rgba(0, 0, 0, 0.42); }
-.input-with-pad .pads-number.open {
-  display: block; }
-.input-with-pad .pads-number ul {
-  z-index: 1;
-  position: relative;
-  margin: 0;
-  padding: 0;
-  list-style: none; }
-.input-with-pad .pads-number li {
-  float: left;
-  width: 80px;
-  height: 80px;
-  margin: 5px;
-  text-align: center; }
-.input-with-pad .pads-number li a {
-  display: list-item;
-  width: 100%;
-  height: 100%;
-  color: #fff;
-  font-family: 'robotobold', 'DB Helvethaica X 45 Li';
-  line-height: 76px;
-  font-size: 36px;
-  font-weight: bold;
-  background: #0077db;
-  border-radius: 10px; }
-.input-with-pad .pads-number li a:hover {
-  background: #8218ed; }
-.input-with-pad .pads-number li img {
-  display: inline-block;
-  vertical-align: sub;
-  padding-bottom: 3px; }
-.input-with-pad .pads-keyboard {
-  display: none;
-  position: absolute;
-  width: 720px;
-  padding: 10px;
-  left: -10px;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 4px;
-  background: #329ffb;
-  border-radius: 10px;
-  z-index: 99;
-  -webkit-box-shadow: 0px 10px 35px -5px rgba(0, 0, 0, 0.42);
-  -moz-box-shadow: 0px 10px 35px -5px rgba(0, 0, 0, 0.42);
-  box-shadow: 0px 10px 35px -5px rgba(0, 0, 0, 0.42); }
-.input-with-pad .pads-keyboard.open {
-  display: block; }
-.input-with-pad .pads-keyboard ul {
-  float: left;
-  width: 100%;
-  text-align: center;
-  z-index: 1;
-  position: relative;
-  margin: 0;
-  padding: 0;
-  list-style: none; }
-.input-with-pad .pads-keyboard li {
-  display: inline-block;
-  width: 60px;
-  height: 60px;
-  margin-left: 4px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  text-align: center; }
-.input-with-pad .pads-keyboard li a {
-  display: list-item;
-  width: 100%;
-  height: 100%;
-  color: #fff;
-  font-family: 'robotobold', 'DB Helvethaica X 45 Li';
-  line-height: 56px;
-  font-size: 36px;
-  font-weight: bold;
-  background: #0077db;
-  border-radius: 10px; }
-.input-with-pad .pads-keyboard li a:hover {
-  background: #8218ed; }
-.input-with-pad .pads-keyboard li img {
-  display: inline-block;
-  vertical-align: sub;
-  padding-bottom: 3px;
-  vertical-align: middle; }
+.input-with-pad {
+  margin-bottom: 15px; }
+  .input-with-pad .input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 15px;
+    font-size: 44px;
+    color: #181818;
+    border: 2px solid #0077DB;
+    height: 60px;
+    width: 400px;
+    border-radius: 10px;
+    background-color: #fff; }
+  .input-with-pad .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(24, 24, 24, 0.1); }
+  .input-with-pad .pads-number {
+    display: none;
+    position: absolute;
+    width: 290px;
+    padding: 10px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 4px;
+    background: #329ffb;
+    border-radius: 10px;
+    z-index: 99;
+    -webkit-box-shadow: 0px 10px 35px -5px rgba(0, 0, 0, 0.42);
+    -moz-box-shadow: 0px 10px 35px -5px rgba(0, 0, 0, 0.42);
+    box-shadow: 0px 10px 35px -5px rgba(0, 0, 0, 0.42); }
+  .input-with-pad .pads-number.open {
+    display: block; }
+  .input-with-pad .pads-number ul {
+    z-index: 1;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none; }
+  .input-with-pad .pads-number li {
+    float: left;
+    width: 80px;
+    height: 80px;
+    margin: 5px;
+    text-align: center; }
+  .input-with-pad .pads-number li a {
+    display: list-item;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    font-family: 'robotobold', 'DB Helvethaica X 45 Li';
+    line-height: 76px;
+    font-size: 36px;
+    font-weight: bold;
+    background: #0077db;
+    border-radius: 10px; }
+  .input-with-pad .pads-number li a:hover {
+    background: #8218ed; }
+  .input-with-pad .pads-number li img {
+    display: inline-block;
+    vertical-align: sub;
+    padding-bottom: 3px; }
+  .input-with-pad .pads-keyboard {
+    display: none;
+    position: absolute;
+    width: 720px;
+    padding: 10px;
+    left: -10px;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 4px;
+    background: #329ffb;
+    border-radius: 10px;
+    z-index: 99;
+    -webkit-box-shadow: 0px 10px 35px -5px rgba(0, 0, 0, 0.42);
+    -moz-box-shadow: 0px 10px 35px -5px rgba(0, 0, 0, 0.42);
+    box-shadow: 0px 10px 35px -5px rgba(0, 0, 0, 0.42); }
+  .input-with-pad .pads-keyboard.open {
+    display: block; }
+  .input-with-pad .pads-keyboard ul {
+    float: left;
+    width: 100%;
+    text-align: center;
+    z-index: 1;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none; }
+  .input-with-pad .pads-keyboard li {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    margin-left: 4px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center; }
+  .input-with-pad .pads-keyboard li a {
+    display: list-item;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    font-family: 'robotobold', 'DB Helvethaica X 45 Li';
+    line-height: 56px;
+    font-size: 36px;
+    font-weight: bold;
+    background: #0077db;
+    border-radius: 10px; }
+  .input-with-pad .pads-keyboard li a:hover {
+    background: #8218ed; }
+  .input-with-pad .pads-keyboard li img {
+    display: inline-block;
+    vertical-align: sub;
+    padding-bottom: 3px;
+    vertical-align: middle; }
 
 .vms-jumbotron {
   display: flex;
@@ -5327,6 +5329,152 @@ hr {
   .vms-jumbotron h2 {
     margin: 0;
     margin-bottom: 15px; }
+
+.box-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s 0.5s ease-in-out;
+  -o-transition: all 0.3s 0.5s ease-in-out;
+  -moz-transition: all 0.3s 0.5s ease-in-out;
+  -webkit-transition: all 0.3s 0.5s ease-in-out;
+  z-index: 8; }
+  .box-modal.overlay {
+    background: rgba(0, 0, 0, 0.75); }
+  .box-modal.show {
+    transition: all 0.3s 0.3s ease-in-out;
+    -o-transition: all 0.3s 0.3s ease-in-out;
+    -moz-transition: all 0.3s 0.3s ease-in-out;
+    -webkit-transition: all 0.3s 0.3s ease-in-out;
+    opacity: 1;
+    visibility: visible; }
+  .box-modal .content-modal {
+    background: #fff;
+    margin: 80px auto 80px auto;
+    height: auto;
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 10;
+    word-wrap: break-word;
+    opacity: 0;
+    transition: all 0.3s 0s ease-in-out;
+    -o-transition: all 0.3s 0s ease-in-out;
+    -moz-transition: all 0.3s 0s ease-in-out;
+    -webkit-transition: all 0.3s 0s ease-in-out;
+    -webkit-transform: translateY(-20%) scale(0.9);
+    -moz-transform: translateY(-20%) scale(0.9);
+    transform: translateY(-20%) scale(0.9); }
+  .box-modal.show .content-modal {
+    opacity: 1;
+    transition: all 0.3s 0.1s ease-in-out;
+    -o-transition: all 0.3s 0.1s ease-in-out;
+    -moz-transition: all 0.3s 0.1s ease-in-out;
+    -webkit-transition: all 0.3s 0.1s ease-in-out;
+    -webkit-transform: translateY(0%) scale(1);
+    -moz-transform: translateY(0%) scale(1);
+    transform: translateY(0%) scale(1); }
+  .box-modal .modal-overlay-hidden {
+    position: fixed;
+    background: none;
+    height: 100%;
+    width: 100%;
+    z-index: 9; }
+
+.btn-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border-radius: 0px 5px 0px 0px; }
+  .btn-close:hover {
+    background: #eee;
+    cursor: pointer; }
+  .btn-close a {
+    color: #000;
+    padding: 5px 10px;
+    display: inline-block; }
+  .btn-close a:hover {
+    color: #000; }
+
+.box-modal .content-modal {
+  width: 920px;
+  background-color: #ffd800;
+  height: 400px;
+  padding: 25px; }
+  .box-modal .content-modal div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; }
+
+.box-modal .content-modal .collect-point h2 {
+  font-weight: 700; }
+.box-modal .content-modal .collect-point p {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 5px; }
+.box-modal .content-modal .collect-point small {
+  color: #815800; }
+.box-modal .content-modal .collect-point .or {
+  margin: 20px 0;
+  font-weight: 700; }
+
+.box-modal .content-modal .app-error h2 {
+  font-weight: 700;
+  margin-bottom: 15px; }
+.box-modal .content-modal .app-error p {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 25px; }
+.box-modal .content-modal .app-error small {
+  color: #815800; }
+.box-modal .content-modal .app-error .or {
+  margin: 20px 0;
+  font-weight: 700; }
+
+@media screen and (max-width: 992px) {
+  .box-modal .content-modal.small {
+    width: 250px; }
+  .box-modal .content-modal.medium {
+    width: 400px; }
+  .box-modal .content-modal.large {
+    width: 600px; } }
+@media screen and (max-width: 768px) {
+  .box-modal .content-modal.small {
+    width: 150px; }
+  .box-modal .content-modal.medium {
+    width: 300px; }
+  .box-modal .content-modal.large {
+    width: 600px; } }
+@media screen and (max-width: 568px) {
+  .box-modal .content-modal.small {
+    width: 100px; }
+  .box-modal .content-modal.medium {
+    width: 200px; }
+  .box-modal .content-modal.large {
+    width: 300px; } }
+.box-modal .content-modal .header {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+  padding: 15px;
+  padding-top: 0; }
+.box-modal .content-modal .body {
+  padding: 15px 0; }
+.box-modal .content-modal .footer {
+  border-top: 1px solid #eee;
+  padding: 15px 0; }
 
 .development-toolbar {
   position: fixed;
@@ -5433,10 +5581,10 @@ hr {
   border: 1px solid red;
   cursor: pointer;
   color: #fff;
-  transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -webkit-transition: all 0.3s ease-in-out; }
+  transition: all 0.3s 0.3s ease-in-out;
+  -o-transition: all 0.3s 0.3s ease-in-out;
+  -moz-transition: all 0.3s 0.3s ease-in-out;
+  -webkit-transition: all 0.3s 0.3s ease-in-out; }
 .checkbox-style input:checked ~ .input:before, .form-input-checkbox input:checked ~ .input:before, .input-checkbox input:checked ~ .input:before {
   content: "\f00c";
   font-family: FontAwesome;
@@ -5619,10 +5767,10 @@ hr {
   background: #fff;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   border: 1px solid #D5D6D7;
-  transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -webkit-transition: all 0.3s ease-in-out; }
+  transition: all 0.3s 0.3s ease-in-out;
+  -o-transition: all 0.3s 0.3s ease-in-out;
+  -moz-transition: all 0.3s 0.3s ease-in-out;
+  -webkit-transition: all 0.3s 0.3s ease-in-out; }
   .form-input:focus {
     border: 1px solid #26c6da;
     outline: none;

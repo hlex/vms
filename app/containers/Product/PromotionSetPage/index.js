@@ -23,6 +23,7 @@ import OrderSelector from '../../../selectors/order';
 const mapStateToProps = (state) => {
   return {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
+    modal: PropTypes.shape({}).isRequired,
   };
 };
 
@@ -47,7 +48,7 @@ class PromotionSetPage extends Component {
   }
 
   render() {
-    const { baseURL, back, submitProduct } = this.props;
+    const { baseURL, back, submitProduct, modal } = this.props;
     return (
       <div>
         <Layout.Title>
@@ -55,7 +56,9 @@ class PromotionSetPage extends Component {
             baseURL={baseURL}
           />
         </Layout.Title>
-        <Layout.Content>
+        <Layout.Content
+          modal={modal}
+        >
           <ProductSummary
             productPrice={'50'}
             discountAmount={'5'}

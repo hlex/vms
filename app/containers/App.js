@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import type { Children } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Layout } from '../components';
+import { Layout, Modal } from '../components';
 // ======================================================
 // Actions
 // ======================================================
@@ -21,6 +21,7 @@ const mapStateToProps = state => ({
   location: state.router.location,
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
   tcp: MasterappSelector.getTcp(state.masterapp),
+  modal: state.modal,
 });
 
 const actions = {
@@ -45,7 +46,7 @@ class App extends Component {
   };
 
   render() {
-    const { backToHome, baseURL, location, insetCoin } = this.props;
+    const { backToHome, baseURL, location, insetCoin, modal } = this.props;
     console.log('App@render', this.props);
     return (
       <div className="smart-vending-machine-app">
