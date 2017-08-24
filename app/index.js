@@ -127,11 +127,7 @@ if (process.env.NODE_ENV !== 'production') {
             JSON.stringify({
               action: 2,
               result: 'success',
-              remain: {
-                baht1: sv.getCoinOneBaht(),
-                baht5: sv.getCoinFiveBaht(),
-                baht10: sv.getCoinTenBaht(),
-              },
+              description: 'cash change completed',
             }),
           );
         } else {
