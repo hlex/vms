@@ -1,4 +1,9 @@
-import { INIT_TCP_CLIENT, RECEIVED_SENSOR_INFORMATION } from '../actions/actionTypes';
+import {
+  INIT_TCP_CLIENT,
+  RECEIVED_SENSOR_INFORMATION,
+  READY_TO_DROP_PRODUCT,
+  NOT_READY_TO_DROP_PRODUCT
+} from '../actions/actionTypes';
 
 const initialTcp = process.env.NODE_ENV !== 'production'
 ? {
@@ -37,6 +42,7 @@ const initialState = {
   tcp: initialTcp,
   tcpClient: {},
   temp: 25, // celcius
+  readyToDropProduct: false,
 };
 
 export default (state = initialState, action) => {
@@ -51,6 +57,16 @@ export default (state = initialState, action) => {
         ...state,
         tcpClient: action.tcpClient
       };
+    case READY_TO_DROP_PRODUCT:
+      return {
+        ...state,
+        readyToDropProduct: true,
+      }
+    case NOT_READY_TO_DROP_PRODUCT:
+      return {
+        ...state,
+        readyToDropProduct: false,
+      }
     default:
       return state;
   }

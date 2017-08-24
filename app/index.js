@@ -16,9 +16,9 @@ class Server {
   baht5;
   baht10;
   constructor() {
-    this.baht1 = 0;
-    this.baht5 = 0;
-    this.baht10 = 0;
+    this.baht1 = 10;
+    this.baht5 = 10;
+    this.baht10 = 10;
   }
   getCoinOneBaht() {
     return this.baht1;
@@ -96,8 +96,9 @@ if (process.env.NODE_ENV !== 'production') {
       // ======================================================
       if (objectData.action === 1 && objectData.msg !== 'failed') {
         console.log('%c Server: Drop product', serverLog, data);
-        const successPercent = (Math.random() * 10) + 1;
-        if (successPercent >= 8) {
+        const successPercent = Math.floor(((Math.random() * 10))) + 1;
+        console.log('successPercent', successPercent);
+        if (successPercent <= 7) {
           setTimeout(() => {
             socket.write(
               JSON.stringify({

@@ -16,15 +16,13 @@ import {
   isInsertCash,
   isProductDropSuccess,
   isProductDropFail,
-  isGetCashRemaining,
   needToChangeCash,
   isCashChangeSuccess,
   isCashChangeFail,
-  verifyCanChangeCoin,
 } from '../helpers/tcp';
-
-
-const appLog = 'background: #000; color: #fff';
+import {
+  createLog,
+} from '../helpers/global';
 
 export const backToHome = () => dispatch => {
   dispatch(changePage(''));
@@ -32,6 +30,7 @@ export const backToHome = () => dispatch => {
     // Clear many stuffs
     // ======================================================
   dispatch(Actions.resetPaymentReducer());
+  dispatch(Actions.notReadyToDropProduct());
 };
 
 export const back = () => dispatch => {
@@ -67,11 +66,16 @@ export const receivedCashCompletely = () => dispatch => {
 };
 
 export const productDrop = () => (dispatch, getState) => {
-  const client = MasterappSelector.getTcpClient(getState().masterapp);
-  client.send({
-    action: 1,
-    msg: '11', // row * col
-  });
+  const readyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
+  if (readyToDropProduct) {
+    const client = MasterappSelector.getTcpClient(getState().masterapp);
+    client.send({
+      action: 1,
+      msg: '11', // row * col
+    });
+  } else {
+    console.error('Cannot Drop Product because readyToDropProduct = ', readyToDropProduct);
+  }
 };
 
 export const selectTopupProvider = (context, topupProvider) => {
@@ -82,16 +86,16 @@ export const selectTopupProvider = (context, topupProvider) => {
 };
 
 export const receivedDataFromServer = data => (dispatch, getState) => {
-  console.log('%c App Received: ', 'background: #000; color: #fff', data);
+  console.log('%c App Received: ', createLog(null, 'lime', 'black'), data);
   // classify data
   // ======================================================
   // SENSOR
   // ======================================================
   if (data.sensor) {
-    console.log('%c App getSensor:', appLog, data);
+    console.log('%c App getSensor:', createLog('app'), data);
     dispatch(Actions.receivedSensorInformation(data));
   } else if (isInsertCash(data)) {
-    console.log('%c App insertCoin:', appLog, data);
+    console.log('%c App insertCoin:', createLog('app'), data);
     // ======================================================
     // CASH
     // ======================================================
@@ -101,17 +105,18 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
     const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
     const totalAmount = OrderSelector.getOrderTotalAmount(getState().order);
     // const cashReturnTotalAmount = RootSelector.getCashReturnAmount(getState());
-    console.log('%c App isInsertCash:', appLog, currentCash, totalAmount);
+    console.log('%c App isInsertCash:', createLog('app'), 'currentCash =', currentCash, 'totalAmount =', totalAmount);
     if (currentCash >= totalAmount) {
+      dispatch(setReadyToDropProduct());
       if (needToChangeCash(totalAmount, currentCash)) {
         // change
-        console.log('%c App cashChange', appLog);
+        console.log('%c App cashChange:', createLog('app'), 'cashChange =', currentCash - totalAmount);
         setTimeout(() => {
           dispatch(cashChange());
         }, 1000);
       } else {
         // no change
-        console.log('%c App productDrop', appLog);
+        console.log('%c App productDrop:', createLog('app'), 'cashChange =', currentCash - totalAmount);
         setTimeout(() => {
           dispatch(receivedCashCompletely());
           dispatch(productDrop());
@@ -119,29 +124,34 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       }
     }
   } else if (isCashChangeSuccess(data)) {
-    console.log('%c App cashChange success:', appLog, data);
-    // drop product
-    setTimeout(() => {
-      dispatch(receivedCashCompletely());
-      dispatch(productDrop());
-    }, 1000);
+    console.log('%c App cashChange success:', createLog('app'), data);
+    const readyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
+    if (readyToDropProduct) {
+      setTimeout(() => {
+        dispatch(receivedCashCompletely());
+        dispatch(productDrop());
+      }, 1000);
+    } else {
+      console.error('Cannot Drop Product because readyToDropProduct = ', readyToDropProduct);
+    }
   } else if (isCashChangeFail(data)) {
-    console.log('%c App cashChange fail:', appLog, data);
+    console.log('%c App cashChange fail:', createLog('app'), data);
     // popup
     dispatch(Actions.showModal('cashChangeError'));
   } else if (isProductDropSuccess(data)) {
-    console.log('%c App productDrop success:', appLog, data);
+    console.log('%c App productDrop success:', createLog('app'), data);
     // ======================================================
     // DROP PRODUCT SUCCESS
     // ======================================================
     dispatch(productDropSuccess());
   } else if (isProductDropFail(data)) {
-    console.log('%c App productDrop fail:', appLog, data);
+    console.log('%c App productDrop fail:', createLog('app'), data);
     // return cash eql product price
+    dispatch(setNotReadyToDropProduct());
     dispatch(cashChangeAll());
     dispatch(Actions.showModal('productDropError'));
   } else {
-    console.log('%c App Do nothing:', appLog, data);
+    console.log('%c App Do nothing:', createLog('app'), data);
     // Do Nothing
   }
 };
@@ -220,3 +230,15 @@ export const hideAllModal = () => {
     dispatch(Actions.hideAllModal());
   };
 };
+
+export const setReadyToDropProduct = () => {
+  return (dispatch) => {
+    dispatch(Actions.readyToDropProduct());
+  };
+}
+
+export const setNotReadyToDropProduct = () => {
+  return (dispatch) => {
+    dispatch(Actions.notReadyToDropProduct());
+  };
+}

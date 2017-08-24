@@ -13,6 +13,8 @@ import {
   SHOW_MODAL,
   HIDE_MODAL,
   HIDE_ALL_MODAL,
+  READY_TO_DROP_PRODUCT,
+  NOT_READY_TO_DROP_PRODUCT,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -106,5 +108,17 @@ export const hideModal = (modalName) => {
 export const hideAllModal = () => {
   return {
     type: HIDE_ALL_MODAL
+  };
+};
+
+export const readyToDropProduct = () => {
+  return {
+    type: READY_TO_DROP_PRODUCT
+  };
+};
+
+export const notReadyToDropProduct = () => {
+  return {
+    type: NOT_READY_TO_DROP_PRODUCT
   };
 };

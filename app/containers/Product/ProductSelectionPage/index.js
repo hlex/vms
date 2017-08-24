@@ -18,10 +18,11 @@ import * as Actions from './actions';
 // Selectors
 // ======================================================
 import MasterappSelector from '../../../selectors/masterapp';
+import MasterdataSelector from '../../../selectors/masterdata';
 
 const mapStateToProps = state => ({
-  products: state.products,
-  promotionSets: state.promotionSets,
+  products: MasterdataSelector.getProducts(state.masterdata),
+  promotionSets: MasterdataSelector.getPromotionSets(state.masterdata),
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
 });
 

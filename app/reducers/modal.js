@@ -5,7 +5,7 @@ import { SHOW_MODAL, HIDE_MODAL, HIDE_ALL_MODAL } from '../actions/actionTypes';
 const initModal = () => {
   return {
     collectPoint: false,
-    contentError: false,
+    cashChangeError: false,
     productDropError: false,
   };
 };

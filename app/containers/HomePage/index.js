@@ -18,6 +18,7 @@ import * as Actions from './actions';
 // Selectors
 // ======================================================
 import MasterappSelector from '../../selectors/masterapp';
+import MasterdataSelector from '../../selectors/masterdata';
 // ======================================================
 // Slick
 // ======================================================
@@ -35,8 +36,9 @@ const navMenuSettings = {
 
 const mapStateToProps = state => ({
   navMenus: state.masterapp.navMenus,
-  products: state.products,
-  promotionSets: state.promotionSets,
+  products: MasterdataSelector.getProducts(state.masterdata),
+  promotionSets: MasterdataSelector.getPromotionSets(state.masterdata),
+  mobileTopupProviders: MasterdataSelector.getTopupProviders(state.masterdata),
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
   temp: MasterappSelector.getTemp(state.masterapp),
 });

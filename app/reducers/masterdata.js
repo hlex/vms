@@ -1,3 +1,5 @@
+import _ from 'lodash';
+import cuid from 'cuid';
 
 const mockupTopupProviders = [
   {
@@ -44,16 +46,32 @@ const mockupTopupProviders = [
   },
 ];
 
+const productGenerator = number =>
+  _.map(_.range(number), index => ({
+    id: index + 1,
+    name: cuid(),
+    price: _.random(1, 50),
+    isSoldout: false,
+    image: `images/product-${index + 1}.png`,
+  }));
+
+const promotionGenerator = number =>
+  _.map(_.range(number), index => ({
+    id: index + 1,
+    products: productGenerator(2),
+    price: 25,
+    image: '',
+  }));
+
 const initialState = {
-  products: [],
-  promotionSets: [],
+  products: productGenerator(36),
+  promotionSets: promotionGenerator(10),
   topupProviders: mockupTopupProviders,
 };
-const getInitialState = () => {
-  return {
-    ...initialState
-  };
-};
+
+const getInitialState = () => ({
+  ...initialState,
+});
 
 export default function masterdata(state = getInitialState(), action) {
   switch (action.type) {

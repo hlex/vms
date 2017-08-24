@@ -8,3 +8,9 @@ export const changeCoin = (value) => {
     baht10,
   };
 };
+
+export const createLog = (type = '', bgColor = 'green', color = '#fff') => {
+  if (type === 'app') return 'background: #333; color: #fff';
+  if (type === 'client') return 'background: green; color: #fff';
+  return `background: ${bgColor}; color: ${color}`;
+};

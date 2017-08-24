@@ -11,6 +11,8 @@ export const RECEIVED_CASH_REMAINING = 'RECEIVED_CASH_REMAINING';
 export const SHOW_MODAL = 'SHOW_MODAL';
 export const HIDE_MODAL = 'HIDE_MODAL';
 export const HIDE_ALL_MODAL = 'HIDE_ALL_MODAL';
+export const READY_TO_DROP_PRODUCT = 'READY_TO_DROP_PRODUCT';
+export const NOT_READY_TO_DROP_PRODUCT = 'NOT_READY_TO_DROP_PRODUCT';
 // ======================================================
 // TCP
 // ======================================================

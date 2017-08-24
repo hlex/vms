@@ -41,6 +41,7 @@ class PaymentConfirmation extends Component {
             <h2>ยืนยันชำระเงินค่าสินค้า</h2>
             <hr />
             <Summarylist items={summaryList} />
+            <br />
             <hr />
             <div className="_center">
               <h3>กรุณาหยอดเหรียญหรือธนบัตร</h3>
@@ -84,7 +85,7 @@ class PaymentConfirmation extends Component {
                 <img src={`${baseURL}/images/icon-point-left.png`} alt="" />
               </div>
               <h4>หยอดเงิน</h4>
-              <div className="error">
+              <div className="error _hidden">
                 <p>เงินทอนไม่พอ</p>
                 <p>กรุณาใส่เงินให้พอดั</p>
               </div>

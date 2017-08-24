@@ -5415,7 +5415,8 @@ hr {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; }
+    justify-content: center;
+    height: 100%; }
 
 .box-modal .content-modal .collect-point h2 {
   font-weight: 700; }
@@ -7878,5 +7879,8 @@ span.currency {
 
 ._pull-right {
   float: right !important; }
+
+._hidden {
+  display: none !important; }
 
 /*# sourceMappingURL=style.css.map */

@@ -30,7 +30,6 @@ const mapStateToProps = state => {
     ...state.payment,
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     summaryList: RootSelector.getPaymentSummaryList(state),
-    modal: state.modal,
   };
 };
 
@@ -47,17 +46,19 @@ class PaymentPage extends Component {
     summaryList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     isFinish: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
-    back: PropTypes.func,
-  };
-
-  static defaultProps = {
-    back: () => console.log('back'),
+    back: PropTypes.func.isRequired,
+    backToHome: PropTypes.func.isRequired,
   };
 
   renderContent = () => {
-    const { baseURL, back, isLoading, isFinish, summaryList } = this.props;
+    const { baseURL, back, backToHome, isLoading, isFinish, summaryList } = this.props;
     // const isFinish = true;
-    if (isFinish) return <Thankyou baseURL={baseURL} />;
+    if (isFinish) {
+      setTimeout(() => {
+        backToHome();
+      }, 3000);
+      return <Thankyou baseURL={baseURL} />;
+    }
     if (isLoading) return <Loading baseURL={baseURL} />;
     return (
       <PaymentConfirmation
@@ -69,7 +70,7 @@ class PaymentPage extends Component {
   }
 
   render() {
-    const { baseURL, modal } = this.props;
+    const { baseURL } = this.props;
     return (
       <div>
         <Layout.Title>
