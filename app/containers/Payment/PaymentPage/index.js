@@ -52,14 +52,13 @@ class PaymentPage extends PureComponent {
 
   componentWillUnmount = () => {
     const { returnCash } = this.props;
-    console.log('componentWillUnmount');
+    console.log('outPaymentPage');
     // if unmount return
     returnCash();
   }
 
   renderContent = () => {
     const { baseURL, back, isLoading, isFinish, summaryList } = this.props;
-    console.log('renderContent', this.props);
     // const isFinish = true;
     if (isFinish) return <Thankyou baseURL={baseURL} />;
     if (isLoading) return <Loading baseURL={baseURL} />;

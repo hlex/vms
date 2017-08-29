@@ -122,6 +122,8 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
           dispatch(cashChange());
         }, 1000);
       } else {
+        // clear amount becease no need to return money to customer even if cannot drop product
+        dispatch(clearPaymentAmount());
         // no change
         console.log('%c App productDrop:', createLog('app'), 'cashChange =', currentCash - totalAmount);
         setTimeout(() => {
