@@ -59,6 +59,9 @@ export const initTcpClient = tcpClient => dispatch => {
 
 export const productDropSuccess = () => dispatch => {
   dispatch(Actions.productDropSuccess());
+  setTimeout(() => {
+    dispatch(backToHome());
+  }, 3000);
 };
 
 export const receivedCashCompletely = () => dispatch => {
@@ -235,10 +238,10 @@ export const setReadyToDropProduct = () => {
   return (dispatch) => {
     dispatch(Actions.readyToDropProduct());
   };
-}
+};
 
 export const setNotReadyToDropProduct = () => {
   return (dispatch) => {
     dispatch(Actions.notReadyToDropProduct());
   };
-}
+};

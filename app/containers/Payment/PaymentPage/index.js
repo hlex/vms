@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -40,25 +40,20 @@ const actions = {
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
-class PaymentPage extends Component {
+class PaymentPage extends PureComponent {
   static propTypes = {
     baseURL: PropTypes.string.isRequired,
     summaryList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     isFinish: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
     back: PropTypes.func.isRequired,
-    backToHome: PropTypes.func.isRequired,
   };
 
   renderContent = () => {
-    const { baseURL, back, backToHome, isLoading, isFinish, summaryList } = this.props;
+    const { baseURL, back, isLoading, isFinish, summaryList } = this.props;
+    console.log('renderContent', this.props);
     // const isFinish = true;
-    if (isFinish) {
-      setTimeout(() => {
-        backToHome();
-      }, 3000);
-      return <Thankyou baseURL={baseURL} />;
-    }
+    if (isFinish) return <Thankyou baseURL={baseURL} />;
     if (isLoading) return <Loading baseURL={baseURL} />;
     return (
       <PaymentConfirmation
