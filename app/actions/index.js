@@ -15,6 +15,7 @@ import {
   HIDE_ALL_MODAL,
   READY_TO_DROP_PRODUCT,
   NOT_READY_TO_DROP_PRODUCT,
+  CLEAR_ORDER,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -122,3 +123,9 @@ export const notReadyToDropProduct = () => {
     type: NOT_READY_TO_DROP_PRODUCT
   };
 };
+
+export const clearOrder = () => {
+  return {
+    type: CLEAR_ORDER
+  };
+}

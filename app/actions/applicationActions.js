@@ -24,6 +24,10 @@ import {
   createLog,
 } from '../helpers/global';
 
+export const clearOrder = () => dispatch => {
+  dispatch(Actions.clearOrder());
+};
+
 export const backToHome = () => dispatch => {
   dispatch(changePage(''));
     // ======================================================
@@ -179,13 +183,18 @@ export const cashChangeAll = () => {
   };
 };
 
+export const clearPaymentAmount = () => dispatch => {
+  setTimeout(() => {
+    dispatch(Actions.clearPaymentAmount());
+  }, 1000);
+};
+
 export const cashChange = () => {
   return (dispatch, getState) => {
     const cashReturnTotalAmount = RootSelector.getCashChangeAmount(getState());
     // ======================================================
     // if cashReturn > 0 then call api to return cash
     // ======================================================
-    debugger;
     if (cashReturnTotalAmount > 0) {
       const client = MasterappSelector.getTcpClient(getState().masterapp);
       client.send({
@@ -194,7 +203,7 @@ export const cashChange = () => {
         mode: 'coin',
       });
     }
-    dispatch(Actions.clearPaymentAmount());
+    dispatch(clearPaymentAmount());
   };
 };
 
@@ -204,7 +213,6 @@ export const returnCash = () => {
     // ======================================================
     // if cashReturn > 0 then call api to return cash
     // ======================================================
-    debugger;
     if (cashReturnTotalAmount > 0) {
       const client = MasterappSelector.getTcpClient(getState().masterapp);
       client.send({
@@ -213,9 +221,9 @@ export const returnCash = () => {
         mode: 'coin',
       });
     }
-    dispatch(Actions.clearPaymentAmount());
+    dispatch(clearPaymentAmount());
   };
-}
+};
 
 export const getCashRemaining = () => {
   return (dispatch, getState) => {
