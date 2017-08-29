@@ -47,7 +47,15 @@ class PaymentPage extends PureComponent {
     isFinish: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
     back: PropTypes.func.isRequired,
+    returnCash: PropTypes.func.isRequired,
   };
+
+  componentWillUnmount = () => {
+    const { returnCash } = this.props;
+    console.log('componentWillUnmount');
+    // if unmount return
+    returnCash();
+  }
 
   renderContent = () => {
     const { baseURL, back, isLoading, isFinish, summaryList } = this.props;

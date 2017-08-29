@@ -181,10 +181,11 @@ export const cashChangeAll = () => {
 
 export const cashChange = () => {
   return (dispatch, getState) => {
-    const cashReturnTotalAmount = RootSelector.getCashReturnAmount(getState());
+    const cashReturnTotalAmount = RootSelector.getCashChangeAmount(getState());
     // ======================================================
     // if cashReturn > 0 then call api to return cash
     // ======================================================
+    debugger;
     if (cashReturnTotalAmount > 0) {
       const client = MasterappSelector.getTcpClient(getState().masterapp);
       client.send({
@@ -196,6 +197,25 @@ export const cashChange = () => {
     dispatch(Actions.clearPaymentAmount());
   };
 };
+
+export const returnCash = () => {
+  return (dispatch, getState) => {
+    const cashReturnTotalAmount = RootSelector.getCashReturnAmount(getState());
+    // ======================================================
+    // if cashReturn > 0 then call api to return cash
+    // ======================================================
+    debugger;
+    if (cashReturnTotalAmount > 0) {
+      const client = MasterappSelector.getTcpClient(getState().masterapp);
+      client.send({
+        action: 2,
+        msg: `${cashReturnTotalAmount}`,
+        mode: 'coin',
+      });
+    }
+    dispatch(Actions.clearPaymentAmount());
+  };
+}
 
 export const getCashRemaining = () => {
   return (dispatch, getState) => {

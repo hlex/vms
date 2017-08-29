@@ -21,13 +21,22 @@ const getPaymentSummaryList = (state) => {
   ];
 };
 
-const getCashReturnAmount = (state) => {
+// ทอนเงินตามจริง
+const getCashChangeAmount = (state) => {
   const singleProductPrice = OrderSelector.getSingleProductPrice(state.order);
   const currentAmount = PaymentSelector.getCurrentAmount(state.payment);
   return currentAmount - singleProductPrice;
 };
 
+// คืนเงินที่หยอดมา
+const getCashReturnAmount = (state) => {
+  const currentAmount = PaymentSelector.getCurrentAmount(state.payment);
+  return currentAmount;
+};
+
+
 export default {
   getPaymentSummaryList,
+  getCashChangeAmount,
   getCashReturnAmount,
 };

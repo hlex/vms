@@ -26,7 +26,10 @@ const getInitialState = () => {
 export default function products(state = getInitialState(), action: actionType) {
   switch (action.type) {
     case RESET_PAYMENT_REDUCER:
-      return getInitialState();
+      return {
+        ...getInitialState(),
+        amount: state.amount,
+      };
     case RECEIVED_CASH:
       return {
         ...state,
