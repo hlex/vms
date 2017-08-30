@@ -61,9 +61,9 @@ class ProductItems extends Component {
     back: () => console.log('Please send any back function')
   };
 
-  handleClickItem = (context, itemId) => {
+  handleClickItem = (context, item, module) => {
     const { onClickItem } = this.props;
-    onClickItem(context, itemId);
+    onClickItem(context, item, module);
   };
 
   render() {
@@ -102,7 +102,7 @@ class ProductItems extends Component {
                           className="box"
                           key={cuid()}
                           onClick={() =>
-                                this.handleClickItem('/product/promotionSet', promotion)}
+                                this.handleClickItem('/product/promotionSet', promotion, 'promotionSet')}
                         >
                           <div className="item">
                             <div className="combo">
@@ -129,7 +129,7 @@ class ProductItems extends Component {
                         <a
                           className="box"
                           key={cuid()}
-                          onClick={() => this.handleClickItem('/product/single', product)}
+                          onClick={() => this.handleClickItem('/product/single', product, 'singleProduct')}
                         >
                           <div className="item">
                             <img className="" alt="" src={`${baseURL}/${product.image}`} />

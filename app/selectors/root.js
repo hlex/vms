@@ -5,33 +5,28 @@ import OrderSelector from './order';
 import PaymentSelector from './payment';
 
 const getPaymentSummaryList = (state) => {
-  const singleProductPrice = OrderSelector.getSingleProductPrice(state.order);
-  const currentAmount = PaymentSelector.getCurrentAmount(state.payment);
   return [
     {
       text: 'ยอดชำระสุทธิ',
       color: 'blue',
-      amount: `${singleProductPrice}`,
+      amount: `${OrderSelector.getOrderGrandTotalAmount(state.order)}`,
     },
     {
       text: 'ใส่เงินแล้ว',
       color: 'green',
-      amount: `${currentAmount}`,
+      amount: `${PaymentSelector.getCurrentAmount(state.payment)}`,
     },
   ];
 };
 
 // ทอนเงินตามจริง
 const getCashChangeAmount = (state) => {
-  const singleProductPrice = OrderSelector.getSingleProductPrice(state.order);
-  const currentAmount = PaymentSelector.getCurrentAmount(state.payment);
-  return currentAmount - singleProductPrice;
+  return PaymentSelector.getCurrentAmount(state.payment) - OrderSelector.getOrderGrandTotalAmount(state.order);
 };
 
 // คืนเงินที่หยอดมา
 const getCashReturnAmount = (state) => {
-  const currentAmount = PaymentSelector.getCurrentAmount(state.payment);
-  return currentAmount;
+  return OrderSelector.getOrderGrandTotalAmount(state.order);
 };
 
 

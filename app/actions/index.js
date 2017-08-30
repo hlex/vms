@@ -1,10 +1,12 @@
 import {
   SELECT_PRODUCT,
+  SELECT_PROMOTION_SET,
   INIT_TCP_CLIENT,
   RECEIVED_SENSOR_INFORMATION,
   RECEIVED_CASH,
   RECEIVED_CASH_COMPLETELY,
   PRODUCT_DROP_SUCCESS,
+  PRODUCT_DROP_PROCESS_COMPLETELY,
   RESET_PAYMENT_REDUCER,
   CLEAR_PAYMENT_AMOUNT,
   SELECT_MOBILE_TOPUP_PROVIDER,
@@ -16,6 +18,7 @@ import {
   READY_TO_DROP_PRODUCT,
   NOT_READY_TO_DROP_PRODUCT,
   CLEAR_ORDER,
+  DROPPING_PRODUCT,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -38,15 +41,29 @@ export const receivedCashCompletely = () => {
   };
 };
 
-export const productDropSuccess = () => {
+export const productDropSuccess = (droppedProduct) => {
   return {
     type: PRODUCT_DROP_SUCCESS,
+    product: droppedProduct
+  };
+};
+
+export const productDropProcessCompletely = () => {
+  return {
+    type: PRODUCT_DROP_PROCESS_COMPLETELY,
   };
 };
 
 export const selectProduct = (item) => {
   return {
     type: SELECT_PRODUCT,
+    item
+  };
+};
+
+export const selectPromotionSet = (item) => {
+  return {
+    type: SELECT_PROMOTION_SET,
     item
   };
 };
@@ -128,4 +145,11 @@ export const clearOrder = () => {
   return {
     type: CLEAR_ORDER
   };
-}
+};
+
+export const droppingProduct = (product) => {
+  return {
+    type: DROPPING_PRODUCT,
+    product
+  };
+};

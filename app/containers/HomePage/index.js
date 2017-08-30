@@ -126,7 +126,7 @@ class HomePage extends Component {
             promotionSetPerPage={3}
             productPerPage={10}
             eventPerPage={6}
-            onClickItem={(context, itemId) => selectProduct(context, itemId)}
+            onClickItem={selectProduct}
             baseURL={baseURL}
           />
         </div>

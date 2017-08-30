@@ -4,7 +4,7 @@ import cuid from 'cuid';
 import {
   RECEIVED_CASH,
   RECEIVED_CASH_COMPLETELY,
-  PRODUCT_DROP_SUCCESS,
+  PRODUCT_DROP_PROCESS_COMPLETELY,
   RESET_PAYMENT_REDUCER,
   CLEAR_PAYMENT_AMOUNT,
   RECEIVED_CASH_REMAINING,
@@ -40,7 +40,7 @@ export default function products(state = getInitialState(), action: actionType) 
         ...state,
         isLoading: true,
       };
-    case PRODUCT_DROP_SUCCESS:
+    case PRODUCT_DROP_PROCESS_COMPLETELY:
       return {
         ...state,
         isFinish: true,

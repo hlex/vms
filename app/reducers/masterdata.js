@@ -48,18 +48,23 @@ const mockupTopupProviders = [
 
 const productGenerator = number =>
   _.map(_.range(number), index => ({
+    cuid: cuid(),
     id: index + 1,
     name: cuid(),
     price: _.random(1, 50),
     isSoldout: false,
     image: `images/product-${index + 1}.png`,
+    row: _.random(1, 9),
+    col: _.random(1, 9),
+    isDropped: false,
   }));
 
 const promotionGenerator = number =>
   _.map(_.range(number), index => ({
+    cuid: cuid(),
     id: index + 1,
     products: productGenerator(2),
-    price: 25,
+    price: _.random(1, 10),
     image: '',
   }));
 

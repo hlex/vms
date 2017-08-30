@@ -3,8 +3,7 @@ import cuid from 'cuid';
 
 import {
   CLEAR_ORDER,
-  SELECT_PRODUCT,
-  PRODUCT_DROP_SUCCESS,
+  SELECT_PROMOTION_SET,
 } from '../../actions/actionTypes';
 
 const initialState = [];
@@ -18,23 +17,10 @@ export default function products(state = getInitialState(), action: actionType) 
   switch (action.type) {
     case CLEAR_ORDER:
       return [];
-    case SELECT_PRODUCT:
+    case SELECT_PROMOTION_SET:
       return [
-        ...state,
         action.item
       ];
-    case PRODUCT_DROP_SUCCESS:
-      return _.map(state, (product) => {
-        if (product.cuid === action.product.cuid) {
-          return {
-            ...product,
-            isDropped: true,
-          };
-        }
-        return {
-          ...product,
-        };
-      });
     default:
       return state;
   }

@@ -23,6 +23,7 @@ import OrderSelector from '../../../selectors/order';
 const mapStateToProps = (state) => {
   return {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
+    productPrice: OrderSelector.getPromotionSetPrice(state.order),
   };
 };
 
@@ -37,17 +38,14 @@ class PromotionSetPage extends Component {
 
   static propTypes = {
     baseURL: PropTypes.string.isRequired,
-    back: PropTypes.func,
-    submitProduct: PropTypes.func,
-  }
-
-  static defaultProps = {
-    back: () => console.log('back'),
-    submitProduct: () => console.log('submitProduct'),
+    back: PropTypes.func.isRequired,
+    submitPromotionSet: PropTypes.func.isRequired,
+    productPrice: PropTypes.number.isRequired,
   }
 
   render() {
-    const { baseURL, back, submitProduct } = this.props;
+    console.log('PromotionSetPage', this.props);
+    const { baseURL, back, submitPromotionSet, productPrice } = this.props;
     return (
       <div>
         <Layout.Title>
@@ -57,10 +55,10 @@ class PromotionSetPage extends Component {
         </Layout.Title>
         <Layout.Content>
           <ProductSummary
-            productPrice={'50'}
-            discountAmount={'5'}
+            productPrice={productPrice}
+            discountAmount={0}
             back={back}
-            onSubmit={submitProduct}
+            onSubmit={submitPromotionSet}
           />
         </Layout.Content>
       </div>

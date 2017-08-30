@@ -23,7 +23,6 @@ import OrderSelector from '../../../selectors/order';
 const mapStateToProps = (state) => {
   return {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
-    product: OrderSelector.getSingleProduct(state.order),
     productPrice: OrderSelector.getSingleProductPrice(state.order),
   };
 };
@@ -55,7 +54,6 @@ class SingleProductPage extends Component {
   render() {
     const {
       baseURL,
-      product,
       productPrice,
       back,
       submitProduct,

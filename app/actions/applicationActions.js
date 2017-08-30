@@ -1,4 +1,5 @@
 import { push, goBack } from 'react-router-redux';
+import _ from 'lodash';
 import * as Actions from './index';
 
 // ======================================================
@@ -45,15 +46,35 @@ export const changePage = context => dispatch => {
   dispatch(push(context));
 };
 
-export const selectProduct = (context, item) => dispatch => {
+export const selectProduct = (context, item, module) => dispatch => {
+  console.log('selectProduct', context, item, module);
   dispatch(changePage(context));
   // ======================================================
   // Select Product
   // ======================================================
-  dispatch(Actions.selectProduct(item));
+  switch (module) {
+    case 'singleProduct':
+      dispatch(Actions.selectProduct(item));
+      break;
+    case 'promotionSet':
+      dispatch(Actions.selectPromotionSet(item));
+      _.forEach(item.products, (product) => {
+        dispatch(Actions.selectProduct(product));
+      });
+      break;
+    case 'mobileTopup':
+    case 'event':
+    default:
+      console.warn('module not matching', module);
+      break;
+  }
 };
 
 export const submitProduct = () => dispatch => {
+  dispatch(changePage('/payment'));
+};
+
+export const submitPromotionSet = () => dispatch => {
   dispatch(changePage('/payment'));
 };
 
@@ -61,11 +82,8 @@ export const initTcpClient = tcpClient => dispatch => {
   dispatch(Actions.initTcpClient(tcpClient));
 };
 
-export const productDropSuccess = () => dispatch => {
-  dispatch(Actions.productDropSuccess());
-  setTimeout(() => {
-    dispatch(backToHome());
-  }, 3000);
+export const productDropSuccess = (droppedProduct) => dispatch => {
+  dispatch(Actions.productDropSuccess(droppedProduct));
 };
 
 export const receivedCashCompletely = () => dispatch => {
@@ -75,11 +93,13 @@ export const receivedCashCompletely = () => dispatch => {
 export const productDrop = () => (dispatch, getState) => {
   const readyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
   if (readyToDropProduct) {
+    const targetRowColumn = OrderSelector.getDropProductTargetRowColumn(getState().order);
     const client = MasterappSelector.getTcpClient(getState().masterapp);
     client.send({
       action: 1,
-      msg: '11', // row * col
+      msg: targetRowColumn, // row * col
     });
+    dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
   } else {
     console.error('Cannot Drop Product because readyToDropProduct = ', readyToDropProduct);
   }
@@ -107,25 +127,22 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
     // CASH
     // ======================================================
     dispatch(Actions.receivedCash(data));
-    // dispatch(getCashRemaining());
-    // const cashRemaining = PaymentSelector.getCashRemaining(getState().payment);
     const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
-    const totalAmount = OrderSelector.getOrderTotalAmount(getState().order);
-    // const cashReturnTotalAmount = RootSelector.getCashReturnAmount(getState());
-    console.log('%c App isInsertCash:', createLog('app'), 'currentCash =', currentCash, 'totalAmount =', totalAmount);
-    if (currentCash >= totalAmount) {
+    const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
+    console.log('%c App isInsertCash:', createLog('app'), 'currentCash =', currentCash, 'totalAmount =', grandTotalAmount);
+    if (currentCash >= grandTotalAmount) {
       dispatch(setReadyToDropProduct());
-      if (needToChangeCash(totalAmount, currentCash)) {
-        // change
-        console.log('%c App cashChange:', createLog('app'), 'cashChange =', currentCash - totalAmount);
+      if (needToChangeCash(grandTotalAmount, currentCash)) {
+        // cashChange
+        console.log('%c App cashChange:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
         setTimeout(() => {
           dispatch(cashChange());
         }, 1000);
       } else {
-        // clear amount becease no need to return money to customer even if cannot drop product
+        // clear amount because no need to return money to customer even if cannot drop product
         dispatch(clearPaymentAmount());
         // no change
-        console.log('%c App productDrop:', createLog('app'), 'cashChange =', currentCash - totalAmount);
+        console.log('%c App productDrop:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
         setTimeout(() => {
           dispatch(receivedCashCompletely());
           dispatch(productDrop());
@@ -149,20 +166,33 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
     dispatch(Actions.showModal('cashChangeError'));
   } else if (isProductDropSuccess(data)) {
     console.log('%c App productDrop success:', createLog('app'), data);
+    const droppedProduct = MasterappSelector.getDroppedProduct(getState().masterapp);
+    dispatch(productDropSuccess(droppedProduct));
     // ======================================================
-    // DROP PRODUCT SUCCESS
+    // check hasPromotionSet ?
     // ======================================================
-    dispatch(productDropSuccess());
+    if (OrderSelector.verifyAllOrderDropped(getState().order)) {
+      dispatch(productDropProcessCompletely());
+    } else {
+      dispatch(productDrop());
+    }
   } else if (isProductDropFail(data)) {
     console.log('%c App productDrop fail:', createLog('app'), data);
     // return cash eql product price
     dispatch(setNotReadyToDropProduct());
-    dispatch(cashChangeAll());
+    dispatch(cashChangeEqualToGrandTotalAmount());
     dispatch(Actions.showModal('productDropError'));
   } else {
     console.log('%c App Do nothing:', createLog('app'), data);
     // Do Nothing
   }
+};
+
+export const productDropProcessCompletely = () => dispatch => {
+  dispatch(Actions.productDropProcessCompletely());
+  setTimeout(() => {
+    dispatch(backToHome());
+  }, 3000);
 };
 
 export const confirmMobileTopupMSISDN = (MSISDN) => {
@@ -172,9 +202,9 @@ export const confirmMobileTopupMSISDN = (MSISDN) => {
   };
 };
 
-export const cashChangeAll = () => {
+export const cashChangeEqualToGrandTotalAmount = () => {
   return (dispatch, getState) => {
-    const cashReturnTotalAmount = OrderSelector.getOrderTotalAmount(getState());
+    const cashReturnTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState());
     const client = MasterappSelector.getTcpClient(getState().masterapp);
     client.send({
       action: 2,
@@ -253,7 +283,7 @@ export const insetCoin = (value) => {
 export const cancelPayment = () => {
   return (dispatch) => {
     dispatch(backToHome());
-    // dispatch(cashChangeAll()); // ปล่อยให้มันกินตังค์ไปก่อน
+    // dispatch(cashChangeEqualToGrandTotalAmount()); // ปล่อยให้มันกินตังค์ไปก่อน
     dispatch(hideAllModal());
   };
 };

@@ -5,6 +5,7 @@ const getTcp = state => state.tcp;
 const getTemp = state => state.temp;
 const getTcpClient = state => state.tcpClient;
 const verifyReadyToDropProduct = state => state.readyToDropProduct;
+const getDroppedProduct = state => state.droppingProduct;
 
 export default {
   getBaseURL,
@@ -12,4 +13,5 @@ export default {
   getTemp,
   getTcpClient,
   verifyReadyToDropProduct,
+  getDroppedProduct,
 };
