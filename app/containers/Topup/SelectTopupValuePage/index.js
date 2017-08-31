@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import cuid from 'cuid';
 // ======================================================
 // Components
 // ======================================================
@@ -18,10 +18,14 @@ import * as Actions from './actions';
 // ======================================================
 // Selectors
 // ======================================================
-import MobileTopupSelectors from '../../../selectors/mobileTopup';
+import MasterdataSelectors from '../../../selectors/masterdata';
+import OrderSelectors from '../../../selectors/order';
 
 const mapStateToProps = (state) => {
-  return state;
+  return {
+    mobileTopupValues: MasterdataSelectors.getMobileTopupValues(state.masterdata),
+    // selectedMobileTopupValue: OrderSelectors.getSelectedMobileTopupValue(state.order),
+  };
 };
 
 const actions = {
@@ -36,69 +40,53 @@ const mapDispatchToProps = (dispatch) => {
 
 class SelectTopupValuePage extends Component {
 
+  static propTypes = {
+    mobileTopupValues: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    submitMobileTopupValue: PropTypes.func.isRequired,
+    // selectedMobileTopupValue: PropTypes.shape({}).isRequired,
+  }
+
+  state = {
+    selectedMobileTopupValue: {
+      cuid: ''
+    },
+  }
+
+  componentDidMount = () => {
+    const { clearMobileTopupValue } = this.props;
+    clearMobileTopupValue();
+  }
+
+  selectMobileTopupValue = (mobileTopupValue) => {
+    // const { selectMobileTopupValue } = this.props;
+    // selectMobileTopupValue(mobileTopupValue);
+    this.setState({
+      selectedMobileTopupValue: mobileTopupValue,
+    });
+  }
+
   renderMobileTopupValue = (mobileTopupValue) => {
+    const { selectedMobileTopupValue } = this.state;
     const value = mobileTopupValue.value;
     const feeText = mobileTopupValue.fee === '0' || mobileTopupValue.fee === 0 ? 'ไม่มีค่าบริการ' : `ค่าบริการ ${mobileTopupValue.fee} บาท`;
     return (
-      <li>
-        <a><span>{`${value} บาท`}</span><small>{`${feeText}`}</small></a>
+      <li key={cuid()}>
+        <a
+          className={`select-pack ${selectedMobileTopupValue.cuid === mobileTopupValue.cuid ? 'current' : ''}`}
+          onClick={() => this.selectMobileTopupValue(mobileTopupValue)}
+        ><span>{`${value} บาท`}</span><small>{`${feeText}`}</small>
+        </a>
       </li>
     );
   }
 
+  handleSubmit = () => {
+    const { submitMobileTopupValue } = this.props;
+    submitMobileTopupValue(this.state.selectedMobileTopupValue);
+  }
+
   render() {
-    const mobileTopupValues = [
-      {
-        id: 1,
-        value: '20',
-        fee: '2',
-      },
-      {
-        id: 2,
-        value: '50',
-        fee: '1',
-      },
-      {
-        id: 3,
-        value: '100',
-        fee: '0',
-      },
-      {
-        id: 4,
-        value: '150',
-        fee: '0',
-      },
-      {
-        id: 1,
-        value: '200',
-        fee: '0',
-      },
-      {
-        id: 1,
-        value: '250',
-        fee: '0',
-      },
-      {
-        id: 1,
-        value: '300',
-        fee: '0',
-      },
-      {
-        id: 1,
-        value: '350',
-        fee: '0',
-      },
-      {
-        id: 1,
-        value: '400',
-        fee: '0',
-      },
-      {
-        id: 1,
-        value: '500',
-        fee: '0',
-      },
-    ];
+    const { mobileTopupValues } = this.props;
     return (
       <div className="select-mobile-topup-value">
         <Layout.ContentLong>

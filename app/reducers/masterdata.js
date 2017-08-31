@@ -46,6 +46,69 @@ const mockupTopupProviders = [
   },
 ];
 
+const mockupMobileTopupValues = [
+  {
+    cuid: cuid(),
+    id: 1,
+    value: '20',
+    fee: '2',
+  },
+  {
+    cuid: cuid(),
+    id: 2,
+    value: '50',
+    fee: '1',
+  },
+  {
+    cuid: cuid(),
+    id: 3,
+    value: '100',
+    fee: '0',
+  },
+  {
+    cuid: cuid(),
+    id: 4,
+    value: '150',
+    fee: '0',
+  },
+  {
+    cuid: cuid(),
+    id: 1,
+    value: '200',
+    fee: '0',
+  },
+  {
+    cuid: cuid(),
+    id: 1,
+    value: '250',
+    fee: '0',
+  },
+  {
+    cuid: cuid(),
+    id: 1,
+    value: '300',
+    fee: '0',
+  },
+  {
+    cuid: cuid(),
+    id: 1,
+    value: '350',
+    fee: '0',
+  },
+  {
+    cuid: cuid(),
+    id: 1,
+    value: '400',
+    fee: '0',
+  },
+  {
+    cuid: cuid(),
+    id: 1,
+    value: '500',
+    fee: '0',
+  },
+];
+
 const productGenerator = number =>
   _.map(_.range(number), index => ({
     cuid: cuid(),
@@ -72,6 +135,7 @@ const initialState = {
   products: productGenerator(36),
   promotionSets: promotionGenerator(10),
   topupProviders: mockupTopupProviders,
+  mobileTopupValues: mockupMobileTopupValues,
 };
 
 const getInitialState = () => ({

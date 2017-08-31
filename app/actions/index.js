@@ -19,6 +19,9 @@ import {
   NOT_READY_TO_DROP_PRODUCT,
   CLEAR_ORDER,
   DROPPING_PRODUCT,
+  SELECT_MOBILE_TOPUP_VALUE,
+  SUBMIT_MOBILE_TOPUP_VALUE,
+  CLEAR_MOBILE_TOPUP_VALUE,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -151,5 +154,25 @@ export const droppingProduct = (product) => {
   return {
     type: DROPPING_PRODUCT,
     product
+  };
+};
+
+export const selectMobileTopupValue = (item) => {
+  return {
+    type: SELECT_MOBILE_TOPUP_VALUE,
+    item,
+  };
+};
+
+export const submitMobileTopupValue = (item) => {
+  return {
+    type: SUBMIT_MOBILE_TOPUP_VALUE,
+    item,
+  };
+};
+
+export const clearMobileTopupValue = () => {
+  return {
+    type: CLEAR_MOBILE_TOPUP_VALUE,
   };
 };

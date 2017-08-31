@@ -62,6 +62,19 @@
     -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
   }
+  li a.current {
+    background: rgba(0,120,219,1);
+    background: -moz-linear-gradient(left, rgba(0,120,219,1) 0%, rgba(0,120,219,1) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(0,120,219,1)), color-stop(100%, rgba(0,120,219,1)));
+    background: -webkit-linear-gradient(left, rgba(0,120,219,1) 0%, rgba(0,120,219,1) 100%);
+    background: -o-linear-gradient(left, rgba(0,120,219,1) 0%, rgba(0,120,219,1) 100%);
+    background: -ms-linear-gradient(left, rgba(0,120,219,1) 0%, rgba(0,120,219,1) 100%);
+    background: linear-gradient(to right, rgba(0,120,219,1) 0%, rgba(0,120,219,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0078db', endColorstr='#0078db', GradientType=1 );
+  }
+  li a.current span {
+    background: url(../images/icon-check.png) no-repeat 20px center;
+  }
   li a span {
     display: inline-block;
     width: 160px;

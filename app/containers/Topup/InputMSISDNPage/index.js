@@ -20,13 +20,12 @@ import * as Actions from './actions';
 // Selectors
 // ======================================================
 import MasterappSelector from '../../../selectors/masterapp';
-import MobileTopupSelectors from '../../../selectors/mobileTopup';
 import OrderSelector from '../../../selectors/order';
 
 const mapStateToProps = (state) => {
   return {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
-    banner: MobileTopupSelectors.getBannerSrc(state.mobileTopup),
+    banner: OrderSelector.getMobileTopupBanner(state.order),
   };
 };
 

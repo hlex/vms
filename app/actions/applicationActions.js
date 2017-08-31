@@ -119,10 +119,10 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
   // SENSOR
   // ======================================================
   if (data.sensor) {
-    console.log('%c App getSensor:', createLog('app'), data);
+    console.log('%c App getSensor:', createLog('app'));
     dispatch(Actions.receivedSensorInformation(data));
   } else if (isInsertCash(data)) {
-    console.log('%c App insertCoin:', createLog('app'), data);
+    console.log('%c App insertCoin:', createLog('app'));
     // ======================================================
     // CASH
     // ======================================================
@@ -140,32 +140,51 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
         }, 1000);
       } else {
         // clear amount because no need to return money to customer even if cannot drop product
-        dispatch(clearPaymentAmount());
+        setTimeout(() => {
+          dispatch(clearPaymentAmount());
+        }, 1000);
         // no change
         console.log('%c App productDrop:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
+        if (OrderSelector.verifyOrderHasProduct(getState().order)) {
+          setTimeout(() => {
+            dispatch(receivedCashCompletely());
+            dispatch(productDrop());
+          }, 1000);
+        } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
+          dispatch(receivedCashCompletely());
+          setTimeout(() => {
+            dispatch(productDropProcessCompletely());
+          }, 1000);
+        }
+      }
+    }
+  } else if (isCashChangeSuccess(data)) {
+    console.log('%c App cashChange success:', createLog('app'));
+    if (OrderSelector.verifyOrderHasProduct(getState().order)) {
+      console.log('%c App Product Order', createLog('app'));
+      const readyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
+      if (readyToDropProduct) {
         setTimeout(() => {
           dispatch(receivedCashCompletely());
           dispatch(productDrop());
         }, 1000);
+      } else {
+        console.error('Cannot Drop Product because readyToDropProduct = ', readyToDropProduct);
       }
-    }
-  } else if (isCashChangeSuccess(data)) {
-    console.log('%c App cashChange success:', createLog('app'), data);
-    const readyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
-    if (readyToDropProduct) {
+    } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
+      console.log('%c App MobileTopup Order', createLog('app'));
+      // call API
+      dispatch(receivedCashCompletely());
       setTimeout(() => {
-        dispatch(receivedCashCompletely());
-        dispatch(productDrop());
+        dispatch(productDropProcessCompletely());
       }, 1000);
-    } else {
-      console.error('Cannot Drop Product because readyToDropProduct = ', readyToDropProduct);
     }
   } else if (isCashChangeFail(data)) {
-    console.log('%c App cashChange fail:', createLog('app'), data);
+    console.log('%c App cashChange fail:', createLog('app'));
     // popup
     dispatch(Actions.showModal('cashChangeError'));
   } else if (isProductDropSuccess(data)) {
-    console.log('%c App productDrop success:', createLog('app'), data);
+    console.log('%c App productDrop success:', createLog('app'));
     const droppedProduct = MasterappSelector.getDroppedProduct(getState().masterapp);
     dispatch(productDropSuccess(droppedProduct));
     // ======================================================
@@ -303,5 +322,24 @@ export const setReadyToDropProduct = () => {
 export const setNotReadyToDropProduct = () => {
   return (dispatch) => {
     dispatch(Actions.notReadyToDropProduct());
+  };
+};
+
+export const selectMobileTopupValue = (item) => {
+  return (dispatch) => {
+    dispatch(Actions.selectMobileTopupValue(item));
+  };
+};
+
+export const submitMobileTopupValue = (mobileTopupValue) => {
+  return (dispatch) => {
+    dispatch(Actions.submitMobileTopupValue(mobileTopupValue));
+    dispatch(changePage('/payment'));
+  };
+};
+
+export const clearMobileTopupValue = () => {
+  return (dispatch) => {
+    dispatch(Actions.clearMobileTopupValue());
   };
 };

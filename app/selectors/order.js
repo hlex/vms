@@ -3,6 +3,49 @@ import _ from 'lodash';
 
 const getProducts = state => state.products;
 const getPromotionSets = state => state.promotionSets;
+const getMobileTopup = state => state.mobileTopup;
+
+const getTopupMSISDN = createSelector(
+  [getMobileTopup],
+  (mobileTopup) => {
+    return mobileTopup.MSISDN || '';
+  }
+);
+
+const getSelectedMobileTopupProvider = createSelector(
+  [getMobileTopup],
+  (mobileTopup) => {
+    return mobileTopup.selectedMobileTopupProvider || {};
+  }
+);
+
+const getSelectedMobileTopupValue = createSelector(
+  [getMobileTopup],
+  (mobileTopup) => {
+    return mobileTopup.selectedMobileTopupValue || {};
+  }
+);
+
+const getSelectedMobileTopupPrice = createSelector(
+  [getSelectedMobileTopupValue],
+  (selectedMobileTopupValue) => {
+    return Number(selectedMobileTopupValue.value);
+  }
+);
+
+const getSelectedMobileTopupTotalPrice = createSelector(
+  [getSelectedMobileTopupValue, getSelectedMobileTopupPrice],
+  (selectedMobileTopupValue, selectedMobileTopupPrice) => {
+    return selectedMobileTopupPrice + Number(selectedMobileTopupValue.fee);
+  }
+);
+
+const getMobileTopupBanner = createSelector(
+  [getSelectedMobileTopupProvider],
+  (selectedMobileTopupProvider) => {
+    return selectedMobileTopupProvider.banner || '';
+  }
+);
 
 const getSingleProduct = createSelector(
   [getProducts],
@@ -53,6 +96,13 @@ const getDropProductTargetRowColumn = createSelector(
   }
 );
 
+const verifyOrderHasProduct = createSelector(
+  [getProducts],
+  (products) => {
+    return _.size(getProducts) > 0;
+  }
+);
+
 const verifyAllOrderDropped = createSelector(
   [getProducts],
   (products) => {
@@ -67,23 +117,66 @@ const verifyOrderHasPromotionSet = createSelector(
   }
 );
 
+const verifyMobileTopupOrder = createSelector(
+  [getSelectedMobileTopupProvider],
+  (selectedMobileTopup) => {
+    return !_.isEmpty(selectedMobileTopup);
+  }
+);
+
 const getOrderGrandTotalAmount = createSelector(
-  [verifyOrderHasPromotionSet, getSingleProductPrice, getPromotionSetPrice],
-  (hasPromotionSet, singleProductPrice, promotionSetPrice) => {
+  [
+    verifyOrderHasPromotionSet,
+    verifyMobileTopupOrder,
+    getSelectedMobileTopupTotalPrice,
+    getSingleProductPrice,
+    getPromotionSetPrice
+  ],
+  (
+    hasPromotionSet,
+    hasMobileTopup,
+    selectedMobileTopupTotalPrice,
+    singleProductPrice,
+    promotionSetPrice
+  ) => {
+    if (hasMobileTopup) return selectedMobileTopupTotalPrice;
     return hasPromotionSet ? promotionSetPrice : singleProductPrice;
   }
 );
 
 export default {
+  // ======================================================
+  // Mobile Topup
+  // ======================================================
+  getMobileTopup,
+  getTopupMSISDN,
+  getSelectedMobileTopupProvider,
+  getSelectedMobileTopupValue,
+  getSelectedMobileTopupTotalPrice,
+  getMobileTopupBanner,
+  // ======================================================
+  // Single Product
+  // ======================================================
   getProducts,
   getSingleProduct,
   getSingleProductPrice,
+  // ======================================================
+  // PromotionSet
+  // ======================================================
   getPromotionSet,
   getPromotionSetProducts,
   getPromotionSetPrice,
   getProductToDrop,
   getDropProductTargetRowColumn,
+  // ======================================================
+  // Flag
+  // ======================================================
+  verifyOrderHasProduct,
   verifyAllOrderDropped,
   verifyOrderHasPromotionSet,
+  verifyMobileTopupOrder,
+  // ======================================================
+  // Payment
+  // ======================================================
   getOrderGrandTotalAmount,
 };

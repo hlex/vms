@@ -5558,6 +5558,17 @@ hr {
     -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2); }
+  .topup-packages ul li a.current {
+    background: #0078db;
+    background: -moz-linear-gradient(left, #0078db 0%, #0078db 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, #0078db), color-stop(100%, #0078db));
+    background: -webkit-linear-gradient(left, #0078db 0%, #0078db 100%);
+    background: -o-linear-gradient(left, #0078db 0%, #0078db 100%);
+    background: -ms-linear-gradient(left, #0078db 0%, #0078db 100%);
+    background: linear-gradient(to right, #0078db 0%, #0078db 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0078db', endColorstr='#0078db', GradientType=1 ); }
+  .topup-packages ul li a.current span {
+    background: url(../images/icon-check.png) no-repeat 20px center; }
   .topup-packages ul li a span {
     display: inline-block;
     width: 160px;

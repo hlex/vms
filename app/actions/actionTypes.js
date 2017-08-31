@@ -16,6 +16,9 @@ export const READY_TO_DROP_PRODUCT = 'READY_TO_DROP_PRODUCT';
 export const NOT_READY_TO_DROP_PRODUCT = 'NOT_READY_TO_DROP_PRODUCT';
 export const CLEAR_ORDER = 'CLEAR_ORDER';
 export const DROPPING_PRODUCT = 'DROPPING_PRODUCT';
+export const SELECT_MOBILE_TOPUP_VALUE = 'SELECT_MOBILE_TOPUP_VALUE';
+export const SUBMIT_MOBILE_TOPUP_VALUE = 'SUBMIT_MOBILE_TOPUP_VALUE';
+export const CLEAR_MOBILE_TOPUP_VALUE = 'CLEAR_MOBILE_TOPUP_VALUE';
 // ======================================================
 // TCP
 // ======================================================
