@@ -15,7 +15,7 @@ export const createTcpClient = (ip, port) => {
     console.log('%c Client Connected to Server: ', createLog('client'), ip, port);
   });
   // ======================================================
-  // Add any listeners function chere...
+  // Add any listeners function here...
   // ======================================================
   client.on('data', data => {
     const dataChunk = data.toString('utf8');

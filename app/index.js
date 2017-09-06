@@ -64,6 +64,23 @@ if (process.env.NODE_ENV !== 'production') {
   const server = net.createServer(socket => {
     const sv = new Server();
     console.log('%c Init Server:', serverLog, sv);
+    setTimeout(() => {
+      socket.write(
+        JSON.stringify({
+          action: 4,
+          initialized: 0,
+        }),
+      );
+    }, 500);
+    setTimeout(() => {
+      socket.write(
+        JSON.stringify({
+          action: 4,
+          initialized: 1,
+        }),
+      );
+    }, 2000);
+
     // socket.pipe(socket);
     // setInterval(() => {
     //   socket.write(
@@ -152,6 +169,17 @@ if (process.env.NODE_ENV !== 'production') {
               baht5: sv.getCoinFiveBaht(),
               baht10: sv.getCoinTenBaht(),
             },
+          }),
+        );
+      }
+      if (objectData.action === 2 && objectData.mode === 'bill' && objectData.msg === '01') {
+        // reset TAIKO
+        socket.write(
+          JSON.stringify({
+            action: 2,
+            msg: '01',
+            result: 'success',
+            description: 'reset completed'
           }),
         );
       }

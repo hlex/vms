@@ -14,6 +14,7 @@ import OrderSelector from '../selectors/order';
 // Helpers
 // ======================================================
 import {
+  getServerCommand,
   isInsertCash,
   isProductDropSuccess,
   isProductDropFail,
@@ -24,6 +25,8 @@ import {
 import {
   createLog,
 } from '../helpers/global';
+
+let cmdNo = 0;
 
 export const clearOrder = () => dispatch => {
   dispatch(Actions.clearOrder());
@@ -112,21 +115,11 @@ export const selectTopupProvider = (context, topupProvider) => {
   };
 };
 
-export const receivedDataFromServer = data => (dispatch, getState) => {
-  console.log('%c App Received: ', createLog(null, 'lime', 'black'), data);
-  // classify data
-  // ======================================================
-  // SENSOR
-  // ======================================================
-  if (data.sensor) {
-    console.log('%c App getSensor:', createLog('app'));
-    dispatch(Actions.receivedSensorInformation(data));
-  } else if (isInsertCash(data)) {
-    console.log('%c App insertCoin:', createLog('app'));
-    // ======================================================
-    // CASH
-    // ======================================================
-    dispatch(Actions.receivedCash(data));
+// ======================================================
+// Server Command
+// ======================================================
+const runFlowCashInserted = () => {
+  return (dispatch, getState) => {
     const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
     const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
     console.log('%c App isInsertCash:', createLog('app'), 'currentCash =', currentCash, 'totalAmount =', grandTotalAmount);
@@ -158,8 +151,11 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
         }
       }
     }
-  } else if (isCashChangeSuccess(data)) {
-    console.log('%c App cashChange success:', createLog('app'));
+  };
+};
+
+const runFlowCashChangeSuccess = () => {
+  return (dispatch, getState) => {
     if (OrderSelector.verifyOrderHasProduct(getState().order)) {
       console.log('%c App Product Order', createLog('app'));
       const readyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
@@ -179,12 +175,11 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
         dispatch(productDropProcessCompletely());
       }, 1000);
     }
-  } else if (isCashChangeFail(data)) {
-    console.log('%c App cashChange fail:', createLog('app'));
-    // popup
-    dispatch(Actions.showModal('cashChangeError'));
-  } else if (isProductDropSuccess(data)) {
-    console.log('%c App productDrop success:', createLog('app'));
+  };
+};
+
+const runFlowProductDropSuccess = () => {
+  return (dispatch, getState) => {
     const droppedProduct = MasterappSelector.getDroppedProduct(getState().masterapp);
     dispatch(productDropSuccess(droppedProduct));
     // ======================================================
@@ -195,16 +190,151 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
     } else {
       dispatch(productDrop());
     }
-  } else if (isProductDropFail(data)) {
-    console.log('%c App productDrop fail:', createLog('app'), data);
-    // return cash eql product price
-    dispatch(setNotReadyToDropProduct());
-    dispatch(cashChangeEqualToGrandTotalAmount());
-    dispatch(Actions.showModal('productDropError'));
-  } else {
-    console.log('%c App Do nothing:', createLog('app'), data);
-    // Do Nothing
+  };
+};
+
+export const receivedDataFromServer = data => (dispatch) => {
+  console.log('%c App Received: ', createLog(null, 'lime', 'black'), data);
+  // classify data
+  const cmd = getServerCommand(data);
+  cmdNo += 1;
+  console.log(`%c App cmd: ${cmd}`, createLog(null, 'pink', 'red'), 'trx:cmd =', cmdNo);
+  switch (cmd) {
+    case 'CONNECTION_ESTABLISH':
+      console.log('%c App connectionEstablish:', createLog('app'));
+      break;
+    case 'CONNECTED':
+      console.log('%c App connected:', createLog('app'));
+      dispatch(resetTAIKO());
+      break;
+    case 'SENSOR':
+      console.log('%c App getSensor:', createLog('app'));
+      dispatch(Actions.receivedSensorInformation(data));
+      break;
+    case 'INSERT_CASH':
+      console.log('%c App insertCoin:', createLog('app'));
+      dispatch(Actions.receivedCash(data));
+      dispatch(runFlowCashInserted());
+      break;
+    case 'CASH_CHANGE_SUCCESS':
+      console.log('%c App cashChange success:', createLog('app'));
+      dispatch(runFlowCashChangeSuccess());
+      break;
+    case 'CASH_CHANGE_FAIL':
+      console.log('%c App cashChange fail:', createLog('app'));
+      dispatch(Actions.showModal('cashChangeError'));
+      break;
+    case 'PRODUCT_DROP_SUCCESS':
+      console.log('%c App productDrop success:', createLog('app'));
+      dispatch(runFlowProductDropSuccess());
+      break;
+    case 'PRODUCT_DROP_FAIL':
+      console.log('%c App productDrop fail:', createLog('app'), data);
+      // return cash eql product price
+      dispatch(setNotReadyToDropProduct());
+      dispatch(cashChangeEqualToGrandTotalAmount());
+      dispatch(Actions.showModal('productDropError'));
+      break;
+    case 'RESET_TAIKO_SUCCESS':
+      break;
+    case 'RESET_TAIKO_FAIL':
+      break;
+    default:
+      console.log('%c App Do nothing:', createLog('app'), data);
+      break;
   }
+
+
+  // // ======================================================
+  // // SENSOR
+  // // ======================================================
+  // if (data.sensor) {
+  //   console.log('%c App getSensor:', createLog('app'));
+  //   dispatch(Actions.receivedSensorInformation(data));
+  // } else if (isInsertCash(data)) {
+  //   console.log('%c App insertCoin:', createLog('app'));
+  // // ======================================================
+  // // CASH
+  // // ======================================================
+  //   dispatch(Actions.receivedCash(data));
+  //   const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
+  //   const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
+  //   console.log('%c App isInsertCash:', createLog('app'), 'currentCash =', currentCash, 'totalAmount =', grandTotalAmount);
+  //   if (currentCash >= grandTotalAmount) {
+  //     dispatch(setReadyToDropProduct());
+  //     if (needToChangeCash(grandTotalAmount, currentCash)) {
+  //       // cashChange
+  //       console.log('%c App cashChange:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
+  //       setTimeout(() => {
+  //         dispatch(cashChange());
+  //       }, 1000);
+  //     } else {
+  //       // clear amount because no need to return money to customer even if cannot drop product
+  //       setTimeout(() => {
+  //         dispatch(clearPaymentAmount());
+  //       }, 1000);
+  //       // no change
+  //       console.log('%c App productDrop:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
+  //       if (OrderSelector.verifyOrderHasProduct(getState().order)) {
+  //         setTimeout(() => {
+  //           dispatch(receivedCashCompletely());
+  //           dispatch(productDrop());
+  //         }, 1000);
+  //       } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
+  //         dispatch(receivedCashCompletely());
+  //         setTimeout(() => {
+  //           dispatch(productDropProcessCompletely());
+  //         }, 1000);
+  //       }
+  //     }
+  //   }
+  // } else if (isCashChangeSuccess(data)) {
+  //   console.log('%c App cashChange success:', createLog('app'));
+  //   if (OrderSelector.verifyOrderHasProduct(getState().order)) {
+  //     console.log('%c App Product Order', createLog('app'));
+  //     const readyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
+  //     if (readyToDropProduct) {
+  //       setTimeout(() => {
+  //         dispatch(receivedCashCompletely());
+  //         dispatch(productDrop());
+  //       }, 1000);
+  //     } else {
+  //       console.error('Cannot Drop Product because readyToDropProduct = ', readyToDropProduct);
+  //     }
+  //   } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
+  //     console.log('%c App MobileTopup Order', createLog('app'));
+  //     // call API
+  //     dispatch(receivedCashCompletely());
+  //     setTimeout(() => {
+  //       dispatch(productDropProcessCompletely());
+  //     }, 1000);
+  //   }
+  // } else if (isCashChangeFail(data)) {
+  //   console.log('%c App cashChange fail:', createLog('app'));
+  //   // popup
+  //   dispatch(Actions.showModal('cashChangeError'));
+  // } else if (isProductDropSuccess(data)) {
+  //   console.log('%c App productDrop success:', createLog('app'));
+  //   const droppedProduct = MasterappSelector.getDroppedProduct(getState().masterapp);
+  //   dispatch(productDropSuccess(droppedProduct));
+  //   // ======================================================
+  //   // check hasPromotionSet ?
+  //   // ======================================================
+  //   if (OrderSelector.verifyAllOrderDropped(getState().order)) {
+  //     dispatch(productDropProcessCompletely());
+  //   } else {
+  //     dispatch(productDrop());
+  //   }
+  // } else if (isProductDropFail(data)) {
+  //   console.log('%c App productDrop fail:', createLog('app'), data);
+  //   // return cash eql product price
+  //   dispatch(setNotReadyToDropProduct());
+  //   dispatch(cashChangeEqualToGrandTotalAmount());
+  //   dispatch(Actions.showModal('productDropError'));
+  // } else {
+  //   console.log('%c App Do nothing:', createLog('app'), data);
+  //   // Do Nothing
+  // }
 };
 
 export const productDropProcessCompletely = () => dispatch => {
@@ -341,5 +471,16 @@ export const submitMobileTopupValue = (mobileTopupValue) => {
 export const clearMobileTopupValue = () => {
   return (dispatch) => {
     dispatch(Actions.clearMobileTopupValue());
+  };
+};
+
+export const resetTAIKO = () => {
+  return (dispatch, getState) => {
+    const client = MasterappSelector.getTcpClient(getState().masterapp);
+    client.send({
+      action: 2,
+      msg: '01',
+      mode: 'bill'
+    });
   };
 };
