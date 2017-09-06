@@ -183,6 +183,28 @@ if (process.env.NODE_ENV !== 'production') {
           }),
         );
       }
+      if (objectData.action === 2 && objectData.mode === 'both' && objectData.msg === '020') {
+        // enable money box
+        socket.write(
+          JSON.stringify({
+            action: 2,
+            msg: '020',
+            result: 'success',
+            description: 'Disable Off.'
+          }),
+        );
+      }
+      if (objectData.action === 2 && objectData.mode === 'both' && objectData.msg === '021') {
+        // enable money box
+        socket.write(
+          JSON.stringify({
+            action: 2,
+            msg: '021',
+            result: 'success',
+            description: 'Disable On.'
+          }),
+        );
+      }
       // insert coin
       if (objectData.action === 999) {
         const insertedValue = Number(objectData.msg);
