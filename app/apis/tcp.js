@@ -19,7 +19,7 @@ export const createTcpClient = (ip, port) => {
   // ======================================================
   client.on('data', data => {
     const dataChunk = data.toString('utf8');
-    console.log('%c Client Received: ', createLog('client'), dataChunk);
+    if (!dataChunk.sensor) console.log('%c Client Received: ', createLog('client'), dataChunk);
     const dataObject = JSON.parse(dataChunk);
     if (verifyServerResponseData(dataObject)) {
       store.dispatch(ApplicationActions.receivedDataFromServer(dataObject));
