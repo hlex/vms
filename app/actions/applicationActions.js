@@ -27,6 +27,7 @@ import {
 } from '../helpers/global';
 
 let cmdNo = 0;
+let retryNo = 0;
 
 export const clearOrder = () => dispatch => {
   dispatch(Actions.clearOrder());
@@ -129,7 +130,7 @@ const runFlowCashInserted = () => {
         // cashChange
         console.log('%c App cashChange:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
         setTimeout(() => {
-          dispatch(returnCash());
+          dispatch(cashChange());
         }, 1000);
       } else {
         // clear amount because no need to return money to customer even if cannot drop product
@@ -156,6 +157,7 @@ const runFlowCashInserted = () => {
 
 const runFlowCashChangeSuccess = () => {
   return (dispatch, getState) => {
+    dispatch(Actions.setCashChangeAmount(0));
     if (OrderSelector.verifyOrderHasProduct(getState().order)) {
       console.log('%c App Product Order', createLog('app'));
       const readyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
@@ -240,10 +242,33 @@ export const receivedDataFromServer = data => (dispatch) => {
       break;
     case 'RESET_TAIKO_FAIL':
       break;
-    case 'ENABLE_MONEY_BOX':
+    case 'ENABLE_MONEY_BOX_SUCCESS':
+      // Do nothing
+      retryNo = 0;
       break;
-    case 'DISABLE_MONEY_BOX':
+    case 'ENABLE_MONEY_BOX_FAIL':
+      // Retry
+      if (retryNo <= 3) {
+        dispatch(enableMoneyBox());
+        retryNo += 1;
+      } else {
+        retryNo = 0;
+        alert('Retry 3 times max quota');
+      }
+      break;
+    case 'DISABLE_MONEY_BOX_SUCCESS':
       dispatch(sendCashChangeToServer());
+      retryNo = 0;
+      break;
+    case 'DISABLE_MONEY_BOX_FAIL':
+      // Retry
+      if (retryNo <= 3) {
+        dispatch(disableMoneyBox());
+        retryNo += 1;
+      } else {
+        retryNo = 0;
+        alert('Retry 3 times max quota');
+      }
       break;
     default:
       console.log('%c App Do nothing:', createLog('app'), data);
@@ -265,19 +290,6 @@ export const confirmMobileTopupMSISDN = (MSISDN) => {
   };
 };
 
-export const cashChangeEqualToGrandTotalAmount = () => {
-  return (dispatch, getState) => {
-    const cashReturnTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState());
-    const client = MasterappSelector.getTcpClient(getState().masterapp);
-    client.send({
-      action: 2,
-      msg: `${cashReturnTotalAmount}`,
-      mode: 'coin',
-    });
-    dispatch(Actions.clearPaymentAmount());
-  };
-};
-
 export const clearPaymentAmount = () => dispatch => {
   setTimeout(() => {
     dispatch(Actions.clearPaymentAmount());
@@ -286,15 +298,16 @@ export const clearPaymentAmount = () => dispatch => {
 
 export const sendCashChangeToServer = () => {
   return (dispatch, getState) => {
-    const cashReturnTotalAmount = RootSelector.getCashChangeAmount(getState());
+    const cashChangeAmount = PaymentSelector.getCashChangeAmount(getState().payment);
+    console.log('sendCashChangeToServer:cashChangeAmount', cashChangeAmount);
     // ======================================================
     // if cashReturn > 0 then call api to return cash
     // ======================================================
-    if (cashReturnTotalAmount > 0) {
+    if (cashChangeAmount > 0) {
       const client = MasterappSelector.getTcpClient(getState().masterapp);
       client.send({
         action: 2,
-        msg: `${cashReturnTotalAmount}`,
+        msg: `${cashChangeAmount}`,
         mode: 'coin',
       });
     }
@@ -302,8 +315,32 @@ export const sendCashChangeToServer = () => {
   };
 };
 
-export const returnCash = () => {
-  return (dispatch) => {
+export const cashChangeEqualToGrandTotalAmount = () => {
+  return (dispatch, getState) => {
+    const grandTotalAmount = RootSelector.getCashChangeFromOrderAmount(getState());
+    dispatch(Actions.setCashChangeAmount(grandTotalAmount));
+    // ======================================================
+    // Disable Moneybox before sendCashChange
+    // ======================================================
+    dispatch(disableMoneyBox());
+  };
+};
+
+export const cashChange = () => {
+  return (dispatch, getState) => {
+    const currentCash = RootSelector.getCashChangeAmount(getState());
+    dispatch(Actions.setCashChangeAmount(currentCash));
+    // ======================================================
+    // Disable Moneybox before sendCashChange
+    // ======================================================
+    dispatch(disableMoneyBox());
+  };
+};
+
+export const returnAllInsertCash = () => {
+  return (dispatch, getState) => {
+    const currentCash = RootSelector.getCashChangeFromCurrentCash(getState());
+    dispatch(Actions.setCashChangeAmount(currentCash));
     // ======================================================
     // Disable Moneybox before sendCashChange
     // ======================================================

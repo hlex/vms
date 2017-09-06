@@ -8,6 +8,7 @@ import {
   RESET_PAYMENT_REDUCER,
   CLEAR_PAYMENT_AMOUNT,
   RECEIVED_CASH_REMAINING,
+  SET_CASH_CHANGE_AMOUNT,
 } from '../actions/actionTypes';
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
   isFinish: false,
   amount: 0,
   remain: {},
+  cashChangeAmount: 0,
 };
 const getInitialState = () => {
   return {
@@ -55,6 +57,11 @@ export default function products(state = getInitialState(), action: actionType) 
         ...state,
         remain: action.data.remain
       }
+    case SET_CASH_CHANGE_AMOUNT:
+      return {
+        ...state,
+        cashChangeAmount: action.cashChangeAmount
+      };
     default:
       return state;
   }

@@ -24,14 +24,24 @@ const getCashChangeAmount = (state) => {
   return PaymentSelector.getCurrentAmount(state.payment) - OrderSelector.getOrderGrandTotalAmount(state.order);
 };
 
-// คืนเงินที่หยอดมา
-const getCashReturnAmount = (state) => {
+// คืนเงินเท่ากับราคาออเดอร์
+const getCashChangeFromOrderAmount = (state) => {
   return OrderSelector.getOrderGrandTotalAmount(state.order);
 };
 
+// คืนเงินที่หยอดมา
+const getCashChangeFromCurrentCash = (state) => {
+  return PaymentSelector.getCurrentAmount(state.payment);
+};
+
+const getCashChangePromotionSetError = (state) => {
+  return OrderSelector.getOrderGrandTotalAmount(state.order) - OrderSelector.getPromotionSetFirstProductPrice(state.order);
+};
 
 export default {
   getPaymentSummaryList,
   getCashChangeAmount,
-  getCashReturnAmount,
+  getCashChangeFromOrderAmount,
+  getCashChangeFromCurrentCash,
+  getCashChangePromotionSetError
 };

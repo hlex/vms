@@ -185,24 +185,38 @@ if (process.env.NODE_ENV !== 'production') {
       }
       if (objectData.action === 2 && objectData.mode === 'both' && objectData.msg === '020') {
         // enable money box
+        const success = {
+          action: 2,
+          msg: '020',
+          result: 'success',
+          description: 'Disable Off.'
+        };
+        const failed = {
+          action: 2,
+          msg: '020',
+          result: 'failed',
+          description: 'failed please try again'
+        };
         socket.write(
-          JSON.stringify({
-            action: 2,
-            msg: '020',
-            result: 'success',
-            description: 'Disable Off.'
-          }),
+          JSON.stringify(_.random(1, 5) <= 4 ? success : failed),
         );
       }
       if (objectData.action === 2 && objectData.mode === 'both' && objectData.msg === '021') {
         // enable money box
+        const success = {
+          action: 2,
+          msg: '021',
+          result: 'success',
+          description: 'Disable On.'
+        };
+        const failed = {
+          action: 2,
+          msg: '021',
+          result: 'failed',
+          description: 'failed please try again'
+        };
         socket.write(
-          JSON.stringify({
-            action: 2,
-            msg: '021',
-            result: 'success',
-            description: 'Disable On.'
-          }),
+          JSON.stringify(_.random(1, 5) <= 4 ? success : failed),
         );
       }
       // insert coin

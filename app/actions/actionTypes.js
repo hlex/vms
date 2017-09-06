@@ -19,6 +19,7 @@ export const DROPPING_PRODUCT = 'DROPPING_PRODUCT';
 export const SELECT_MOBILE_TOPUP_VALUE = 'SELECT_MOBILE_TOPUP_VALUE';
 export const SUBMIT_MOBILE_TOPUP_VALUE = 'SUBMIT_MOBILE_TOPUP_VALUE';
 export const CLEAR_MOBILE_TOPUP_VALUE = 'CLEAR_MOBILE_TOPUP_VALUE';
+export const SET_CASH_CHANGE_AMOUNT = 'SET_CASH_CHANGE_AMOUNT';
 // ======================================================
 // TCP
 // ======================================================

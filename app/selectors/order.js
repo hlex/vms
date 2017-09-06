@@ -82,6 +82,13 @@ const getPromotionSetPrice = createSelector(
   }
 );
 
+const getPromotionSetFirstProductPrice = createSelector(
+  [getPromotionSetProducts],
+  (products) => {
+    return Number(_.head(products).price);
+  }
+);
+
 const getProductToDrop = createSelector(
   [getProducts],
   (products) => {
@@ -99,7 +106,7 @@ const getDropProductTargetRowColumn = createSelector(
 const verifyOrderHasProduct = createSelector(
   [getProducts],
   (products) => {
-    return _.size(getProducts) > 0;
+    return _.size(products) > 0;
   }
 );
 
@@ -166,6 +173,7 @@ export default {
   getPromotionSet,
   getPromotionSetProducts,
   getPromotionSetPrice,
+  getPromotionSetFirstProductPrice,
   getProductToDrop,
   getDropProductTargetRowColumn,
   // ======================================================

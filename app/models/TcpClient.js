@@ -13,6 +13,6 @@ export default class TcpClient {
       } else {
         this.client.write(JSON.stringify(data));
       }
-    }, 500);
+    }, 150);
   }
 }

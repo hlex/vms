@@ -47,7 +47,7 @@ class PaymentPage extends PureComponent {
     isFinish: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
     back: PropTypes.func.isRequired,
-    returnCash: PropTypes.func.isRequired,
+    returnAllInsertCash: PropTypes.func.isRequired,
     enableMoneyBox: PropTypes.func.isRequired,
   };
 
@@ -59,10 +59,10 @@ class PaymentPage extends PureComponent {
   }
 
   componentWillUnmount = () => {
-    const { returnCash } = this.props;
+    const { returnAllInsertCash } = this.props;
     console.log('outPaymentPage !!!!');
     // if unmount return
-    returnCash();
+    returnAllInsertCash();
   }
 
   renderContent = () => {

@@ -96,7 +96,7 @@ export const isResetTAIKOFail = ({ action, msg, result, description }) => {
   return true;
 };
 
-export const isEnableMoneyBox = ({ action, msg, result, description }) => {
+export const isEnableMoneyBoxSuccess = ({ action, msg, result, description }) => {
   if (action !== actionCode.cash
     || msg !== messageCode.enableMoneyReceiver
     || result !== resultCode.success
@@ -104,11 +104,27 @@ export const isEnableMoneyBox = ({ action, msg, result, description }) => {
   return true;
 };
 
-export const isDisabledMoneyBox = ({ action, msg, result, description }) => {
+export const isEnableMoneyBoxFail = ({ action, msg, result, description }) => {
+  if (action !== actionCode.cash
+    || msg !== messageCode.enableMoneyReceiver
+    || result !== resultCode.unsuccess
+    || description.indexOf('try again') < 0) return false;
+  return true;
+};
+
+export const isDisabledMoneyBoxSuccess = ({ action, msg, result, description }) => {
   if (action !== actionCode.cash
     || msg !== messageCode.disableMoneyReceiver
     || result !== resultCode.success
     || description.indexOf('disable on') < 0) return false;
+  return true;
+};
+
+export const isDisabledMoneyBoxFail = ({ action, msg, result, description }) => {
+  if (action !== actionCode.cash
+    || msg !== messageCode.disableMoneyReceiver
+    || result !== resultCode.unsuccess
+    || description.indexOf('try again') < 0) return false;
   return true;
 };
 
@@ -138,8 +154,10 @@ export const getServerCommand = (data) => {
   if (isSensor(normalizeData)) return 'SENSOR';
   if (isResetTAIKOSuccess(normalizeData)) return 'RESET_TAIKO_SUCCESS';
   if (isResetTAIKOFail(normalizeData)) return 'RESET_TAIKO_FAIL';
-  if (isEnableMoneyBox(normalizeData)) return 'ENABLE_MONEY_BOX';
-  if (isDisabledMoneyBox(normalizeData)) return 'DISABLE_MONEY_BOX';
+  if (isEnableMoneyBoxSuccess(normalizeData)) return 'ENABLE_MONEY_BOX_SUCCESS';
+  if (isEnableMoneyBoxFail(normalizeData)) return 'ENABLE_MONEY_BOX_FAIL';
+  if (isDisabledMoneyBoxSuccess(normalizeData)) return 'DISABLE_MONEY_BOX_SUCCESS';
+  if (isDisabledMoneyBoxFail(normalizeData)) return 'DISABLE_MONEY_BOX_FAIL';
   if (isInsertCash(normalizeData)) return 'INSERT_CASH';
   if (isCashChangeSuccess(normalizeData)) return 'CASH_CHANGE_SUCCESS';
   if (isCashChangeFail(normalizeData)) return 'CASH_CHANGE_FAIL';
