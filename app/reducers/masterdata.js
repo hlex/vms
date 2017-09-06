@@ -118,11 +118,11 @@ const productGenerator = number =>
     cuid: cuid(),
     id: index + 1,
     name: cuid(),
-    price: _.random(1, 50),
+    price: 10, // _.random(1, 50),
     isSoldout: isSoldout(),
     image: `images/product-${index + 1}.png`,
     row: 2, // _.random(1, 2),
-    col: _.random(1, 2),
+    col: 1, // _.random(1, 2),
     isDropped: false,
   }));
 
@@ -131,7 +131,7 @@ const promotionGenerator = number =>
     cuid: cuid(),
     id: index + 1,
     products: productGenerator(2),
-    price: _.random(1, 10),
+    price: 15, // _.random(1, 10),
     image: '',
   }));
 

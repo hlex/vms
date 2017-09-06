@@ -195,7 +195,7 @@ const runFlowProductDropSuccess = () => {
   };
 };
 
-export const receivedDataFromServer = data => (dispatch) => {
+export const receivedDataFromServer = data => (dispatch, getState) => {
   if (data.sensor) return;
   console.log('%c App Received: ', createLog(null, 'lime', 'black'), data);
   // classify data
@@ -235,7 +235,11 @@ export const receivedDataFromServer = data => (dispatch) => {
       console.log('%c App productDrop fail:', createLog('app'), data);
       // return cash eql product price
       dispatch(setNotReadyToDropProduct());
-      dispatch(cashChangeEqualToGrandTotalAmount());
+      if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
+        dispatch(cashChange());
+      } else {
+        dispatch(cashChangeEqualToGrandTotalAmount());
+      }
       dispatch(Actions.showModal('productDropError'));
       break;
     case 'RESET_TAIKO_SUCCESS':
@@ -319,6 +323,17 @@ export const cashChangeEqualToGrandTotalAmount = () => {
   return (dispatch, getState) => {
     const grandTotalAmount = RootSelector.getCashChangeFromOrderAmount(getState());
     dispatch(Actions.setCashChangeAmount(grandTotalAmount));
+    // ======================================================
+    // Disable Moneybox before sendCashChange
+    // ======================================================
+    dispatch(disableMoneyBox());
+  };
+};
+
+export const cashChangeEqualToGrandTotalAmountMinusDroppedProduct = () => {
+  return (dispatch, getState) => {
+    const cashChangePromotionError = RootSelector.getCashChangePromotionSetError(getState());
+    dispatch(Actions.setCashChangeAmount(cashChangePromotionError));
     // ======================================================
     // Disable Moneybox before sendCashChange
     // ======================================================

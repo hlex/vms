@@ -89,6 +89,20 @@ const getPromotionSetFirstProductPrice = createSelector(
   }
 );
 
+const getDroppedProducts = createSelector(
+  [getProducts],
+  (products) => {
+    return _.filter(products, product => product.isDropped);
+  }
+);
+
+const getDroppedProductSummaryPrice = createSelector(
+  [getDroppedProducts],
+  (products) => {
+    return _.sumBy(products, product => Number(product.price));
+  }
+);
+
 const getProductToDrop = createSelector(
   [getProducts],
   (products) => {
@@ -107,6 +121,13 @@ const verifyOrderHasProduct = createSelector(
   [getProducts],
   (products) => {
     return _.size(products) > 0;
+  }
+);
+
+const verifyHasDroppedProduct = createSelector(
+  [getProducts],
+  (products) => {
+    return _.some(products, product => product.isDropped);
   }
 );
 
@@ -176,10 +197,12 @@ export default {
   getPromotionSetFirstProductPrice,
   getProductToDrop,
   getDropProductTargetRowColumn,
+  getDroppedProductSummaryPrice,
   // ======================================================
   // Flag
   // ======================================================
   verifyOrderHasProduct,
+  verifyHasDroppedProduct,
   verifyAllOrderDropped,
   verifyOrderHasPromotionSet,
   verifyMobileTopupOrder,
