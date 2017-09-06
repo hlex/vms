@@ -97,28 +97,35 @@ class ProductItems extends Component {
                 <div className="promotion-item-list">
                   <div className="product-row-big">
                     <div className="flex-rows">
-                      {_.map(_.get(promotionItems, index, []), promotion => (
-                        <a
-                          className="box"
-                          key={cuid()}
-                          onClick={() =>
-                                this.handleClickItem('/product/promotionSet', promotion, 'promotionSet')}
-                        >
-                          <div className="item">
-                            <div className="combo">
-                                <img alt="" src={`${baseURL}/${_.get(promotion, 'products.0.image')}`} />
-                                <span>&nbsp;</span>
-                                <img alt="" src={`${baseURL}/${_.get(promotion, 'products.1.image')}`} />
+                      {_.map(_.get(promotionItems, index, []), (promotion) => {
+                        const someProductSoldout = _.some(promotion.products, product => product.isSoldout);
+                        return (
+                            <a
+                              className={`box ${someProductSoldout ? 'outstock' : ''}`}
+                              key={cuid()}
+                              onClick={() =>
+                                    !someProductSoldout && this.handleClickItem('/product/promotionSet', promotion, 'promotionSet')}
+                            >
+                            {
+                              someProductSoldout && <div className="product-outstock"><span>หมด</span></div>
+                            }
+                              <div className="item">
+                                <div className="combo">
+                                    <img alt="" src={`${baseURL}/${_.get(promotion, 'products.0.image')}`} />
+                                    <span>&nbsp;</span>
+                                    <img alt="" src={`${baseURL}/${_.get(promotion, 'products.1.image')}`} />
+                                  </div>
+                                <div className="price">
+                                    <span>{`ปกติ ${_.sumBy(
+                                        promotion.products,
+                                        product => product.price,
+                                      )}฿ พิเศษ ${promotion.price}฿`}</span>
+                                  </div>
                               </div>
-                            <div className="price">
-                                <span>{`ปกติ ${_.sumBy(
-                                    promotion.products,
-                                    product => product.price,
-                                  )}฿ พิเศษ ${promotion.price}฿`}</span>
-                              </div>
-                          </div>
-                        </a>
-                          ))}
+                            </a>
+                          );
+                        }
+                      )}
                     </div>
                   </div>
                 </div>
@@ -127,11 +134,15 @@ class ProductItems extends Component {
                     <div className="flex-rows">
                       {_.map(_.get(productItems, index, []), product => (
                         <a
-                          className="box"
+                          className={`box ${product.isSoldout ? 'outstock' : ''}`}
                           key={cuid()}
-                          onClick={() => this.handleClickItem('/product/single', product, 'singleProduct')}
+                          onClick={() => !product.isSoldout && this.handleClickItem('/product/single', product, 'singleProduct')}
                         >
                           <div className="item">
+                            {
+                              product.isSoldout &&
+                              <div className="product-outstock"><span>หมด</span></div>
+                            }
                             <img className="" alt="" src={`${baseURL}/${product.image}`} />
                             <div className="price">
                                 <span>

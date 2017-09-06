@@ -109,13 +109,17 @@ const mockupMobileTopupValues = [
   },
 ];
 
+const isSoldout = () => {
+  return _.random(1, 5) >= 4;
+};
+
 const productGenerator = number =>
   _.map(_.range(number), index => ({
     cuid: cuid(),
     id: index + 1,
     name: cuid(),
     price: _.random(1, 50),
-    isSoldout: false,
+    isSoldout: isSoldout(),
     image: `images/product-${index + 1}.png`,
     row: _.random(1, 9),
     col: _.random(1, 9),
