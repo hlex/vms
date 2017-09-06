@@ -121,8 +121,8 @@ const productGenerator = number =>
     price: _.random(1, 50),
     isSoldout: isSoldout(),
     image: `images/product-${index + 1}.png`,
-    row: _.random(1, 9),
-    col: _.random(1, 9),
+    row: 2, // _.random(1, 2),
+    col: _.random(1, 2),
     isDropped: false,
   }));
 
