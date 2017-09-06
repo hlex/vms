@@ -236,7 +236,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       // return cash eql product price
       dispatch(setNotReadyToDropProduct());
       if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
-        dispatch(cashChange());
+        dispatch(cashChangeEqualToGrandTotalAmountMinusDroppedProduct());
       } else {
         dispatch(cashChangeEqualToGrandTotalAmount());
       }
