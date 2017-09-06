@@ -129,7 +129,7 @@ const runFlowCashInserted = () => {
         // cashChange
         console.log('%c App cashChange:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
         setTimeout(() => {
-          dispatch(cashChange());
+          dispatch(returnCash());
         }, 1000);
       } else {
         // clear amount because no need to return money to customer even if cannot drop product
@@ -239,102 +239,15 @@ export const receivedDataFromServer = data => (dispatch) => {
       break;
     case 'RESET_TAIKO_FAIL':
       break;
+    case 'ENABLE_MONEY_BOX':
+      break;
+    case 'DISABLE_MONEY_BOX':
+      dispatch(sendCashChangeToServer());
+      break;
     default:
       console.log('%c App Do nothing:', createLog('app'), data);
       break;
   }
-
-
-  // // ======================================================
-  // // SENSOR
-  // // ======================================================
-  // if (data.sensor) {
-  //   console.log('%c App getSensor:', createLog('app'));
-  //   dispatch(Actions.receivedSensorInformation(data));
-  // } else if (isInsertCash(data)) {
-  //   console.log('%c App insertCoin:', createLog('app'));
-  // // ======================================================
-  // // CASH
-  // // ======================================================
-  //   dispatch(Actions.receivedCash(data));
-  //   const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
-  //   const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
-  //   console.log('%c App isInsertCash:', createLog('app'), 'currentCash =', currentCash, 'totalAmount =', grandTotalAmount);
-  //   if (currentCash >= grandTotalAmount) {
-  //     dispatch(setReadyToDropProduct());
-  //     if (needToChangeCash(grandTotalAmount, currentCash)) {
-  //       // cashChange
-  //       console.log('%c App cashChange:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
-  //       setTimeout(() => {
-  //         dispatch(cashChange());
-  //       }, 1000);
-  //     } else {
-  //       // clear amount because no need to return money to customer even if cannot drop product
-  //       setTimeout(() => {
-  //         dispatch(clearPaymentAmount());
-  //       }, 1000);
-  //       // no change
-  //       console.log('%c App productDrop:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
-  //       if (OrderSelector.verifyOrderHasProduct(getState().order)) {
-  //         setTimeout(() => {
-  //           dispatch(receivedCashCompletely());
-  //           dispatch(productDrop());
-  //         }, 1000);
-  //       } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
-  //         dispatch(receivedCashCompletely());
-  //         setTimeout(() => {
-  //           dispatch(productDropProcessCompletely());
-  //         }, 1000);
-  //       }
-  //     }
-  //   }
-  // } else if (isCashChangeSuccess(data)) {
-  //   console.log('%c App cashChange success:', createLog('app'));
-  //   if (OrderSelector.verifyOrderHasProduct(getState().order)) {
-  //     console.log('%c App Product Order', createLog('app'));
-  //     const readyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
-  //     if (readyToDropProduct) {
-  //       setTimeout(() => {
-  //         dispatch(receivedCashCompletely());
-  //         dispatch(productDrop());
-  //       }, 1000);
-  //     } else {
-  //       console.error('Cannot Drop Product because readyToDropProduct = ', readyToDropProduct);
-  //     }
-  //   } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
-  //     console.log('%c App MobileTopup Order', createLog('app'));
-  //     // call API
-  //     dispatch(receivedCashCompletely());
-  //     setTimeout(() => {
-  //       dispatch(productDropProcessCompletely());
-  //     }, 1000);
-  //   }
-  // } else if (isCashChangeFail(data)) {
-  //   console.log('%c App cashChange fail:', createLog('app'));
-  //   // popup
-  //   dispatch(Actions.showModal('cashChangeError'));
-  // } else if (isProductDropSuccess(data)) {
-  //   console.log('%c App productDrop success:', createLog('app'));
-  //   const droppedProduct = MasterappSelector.getDroppedProduct(getState().masterapp);
-  //   dispatch(productDropSuccess(droppedProduct));
-  //   // ======================================================
-  //   // check hasPromotionSet ?
-  //   // ======================================================
-  //   if (OrderSelector.verifyAllOrderDropped(getState().order)) {
-  //     dispatch(productDropProcessCompletely());
-  //   } else {
-  //     dispatch(productDrop());
-  //   }
-  // } else if (isProductDropFail(data)) {
-  //   console.log('%c App productDrop fail:', createLog('app'), data);
-  //   // return cash eql product price
-  //   dispatch(setNotReadyToDropProduct());
-  //   dispatch(cashChangeEqualToGrandTotalAmount());
-  //   dispatch(Actions.showModal('productDropError'));
-  // } else {
-  //   console.log('%c App Do nothing:', createLog('app'), data);
-  //   // Do Nothing
-  // }
 };
 
 export const productDropProcessCompletely = () => dispatch => {
@@ -370,7 +283,7 @@ export const clearPaymentAmount = () => dispatch => {
   }, 1000);
 };
 
-export const cashChange = () => {
+export const sendCashChangeToServer = () => {
   return (dispatch, getState) => {
     const cashReturnTotalAmount = RootSelector.getCashChangeAmount(getState());
     // ======================================================
@@ -389,20 +302,11 @@ export const cashChange = () => {
 };
 
 export const returnCash = () => {
-  return (dispatch, getState) => {
-    const cashReturnTotalAmount = RootSelector.getCashReturnAmount(getState());
+  return (dispatch) => {
     // ======================================================
-    // if cashReturn > 0 then call api to return cash
+    // Disable Moneybox before sendCashChange
     // ======================================================
-    if (cashReturnTotalAmount > 0) {
-      const client = MasterappSelector.getTcpClient(getState().masterapp);
-      client.send({
-        action: 2,
-        msg: `${cashReturnTotalAmount}`,
-        mode: 'coin',
-      });
-    }
-    dispatch(clearPaymentAmount());
+    dispatch(disableMoneyBox());
   };
 };
 
@@ -484,3 +388,26 @@ export const resetTAIKO = () => {
     });
   };
 };
+
+export const enableMoneyBox = () => {
+  return (dispatch, getState) => {
+    const client = MasterappSelector.getTcpClient(getState().masterapp);
+    client.send({
+      action: 2,
+      msg: '020',
+      mode: 'both'
+    });
+  };
+};
+
+export const disableMoneyBox = () => {
+  return (dispatch, getState) => {
+    const client = MasterappSelector.getTcpClient(getState().masterapp);
+    client.send({
+      action: 2,
+      msg: '021',
+      mode: 'both'
+    });
+  };
+};
+

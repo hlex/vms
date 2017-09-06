@@ -48,11 +48,19 @@ class PaymentPage extends PureComponent {
     isLoading: PropTypes.bool.isRequired,
     back: PropTypes.func.isRequired,
     returnCash: PropTypes.func.isRequired,
+    enableMoneyBox: PropTypes.func.isRequired,
   };
+
+  componentDidMount = () => {
+    const { enableMoneyBox } = this.props;
+    console.log('inPaymentPage !!!!');
+    // if mount enable money box
+    enableMoneyBox();
+  }
 
   componentWillUnmount = () => {
     const { returnCash } = this.props;
-    console.log('outPaymentPage');
+    console.log('outPaymentPage !!!!');
     // if unmount return
     returnCash();
   }

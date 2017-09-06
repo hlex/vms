@@ -18,8 +18,8 @@ const actionCode = {
 // ======================================================
 const messageCode = {
   resetTAIKO: '01',
-  disableMoneyReceiverOFF: '021',
-  disableMoneyReceiverON: '022',
+  enableMoneyReceiver: '020',
+  disableMoneyReceiver: '021',
 };
 // ======================================================
 // Result Code
@@ -96,19 +96,19 @@ export const isResetTAIKOFail = ({ action, msg, result, description }) => {
   return true;
 };
 
-export const isDisabledMoneyBox = ({ action, msg, result, description }) => {
+export const isEnableMoneyBox = ({ action, msg, result, description }) => {
   if (action !== actionCode.cash
-    || msg !== messageCode.disableMoneyReceiverON
+    || msg !== messageCode.enableMoneyReceiver
     || result !== resultCode.success
-    || description.indexOf('disable on') < 0) return false;
+    || description.indexOf('disable off') < 0) return false;
   return true;
 };
 
-export const isEnableMoneyBox = ({ action, msg, result, description }) => {
+export const isDisabledMoneyBox = ({ action, msg, result, description }) => {
   if (action !== actionCode.cash
-    || msg !== messageCode.disableMoneyReceiverOFF
+    || msg !== messageCode.disableMoneyReceiver
     || result !== resultCode.success
-    || description.indexOf('disable off') < 0) return false;
+    || description.indexOf('disable on') < 0) return false;
   return true;
 };
 
@@ -138,8 +138,8 @@ export const getServerCommand = (data) => {
   if (isSensor(normalizeData)) return 'SENSOR';
   if (isResetTAIKOSuccess(normalizeData)) return 'RESET_TAIKO_SUCCESS';
   if (isResetTAIKOFail(normalizeData)) return 'RESET_TAIKO_FAIL';
-  if (isDisabledMoneyBox(normalizeData)) return 'DISABLE_MONEY_BOX';
   if (isEnableMoneyBox(normalizeData)) return 'ENABLE_MONEY_BOX';
+  if (isDisabledMoneyBox(normalizeData)) return 'DISABLE_MONEY_BOX';
   if (isInsertCash(normalizeData)) return 'INSERT_CASH';
   if (isCashChangeSuccess(normalizeData)) return 'CASH_CHANGE_SUCCESS';
   if (isCashChangeFail(normalizeData)) return 'CASH_CHANGE_FAIL';
