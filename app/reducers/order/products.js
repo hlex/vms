@@ -17,7 +17,7 @@ const getInitialState = () => {
 export default function products(state = getInitialState(), action: actionType) {
   switch (action.type) {
     case CLEAR_ORDER:
-      return [];
+      return getInitialState();
     case SELECT_PRODUCT:
       return [
         ...state,
