@@ -42,7 +42,7 @@ export const needToChangeCash = (totalAmount, currentCash) => {
 
 export const isInsertCash = ({ action, msg, result, description }) => {
   if (msg === '') return false;
-  if (action !== actionCode.cash || Number(msg) <= 0) return false;
+  if (action !== actionCode.cash || Number(msg) <= 0 || result !== '' || description !== '') return false;
   return true;
 };
 
