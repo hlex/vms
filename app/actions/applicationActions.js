@@ -195,6 +195,7 @@ const runFlowProductDropSuccess = () => {
 
 export const receivedDataFromServer = data => (dispatch) => {
   console.log('%c App Received: ', createLog(null, 'lime', 'black'), data);
+  if (data.sensor) return;
   // classify data
   const cmd = getServerCommand(data);
   cmdNo += 1;
