@@ -28,6 +28,7 @@ import MasterappSelector from '../../../selectors/masterapp';
 const mapStateToProps = state => {
   return {
     ...state.payment,
+    canChangeCash: state.masterapp.canChangeCash,
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     summaryList: RootSelector.getPaymentSummaryList(state),
   };
@@ -49,6 +50,7 @@ class PaymentPage extends PureComponent {
     back: PropTypes.func.isRequired,
     returnAllInsertCash: PropTypes.func.isRequired,
     enableMoneyBox: PropTypes.func.isRequired,
+    canChangeCash: PropTypes.bool.isRequired
   };
 
   componentDidMount = () => {
@@ -66,7 +68,7 @@ class PaymentPage extends PureComponent {
   }
 
   renderContent = () => {
-    const { baseURL, back, isLoading, isFinish, summaryList } = this.props;
+    const { baseURL, back, isLoading, isFinish, summaryList, canChangeCash } = this.props;
     // const isFinish = true;
     if (isFinish) return <Thankyou baseURL={baseURL} />;
     if (isLoading) return <Loading baseURL={baseURL} />;
@@ -74,6 +76,7 @@ class PaymentPage extends PureComponent {
       <PaymentConfirmation
         baseURL={baseURL}
         summaryList={summaryList}
+        canChangeCash={canChangeCash}
         back={back}
       />
     );

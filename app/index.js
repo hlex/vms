@@ -11,6 +11,8 @@ import { changeCoin } from './helpers/global';
 const store = configureStore();
 console.log('process.env', process.env);
 
+let isFirstTime = false;
+
 class Server {
   baht1;
   baht5;
@@ -115,7 +117,8 @@ if (process.env.NODE_ENV !== 'production') {
         console.log('%c Server: Drop product', serverLog, data);
         const successPercent = Math.floor(((Math.random() * 10))) + 1;
         console.log('successPercent', successPercent);
-        if (successPercent <= 7) {
+        if (successPercent <= 10 && !isFirstTime) {
+          isFirstTime = true;
           setTimeout(() => {
             socket.write(
               JSON.stringify({
@@ -124,8 +127,9 @@ if (process.env.NODE_ENV !== 'production') {
                 description: 'Item XX delivered',
               }),
             );
-          }, 2000);
+          }, 5000);
         } else {
+          isFirstTime = false;
           setTimeout(() => {
             socket.write(
               JSON.stringify({
@@ -134,7 +138,7 @@ if (process.env.NODE_ENV !== 'production') {
                 description: 'Item delivered failed',
               }),
             );
-          }, 2000);
+          }, 5000);
         }
       }
       if (objectData.action === 2 && objectData.mode === 'coin') {

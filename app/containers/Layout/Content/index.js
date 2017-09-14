@@ -28,10 +28,11 @@ class Content extends Component {
   static propTypes = {
     modal: PropTypes.shape({}).isRequired,
     cancelPayment: PropTypes.func.isRequired,
+    confirmWarningSystemWillNotChangeCash: PropTypes.func.isRequired,
   }
 
   render() {
-    const { modal, cancelPayment } = this.props;
+    const { modal, cancelPayment, confirmWarningSystemWillNotChangeCash } = this.props;
     return (
       <div className="content-wrapper">
         {
@@ -63,6 +64,13 @@ class Content extends Component {
             <small>เนื่องจากระบบขัดช้องหรือสินค้าหมด</small>
             <p>กรุณาเลือกสินค้าชนิดอื่น</p>
             <button onClick={cancelPayment} className="button purple">ยกเลิกรายการ</button>
+          </div>
+        </Modal>
+        <Modal show={modal.type.warningSystemWillNotChangeCash}>
+          <div className="app-error">
+            <h2>ขณะนี้ระบบมีเงินทอนไม่เพียงพอ</h2>
+            <p>กรุณาใส่เหรียญให้พอดีกับมูลค่าสินค้า เครื่องจะไม่ทอนเงิน</p>
+            <button onClick={confirmWarningSystemWillNotChangeCash} className="button purple">รับทราบ</button>
           </div>
         </Modal>
       </div>

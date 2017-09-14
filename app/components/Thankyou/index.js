@@ -17,7 +17,7 @@ class Thankyou extends Component {
             <span className="icon"><img src={`${baseURL}/images/icon-thank.png`} alt="" /></span>
           </span>
         </div>
-        <div className="box-with-bg yellow">
+        <div className="box-with-bg yellow _hidden">
           <p>คุณมีคะแนนสะสมจำนวน 20 คะแนน</p>
         </div>
         <div className="cash-return-box">

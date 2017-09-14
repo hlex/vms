@@ -5011,6 +5011,10 @@ hr {
 
 .payment-confirmation .payment-method .hint-message {
   font-size: 34px; }
+.payment-confirmation .payment-method .cash {
+  display: flex;
+  align-items: center;
+  justify-content: center; }
 
 .payment-confirmation .payment-method .coin {
   display: flex;

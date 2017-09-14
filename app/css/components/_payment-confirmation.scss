@@ -6,6 +6,11 @@
   .hint-message {
     font-size: 34px;
   }
+  .cash {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .payment-confirmation .payment-method .coin {

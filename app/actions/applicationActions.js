@@ -15,12 +15,7 @@ import OrderSelector from '../selectors/order';
 // ======================================================
 import {
   getServerCommand,
-  isInsertCash,
-  isProductDropSuccess,
-  isProductDropFail,
   needToChangeCash,
-  isCashChangeSuccess,
-  isCashChangeFail,
 } from '../helpers/tcp';
 import {
   createLog,
@@ -126,57 +121,47 @@ const runFlowCashInserted = () => {
     console.log('%c App isInsertCash:', createLog('app'), 'currentCash =', currentCash, 'totalAmount =', grandTotalAmount);
     if (currentCash >= grandTotalAmount) {
       dispatch(setReadyToDropProduct());
-      if (needToChangeCash(grandTotalAmount, currentCash)) {
-        // cashChange
-        console.log('%c App cashChange:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
-        setTimeout(() => {
-          dispatch(cashChange());
-        }, 1000);
-      } else {
-        // clear amount because no need to return money to customer even if cannot drop product
-        setTimeout(() => {
-          dispatch(clearPaymentAmount());
-        }, 1000);
-        // no change
-        console.log('%c App productDrop:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
-        if (OrderSelector.verifyOrderHasProduct(getState().order)) {
-          setTimeout(() => {
-            dispatch(receivedCashCompletely());
-            dispatch(productDrop());
-          }, 1000);
-        } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
-          dispatch(receivedCashCompletely());
-          setTimeout(() => {
-            dispatch(productDropProcessCompletely());
-          }, 1000);
-        }
+      setTimeout(() => {
+        dispatch(receivedCashCompletely());
+      }, 1000);
+      if (OrderSelector.verifyOrderHasProduct(getState().order)) {
+        dispatch(productDrop());
+      } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
+        dispatch(productDropProcessCompletely());
       }
     }
+    //   if (needToChangeCash(grandTotalAmount, currentCash)) {
+    //     // cashChange
+    //     console.log('%c App cashChange:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
+    //     setTimeout(() => {
+    //       dispatch(cashChange());
+    //     }, 1000);
+    //   } else {
+    //     // clear amount because no need to return money to customer even if cannot drop product
+    //     setTimeout(() => {
+    //       dispatch(clearPaymentAmount());
+    //     }, 1000);
+    //     // no change
+    //     console.log('%c App productDrop:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
+    //     if (OrderSelector.verifyOrderHasProduct(getState().order)) {
+    //       setTimeout(() => {
+    //         dispatch(receivedCashCompletely());
+    //         dispatch(productDrop());
+    //       }, 1000);
+    //     } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
+    //       dispatch(receivedCashCompletely());
+    //       setTimeout(() => {
+    //         dispatch(productDropProcessCompletely());
+    //       }, 1000);
+    //     }
+    //   }
+    // }
   };
 };
 
 const runFlowCashChangeSuccess = () => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(Actions.setCashChangeAmount(0));
-    if (OrderSelector.verifyOrderHasProduct(getState().order)) {
-      console.log('%c App Product Order', createLog('app'));
-      const readyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
-      if (readyToDropProduct) {
-        setTimeout(() => {
-          dispatch(receivedCashCompletely());
-          dispatch(productDrop());
-        }, 1000);
-      } else {
-        console.error('Cannot Drop Product because readyToDropProduct = ', readyToDropProduct);
-      }
-    } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
-      console.log('%c App MobileTopup Order', createLog('app'));
-      // call API
-      dispatch(receivedCashCompletely());
-      setTimeout(() => {
-        dispatch(productDropProcessCompletely());
-      }, 1000);
-    }
   };
 };
 
@@ -188,6 +173,15 @@ const runFlowProductDropSuccess = () => {
     // check hasPromotionSet ?
     // ======================================================
     if (OrderSelector.verifyAllOrderDropped(getState().order)) {
+      const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
+      const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
+      // ======================================================
+      // Cash Change
+      // ======================================================
+      if (needToChangeCash(grandTotalAmount, currentCash)) {
+        console.log('%c App cashChange:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
+        dispatch(cashChange());
+      }
       dispatch(productDropProcessCompletely());
     } else {
       dispatch(productDrop());
@@ -236,9 +230,9 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       // return cash eql product price
       dispatch(setNotReadyToDropProduct());
       if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
-        dispatch(cashChangeEqualToGrandTotalAmountMinusDroppedProduct());
+        dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
       } else {
-        dispatch(cashChangeEqualToGrandTotalAmount());
+        dispatch(cashChangeEqualToCurrentCashAmount());
       }
       dispatch(Actions.showModal('productDropError'));
       break;
@@ -284,7 +278,7 @@ export const productDropProcessCompletely = () => dispatch => {
   dispatch(Actions.productDropProcessCompletely());
   setTimeout(() => {
     dispatch(backToHome());
-  }, 3000);
+  }, 5000);
 };
 
 export const confirmMobileTopupMSISDN = (MSISDN) => {
@@ -319,10 +313,21 @@ export const sendCashChangeToServer = () => {
   };
 };
 
-export const cashChangeEqualToGrandTotalAmount = () => {
+// export const cashChangeEqualToGrandTotalAmount = () => {
+//   return (dispatch, getState) => {
+//     const grandTotalAmount = RootSelector.getCashChangeFromOrderAmount(getState());
+//     dispatch(Actions.setCashChangeAmount(grandTotalAmount));
+//     // ======================================================
+//     // Disable Moneybox before sendCashChange
+//     // ======================================================
+//     dispatch(disableMoneyBox());
+//   };
+// };
+
+export const cashChangeEqualToCurrentCashAmountMinusDroppedProduct = () => {
   return (dispatch, getState) => {
-    const grandTotalAmount = RootSelector.getCashChangeFromOrderAmount(getState());
-    dispatch(Actions.setCashChangeAmount(grandTotalAmount));
+    const cashChangePromotionError = RootSelector.getCashChangePromotionSetError(getState());
+    dispatch(Actions.setCashChangeAmount(cashChangePromotionError));
     // ======================================================
     // Disable Moneybox before sendCashChange
     // ======================================================
@@ -330,10 +335,11 @@ export const cashChangeEqualToGrandTotalAmount = () => {
   };
 };
 
-export const cashChangeEqualToGrandTotalAmountMinusDroppedProduct = () => {
+export const cashChangeEqualToCurrentCashAmount = () => {
   return (dispatch, getState) => {
-    const cashChangePromotionError = RootSelector.getCashChangePromotionSetError(getState());
-    dispatch(Actions.setCashChangeAmount(cashChangePromotionError));
+    const currentAmount = PaymentSelector.getCurrentAmount(getState().payment);
+    debugger;
+    dispatch(Actions.setCashChangeAmount(currentAmount));
     // ======================================================
     // Disable Moneybox before sendCashChange
     // ======================================================
@@ -383,6 +389,12 @@ export const insetCoin = (value) => {
       action: 999,
       msg: value,
     });
+  };
+};
+
+export const confirmWarningSystemWillNotChangeCash = () => {
+  return (dispatch) => {
+    dispatch(hideAllModal());
   };
 };
 

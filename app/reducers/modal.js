@@ -7,6 +7,7 @@ const initModal = () => {
     collectPoint: false,
     cashChangeError: false,
     productDropError: false,
+    warningSystemWillNotChangeCash: false
   };
 };
 

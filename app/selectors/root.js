@@ -35,7 +35,7 @@ const getCashChangeFromCurrentCash = (state) => {
 };
 
 const getCashChangePromotionSetError = (state) => {
-  return OrderSelector.getOrderGrandTotalAmount(state.order) - OrderSelector.getDroppedProductSummaryPrice(state.order);
+  return PaymentSelector.getCurrentAmount(state.payment) - OrderSelector.getDroppedProductSummaryPrice(state.order);
 };
 
 export default {

@@ -9,6 +9,7 @@ class PaymentConfirmation extends Component {
     baseURL: PropTypes.string.isRequired,
     summaryList: PropTypes.arrayOf(PropTypes.shape({})),
     back: PropTypes.func,
+    canChangeCash: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -25,6 +26,7 @@ class PaymentConfirmation extends Component {
       },
     ],
     back: () => console.log('back'),
+    canChangeCash: false,
   }
 
   handleBack = () => {
@@ -33,7 +35,7 @@ class PaymentConfirmation extends Component {
   }
 
   render() {
-    const { baseURL, summaryList } = this.props;
+    const { baseURL, summaryList, canChangeCash } = this.props;
     return (
       <div className="payment-confirmation">
         <div className="row">
@@ -44,7 +46,7 @@ class PaymentConfirmation extends Component {
             <br />
             <hr />
             <div className="_center">
-              <h3>กรุณาหยอดเหรียญหรือธนบัตร</h3>
+              <h3>{`กรุณาหยอดเหรียญ${canChangeCash ? 'หรือธนบัตร' : ''}`}</h3>
             </div>
             <div className="payment-method">
               <div className="cash">
@@ -62,20 +64,23 @@ class PaymentConfirmation extends Component {
                   </div>
                   <span className="hint-message">1, 5, 10 เท่านั้น</span>
                 </div>
-                <div className="banknote">
-                  <div className="list">
-                    <div className="item">
-                      <img src={`${baseURL}/images/banknote-20.png`} alt="" />
+                {
+                  canChangeCash &&
+                  <div className="banknote">
+                    <div className="list">
+                      <div className="item">
+                        <img src={`${baseURL}/images/banknote-20.png`} alt="" />
+                      </div>
+                      <div className="item">
+                        <img src={`${baseURL}/images/banknote-50.png`} alt="" />
+                      </div>
+                      <div className="item">
+                        <img src={`${baseURL}/images/banknote-100.png`} alt="" />
+                      </div>
                     </div>
-                    <div className="item">
-                      <img src={`${baseURL}/images/banknote-50.png`} alt="" />
-                    </div>
-                    <div className="item">
-                      <img src={`${baseURL}/images/banknote-100.png`} alt="" />
-                    </div>
+                    <span className="hint-message">20, 50, 100 เท่านั้น</span>
                   </div>
-                  <span className="hint-message">20, 50, 100 เท่านั้น</span>
-                </div>
+                }
               </div>
             </div>
           </div>
@@ -84,7 +89,11 @@ class PaymentConfirmation extends Component {
               <div className="insert-cash-sign">
                 <img src={`${baseURL}/images/icon-point-left.png`} alt="" />
               </div>
-              <h4>หยอดเงิน</h4>
+              {
+                canChangeCash
+                ? <h4>หยอดเงิน</h4>
+                : <h4>หยอดเหรียญให้พอดี</h4>
+              }
               <div className="error _hidden">
                 <p>เงินทอนไม่พอ</p>
                 <p>กรุณาใส่เงินให้พอดั</p>

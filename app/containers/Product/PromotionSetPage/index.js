@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 // ======================================================
 // Components
 // ======================================================
-import { Layout, ProductSummary, PromotionSetTitle } from '../../../components';
-
+import { ProductSummary, PromotionSetTitle } from '../../../components';
+import Layout from '../../Layout';
 // ======================================================
 // Actions
 // ======================================================
