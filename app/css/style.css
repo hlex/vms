@@ -7536,30 +7536,6 @@ span.currency {
   background: linear-gradient(to right, #912cf7 0%, #5b69ff 39%, #5b69ff 69%, #912cf7 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#912cf7', endColorstr='#912cf7', GradientType=1); }
 
-.footer-ads {
-  float: left;
-  width: 100%; }
-
-.footer-ads img {
-  display: block; }
-
-.footer {
-  float: left;
-  width: 100%;
-  height: 40px;
-  background: #181818; }
-
-.footer .copy {
-  float: left;
-  width: 100%;
-  color: #ffd800;
-  line-height: 40px;
-  font-size: 22px;
-  text-align: center; }
-
-.footer .copy p {
-  padding: 0; }
-
 .with-pads {
   position: relative;
   padding-top: 15px; }
@@ -7881,8 +7857,29 @@ span.currency {
     font-weight: bold;
     z-index: 1; }
 
-.footer p {
-  margin: 0; }
+.footer-section {
+  position: relative; }
+  .footer-section .signage {
+    position: relative; }
+  .footer-section .copy {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    background: #181818; }
+  .footer-section .react-mediaplayer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; }
+
+.footer-section .copy p {
+  padding: 0;
+  margin: 0;
+  color: #ffd800;
+  font-size: 22px; }
 
 ._unmargin {
   margin: 0 !important; }
