@@ -20,12 +20,14 @@ import * as Actions from './actions';
 // Selectors
 // ======================================================
 import MasterappSelector from '../../../selectors/masterapp';
-import OrderSelector from '../../../selectors/order';
+import OrderSelectors from '../../../selectors/order';
 
 const mapStateToProps = (state) => {
   return {
+    MSISDN: OrderSelectors.getTopupMSISDN(state.order),
+    topupProviderName: OrderSelectors.getMobileTopupName(state.order),
+    banner: OrderSelectors.getMobileTopupBanner(state.order),
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
-    banner: OrderSelector.getMobileTopupBanner(state.order),
   };
 };
 
@@ -44,12 +46,15 @@ class InputMSISDNPage extends Component {
   static propTypes = {
     baseURL: PropTypes.string.isRequired,
     banner: PropTypes.string.isRequired,
+    MSISDN: PropTypes.string.isRequired,
+    topupProviderName: PropTypes.string.isRequired,
     confirmMobileTopupMSISDN: PropTypes.func.isRequired,
+    back: PropTypes.func.isRequired,
   }
 
   render() {
     console.log('InputMSISDNPage', this.props);
-    const { baseURL, banner, confirmMobileTopupMSISDN } = this.props;
+    const { baseURL, banner, topupProviderName, confirmMobileTopupMSISDN, MSISDN, back } = this.props;
     return (
       <div className="input-msisdn">
         <Layout.Title>
@@ -62,22 +67,25 @@ class InputMSISDNPage extends Component {
         <Layout.Content>
           <div className="input-msisdn-box">
             <div className="content _center">
-              <p>ท่านเลือกเครือข่าย AIS one2call</p>
+              <p>ท่านเลือกเครือข่าย {topupProviderName}</p>
               <h2>ใส่เบอร์มือถือที่ต้องการเติมเงิน</h2>
-              <div className="input-box">
-                <InputWithPad
-                  type={'num'}
-                  onConfirm={confirmMobileTopupMSISDN}
-                />
-                <p className="sm"><small>กรุณาตรวจสอบหมายเลขโทรศัพท์ให้ถูกต้อง</small></p>
-                <p className="sm _unpadding"><small>สัมผัสช่องว่างแป้นพิมพ์จะปรากฏ</small></p>
-              </div>
+              <p className="sm"><small>กรุณาตรวจสอบหมายเลขโทรศัพท์ให้ถูกต้อง</small></p>
+              <InputWithPad
+                show
+                type={'num'}
+                rules={{
+                  required: 'กรุณาระบุหมายเลขโทรศัพท์',
+                  mobileNumber: 'รูปแบบหมายเลขโทรศัพท์ไม่ถูกต้อง'
+                }}
+                value={MSISDN}
+                onConfirm={confirmMobileTopupMSISDN}
+              />
             </div>
           </div>
           <a
             style={{ position: 'absolute', bottom: '40px', left: '80px' }}
             className="button purple M"
-            onClick={this.handleBack}
+            onClick={back}
           >
             <i className="fa fa-chevron-left" />ย้อนกลับ
           </a>

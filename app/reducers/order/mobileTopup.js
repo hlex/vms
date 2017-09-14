@@ -5,6 +5,7 @@ import {
   SELECT_MOBILE_TOPUP_VALUE,
   SUBMIT_MOBILE_TOPUP_VALUE,
   CLEAR_MOBILE_TOPUP_VALUE,
+  CLEAR_MOBILE_TOPUP_MSISDN,
 } from '../../actions/actionTypes';
 
 const initialState = {
@@ -42,6 +43,11 @@ export default (state = getInitialState(), action) => {
       return {
         ...state,
         selectedMobileTopupValue: {},
+      }
+    case CLEAR_MOBILE_TOPUP_MSISDN:
+      return {
+        ...state,
+        MSISDN: '',
       }
     default:
       return state;

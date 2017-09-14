@@ -24,6 +24,8 @@ import OrderSelectors from '../../../selectors/order';
 const mapStateToProps = (state) => {
   return {
     mobileTopupValues: MasterdataSelectors.getMobileTopupValues(state.masterdata),
+    topupProviderName: OrderSelectors.getMobileTopupName(state.order),
+    MSISDN: OrderSelectors.getTopupMSISDN(state.order),
     // selectedMobileTopupValue: OrderSelectors.getSelectedMobileTopupValue(state.order),
   };
 };
@@ -42,7 +44,10 @@ class SelectTopupValuePage extends Component {
 
   static propTypes = {
     mobileTopupValues: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    topupProviderName: PropTypes.string.isRequired,
     submitMobileTopupValue: PropTypes.func.isRequired,
+    back: PropTypes.func.isRequired,
+    MSISDN: PropTypes.string.isRequired,
     // selectedMobileTopupValue: PropTypes.shape({}).isRequired,
   }
 
@@ -86,7 +91,12 @@ class SelectTopupValuePage extends Component {
   }
 
   render() {
-    const { mobileTopupValues } = this.props;
+    const { mobileTopupValues, topupProviderName, MSISDN, back } = this.props;
+    let displayMSISDN = '';
+    for (let i = 0; i < MSISDN.length; i += 1) {
+      if (i === 3 || i === 6) displayMSISDN += '-';
+      displayMSISDN += MSISDN[i];
+    }
     return (
       <div className="select-mobile-topup-value">
         <Layout.ContentLong>
@@ -96,9 +106,9 @@ class SelectTopupValuePage extends Component {
           </div>
           <div className="page-container">
             <Jumbotron>
-              <p>ท่านเลือกเครือข่าย AIS one2call</p>
+              <p>ท่านเลือกเครือข่าย {topupProviderName}</p>
               <h2>ใส่เบอร์มือถือที่ต้องการเติมเงิน</h2>
-              <div className="msisdn">088-185-9067</div>
+              <div className="msisdn">{displayMSISDN}</div>
             </Jumbotron>
             <div className="topup-packages">
               <div className="_center">
@@ -116,7 +126,7 @@ class SelectTopupValuePage extends Component {
           <a
             style={{ position: 'absolute', bottom: '240px', left: '40px' }}
             className="button purple M"
-            onClick={this.handleBack}
+            onClick={back}
           >
             <i className="fa fa-chevron-left" />ย้อนกลับ
           </a>

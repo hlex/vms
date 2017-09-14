@@ -40,12 +40,17 @@ class TopupProviderSelectionPage extends Component {
   static propTypes = {
     baseURL: PropTypes.string.isRequired,
     topupProviders: PropTypes.arrayOf(PropTypes.shape({})),
-    selectTopupProvider: PropTypes.func,
+    selectTopupProvider: PropTypes.func.isRequired,
+    clearMobileTopupMSISDN: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
     topupProviders: [],
-    selectTopupProvider: () => console.log('selectTopupProvider'),
+  }
+
+  componentDidMount = () => {
+    const { clearMobileTopupMSISDN } = this.props;
+    clearMobileTopupMSISDN();
   }
 
   render() {

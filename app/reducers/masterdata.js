@@ -7,7 +7,7 @@ const mockupTopupProviders = [
     banner: 'images/product-full-ais.png',
     src: 'images/operation-ais.png',
     serviceCode: '1001',
-    name: 'AIS',
+    name: 'AIS one2call',
   },
   {
     id: 2,
@@ -37,13 +37,13 @@ const mockupTopupProviders = [
     serviceCode: '1001',
     name: 'Cat',
   },
-  {
-    id: 6,
-    banner: 'images/product-full-ais.png',
-    src: 'images/operation-penguin.png',
-    serviceCode: '1001',
-    name: 'Penguin',
-  },
+  // {
+  //   id: 6,
+  //   banner: 'images/product-full-ais.png',
+  //   src: 'images/operation-penguin.png',
+  //   serviceCode: '1001',
+  //   name: 'Penguin',
+  // },
 ];
 
 const mockupMobileTopupValues = [
@@ -73,40 +73,40 @@ const mockupMobileTopupValues = [
   },
   {
     cuid: cuid(),
-    id: 1,
+    id: 5,
     value: '200',
     fee: '0',
   },
+  // {
+  //   cuid: cuid(),
+  //   id: 1,
+  //   value: '250',
+  //   fee: '0',
+  // },
   {
     cuid: cuid(),
-    id: 1,
-    value: '250',
-    fee: '0',
-  },
-  {
-    cuid: cuid(),
-    id: 1,
+    id: 6,
     value: '300',
     fee: '0',
   },
-  {
-    cuid: cuid(),
-    id: 1,
-    value: '350',
-    fee: '0',
-  },
-  {
-    cuid: cuid(),
-    id: 1,
-    value: '400',
-    fee: '0',
-  },
-  {
-    cuid: cuid(),
-    id: 1,
-    value: '500',
-    fee: '0',
-  },
+  // {
+  //   cuid: cuid(),
+  //   id: 1,
+  //   value: '350',
+  //   fee: '0',
+  // },
+  // {
+  //   cuid: cuid(),
+  //   id: 1,
+  //   value: '400',
+  //   fee: '0',
+  // },
+  // {
+  //   cuid: cuid(),
+  //   id: 1,
+  //   value: '500',
+  //   fee: '0',
+  // },
 ];
 
 const isSoldout = () => {

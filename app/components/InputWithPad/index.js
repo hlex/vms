@@ -3,43 +3,89 @@ import PropTypes from 'prop-types';
 
 export default class InputWithPad extends PureComponent {
   static propTypes = {
+    show: PropTypes.bool,
     type: PropTypes.string,
+    value: PropTypes.string,
+    rules: PropTypes.shape({}),
     onConfirm: PropTypes.func,
   };
 
   static defaultProps = {
+    show: false,
     type: 'num', // 'keyboard'
+    value: '',
     onConfirm: () => console.log('Please send any onConfirm(inputValue)'),
+    rules: {},
   };
 
   state = {
-    show: false,
-    inputValue: '',
+    show: this.props.show || false,
+    inputValue: this.props.value || '',
+    validationMessage: ''
   };
+
+  componentDidMount = () => {
+    this.setState({
+      validationMessage: this.handleValidateInput(this.state.inputValue)
+    });
+  }
 
   handleToggleShowKeyboard = () => {
-    this.setState({
-      show: !this.state.show,
-    });
+    if (!this.props.show) {
+      this.setState({
+        show: !this.state.show,
+      });
+    }
   };
 
+  handleValidateInput = (value) => {
+    const { rules } = this.props;
+    let validationMessage = '';
+    _.forEach(rules, (message, rule) => {
+      console.log('rule', rule, message);
+      switch (rule) {
+        case 'required':
+        case 'require':
+          validationMessage = !value || value === '' || value === null ? message : '';
+          break;
+        case 'mobileNumber':
+          validationMessage = /^(0)\d{9}$/.test(value) ? '' : message;
+          break;
+        default:
+          return '';
+      }
+    });
+    return validationMessage;
+  }
+
   handleSelectChar = char => {
+    const { inputValue } = this.state;
+    if (inputValue.length === 10) {
+      return '';
+    }
+    const nextValue = `${this.state.inputValue}${char}`;
     this.setState({
-      inputValue: `${this.state.inputValue}${char}`,
+      inputValue: nextValue,
+      validationMessage: this.handleValidateInput(nextValue),
     });
   };
 
   handleSelectBackspace = () => {
     const { inputValue } = this.state;
     console.log(inputValue, inputValue.length);
+    const nextValue = inputValue.substring(0, inputValue.length - 1);
     this.setState({
-      inputValue: inputValue.substring(0, inputValue.length - 1),
+      inputValue: nextValue,
+      validationMessage: this.handleValidateInput(),
     });
   };
 
   handleSelectConfirm = () => {
     const { onConfirm } = this.props;
-    onConfirm(this.state.inputValue);
+    const { validationMessage } = this.state;
+    if (validationMessage === '') {
+      onConfirm(this.state.inputValue);
+    }
   };
 
   renderPad = () => {
@@ -48,7 +94,7 @@ export default class InputWithPad extends PureComponent {
     if (type === 'num') {
       return (
         <div className={`pads-number ${show ? 'open' : ''}`}>
-          <div className="overlay" onClick={this.handleToggleShowKeyboard}></div>
+          {!this.props.show && <div className="overlay" onClick={this.handleToggleShowKeyboard}></div>}
           <ul>
             <li>
               <a onClick={() => this.handleSelectChar('7')}>7</a>
@@ -85,13 +131,13 @@ export default class InputWithPad extends PureComponent {
             <li>
               <a onClick={() => this.handleSelectChar('0')}>0</a>
             </li>
-            <li>
-              <a className="clickpads-phone-ok" onClick={() => this.handleSelectConfirm()}>
-                OK
-              </a>
-            </li>
-          </ul>
-        </div>
+              <li>
+                <a className="clickpads-phone-ok" onClick={() => this.handleSelectConfirm()}>
+                  OK
+                </a>
+              </li>
+            </ul>
+          </div>
       );
     }
     return (
@@ -255,19 +301,33 @@ export default class InputWithPad extends PureComponent {
   };
 
   render() {
-    const { inputValue } = this.state;
+    console.log('state', this.state);
+    const { show } = this.props;
+    const { inputValue, validationMessage } = this.state;
+    let displayInputValue = '';
+    if (show) {
+      for (let i = 0; i < inputValue.length; i += 1) {
+        if (i === 3 || i === 6) displayInputValue += '-';
+        displayInputValue += inputValue[i];
+      }
+    } else {
+      displayInputValue = inputValue;
+    }
     return (
-      <div className="input-with-pad">
-        <div
-          className="input"
-          onClick={this.handleToggleShowKeyboard}
-          onBlur={this.handleToggleShowKeyboard}
-        >
-          {inputValue}
+      <div className="input-box">
+        <p className="input-validation">{validationMessage}</p>
+        <div className="input-with-pad">
+          <div
+            className="input"
+            onClick={this.handleToggleShowKeyboard}
+            onBlur={this.handleToggleShowKeyboard}
+          >
+            {displayInputValue}
+          </div>
+          {
+            this.renderPad()
+          }
         </div>
-        {
-          this.renderPad()
-        }
       </div>
     );
   }

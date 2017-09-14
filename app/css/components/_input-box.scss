@@ -3,7 +3,13 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10px;
+  position: relative;
+  .input-validation {
+    width: 100%;
+    position: absolute;
+    color: red;
+    top: 0;
+  }
   p {
     margin: 0;
   }

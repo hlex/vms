@@ -23,6 +23,7 @@ import {
   SUBMIT_MOBILE_TOPUP_VALUE,
   CLEAR_MOBILE_TOPUP_VALUE,
   SET_CASH_CHANGE_AMOUNT,
+  CLEAR_MOBILE_TOPUP_MSISDN,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -182,5 +183,11 @@ export const setCashChangeAmount = (cashChangeAmount) => {
   return {
     type: SET_CASH_CHANGE_AMOUNT,
     cashChangeAmount
+  };
+};
+
+export const clearMobileTopupMSISDN = () => {
+  return {
+    type: CLEAR_MOBILE_TOPUP_MSISDN,
   };
 };

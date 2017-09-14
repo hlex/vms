@@ -40,10 +40,24 @@ const getSelectedMobileTopupTotalPrice = createSelector(
   }
 );
 
+const getMobileTopupName = createSelector(
+  [getSelectedMobileTopupProvider],
+  (selectedMobileTopupProvider) => {
+    return selectedMobileTopupProvider.name || '';
+  }
+);
+
 const getMobileTopupBanner = createSelector(
   [getSelectedMobileTopupProvider],
   (selectedMobileTopupProvider) => {
     return selectedMobileTopupProvider.banner || '';
+  }
+);
+
+const getMobileTopupServiceCode = createSelector(
+  [getSelectedMobileTopupProvider],
+  (selectedMobileTopupProvider) => {
+    return selectedMobileTopupProvider.serviceCode || '';
   }
 );
 
@@ -181,7 +195,9 @@ export default {
   getSelectedMobileTopupProvider,
   getSelectedMobileTopupValue,
   getSelectedMobileTopupTotalPrice,
+  getMobileTopupName,
   getMobileTopupBanner,
+  getMobileTopupServiceCode,
   // ======================================================
   // Single Product
   // ======================================================

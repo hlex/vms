@@ -5173,12 +5173,23 @@ hr {
   align-items: center;
   height: 400px; }
 
+.input-msisdn-box .content p {
+  margin: 0; }
+.input-msisdn-box .content .input-box {
+  margin-top: 15px;
+  padding-top: 65px; }
+
 .input-box {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10px; }
+  position: relative; }
+  .input-box .input-validation {
+    width: 100%;
+    position: absolute;
+    color: red;
+    top: 0; }
   .input-box p {
     margin: 0; }
   .input-box p.sm {
@@ -5217,8 +5228,7 @@ hr {
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background-color: rgba(24, 24, 24, 0.1); }
+    bottom: 0; }
   .input-with-pad .pads-number {
     display: none;
     position: absolute;

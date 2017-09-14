@@ -476,3 +476,8 @@ export const disableMoneyBox = () => {
   };
 };
 
+export const clearMobileTopupMSISDN = () => {
+  return (dispatch) => {
+    dispatch(Actions.clearMobileTopupMSISDN());
+  };
+};
