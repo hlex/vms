@@ -86,8 +86,11 @@ class SelectTopupValuePage extends Component {
   }
 
   handleSubmit = () => {
+    const { selectedMobileTopupValue } = this.state;
     const { submitMobileTopupValue } = this.props;
-    submitMobileTopupValue(this.state.selectedMobileTopupValue);
+    if (selectedMobileTopupValue.cuid !== '') {
+      submitMobileTopupValue(this.state.selectedMobileTopupValue);
+    }
   }
 
   render() {

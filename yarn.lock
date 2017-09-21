@@ -193,6 +193,10 @@ anymatch@^1.3.0:
     arrify "^1.0.0"
     micromatch "^2.1.5"
 
+api-jarvis@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/api-jarvis/-/api-jarvis-2.2.0.tgz#c4f5811d61df45b0a610eb4ad757babaf6f642e7"
+
 append-transform@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/append-transform/-/append-transform-0.4.0.tgz#d76ebf8ca94d276e247a36bad44a4b74ab611991"

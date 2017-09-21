@@ -15,7 +15,7 @@ class Header extends Component {
         <div className="header">
           <div className="tooltip">
             <h2>
-              <span>ยินดีต้อนรับ</span> ใช้ระบบสัมผัสในการเลือก
+              <span>ยินดีต้อนรับ</span> ใช้นิ้วเดียวสัมผัสในการเลือก
             </h2>
             <i>
               <img src={`${baseURL}/images/icon-tuch.png`} />

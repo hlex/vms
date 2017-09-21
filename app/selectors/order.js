@@ -5,165 +5,108 @@ const getProducts = state => state.products;
 const getPromotionSets = state => state.promotionSets;
 const getMobileTopup = state => state.mobileTopup;
 
-const getTopupMSISDN = createSelector(
-  [getMobileTopup],
-  (mobileTopup) => {
-    return mobileTopup.MSISDN || '';
-  }
-);
+const getTopupMSISDN = createSelector([getMobileTopup], mobileTopup => mobileTopup.MSISDN || '');
 
 const getSelectedMobileTopupProvider = createSelector(
   [getMobileTopup],
-  (mobileTopup) => {
-    return mobileTopup.selectedMobileTopupProvider || {};
-  }
+  mobileTopup => mobileTopup.selectedMobileTopupProvider || {},
 );
 
 const getSelectedMobileTopupValue = createSelector(
   [getMobileTopup],
-  (mobileTopup) => {
-    return mobileTopup.selectedMobileTopupValue || {};
-  }
+  mobileTopup => mobileTopup.selectedMobileTopupValue || {},
 );
 
 const getSelectedMobileTopupPrice = createSelector(
   [getSelectedMobileTopupValue],
-  (selectedMobileTopupValue) => {
-    return Number(selectedMobileTopupValue.value);
-  }
+  selectedMobileTopupValue => Number(selectedMobileTopupValue.value),
 );
 
 const getSelectedMobileTopupTotalPrice = createSelector(
   [getSelectedMobileTopupValue, getSelectedMobileTopupPrice],
-  (selectedMobileTopupValue, selectedMobileTopupPrice) => {
-    return selectedMobileTopupPrice + Number(selectedMobileTopupValue.fee);
-  }
+  (selectedMobileTopupValue, selectedMobileTopupPrice) =>
+    selectedMobileTopupPrice + Number(selectedMobileTopupValue.fee),
 );
 
 const getMobileTopupName = createSelector(
   [getSelectedMobileTopupProvider],
-  (selectedMobileTopupProvider) => {
-    return selectedMobileTopupProvider.name || '';
-  }
+  selectedMobileTopupProvider => selectedMobileTopupProvider.name || '',
 );
 
 const getMobileTopupBanner = createSelector(
   [getSelectedMobileTopupProvider],
-  (selectedMobileTopupProvider) => {
-    return selectedMobileTopupProvider.banner || '';
-  }
+  selectedMobileTopupProvider => selectedMobileTopupProvider.banner || '',
 );
 
 const getMobileTopupServiceCode = createSelector(
   [getSelectedMobileTopupProvider],
-  (selectedMobileTopupProvider) => {
-    return selectedMobileTopupProvider.serviceCode || '';
-  }
+  selectedMobileTopupProvider => selectedMobileTopupProvider.serviceCode || '',
 );
 
-const getSingleProduct = createSelector(
-  [getProducts],
-  (products) => {
-    return _.head(products);
-  }
+const getMobileTopupToService = createSelector(
+  [getMobileTopupServiceCode, getTopupMSISDN, getSelectedMobileTopupPrice],
+  (serviceCode, MSISDN, mobileTopupValue) => ({
+    serviceCode,
+    MSISDN,
+    mobileTopupValue,
+  }),
 );
 
-const getPromotionSet = createSelector(
-  [getPromotionSets],
-  (promotionSets) => {
-    return _.head(promotionSets);
-  }
+const getSingleProduct = createSelector([getProducts], products => _.head(products));
+
+const getPromotionSet = createSelector([getPromotionSets], promotionSets => _.head(promotionSets));
+
+const getPromotionSetProducts = createSelector([getPromotionSet], promotionSet =>
+  _.get(promotionSet, 'products', []),
 );
 
-const getPromotionSetProducts = createSelector(
-  [getPromotionSet],
-  (promotionSet) => {
-    return _.get(promotionSet, 'products', []);
-  }
+const getSingleProductPrice = createSelector([getSingleProduct], singleProduct =>
+  Number(_.get(singleProduct, 'price', '')),
 );
 
-const getSingleProductPrice = createSelector(
-  [getSingleProduct],
-  (singleProduct) => {
-    return Number(_.get(singleProduct, 'price', ''));
-  }
+const getPromotionSetPrice = createSelector([getPromotionSet], promotionSet =>
+  Number(_.get(promotionSet, 'price', '')),
 );
 
-const getPromotionSetPrice = createSelector(
-  [getPromotionSet],
-  (promotionSet) => {
-    return Number(_.get(promotionSet, 'price', ''));
-  }
+const getPromotionSetFirstProductPrice = createSelector([getPromotionSetProducts], products =>
+  Number(_.head(products).price),
 );
 
-const getPromotionSetFirstProductPrice = createSelector(
-  [getPromotionSetProducts],
-  (products) => {
-    return Number(_.head(products).price);
-  }
+const getDroppedProducts = createSelector([getProducts], products =>
+  _.filter(products, product => product.isDropped),
 );
 
-const getDroppedProducts = createSelector(
-  [getProducts],
-  (products) => {
-    return _.filter(products, product => product.isDropped);
-  }
+const getDroppedProductSummaryPrice = createSelector([getDroppedProducts], products =>
+  _.sumBy(products, product => Number(product.price)),
 );
 
-const getDroppedProductSummaryPrice = createSelector(
-  [getDroppedProducts],
-  (products) => {
-    return _.sumBy(products, product => Number(product.price));
-  }
-);
-
-const getProductToDrop = createSelector(
-  [getProducts],
-  (products) => {
-    return _.find(products, product => !product.isDropped);
-  }
+const getProductToDrop = createSelector([getProducts], products =>
+  _.find(products, product => !product.isDropped),
 );
 
 const getDropProductTargetRowColumn = createSelector(
   [getProductToDrop],
-  (productToDrop) => {
-    return `${productToDrop.row}${productToDrop.col}`;
-  }
+  productToDrop => `${productToDrop.row}${productToDrop.col}`,
 );
 
-const verifyOrderHasProduct = createSelector(
-  [getProducts],
-  (products) => {
-    return _.size(products) > 0;
-  }
+const verifyOrderHasProduct = createSelector([getProducts], products => _.size(products) > 0);
+
+const verifyHasDroppedProduct = createSelector([getProducts], products =>
+  _.some(products, product => product.isDropped),
 );
 
-const verifyHasDroppedProduct = createSelector(
-  [getProducts],
-  (products) => {
-    return _.some(products, product => product.isDropped);
-  }
-);
-
-const verifyAllOrderDropped = createSelector(
-  [getProducts],
-  (products) => {
-    return _.every(products, product => product.isDropped);
-  }
+const verifyAllOrderDropped = createSelector([getProducts], products =>
+  _.every(products, product => product.isDropped),
 );
 
 const verifyOrderHasPromotionSet = createSelector(
   [getPromotionSets],
-  (promotionSets) => {
-    return _.size(promotionSets) > 0;
-  }
+  promotionSets => _.size(promotionSets) > 0,
 );
 
 const verifyMobileTopupOrder = createSelector(
   [getSelectedMobileTopupProvider],
-  (selectedMobileTopup) => {
-    return !_.isEmpty(selectedMobileTopup);
-  }
+  selectedMobileTopup => !_.isEmpty(selectedMobileTopup),
 );
 
 const getOrderGrandTotalAmount = createSelector(
@@ -172,18 +115,18 @@ const getOrderGrandTotalAmount = createSelector(
     verifyMobileTopupOrder,
     getSelectedMobileTopupTotalPrice,
     getSingleProductPrice,
-    getPromotionSetPrice
+    getPromotionSetPrice,
   ],
   (
     hasPromotionSet,
     hasMobileTopup,
     selectedMobileTopupTotalPrice,
     singleProductPrice,
-    promotionSetPrice
+    promotionSetPrice,
   ) => {
     if (hasMobileTopup) return selectedMobileTopupTotalPrice;
     return hasPromotionSet ? promotionSetPrice : singleProductPrice;
-  }
+  },
 );
 
 export default {
@@ -198,6 +141,7 @@ export default {
   getMobileTopupName,
   getMobileTopupBanner,
   getMobileTopupServiceCode,
+  getMobileTopupToService,
   // ======================================================
   // Single Product
   // ======================================================

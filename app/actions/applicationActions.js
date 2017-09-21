@@ -9,17 +9,15 @@ import RootSelector from '../selectors/root';
 import MasterappSelector from '../selectors/masterapp';
 import PaymentSelector from '../selectors/payment';
 import OrderSelector from '../selectors/order';
-
 // ======================================================
 // Helpers
 // ======================================================
-import {
-  getServerCommand,
-  needToChangeCash,
-} from '../helpers/tcp';
-import {
-  createLog,
-} from '../helpers/global';
+import { getServerCommand, needToChangeCash } from '../helpers/tcp';
+import { createLog } from '../helpers/global';
+// ======================================================
+// APIs
+// ======================================================
+import { topupMobile } from '../apis/mobileTopup';
 
 let cmdNo = 0;
 let retryNo = 0;
@@ -30,9 +28,9 @@ export const clearOrder = () => dispatch => {
 
 export const backToHome = () => dispatch => {
   dispatch(changePage(''));
-    // ======================================================
-    // Clear many stuffs
-    // ======================================================
+  // ======================================================
+  // Clear many stuffs
+  // ======================================================
   dispatch(Actions.resetPaymentReducer());
   dispatch(Actions.notReadyToDropProduct());
 };
@@ -57,7 +55,7 @@ export const selectProduct = (context, item, module) => dispatch => {
       break;
     case 'promotionSet':
       dispatch(Actions.selectPromotionSet(item));
-      _.forEach(item.products, (product) => {
+      _.forEach(item.products, product => {
         dispatch(Actions.selectProduct(product));
       });
       break;
@@ -81,7 +79,7 @@ export const initTcpClient = tcpClient => dispatch => {
   dispatch(Actions.initTcpClient(tcpClient));
 };
 
-export const productDropSuccess = (droppedProduct) => dispatch => {
+export const productDropSuccess = droppedProduct => dispatch => {
   dispatch(Actions.productDropSuccess(droppedProduct));
 };
 
@@ -104,32 +102,40 @@ export const productDrop = () => (dispatch, getState) => {
   }
 };
 
-export const selectTopupProvider = (context, topupProvider) => {
-  return (dispatch) => {
-    dispatch(changePage(context));
-    dispatch(Actions.selectTopupProvider(topupProvider));
-  };
+export const selectTopupProvider = (context, topupProvider) => dispatch => {
+  dispatch(changePage(context));
+  dispatch(Actions.selectTopupProvider(topupProvider));
 };
 
 // ======================================================
 // Server Command
 // ======================================================
-const runFlowCashInserted = () => {
-  return (dispatch, getState) => {
-    const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
-    const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
-    console.log('%c App isInsertCash:', createLog('app'), 'currentCash =', currentCash, 'totalAmount =', grandTotalAmount);
-    if (currentCash >= grandTotalAmount) {
-      dispatch(setReadyToDropProduct());
-      setTimeout(() => {
-        dispatch(receivedCashCompletely());
-      }, 1000);
-      if (OrderSelector.verifyOrderHasProduct(getState().order)) {
-        dispatch(productDrop());
-      } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
-        dispatch(productDropProcessCompletely());
-      }
+const runFlowCashInserted = () => async (dispatch, getState) => {
+  const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
+  const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
+  console.log(
+      '%c App isInsertCash:',
+      createLog('app'),
+      'currentCash =',
+      currentCash,
+      'totalAmount =',
+      grandTotalAmount,
+    );
+  if (currentCash >= grandTotalAmount) {
+    dispatch(setReadyToDropProduct());
+    setTimeout(() => {
+      dispatch(receivedCashCompletely());
+    }, 1000);
+    if (OrderSelector.verifyOrderHasProduct(getState().order)) {
+      dispatch(productDrop());
+    } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
+      const topupMobileResponse = await topupMobile(
+          OrderSelector.getMobileTopupToService(getState().order),
+        );
+      console.log('topupMobile', topupMobileResponse);
+      dispatch(productDropProcessCompletely());
     }
+  }
     //   if (needToChangeCash(grandTotalAmount, currentCash)) {
     //     // cashChange
     //     console.log('%c App cashChange:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
@@ -156,37 +162,37 @@ const runFlowCashInserted = () => {
     //     }
     //   }
     // }
-  };
 };
 
-const runFlowCashChangeSuccess = () => {
-  return (dispatch) => {
-    dispatch(Actions.setCashChangeAmount(0));
-  };
+const runFlowCashChangeSuccess = () => dispatch => {
+  dispatch(Actions.setCashChangeAmount(0));
 };
 
-const runFlowProductDropSuccess = () => {
-  return (dispatch, getState) => {
-    const droppedProduct = MasterappSelector.getDroppedProduct(getState().masterapp);
-    dispatch(productDropSuccess(droppedProduct));
+const runFlowProductDropSuccess = () => (dispatch, getState) => {
+  const droppedProduct = MasterappSelector.getDroppedProduct(getState().masterapp);
+  dispatch(productDropSuccess(droppedProduct));
     // ======================================================
     // check hasPromotionSet ?
     // ======================================================
-    if (OrderSelector.verifyAllOrderDropped(getState().order)) {
-      const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
-      const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
+  if (OrderSelector.verifyAllOrderDropped(getState().order)) {
+    const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
+    const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
       // ======================================================
       // Cash Change
       // ======================================================
-      if (needToChangeCash(grandTotalAmount, currentCash)) {
-        console.log('%c App cashChange:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
-        dispatch(cashChange());
-      }
-      dispatch(productDropProcessCompletely());
-    } else {
-      dispatch(productDrop());
+    if (needToChangeCash(grandTotalAmount, currentCash)) {
+      console.log(
+          '%c App cashChange:',
+          createLog('app'),
+          'cashChange =',
+          currentCash - grandTotalAmount,
+        );
+      dispatch(cashChange());
     }
-  };
+    dispatch(productDropProcessCompletely());
+  } else {
+    dispatch(productDrop());
+  }
 };
 
 export const receivedDataFromServer = data => (dispatch, getState) => {
@@ -281,11 +287,9 @@ export const productDropProcessCompletely = () => dispatch => {
   }, 5000);
 };
 
-export const confirmMobileTopupMSISDN = (MSISDN) => {
-  return (dispatch) => {
-    dispatch(changePage('/topup/selectTopupValue'));
-    dispatch(Actions.confirmMobileTopupMSISDN(MSISDN));
-  };
+export const confirmMobileTopupMSISDN = MSISDN => dispatch => {
+  dispatch(changePage('/topup/selectTopupValue'));
+  dispatch(Actions.confirmMobileTopupMSISDN(MSISDN));
 };
 
 export const clearPaymentAmount = () => dispatch => {
@@ -294,23 +298,21 @@ export const clearPaymentAmount = () => dispatch => {
   }, 1000);
 };
 
-export const sendCashChangeToServer = () => {
-  return (dispatch, getState) => {
-    const cashChangeAmount = PaymentSelector.getCashChangeAmount(getState().payment);
-    console.log('sendCashChangeToServer:cashChangeAmount', cashChangeAmount);
+export const sendCashChangeToServer = () => (dispatch, getState) => {
+  const cashChangeAmount = PaymentSelector.getCashChangeAmount(getState().payment);
+  console.log('sendCashChangeToServer:cashChangeAmount', cashChangeAmount);
     // ======================================================
     // if cashReturn > 0 then call api to return cash
     // ======================================================
-    if (cashChangeAmount > 0) {
-      const client = MasterappSelector.getTcpClient(getState().masterapp);
-      client.send({
-        action: 2,
-        msg: `${cashChangeAmount}`,
-        mode: 'coin',
-      });
-    }
-    dispatch(clearPaymentAmount());
-  };
+  if (cashChangeAmount > 0) {
+    const client = MasterappSelector.getTcpClient(getState().masterapp);
+    client.send({
+      action: 2,
+      msg: `${cashChangeAmount}`,
+      mode: 'coin',
+    });
+  }
+  dispatch(clearPaymentAmount());
 };
 
 // export const cashChangeEqualToGrandTotalAmount = () => {
@@ -324,160 +326,124 @@ export const sendCashChangeToServer = () => {
 //   };
 // };
 
-export const cashChangeEqualToCurrentCashAmountMinusDroppedProduct = () => {
-  return (dispatch, getState) => {
-    const cashChangePromotionError = RootSelector.getCashChangePromotionSetError(getState());
-    dispatch(Actions.setCashChangeAmount(cashChangePromotionError));
+export const cashChangeEqualToCurrentCashAmountMinusDroppedProduct = () => (dispatch, getState) => {
+  const cashChangePromotionError = RootSelector.getCashChangePromotionSetError(getState());
+  dispatch(Actions.setCashChangeAmount(cashChangePromotionError));
     // ======================================================
     // Disable Moneybox before sendCashChange
     // ======================================================
-    dispatch(disableMoneyBox());
-  };
+  dispatch(disableMoneyBox());
 };
 
-export const cashChangeEqualToCurrentCashAmount = () => {
-  return (dispatch, getState) => {
-    const currentAmount = PaymentSelector.getCurrentAmount(getState().payment);
-    debugger;
-    dispatch(Actions.setCashChangeAmount(currentAmount));
+export const cashChangeEqualToCurrentCashAmount = () => (dispatch, getState) => {
+  const currentAmount = PaymentSelector.getCurrentAmount(getState().payment);
+  debugger;
+  dispatch(Actions.setCashChangeAmount(currentAmount));
     // ======================================================
     // Disable Moneybox before sendCashChange
     // ======================================================
-    dispatch(disableMoneyBox());
-  };
+  dispatch(disableMoneyBox());
 };
 
-export const cashChange = () => {
-  return (dispatch, getState) => {
-    const currentCash = RootSelector.getCashChangeAmount(getState());
-    dispatch(Actions.setCashChangeAmount(currentCash));
+export const cashChange = () => (dispatch, getState) => {
+  const currentCash = RootSelector.getCashChangeAmount(getState());
+  dispatch(Actions.setCashChangeAmount(currentCash));
     // ======================================================
     // Disable Moneybox before sendCashChange
     // ======================================================
-    dispatch(disableMoneyBox());
-  };
+  dispatch(disableMoneyBox());
 };
 
-export const returnAllInsertCash = () => {
-  return (dispatch, getState) => {
-    const currentCash = RootSelector.getCashChangeFromCurrentCash(getState());
-    dispatch(Actions.setCashChangeAmount(currentCash));
+export const returnAllInsertCash = () => (dispatch, getState) => {
+  const currentCash = RootSelector.getCashChangeFromCurrentCash(getState());
+  dispatch(Actions.setCashChangeAmount(currentCash));
     // ======================================================
     // Disable Moneybox before sendCashChange
     // ======================================================
-    dispatch(disableMoneyBox());
-  };
+  dispatch(disableMoneyBox());
 };
 
-export const getCashRemaining = () => {
-  return (dispatch, getState) => {
-    const client = MasterappSelector.getTcpClient(getState().masterapp);
-    client.send({
-      action: 2,
-      mode: 'remain',
-    });
-  };
+export const getCashRemaining = () => (dispatch, getState) => {
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.send({
+    action: 2,
+    mode: 'remain',
+  });
 };
 
 // ======================================================
 // Dev
 // ======================================================
-export const insetCoin = (value) => {
-  return (dispatch, getState) => {
-    const client = MasterappSelector.getTcpClient(getState().masterapp);
-    client.send({
-      action: 999,
-      msg: value,
-    });
-  };
+export const insetCoin = value => (dispatch, getState) => {
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.send({
+    action: 999,
+    msg: value,
+  });
 };
 
-export const confirmWarningSystemWillNotChangeCash = () => {
-  return (dispatch) => {
-    dispatch(hideAllModal());
-  };
+export const confirmWarningSystemWillNotChangeCash = () => dispatch => {
+  dispatch(hideAllModal());
 };
 
-export const cancelPayment = () => {
-  return (dispatch) => {
-    dispatch(backToHome());
+export const cancelPayment = () => dispatch => {
+  dispatch(backToHome());
     // dispatch(cashChangeEqualToGrandTotalAmount()); // ปล่อยให้มันกินตังค์ไปก่อน
-    dispatch(hideAllModal());
-  };
+  dispatch(hideAllModal());
 };
 
-export const hideAllModal = () => {
-  return (dispatch) => {
-    dispatch(Actions.hideAllModal());
-  };
+export const hideAllModal = () => dispatch => {
+  dispatch(Actions.hideAllModal());
 };
 
-export const setReadyToDropProduct = () => {
-  return (dispatch) => {
-    dispatch(Actions.readyToDropProduct());
-  };
+export const setReadyToDropProduct = () => dispatch => {
+  dispatch(Actions.readyToDropProduct());
 };
 
-export const setNotReadyToDropProduct = () => {
-  return (dispatch) => {
-    dispatch(Actions.notReadyToDropProduct());
-  };
+export const setNotReadyToDropProduct = () => dispatch => {
+  dispatch(Actions.notReadyToDropProduct());
 };
 
-export const selectMobileTopupValue = (item) => {
-  return (dispatch) => {
-    dispatch(Actions.selectMobileTopupValue(item));
-  };
+export const selectMobileTopupValue = item => dispatch => {
+  dispatch(Actions.selectMobileTopupValue(item));
 };
 
-export const submitMobileTopupValue = (mobileTopupValue) => {
-  return (dispatch) => {
-    dispatch(Actions.submitMobileTopupValue(mobileTopupValue));
-    dispatch(changePage('/payment'));
-  };
+export const submitMobileTopupValue = mobileTopupValue => dispatch => {
+  dispatch(Actions.submitMobileTopupValue(mobileTopupValue));
+  dispatch(changePage('/payment'));
 };
 
-export const clearMobileTopupValue = () => {
-  return (dispatch) => {
-    dispatch(Actions.clearMobileTopupValue());
-  };
+export const clearMobileTopupValue = () => dispatch => {
+  dispatch(Actions.clearMobileTopupValue());
 };
 
-export const resetTAIKO = () => {
-  return (dispatch, getState) => {
-    const client = MasterappSelector.getTcpClient(getState().masterapp);
-    client.send({
-      action: 2,
-      msg: '01',
-      mode: 'bill'
-    });
-  };
+export const resetTAIKO = () => (dispatch, getState) => {
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.send({
+    action: 2,
+    msg: '01',
+    mode: 'bill',
+  });
 };
 
-export const enableMoneyBox = () => {
-  return (dispatch, getState) => {
-    const client = MasterappSelector.getTcpClient(getState().masterapp);
-    client.send({
-      action: 2,
-      msg: '020',
-      mode: 'both'
-    });
-  };
+export const enableMoneyBox = () => (dispatch, getState) => {
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.send({
+    action: 2,
+    msg: '020',
+    mode: 'both',
+  });
 };
 
-export const disableMoneyBox = () => {
-  return (dispatch, getState) => {
-    const client = MasterappSelector.getTcpClient(getState().masterapp);
-    client.send({
-      action: 2,
-      msg: '021',
-      mode: 'both'
-    });
-  };
+export const disableMoneyBox = () => (dispatch, getState) => {
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.send({
+    action: 2,
+    msg: '021',
+    mode: 'both',
+  });
 };
 
-export const clearMobileTopupMSISDN = () => {
-  return (dispatch) => {
-    dispatch(Actions.clearMobileTopupMSISDN());
-  };
+export const clearMobileTopupMSISDN = () => dispatch => {
+  dispatch(Actions.clearMobileTopupMSISDN());
 };
