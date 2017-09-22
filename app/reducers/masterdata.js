@@ -262,7 +262,7 @@ const stripAds = [
   },
 ];
 
-const isSoldout = () => _.random(1, 5) >= 4;
+const isSoldout = () => _.random(1, 5) === 5;
 
 const productGenerator = number =>
   _.map(_.range(number), index => ({
