@@ -73,6 +73,14 @@ class SingleProductPage extends Component {
             back={back}
             onSubmit={submitProduct}
           />
+          <div className="action-back">
+            <a
+              className="button purple M"
+              onClick={back}
+            >
+              <i className="fa fa-chevron-left" />ย้อนกลับ
+            </a>
+          </div>
         </Layout.Content>
       </div>
     );

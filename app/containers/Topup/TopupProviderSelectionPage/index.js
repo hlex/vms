@@ -93,7 +93,7 @@ class TopupProviderSelectionPage extends Component {
           </div>
         </Layout.Subheader>
         <ListWithTwoColumnItems
-          className='topup-row'
+          className="topup-row"
           items={topupProviders}
           itemPerPage={6}
           height={842}

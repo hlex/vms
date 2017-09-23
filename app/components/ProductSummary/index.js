@@ -78,16 +78,6 @@ class ProductSummary extends Component {
             items={summaryItems}
           />
           <div className="action _center">
-            {
-              hasBackButton &&
-              <a
-                style={{ position: 'absolute', bottom: '40px', left: '80px' }}
-                className="button purple M"
-                onClick={this.handleBack}
-              >
-                <i className="fa fa-chevron-left" />ย้อนกลับ
-              </a>
-            }
             <a
               className="button blue submit-button"
               onClick={this.handleSubmit}

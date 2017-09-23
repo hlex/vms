@@ -126,19 +126,20 @@ class SelectTopupValuePage extends Component {
               </ul>
             </div>
           </div>
-          <a
-            style={{ position: 'absolute', bottom: '240px', left: '40px' }}
-            className="button purple M"
-            onClick={back}
-          >
-            <i className="fa fa-chevron-left" />ย้อนกลับ
-          </a>
           <div className="_center">
             <a
               className="button blue submit-button"
               onClick={this.handleSubmit}
             >
               <p className="fade-flash">ยืนยัน</p>
+            </a>
+          </div>
+          <div className="action-back">
+            <a
+              className="button purple M"
+              onClick={back}
+            >
+              <i className="fa fa-chevron-left" />ย้อนกลับ
             </a>
           </div>
         </Layout.ContentLong>

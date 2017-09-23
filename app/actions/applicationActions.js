@@ -447,3 +447,10 @@ export const disableMoneyBox = () => (dispatch, getState) => {
 export const clearMobileTopupMSISDN = () => dispatch => {
   dispatch(Actions.clearMobileTopupMSISDN());
 };
+
+export const selectEvent = (context, item) => {
+  return (dispatch, getState) => {
+    dispatch(changePage(context));
+    dispatch(Actions.selectEvent(item));
+  };
+};

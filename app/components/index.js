@@ -13,6 +13,7 @@ import Modal from './Modal';
 import ListWithTwoColumnItems from './ListWithTwoColumnItems';
 import TopUpProviderItem from './TopUpProviderItem';
 import EventItem from './EventItem';
+import EventTitle from './EventTitle';
 
 export {
   PaymentConfirmation,
@@ -30,4 +31,5 @@ export {
   ListWithTwoColumnItems,
   TopUpProviderItem,
   EventItem,
+  EventTitle,
 };

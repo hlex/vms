@@ -5165,7 +5165,11 @@ hr {
     font-weight: 700;
     font-size: 34px; }
 
+.input-msisdn .input-msisdn-box-wrapper {
+  padding: 30px 80px; }
 .input-msisdn .input-msisdn-box {
+  border-radius: 10px;
+  background-color: #FEC42E;
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -5173,10 +5177,11 @@ hr {
   height: 400px; }
 
 .input-msisdn-box .content p {
-  margin: 0; }
+  margin: 0;
+  font-size: 34px; }
 .input-msisdn-box .content .input-box {
   margin-top: 15px;
-  padding-top: 65px; }
+  padding-top: 45px; }
 
 .input-box {
   display: flex;
@@ -5515,7 +5520,7 @@ hr {
 .select-mobile-topup-value {
   position: relative; }
   .select-mobile-topup-value .page-container {
-    padding: 40px 150px; }
+    padding: 40px 100px; }
   .select-mobile-topup-value .topup-packages {
     margin-top: 30px; }
     .select-mobile-topup-value .topup-packages p {
@@ -5930,6 +5935,10 @@ span.currency {
     font-size: 30px; }
   .title-panel .title h1 {
     font-weight: bold; }
+
+.action-back {
+  position: absolute;
+  bottom: 25px; }
 
 .wrapper {
   position: relative;

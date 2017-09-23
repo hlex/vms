@@ -24,6 +24,7 @@ import {
   CLEAR_MOBILE_TOPUP_VALUE,
   SET_CASH_CHANGE_AMOUNT,
   CLEAR_MOBILE_TOPUP_MSISDN,
+  SELECT_EVENT,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -189,5 +190,11 @@ export const setCashChangeAmount = (cashChangeAmount) => {
 export const clearMobileTopupMSISDN = () => {
   return {
     type: CLEAR_MOBILE_TOPUP_MSISDN,
+  };
+};
+
+export const selectEvent = () => {
+  return {
+    type: SELECT_EVENT,
   };
 };

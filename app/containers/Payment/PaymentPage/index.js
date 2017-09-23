@@ -68,7 +68,7 @@ class PaymentPage extends PureComponent {
   }
 
   renderContent = () => {
-    const { baseURL, back, isLoading, isFinish, summaryList, canChangeCash } = this.props;
+    const { baseURL, isLoading, isFinish, summaryList, canChangeCash } = this.props;
     // const isFinish = true;
     if (isFinish) return <Thankyou baseURL={baseURL} />;
     if (isLoading) return <Loading baseURL={baseURL} />;
@@ -77,13 +77,13 @@ class PaymentPage extends PureComponent {
         baseURL={baseURL}
         summaryList={summaryList}
         canChangeCash={canChangeCash}
-        back={back}
       />
     );
   }
 
   render() {
-    const { baseURL } = this.props;
+    const { baseURL, isLoading, isFinish, back } = this.props;
+    const canBack = !isLoading && !isFinish;
     return (
       <div>
         <Layout.Title>
@@ -94,6 +94,17 @@ class PaymentPage extends PureComponent {
         <Layout.Content>
           {
             this.renderContent()
+          }
+          {
+            canBack &&
+            <div className="action-back">
+              <a
+                className="button purple M"
+                onClick={back}
+              >
+                <i className="fa fa-chevron-left" />ย้อนกลับ
+              </a>
+            </div>
           }
         </Layout.Content>
       </div>

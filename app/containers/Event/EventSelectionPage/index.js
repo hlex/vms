@@ -35,8 +35,9 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 class EventSelectionPage extends Component {
   static propTypes = {
     events: PropTypes.arrayOf(PropTypes.shape({})),
-    back: PropTypes.func.isRequired,
     baseURL: PropTypes.string.isRequired,
+    back: PropTypes.func.isRequired,
+    selectEvent: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -49,7 +50,7 @@ class EventSelectionPage extends Component {
   };
 
   render() {
-    const { events, back, baseURL } = this.props;
+    const { events, baseURL, back, selectEvent } = this.props;
     return (
       <div>
         <Layout.Subheader>
@@ -87,7 +88,7 @@ class EventSelectionPage extends Component {
           items={events}
           itemPerPage={10}
           height={1450}
-          onClickItem={(a, b) => console.log(a, b)}
+          onClickItem={selectEvent}
           baseURL={baseURL}
           renderComponent={this.renderItem}
         />

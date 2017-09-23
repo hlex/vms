@@ -8,7 +8,6 @@ class PaymentConfirmation extends Component {
   static propTypes = {
     baseURL: PropTypes.string.isRequired,
     summaryList: PropTypes.arrayOf(PropTypes.shape({})),
-    back: PropTypes.func,
     canChangeCash: PropTypes.bool,
   }
 
@@ -27,11 +26,6 @@ class PaymentConfirmation extends Component {
     ],
     back: () => console.log('back'),
     canChangeCash: false,
-  }
-
-  handleBack = () => {
-    const { back } = this.props;
-    back();
   }
 
   render() {
@@ -101,13 +95,6 @@ class PaymentConfirmation extends Component {
             </div>
           </div>
         </div>
-        <a
-          style={{ position: 'absolute', bottom: '25px', left: '80px' }}
-          className="button purple M"
-          onClick={this.handleBack}
-        >
-          <i className="fa fa-chevron-left" />ย้อนกลับ
-        </a>
       </div>
     );
   }

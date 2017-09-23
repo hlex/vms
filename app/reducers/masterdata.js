@@ -25,74 +25,80 @@ const promotionGenerator = number =>
     image: '',
   }));
 
-const normalizeStripAds = (ad) => {
-  return {
-    name: ad.name,
-    type: ad.type,
-    src: `http://localhost:8888/vms/${ad.path}`,
-    duration: Number(ad.timeout) / 1000
-  };
-};
+const normalizeStripAds = ad => ({
+  name: ad.name,
+  type: ad.type,
+  src: `http://localhost:8888/vms/${ad.path}`,
+  duration: Number(ad.timeout) / 1000,
+});
 
-const eventItemGenerator = (id, input, rewardType, rewardValue) => {
-  return {
-    id: 1,
-    cuid: cuid(),
-    input: 'MSISDN',
-    rewardType,
-    rewardValue,
-    howTo: [
-      {
-        order: 1,
-        type: 'MSISDN',
-        th: 'ใส่เบอร์มือถือ',
-        en: ''
-      },
-      {
-        order: 2,
-        type: 'plain',
-        th: 'ชมโฆษณา 15 วินาที',
-        en: ''
-      },
-      {
-        order: 3,
-        type: 'discount',
-        th: 'รัยส่วนลด 5 บาททาง SMS',
-        en: ''
-      },
-    ],
-    product: {
-      ...productGenerator(1)[0]
+const eventItemGenerator = (id, input, rewardType, rewardValue) => ({
+  id: 1,
+  cuid: cuid(),
+  eventType: '', // MSISDN, EMAIL, LINE_QRCODE, BARCODE, ADD_LINE,
+  receivedChannel: 'MSISDN', // MSISDN, LINE, EMAIL, INSTANT,
+  rewardValue,
+  product: {
+    ...productGenerator(1)[0],
+  },
+    // label
+  rewardTitleLabel: 'ส่วนลด',
+  rewardUnitLabel: '5 บาท',
+  remark: '',
+  howTo: [
+    {
+      order: 1,
+      th: 'ใส่ เบอร์มือถือ MSISDN',
+      en: '',
     },
-  }
-}
+    {
+      order: 2,
+      th: 'ชมโฆษณา 15 วินาที',
+      en: '',
+    },
+    {
+      order: 3,
+      th: 'รับส่วนลด 5 บาททาง SMS',
+      en: '',
+    },
+  ],
+});
 
-const eventGenerator = (number) => {
-  return  _.map(_.range(number), index => {
-    let rand = _.random(1, 2);
-    const inputType = rand === 1 ? 'MSISDN' : 'EMAIL';
-    rand = _.random(1, 1);
-    let rewardType = '';
-    switch (rand) {
-      case 1:
-        rewardType = 'discount';
-        break;
-      case 2:
-        rewardType = 'discount';
-        break;
-      case 3:
-        rewardType = 'discount';
-        break;
-      case 4:
-        rewardType = 'discount';
-        break;
-      default:
-        rewardType = 'discount';
-    }
-    const rewardValue = 5;
-    return eventItemGenerator(index + 1, inputType, rewardType, rewardValue);
-  });
-}
+// HOW TO TYPE
+// MSISDN
+// EMAIL
+// LINE ID
+// BARCODE
+// QRCODE
+// PLAIN_TEXT
+
+// MSISDN + ADS + DISCOUNT_SMS
+const eventTypeA = () => ({});
+
+const eventGenerator = number => _.map(_.range(number), index => {
+  let rand = _.random(1, 2);
+  const inputType = rand === 1 ? 'MSISDN' : 'EMAIL';
+  rand = _.random(1, 1);
+  let rewardType = '';
+  switch (rand) {
+    case 1:
+      rewardType = 'discount';
+      break;
+    case 2:
+      rewardType = 'discount';
+      break;
+    case 3:
+      rewardType = 'discount';
+      break;
+    case 4:
+      rewardType = 'discount';
+      break;
+    default:
+      rewardType = 'discount';
+  }
+  const rewardValue = 5;
+  return eventItemGenerator(index + 1, inputType, rewardType, rewardValue);
+});
 
 const mockupEvents = eventGenerator(20);
 

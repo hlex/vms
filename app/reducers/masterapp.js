@@ -45,7 +45,7 @@ const initialState = {
   tcpClient: {},
   temp: 25, // celcius
   readyToDropProduct: false,
-  canChangeCash: false,
+  canChangeCash: true,
   droppingProduct: {},
 };
 

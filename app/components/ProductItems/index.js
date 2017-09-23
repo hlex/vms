@@ -43,8 +43,6 @@ class ProductItems extends Component {
     eventPerPage: PropTypes.number,
     onClickItem: PropTypes.func,
     height: PropTypes.number,
-    hasBackButton: PropTypes.bool,
-    back: PropTypes.func,
     baseURL: PropTypes.string.isRequired,
   };
 
@@ -57,8 +55,6 @@ class ProductItems extends Component {
     eventPerPage: 1,
     height: 842,
     onClickItem: context => console.log('Please send any onClickItem function', context),
-    hasBackButton: false,
-    back: () => console.log('Please send any back function')
   };
 
   handleClickItem = (context, item, module) => {
@@ -75,8 +71,6 @@ class ProductItems extends Component {
       productPerPage,
       eventPerPage,
       height,
-      hasBackButton,
-      back,
       baseURL,
     } = this.props;
     // ======================================================
@@ -160,16 +154,6 @@ class ProductItems extends Component {
             </div>
             ))}
         </Slider>
-        {
-          hasBackButton &&
-          <a
-            style={{ position: 'absolute', bottom: '25px', left: '40px' }}
-            className="button purple M"
-            onClick={back}
-          >
-            <i className="fa fa-chevron-left" />ย้อนกลับ
-          </a>
-        }
       </div>
     );
   }

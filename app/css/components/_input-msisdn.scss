@@ -1,5 +1,10 @@
 .input-msisdn {
+  .input-msisdn-box-wrapper {
+    padding: 30px 80px;
+  }
   .input-msisdn-box {
+    border-radius: 10px;
+    background-color: #FEC42E;
     margin: 0 auto;
     display: flex;
     justify-content: center;
@@ -11,9 +16,10 @@
 .input-msisdn-box .content {
   p {
     margin: 0;
+    font-size: 34px;
   }
   .input-box {
     margin-top: 15px;
-    padding-top: 65px;
+    padding-top: 45px;
   }
 }

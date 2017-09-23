@@ -65,30 +65,33 @@ class InputMSISDNPage extends Component {
           />
         </Layout.Title>
         <Layout.Content>
-          <div className="input-msisdn-box">
-            <div className="content _center">
-              <p>ท่านเลือกเครือข่าย {topupProviderName}</p>
-              <h2>ใส่เบอร์มือถือที่ต้องการเติมเงิน</h2>
-              <p className="sm"><small>กรุณาตรวจสอบหมายเลขโทรศัพท์ให้ถูกต้อง</small></p>
-              <InputWithPad
-                show
-                type={'num'}
-                rules={{
-                  required: 'กรุณาระบุหมายเลขโทรศัพท์',
-                  mobileNumber: 'รูปแบบหมายเลขโทรศัพท์ไม่ถูกต้อง'
-                }}
-                value={MSISDN}
-                onConfirm={confirmMobileTopupMSISDN}
-              />
+          <div className="input-msisdn-box-wrapper">
+            <div className="input-msisdn-box">
+              <div className="content _center">
+                <p>ท่านเลือกเครือข่าย {topupProviderName}</p>
+                <h2>ใส่เบอร์มือถือที่ต้องการเติมเงิน</h2>
+                <p className="sm"><small>กรุณาตรวจสอบหมายเลขโทรศัพท์ให้ถูกต้อง</small></p>
+                <InputWithPad
+                  show
+                  type={'num'}
+                  rules={{
+                    required: 'กรุณาระบุหมายเลขโทรศัพท์',
+                    mobileNumber: 'รูปแบบหมายเลขโทรศัพท์ไม่ถูกต้อง'
+                  }}
+                  value={MSISDN}
+                  onConfirm={confirmMobileTopupMSISDN}
+                />
+              </div>
             </div>
           </div>
-          <a
-            style={{ position: 'absolute', bottom: '40px', left: '80px' }}
-            className="button purple M"
-            onClick={back}
-          >
-            <i className="fa fa-chevron-left" />ย้อนกลับ
-          </a>
+          <div className="action-back">
+            <a
+              className="button purple M"
+              onClick={back}
+            >
+              <i className="fa fa-chevron-left" />ย้อนกลับ
+            </a>
+          </div>
         </Layout.Content>
       </div>
     );
