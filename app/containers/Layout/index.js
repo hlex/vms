@@ -5,6 +5,7 @@ import ContentGrid from './ContentGrid';
 import ContentLong from './ContentLong';
 import Title from './Title';
 import Subheader from './Subheader';
+import FullScreen from './FullScreen';
 
 export default {
   Header,
@@ -14,4 +15,5 @@ export default {
   ContentLong,
   Title,
   Subheader,
+  FullScreen,
 };

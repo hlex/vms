@@ -14,6 +14,7 @@ import ListWithTwoColumnItems from './ListWithTwoColumnItems';
 import TopUpProviderItem from './TopUpProviderItem';
 import EventItem from './EventItem';
 import EventTitle from './EventTitle';
+import MediaPlayer from './MediaPlayer';
 
 export {
   PaymentConfirmation,
@@ -32,4 +33,5 @@ export {
   TopUpProviderItem,
   EventItem,
   EventTitle,
+  MediaPlayer,
 };

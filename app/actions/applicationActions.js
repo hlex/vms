@@ -471,3 +471,9 @@ export const verifyDiscountCode = (code) => {
     }
   }
 }
+
+export const submitPlayEvent = (value) => {
+  return (dispatch) => {
+    dispatch(changePage('/event/ads'));
+  };
+};

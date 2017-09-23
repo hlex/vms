@@ -12,7 +12,11 @@ class MediaPlayer extends Component {
     })).isRequired,
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
+    onEnded: PropTypes.func,
   };
+  static defaultProps = {
+    onEnded: () => console.warn('You did not send onEnded(lastIndex, nextIndex)')
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -25,12 +29,13 @@ class MediaPlayer extends Component {
   }
   handlePlayerEnded = () => {
     const { index } = this.state;
-    const { sources } = this.props;
+    const { sources, onEnded } = this.props;
     const nextIndex = index < sources.length - 1 ? index + 1 : 0;
     console.log('handlePlayerEnded', index, nextIndex);
     this.setState({
       index: nextIndex,
     });
+    onEnded(index, nextIndex);
   }
   render = () => {
     console.debug('MediaPlayer:state', this.state);

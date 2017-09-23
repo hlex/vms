@@ -4987,6 +4987,18 @@ i.home {
   -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2); }
 
+.fullscreen-wrapper {
+  position: fixed;
+  z-index: 999999;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white; }
+
 hr {
   border: 2px solid #0077DB;
   margin: 0 0 10px;
