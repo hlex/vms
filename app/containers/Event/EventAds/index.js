@@ -46,6 +46,7 @@ class EventAds extends Component {
   }
 
   state = {
+    count: 0,
     adFinished: false,
   }
 
@@ -62,19 +63,29 @@ class EventAds extends Component {
     backToHome();
   }
 
+  handleTicked = () => {
+    console.log('handleTicked');
+    this.setState({
+      count: this.state.count + 1,
+    });
+  }
+
   render() {
     console.log('EventAds', this.props);
-    const { adFinished } = this.state;
+    const { adFinished, count } = this.state;
     const { baseURL, stripAds } = this.props;
     const sources = [_.head(stripAds)];
+    const maxCount = _.get(sources, '0.duration', 0);
+    const remainingCount = maxCount - count;
     return (
       <div className="event-ads">
         <Layout.FullScreen>
-          <div className="count-time"><span id="set_timer" className="style colorDefinition size_sm">06 วินาที</span></div>
+          { remainingCount > 0 && <div className="count-time"><span id="set_timer" className="style colorDefinition size_sm">{maxCount - count} วินาที</span></div> }
           <MediaPlayer
             width={1080}
             height={1920}
             sources={sources}
+            onTicked={this.handleTicked}
             onEnded={this.handleAdsEnd}
           />
           <Modal show={adFinished}>

@@ -7,6 +7,7 @@ class FilePlayer extends Component {
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
     type: PropTypes.string,
+    onTicked: PropTypes.func,
     onEnded: PropTypes.func,
     duration: PropTypes.number.isRequired,
   };
@@ -16,21 +17,25 @@ class FilePlayer extends Component {
     onEnded: () => console.warn('You did not send onEnded(src)')
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      time: Date.now(),
-      duration: props.duration,
-    };
+  state = {
+    time: Date.now(),
+    duration: this.props.duration,
   }
+
   componentDidMount = () => {
     const { duration } = this.props;
-    this.timer = setInterval(this.tick, Number(duration * 1000));
+    this.timer1 = setInterval(this.tick, 1000);
+    this.timer2 = setInterval(this.alarm, Number(duration * 1000));
   }
   tick = () => {
+    const { onTicked } = this.props;
+    if (onTicked) onTicked();
+  }
+  alarm = () => {
     const { onEnded, src } = this.props;
     onEnded(src);
-    clearInterval(this.timer);
+    clearInterval(this.timer1);
+    clearInterval(this.timer2);
   }
   render = () => {
     // console.debug('FilePlayer:state', this.state);

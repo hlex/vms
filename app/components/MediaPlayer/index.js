@@ -12,17 +12,16 @@ class MediaPlayer extends Component {
     })).isRequired,
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
+    onTicked: PropTypes.func,
     onEnded: PropTypes.func,
   };
   static defaultProps = {
+    onTicked: () => console.warn('You did not send onTicked()'),
     onEnded: () => console.warn('You did not send onEnded(lastIndex, nextIndex)')
   }
-  constructor(props) {
-    super(props);
-    this.state = {
-      index: 0,
-    };
-  }
+  state = {
+    index: 0,
+  };
   componentWillUnmount() {
     // console.log('componentWillUnmount', this);
     this.handlePlayerEnded = () => {};
@@ -56,6 +55,7 @@ class MediaPlayer extends Component {
           width={width}
           height={height}
           type={type}
+          onTicked={() => this.props.onTicked()}
           onEnded={() => this.handlePlayerEnded()}
         />
       </div>
