@@ -22,6 +22,7 @@ export const CLEAR_MOBILE_TOPUP_VALUE = 'CLEAR_MOBILE_TOPUP_VALUE';
 export const SET_CASH_CHANGE_AMOUNT = 'SET_CASH_CHANGE_AMOUNT';
 export const CLEAR_MOBILE_TOPUP_MSISDN = 'CLEAR_MOBILE_TOPUP_MSISDN';
 export const SELECT_EVENT = 'SELECT_EVENT';
+export const ADD_DISCOUNT = 'ADD_DISCOUNT';
 // ======================================================
 // TCP
 // ======================================================

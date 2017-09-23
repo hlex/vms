@@ -17,7 +17,8 @@ import { createLog } from '../helpers/global';
 // ======================================================
 // APIs
 // ======================================================
-import { topupMobile } from '../apis/mobileTopup';
+import { serviceTopupMobile } from '../apis/mobileTopup';
+import { serviceVerifyDiscountCode } from '../apis/discount';
 
 let cmdNo = 0;
 let retryNo = 0;
@@ -129,10 +130,10 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
     if (OrderSelector.verifyOrderHasProduct(getState().order)) {
       dispatch(productDrop());
     } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
-      const topupMobileResponse = await topupMobile(
+      const serviceTopupMobileResponse = await serviceTopupMobile(
           OrderSelector.getMobileTopupToService(getState().order),
         );
-      console.log('topupMobile', topupMobileResponse);
+      console.log('serviceTopupMobile', serviceTopupMobileResponse);
       dispatch(productDropProcessCompletely());
     }
   }
@@ -454,3 +455,19 @@ export const selectEvent = (context, item) => {
     dispatch(Actions.selectEvent(item));
   };
 };
+
+export const verifyDiscountCode = (code) => {
+  console.log('verifyDiscountCode', code);
+  return async (dispatch) => {
+    try {
+      const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code);
+      console.log('verifyDiscountCodeResponse', verifyDiscountCodeResponse);
+      const discountItem = {
+        code,
+      };
+      dispatch(Actions.addDiscount(discountItem));
+    } catch (error) {
+
+    }
+  }
+}

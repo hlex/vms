@@ -4,6 +4,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 // ======================================================
+// Containers
+// ======================================================
+import { FooterAction } from '../../Utils';
+// ======================================================
 // Components
 // ======================================================
 import { ProductSummary, PromotionSetTitle } from '../../../components';
@@ -37,15 +41,19 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 class PromotionSetPage extends Component {
 
   static propTypes = {
+    productPrice: PropTypes.number,
     baseURL: PropTypes.string.isRequired,
-    back: PropTypes.func.isRequired,
     submitPromotionSet: PropTypes.func.isRequired,
-    productPrice: PropTypes.number.isRequired,
+    verifyDiscountCode: PropTypes.func.isRequired,
+  }
+
+  static defaultProps = {
+    productPrice: 0,
   }
 
   render() {
     console.log('PromotionSetPage', this.props);
-    const { baseURL, back, submitPromotionSet, productPrice } = this.props;
+    const { baseURL, productPrice, submitPromotionSet, verifyDiscountCode } = this.props;
     return (
       <div>
         <Layout.Title>
@@ -57,17 +65,10 @@ class PromotionSetPage extends Component {
           <ProductSummary
             productPrice={productPrice}
             discountAmount={0}
-            back={back}
             onSubmit={submitPromotionSet}
+            onSubmitDiscount={verifyDiscountCode}
           />
-          <div className="action-back">
-            <a
-              className="button purple M"
-              onClick={back}
-            >
-              <i className="fa fa-chevron-left" />ย้อนกลับ
-            </a>
-          </div>
+          <FooterAction />
         </Layout.Content>
       </div>
     );

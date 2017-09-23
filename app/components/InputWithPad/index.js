@@ -31,7 +31,6 @@ export default class InputWithPad extends PureComponent {
   }
 
   handleToggleShowKeyboard = () => {
-    console.log('handleToggleShowKeyboard', this.props, this.state);
     if (!this.props.show) {
       this.setState({
         show: !this.state.show,
@@ -43,7 +42,6 @@ export default class InputWithPad extends PureComponent {
     const { rules } = this.props;
     let validationMessage = '';
     _.forEach(rules, (message, rule) => {
-      console.log('rule', rule, message);
       switch (rule) {
         case 'required':
         case 'require':
@@ -73,7 +71,6 @@ export default class InputWithPad extends PureComponent {
 
   handleSelectBackspace = () => {
     const { inputValue } = this.state;
-    console.log(inputValue, inputValue.length);
     const nextValue = inputValue.substring(0, inputValue.length - 1);
     this.setState({
       inputValue: nextValue,
@@ -86,6 +83,9 @@ export default class InputWithPad extends PureComponent {
     const { validationMessage } = this.state;
     if (validationMessage === '') {
       onConfirm(this.state.inputValue);
+      this.setState({
+        inputValue: '',
+      });
     }
   };
 
@@ -97,7 +97,6 @@ export default class InputWithPad extends PureComponent {
   renderPad = () => {
     const { show } = this.state;
     const { type } = this.props;
-    console.log('renderPad', show, this.props.show);
     if (type === 'num') {
       return (
         <div className={`pads-number ${show ? 'open' : ''}`}>
@@ -303,7 +302,7 @@ export default class InputWithPad extends PureComponent {
             <a onClick={() => this.handleSelectChar('.co.th')}>.co.th</a>
           </li>
           <li className="width-150">
-            <a className="clickpads-mail-ok" href="event-ads-discount.htm">
+            <a className="clickpads-phone-ok" onClick={() => this.handleSelectConfirm()}>
               OK
             </a>
           </li>
@@ -313,7 +312,6 @@ export default class InputWithPad extends PureComponent {
   };
 
   render() {
-    console.log('state', this.state, this.props);
     const { show, rules } = this.props;
     const { inputValue, validationMessage } = this.state;
     let displayInputValue = '';

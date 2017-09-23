@@ -25,6 +25,7 @@ import {
   SET_CASH_CHANGE_AMOUNT,
   CLEAR_MOBILE_TOPUP_MSISDN,
   SELECT_EVENT,
+  ADD_DISCOUNT,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -198,3 +199,10 @@ export const selectEvent = () => {
     type: SELECT_EVENT,
   };
 };
+
+export const addDiscount = (discount) => {
+  return {
+    type: ADD_DISCOUNT,
+    discount,
+  }
+}

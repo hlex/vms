@@ -3,7 +3,7 @@ import { fetchFacade } from '../helpers/api';
 import { isVMSServiceError, convertVMSServiceResponseToError } from '../helpers/error';
 import URL from './url';
 
-export const topupMobile = ({ serviceCode, MSISDN, mobileTopupValue }) => {
+export const serviceTopupMobile = ({ serviceCode, MSISDN, mobileTopupValue }) => {
   const data = {
     ServiceCode: serviceCode,
     MobileNo: MSISDN,

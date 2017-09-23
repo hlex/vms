@@ -4,6 +4,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 // ======================================================
+// Containers
+// ======================================================
+import { FooterAction } from '../../Utils';
+
+// ======================================================
 // Components
 // ======================================================
 import { ProductSummary, ProductTitle } from '../../../components';
@@ -38,26 +43,23 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 class SingleProductPage extends Component {
 
   static propTypes = {
-    baseURL: PropTypes.string.isRequired,
-    product: PropTypes.shape({}),
     productPrice: PropTypes.number,
-    back: PropTypes.func,
-    submitProduct: PropTypes.func,
+    baseURL: PropTypes.string.isRequired,
+    back: PropTypes.func.isRequired,
+    submitProduct: PropTypes.func.isRequired,
+    verifyDiscountCode: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
-    product: {},
     productPrice: 0,
-    back: () => console.log('back'),
-    submitProduct: () => console.log('submitProduct'),
   }
 
   render() {
     const {
-      baseURL,
       productPrice,
-      back,
+      baseURL,
       submitProduct,
+      verifyDiscountCode,
     } = this.props;
     return (
       <div>
@@ -68,19 +70,13 @@ class SingleProductPage extends Component {
         </Layout.Title>
         <Layout.Content>
           <ProductSummary
+            title={'ยืนยันชำระเงินค่าสินค้า'}
             productPrice={productPrice}
             discountAmount={0}
-            back={back}
             onSubmit={submitProduct}
+            onSubmitDiscount={verifyDiscountCode}
           />
-          <div className="action-back">
-            <a
-              className="button purple M"
-              onClick={back}
-            >
-              <i className="fa fa-chevron-left" />ย้อนกลับ
-            </a>
-          </div>
+          <FooterAction />
         </Layout.Content>
       </div>
     );
