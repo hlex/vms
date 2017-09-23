@@ -4,6 +4,12 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 // ======================================================
+// Containers
+// ======================================================
+import {
+  FooterAction
+} from '../../Utils';
+// ======================================================
 // Components
 // ======================================================
 import {
@@ -54,7 +60,7 @@ class InputMSISDNPage extends Component {
 
   render() {
     console.log('InputMSISDNPage', this.props);
-    const { baseURL, banner, topupProviderName, confirmMobileTopupMSISDN, MSISDN, back } = this.props;
+    const { baseURL, banner, topupProviderName, confirmMobileTopupMSISDN, MSISDN } = this.props;
     return (
       <div className="input-msisdn">
         <Layout.Title>
@@ -84,14 +90,7 @@ class InputMSISDNPage extends Component {
               </div>
             </div>
           </div>
-          <div className="action-back">
-            <a
-              className="button purple M"
-              onClick={back}
-            >
-              <i className="fa fa-chevron-left" />ย้อนกลับ
-            </a>
-          </div>
+          <FooterAction />
         </Layout.Content>
       </div>
     );

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 // Containers
 // ======================================================
 import Layout from '../../Layout';
+import { FooterAction } from '../../Utils';
 
 // ======================================================
 // Components
@@ -82,7 +83,7 @@ class PaymentPage extends PureComponent {
   }
 
   render() {
-    const { baseURL, isLoading, isFinish, back } = this.props;
+    const { baseURL, isLoading, isFinish } = this.props;
     const canBack = !isLoading && !isFinish;
     return (
       <div>
@@ -97,14 +98,7 @@ class PaymentPage extends PureComponent {
           }
           {
             canBack &&
-            <div className="action-back">
-              <a
-                className="button purple M"
-                onClick={back}
-              >
-                <i className="fa fa-chevron-left" />ย้อนกลับ
-              </a>
-            </div>
+            <FooterAction />
           }
         </Layout.Content>
       </div>

@@ -3,6 +3,13 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import cuid from 'cuid';
+
+// ======================================================
+// Containers
+// ======================================================
+import {
+  FooterAction
+} from '../../Utils';
 // ======================================================
 // Components
 // ======================================================
@@ -134,14 +141,7 @@ class SelectTopupValuePage extends Component {
               <p className="fade-flash">ยืนยัน</p>
             </a>
           </div>
-          <div className="action-back">
-            <a
-              className="button purple M"
-              onClick={back}
-            >
-              <i className="fa fa-chevron-left" />ย้อนกลับ
-            </a>
-          </div>
+          <FooterAction />
         </Layout.ContentLong>
       </div>
     );
