@@ -218,7 +218,7 @@ const stripAds = [
     path: 'StripAds/20151204_ais_344.jpg',
     filename: '20151204_ais_344.jpg',
     expire: '2026-11-21',
-    timeout: '15000',
+    timeout: '2000',
     checksum: '47e93aec13f7c9115ebbcfaacb309ccd',
   },
   {

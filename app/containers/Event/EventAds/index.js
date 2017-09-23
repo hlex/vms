@@ -10,7 +10,7 @@ import Layout from '../../Layout';
 // ======================================================
 // Components
 // ======================================================
-import { MediaPlayer } from '../../../components';
+import { MediaPlayer, Modal } from '../../../components';
 // ======================================================
 // Actions
 // ======================================================
@@ -45,18 +45,50 @@ class EventAds extends Component {
     baseURL: PropTypes.string.isRequired,
   }
 
+  state = {
+    adFinished: false,
+  }
+
+  handleAdsEnd = () => {
+    console.log('handleAdsEnd');
+    this.setState({
+      adFinished: true
+    });
+  }
+
+  handleNext = () => {
+    const { backToHome } = this.props;
+    console.log('handleNext !!!');
+    backToHome();
+  }
+
   render() {
     console.log('EventAds', this.props);
+    const { adFinished } = this.state;
     const { baseURL, stripAds } = this.props;
     const sources = [_.head(stripAds)];
     return (
       <div className="event-ads">
         <Layout.FullScreen>
+          <div className="count-time"><span id="set_timer" className="style colorDefinition size_sm">06 วินาที</span></div>
           <MediaPlayer
             width={1080}
             height={1920}
             sources={sources}
+            onEnded={this.handleAdsEnd}
           />
+          <Modal show={adFinished}>
+            <div className="ads-confirm">
+              <h2>รับรหัส <span className="highlight-red">เติมเงินฟรี 5 บาท</span></h2>
+              <p>รับรหัสส่วนลดทาง SMS</p>
+              <a
+                className="button purple M"
+                onClick={this.handleNext}
+              >
+                <i className="fa fa-check" />ยืนยัน
+              </a>
+            </div>
+          </Modal>
         </Layout.FullScreen>
       </div>
     );

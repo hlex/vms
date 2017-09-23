@@ -24,22 +24,22 @@ class MediaPlayer extends Component {
     };
   }
   componentWillUnmount() {
-    console.log('componentWillUnmount', this);
+    // console.log('componentWillUnmount', this);
     this.handlePlayerEnded = () => {};
   }
   handlePlayerEnded = () => {
     const { index } = this.state;
     const { sources, onEnded } = this.props;
     const nextIndex = index < sources.length - 1 ? index + 1 : 0;
-    console.log('handlePlayerEnded', index, nextIndex);
+    // console.log('handlePlayerEnded', index, nextIndex);
     this.setState({
       index: nextIndex,
     });
     onEnded(index, nextIndex);
   }
   render = () => {
-    console.debug('MediaPlayer:state', this.state);
-    console.debug('MediaPlayer:props', this.props);
+    // console.debug('MediaPlayer:state', this.state);
+    // console.debug('MediaPlayer:props', this.props);
     const { index } = this.state;
     const { width, height, sources } = this.props;
     // -----------------------------

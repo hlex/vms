@@ -5393,7 +5393,7 @@ hr {
     position: relative;
     border: 1px solid #ccc;
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 10px;
     z-index: 10;
     word-wrap: break-word;
     opacity: 0;
@@ -5472,6 +5472,21 @@ hr {
 .box-modal .content-modal .app-error .or {
   margin: 20px 0;
   font-weight: 700; }
+
+.box-modal .content-modal .ads-confirm h2 {
+  position: relative;
+  font-weight: bold;
+  font-size: 60px;
+  padding-bottom: 0;
+  line-height: 1.2; }
+.box-modal .content-modal .ads-confirm p {
+  margin: 0;
+  padding: 0;
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 40px; }
+.box-modal .content-modal .ads-confirm small {
+  color: #815800; }
 
 @media screen and (max-width: 992px) {
   .box-modal .content-modal.small {
@@ -5940,6 +5955,9 @@ span.pt {
 
 span.currency {
   font-family: 'DB Helvethaica X 45 Li', Arial, sans-serif; }
+
+span.highlight-red {
+  color: red; }
 
 .title-panel {
   position: relative;

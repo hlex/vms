@@ -13,7 +13,7 @@ class FilePlayer extends Component {
   static defaultProps = {
     key: Date.now(),
     type: 'video',
-    onEnded: () => 'Please send onEnded()',
+    onEnded: () => console.warn('You did not send onEnded(src)')
   }
 
   constructor(props) {
@@ -28,13 +28,13 @@ class FilePlayer extends Component {
     this.timer = setInterval(this.tick, Number(duration * 1000));
   }
   tick = () => {
-    const { onEnded } = this.props;
-    onEnded();
+    const { onEnded, src } = this.props;
+    onEnded(src);
     clearInterval(this.timer);
   }
   render = () => {
-    console.debug('FilePlayer:state', this.state);
-    console.debug('FilePlayer:props', this.props);
+    // console.debug('FilePlayer:state', this.state);
+    // console.debug('FilePlayer:props', this.props);
     const key = Date.now();
     const {
       src,
