@@ -120,6 +120,7 @@ class HomePage extends Component {
         </div>
         <div className="content-panel">
           <ProductItems
+            height={815}
             promotionSets={promotionSets}
             products={products}
             events={events}

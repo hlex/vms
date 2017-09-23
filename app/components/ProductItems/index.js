@@ -53,7 +53,7 @@ class ProductItems extends Component {
     promotionSetPerPage: 1,
     productPerPage: 1,
     eventPerPage: 1,
-    height: 842,
+    height: 815,
     onClickItem: context => console.log('Please send any onClickItem function', context),
   };
 
