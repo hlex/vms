@@ -16,8 +16,8 @@ class MediaPlayer extends Component {
     onEnded: PropTypes.func,
   };
   static defaultProps = {
-    onTicked: () => console.warn('You did not send onTicked()'),
-    onEnded: () => console.warn('You did not send onEnded(lastIndex, nextIndex)')
+    onTicked: () => null,
+    onEnded: () => null
   }
   state = {
     index: 0,

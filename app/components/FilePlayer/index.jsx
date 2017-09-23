@@ -14,7 +14,7 @@ class FilePlayer extends Component {
   static defaultProps = {
     key: Date.now(),
     type: 'video',
-    onEnded: () => console.warn('You did not send onEnded(src)')
+    onEnded: () => null,
   }
 
   state = {

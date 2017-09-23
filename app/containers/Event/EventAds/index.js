@@ -51,7 +51,6 @@ class EventAds extends Component {
   }
 
   handleAdsEnd = () => {
-    console.log('handleAdsEnd');
     this.setState({
       adFinished: true
     });
@@ -59,19 +58,16 @@ class EventAds extends Component {
 
   handleNext = () => {
     const { backToHome } = this.props;
-    console.log('handleNext !!!');
     backToHome();
   }
 
   handleTicked = () => {
-    console.log('handleTicked');
     this.setState({
       count: this.state.count + 1,
     });
   }
 
   render() {
-    console.log('EventAds', this.props);
     const { adFinished, count } = this.state;
     const { baseURL, stripAds } = this.props;
     const sources = [_.head(stripAds)];
