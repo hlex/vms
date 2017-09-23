@@ -31,6 +31,7 @@ export default class InputWithPad extends PureComponent {
   }
 
   handleToggleShowKeyboard = () => {
+    console.log('handleToggleShowKeyboard', this.props, this.state);
     if (!this.props.show) {
       this.setState({
         show: !this.state.show,
@@ -88,13 +89,21 @@ export default class InputWithPad extends PureComponent {
     }
   };
 
+  renderOverlay = () => {
+    const { show } = this.state;
+    return !this.props.show && show && <div className="overlay" onClick={this.handleToggleShowKeyboard}></div>;
+  }
+
   renderPad = () => {
     const { show } = this.state;
     const { type } = this.props;
+    console.log('renderPad', show, this.props.show);
     if (type === 'num') {
       return (
         <div className={`pads-number ${show ? 'open' : ''}`}>
-          {!this.props.show && <div className="overlay" onClick={this.handleToggleShowKeyboard}></div>}
+          {
+            this.renderOverlay()
+          }
           <ul>
             <li>
               <a onClick={() => this.handleSelectChar('7')}>7</a>
@@ -142,6 +151,9 @@ export default class InputWithPad extends PureComponent {
     }
     return (
       <div className={`pads-keyboard ${show ? 'open' : ''}`}>
+        {
+          this.renderOverlay()
+        }
         <ul>
           <li>
             <a onClick={() => this.handleSelectChar('1')}>1</a>
@@ -178,117 +190,117 @@ export default class InputWithPad extends PureComponent {
         </ul>
         <ul>
           <li>
-            <a>q</a>
+            <a onClick={() => this.handleSelectChar('q')}>q</a>
           </li>
           <li>
-            <a>w</a>
+            <a onClick={() => this.handleSelectChar('w')}>w</a>
           </li>
           <li>
-            <a>e</a>
+            <a onClick={() => this.handleSelectChar('e')}>e</a>
           </li>
           <li>
-            <a>r</a>
+            <a onClick={() => this.handleSelectChar('r')}>r</a>
           </li>
           <li>
-            <a>t</a>
+            <a onClick={() => this.handleSelectChar('t')}>t</a>
           </li>
           <li>
-            <a>y</a>
+            <a onClick={() => this.handleSelectChar('y')}>y</a>
           </li>
           <li>
-            <a>u</a>
+            <a onClick={() => this.handleSelectChar('u')}>u</a>
           </li>
           <li>
-            <a>i</a>
+            <a onClick={() => this.handleSelectChar('i')}>i</a>
           </li>
           <li>
-            <a>o</a>
+            <a onClick={() => this.handleSelectChar('o')}>o</a>
           </li>
           <li>
-            <a>p</a>
+            <a onClick={() => this.handleSelectChar('p')}>p</a>
           </li>
         </ul>
         <ul>
           <li>
-            <a>a</a>
+            <a onClick={() => this.handleSelectChar('a')}>a</a>
           </li>
           <li>
-            <a>s</a>
+            <a onClick={() => this.handleSelectChar('s')}>s</a>
           </li>
           <li>
-            <a>d</a>
+            <a onClick={() => this.handleSelectChar('d')}>d</a>
           </li>
           <li>
-            <a>f</a>
+            <a onClick={() => this.handleSelectChar('f')}>f</a>
           </li>
           <li>
-            <a>g</a>
+            <a onClick={() => this.handleSelectChar('g')}>g</a>
           </li>
           <li>
-            <a>h</a>
+            <a onClick={() => this.handleSelectChar('h')}>h</a>
           </li>
           <li>
-            <a>j</a>
+            <a onClick={() => this.handleSelectChar('j')}>j</a>
           </li>
           <li>
-            <a>k</a>
+            <a onClick={() => this.handleSelectChar('k')}>k</a>
           </li>
           <li>
-            <a>l</a>
+            <a onClick={() => this.handleSelectChar('l')}>l</a>
           </li>
         </ul>
         <ul>
           <li>
-            <a>z</a>
+            <a onClick={() => this.handleSelectChar('z')}>z</a>
           </li>
           <li>
-            <a>x</a>
+            <a onClick={() => this.handleSelectChar('x')}>x</a>
           </li>
           <li>
-            <a>c</a>
+            <a onClick={() => this.handleSelectChar('c')}>c</a>
           </li>
           <li>
-            <a>v</a>
+            <a onClick={() => this.handleSelectChar('v')}>v</a>
           </li>
           <li>
-            <a>b</a>
+            <a onClick={() => this.handleSelectChar('b')}>b</a>
           </li>
           <li>
-            <a>n</a>
+            <a onClick={() => this.handleSelectChar('n')}>n</a>
           </li>
           <li>
-            <a>m</a>
+            <a onClick={() => this.handleSelectChar('m')}>m</a>
           </li>
           <li>
-            <a>-</a>
+            <a onClick={() => this.handleSelectChar('-')}>-</a>
           </li>
           <li>
-            <a>_</a>
+            <a onClick={() => this.handleSelectChar('_')}>_</a>
           </li>
           <li>
-            <a>@</a>
-          </li>
-        </ul>
-        <ul>
-          <li className="width-250">
-            <a>@gmail.com</a>
-          </li>
-          <li className="width-250">
-            <a>@hotmail.com</a>
-          </li>
-          <li className="width-100">
-            <a>.com</a>
+            <a onClick={() => this.handleSelectChar('@')}>@</a>
           </li>
         </ul>
         <ul>
           <li className="width-250">
-            <a>@yahoo.com</a>
+            <a onClick={() => this.handleSelectChar('gmail.com')}>@gmail.com</a>
+          </li>
+          <li className="width-250">
+            <a onClick={() => this.handleSelectChar('@hotmail.com')}>@hotmail.com</a>
           </li>
           <li className="width-100">
-            <a>.net</a>
+            <a onClick={() => this.handleSelectChar('.com')}>.com</a>
+          </li>
+        </ul>
+        <ul>
+          <li className="width-250">
+            <a onClick={() => this.handleSelectChar('@yahoo.com')}>@yahoo.com</a>
           </li>
           <li className="width-100">
-            <a>.co.th</a>
+            <a onClick={() => this.handleSelectChar('.net')}>.net</a>
+          </li>
+          <li className="width-100">
+            <a onClick={() => this.handleSelectChar('.co.th')}>.co.th</a>
           </li>
           <li className="width-150">
             <a className="clickpads-mail-ok" href="event-ads-discount.htm">
@@ -301,8 +313,8 @@ export default class InputWithPad extends PureComponent {
   };
 
   render() {
-    console.log('state', this.state);
-    const { show } = this.props;
+    console.log('state', this.state, this.props);
+    const { show, rules } = this.props;
     const { inputValue, validationMessage } = this.state;
     let displayInputValue = '';
     if (show) {
@@ -313,8 +325,9 @@ export default class InputWithPad extends PureComponent {
     } else {
       displayInputValue = inputValue;
     }
+    const hasValidation = rules && _.keys(rules).length > 0;
     return (
-      <div className="input-box">
+      <div className={`input-box ${hasValidation && 'with-validation'}`}>
         <p className="input-validation">{validationMessage}</p>
         <div className="input-with-pad">
           <div

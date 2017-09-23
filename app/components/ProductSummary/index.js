@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+// ======================================================
+// Components
+// ======================================================
+import DiscountInput from '../DiscountInput';
 import SummaryList from '../SummaryList';
 
 class ProductSummary extends Component {
@@ -11,7 +15,7 @@ class ProductSummary extends Component {
     small: PropTypes.string,
     productPrice: PropTypes.number,
     discountAmount: PropTypes.number,
-    hasInput: PropTypes.bool,
+    hasDiscountInput: PropTypes.bool,
     hasBackButton: PropTypes.bool,
     back: PropTypes.func,
     onSubmit: PropTypes.func,
@@ -23,7 +27,7 @@ class ProductSummary extends Component {
     small: '(กรณีมีรหัสส่วนลดและต้องการใช้)',
     productPrice: '45',
     discountAmount: '10',
-    hasInput: true,
+    hasDiscountInput: true,
     hasBackButton: true,
     back: () => console.log('back'),
     onSubmit: () => console.log('onSubmit'),
@@ -44,7 +48,7 @@ class ProductSummary extends Component {
   }
 
   render() {
-    const { h2, p, small, productPrice, discountAmount, hasInput, hasBackButton } = this.props;
+    const { h2, p, small, productPrice, discountAmount, hasDiscountInput, hasBackButton } = this.props;
     const summaryItems = [
       {
         text: 'ราคาสินค้า',
@@ -63,16 +67,8 @@ class ProductSummary extends Component {
         <hr />
         <div className="panel">
           {
-            hasInput &&
-            <div className="input-box">
-              <p>{`${p} `}<small>{small}</small></p>
-              <div
-                className="input-with-keyboard"
-              >
-                A12345
-              </div>
-              <p className="_unpadding"><small>สัมผัสช่องว่างแป้นพิมพ์จะปรากฏ</small></p>
-            </div>
+            hasDiscountInput &&
+            <DiscountInput />
           }
           <SummaryList
             items={summaryItems}
