@@ -1,6 +1,101 @@
 import _ from 'lodash';
 import cuid from 'cuid';
 
+const isSoldout = () => _.random(1, 5) === 5;
+
+const productGenerator = number =>
+  _.map(_.range(number), index => ({
+    cuid: cuid(),
+    id: index + 1,
+    name: cuid(),
+    price: 20, // _.random(1, 50),
+    isSoldout: isSoldout(),
+    image: `images/product-${index + 1}.png`,
+    row: 2, // _.random(1, 2),
+    col: 1, // _.random(1, 2),
+    isDropped: false,
+  }));
+
+const promotionGenerator = number =>
+  _.map(_.range(number), index => ({
+    cuid: cuid(),
+    id: index + 1,
+    products: productGenerator(2),
+    price: 30,
+    image: '',
+  }));
+
+const normalizeStripAds = (ad) => {
+  return {
+    name: ad.name,
+    type: ad.type,
+    src: `http://localhost:8888/vms/${ad.path}`,
+    duration: Number(ad.timeout) / 1000
+  };
+};
+
+const eventItemGenerator = (id, input, rewardType, rewardValue) => {
+  return {
+    id: 1,
+    cuid: cuid(),
+    input: 'MSISDN',
+    rewardType,
+    rewardValue,
+    howTo: [
+      {
+        order: 1,
+        type: 'MSISDN',
+        th: 'ใส่เบอร์มือถือ',
+        en: ''
+      },
+      {
+        order: 2,
+        type: 'plain',
+        th: 'ชมโฆษณา 15 วินาที',
+        en: ''
+      },
+      {
+        order: 3,
+        type: 'discount',
+        th: 'รัยส่วนลด 5 บาททาง SMS',
+        en: ''
+      },
+    ],
+    product: {
+      ...productGenerator(1)[0]
+    },
+  }
+}
+
+const eventGenerator = (number) => {
+  return  _.map(_.range(number), index => {
+    let rand = _.random(1, 2);
+    const inputType = rand === 1 ? 'MSISDN' : 'EMAIL';
+    rand = _.random(1, 1);
+    let rewardType = '';
+    switch (rand) {
+      case 1:
+        rewardType = 'discount';
+        break;
+      case 2:
+        rewardType = 'discount';
+        break;
+      case 3:
+        rewardType = 'discount';
+        break;
+      case 4:
+        rewardType = 'discount';
+        break;
+      default:
+        rewardType = 'discount';
+    }
+    const rewardValue = 5;
+    return eventItemGenerator(index + 1, inputType, rewardType, rewardValue);
+  });
+}
+
+const mockupEvents = eventGenerator(20);
+
 const mockupTopupProviders = [
   {
     id: 1,
@@ -262,44 +357,12 @@ const stripAds = [
   },
 ];
 
-const isSoldout = () => _.random(1, 5) === 5;
-
-const productGenerator = number =>
-  _.map(_.range(number), index => ({
-    cuid: cuid(),
-    id: index + 1,
-    name: cuid(),
-    price: 20, // _.random(1, 50),
-    isSoldout: isSoldout(),
-    image: `images/product-${index + 1}.png`,
-    row: 2, // _.random(1, 2),
-    col: 1, // _.random(1, 2),
-    isDropped: false,
-  }));
-
-const promotionGenerator = number =>
-  _.map(_.range(number), index => ({
-    cuid: cuid(),
-    id: index + 1,
-    products: productGenerator(2),
-    price: 30,
-    image: '',
-  }));
-
-const normalizeStripAds = (ad) => {
-  return {
-    name: ad.name,
-    type: ad.type,
-    src: `http://localhost:8888/vms/${ad.path}`,
-    duration: Number(ad.timeout) / 1000
-  };
-};
-
 const initialState = {
   products: productGenerator(36),
   promotionSets: promotionGenerator(10),
   topupProviders: mockupTopupProviders,
   mobileTopupValues: mockupMobileTopupValues,
+  events: mockupEvents,
   stripAds: _.map(stripAds, ad => normalizeStripAds(ad)),
 };
 

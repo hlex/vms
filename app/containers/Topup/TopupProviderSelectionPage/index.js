@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import cuid from 'cuid';
 
 // ======================================================
 // Components
 // ======================================================
-import { Layout, TopupProviderItems } from '../../../components';
+import { Layout, TopUpProviderItem, ListWithTwoColumnItems } from '../../../components';
 // ======================================================
 // Selectors
 // ======================================================
@@ -53,6 +54,18 @@ class TopupProviderSelectionPage extends Component {
     clearMobileTopupMSISDN();
   }
 
+  renderItem = (renderItem, handleClick) => {
+    const { baseURL } = this.props;
+    return (
+      <TopUpProviderItem
+        key={cuid()}
+        baseURL={baseURL}
+        item={renderItem}
+        handleClick={handleClick}
+      />
+    );
+  }
+
   render() {
     const { baseURL, topupProviders, selectTopupProvider } = this.props;
     return (
@@ -79,12 +92,14 @@ class TopupProviderSelectionPage extends Component {
             </div>
           </div>
         </Layout.Subheader>
-        <TopupProviderItems
+        <ListWithTwoColumnItems
+          className='topup-row'
           items={topupProviders}
           itemPerPage={6}
           height={842}
           onClickItem={selectTopupProvider}
           baseURL={baseURL}
+          renderComponent={this.renderItem}
         />
       </div>
     );

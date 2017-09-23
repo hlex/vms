@@ -54,18 +54,18 @@ class ProductSelectionPage extends Component {
         <Layout.Subheader>
           <div className="title-section">
             <div className="title">
-              <span>เล่นกิจกรรมรับส่วนลด</span>
+              <span>ซื้อเครื่องดื่ม/ขนม</span>
             </div>
             <hr />
             <div className="how-to-box">
               <h2>ขั้นตอน</h2>
               <ul className="item how-to-list">
-                <li><span className="num-list">1</span><span>เลือกกิจกรรมโดยสัมผัสหน้าจอ</span></li>
-                <li><span className="num-list">2</span><span>เล่นกิจกรรมตามที่กำหนด</span></li>
-                <li><span className="num-list">3</span><span>รับรหัสส่วนลดในช่องทางที่แจ้ง</span></li>
-                <li><span className="num-list">4</span><span>ใช้ซื้อทันทีหรือครั้งต่อไป</span></li>
+                <li><span className="num-list">1</span><span>เลือกสินค้าโดยสัมผัสหน้าจอ</span></li>
+                <li><span className="num-list">2</span><span>ใส่เบอร์มือถือเพื่อสะสมแต้ม (ข้ามขั้นตอนนี้ได้)</span></li>
+                <li><span className="num-list">3</span><span>ใส่รหัสส่วนลด กรณีมีรหัสและต้องการใช้</span></li>
               </ul>
               <ul className="item">
+                <li><span>ดูวิดิโอการกดซื้อ</span></li>
               </ul>
             </div>
           </div>

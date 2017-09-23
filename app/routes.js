@@ -18,9 +18,8 @@ export default () =>
       <Route exact path="/product/single" component={Product.SingleProductPage} />
       <Route exact path="/product/promotionSet" component={Product.PromotionSetPage} />
       <Route exact path="/product" component={Product.ProductSelectionPage} />
-      <Route path="/event" component={Event.EventSelectionPage}>
-        <Route path="/play" component={Event.EventPlayPage} />
-      </Route>
+      <Route path="/event/play" component={Event.EventPlayPage} />
+      <Route path="/event" component={Event.EventSelectionPage} />
       <Route path="/topup/inputMSISDN" component={Topup.InputMSISDNPage} />
       <Route path="/topup/selectTopupValue" component={Topup.SelectTopupValuePage} />
       <Route path="/topup" component={Topup.TopupProviderSelectionPage} />

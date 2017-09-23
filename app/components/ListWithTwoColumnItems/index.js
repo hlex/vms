@@ -7,7 +7,7 @@ import _ from 'lodash';
 // ======================================================
 // Slick
 // ======================================================
-const productSettings = {
+const SlickSettings = {
   dots: false,
   speed: 500,
   autoplay: false,
@@ -19,8 +19,6 @@ const productSettings = {
   prevArrow: false,
   arrows: false,
 };
-
-const path = 'http://localhost:8888/vms/html-v2';
 
 const getPaginatedItems = (items, page = 1, perPage) => {
   const offset = (page - 1) * perPage;
@@ -34,16 +32,19 @@ const getPaginatedItems = (items, page = 1, perPage) => {
   };
 };
 
-class TopupProviderItems extends Component {
+class ListWithTwoColumnItems extends Component {
   static propTypes = {
+    className: PropTypes.string,
     items: PropTypes.arrayOf(PropTypes.shape({})),
     itemPerPage: PropTypes.number,
     height: PropTypes.number,
     onClickItem: PropTypes.func,
     baseURL: PropTypes.string.isRequired,
+    renderComponent: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
+    className: 'topup-row',
     items: [],
     itemPerPage: 6,
     height: 842,
@@ -57,10 +58,11 @@ class TopupProviderItems extends Component {
 
   render() {
     const {
+      className,
       items,
       itemPerPage,
       height,
-      baseURL,
+      renderComponent,
     } = this.props;
     // ======================================================
     // Items
@@ -68,33 +70,20 @@ class TopupProviderItems extends Component {
     const itemTotalPage = Math.ceil(_.size(items) / itemPerPage);
     const slickTotalPage = _.max([0, itemTotalPage]);
     const pageRange = _.range(slickTotalPage);
-    const topupProviderItems = _.map(pageRange, index => getPaginatedItems(items, index + 1, itemPerPage).data);
+    const renderItems = _.map(pageRange, index => getPaginatedItems(items, index + 1, itemPerPage).data);
     // console.log('>>>>>>>', itemTotalPage, slickTotalPage, pageRange, topupProviderItems);
     return (
       <div style={{ position: 'relative' }}>
-        <Slider ref={c => (this.slider = c)} {...productSettings}>
+        <Slider ref={c => (this.slider = c)} {...SlickSettings}>
           {pageRange.map(index => (
             <div className="product-items" key={cuid()} style={{ height: `${height}px` }}>
               <div className="box-wrapper">
                 <div className="box-slick">
-                  <div className="topup-row">
+                  <div className={`${className}`}>
                     <div className="flex-rows">
                       {
-                        _.map(_.get(topupProviderItems, index, []), (topupProviderItem) => {
-                          return (
-                            <a
-                              className="box"
-                              key={cuid()}
-                              onClick={() =>
-                                    this.handleClickItem('/topup/inputMSISDN', topupProviderItem)}
-                            >
-                              <div className="item">
-                                <div className="photo-item">
-                                  <img alt="" src={`${baseURL}/${topupProviderItem.src}`} />
-                                </div>
-                              </div>
-                            </a>
-                          );
+                        _.map(_.get(renderItems, index, []), (renderItem) => {
+                          return renderComponent(renderItem, this.handleClickItem);
                         })
                       }
                     </div>
@@ -109,5 +98,5 @@ class TopupProviderItems extends Component {
   }
 }
 
-export default TopupProviderItems;
+export default ListWithTwoColumnItems;
 

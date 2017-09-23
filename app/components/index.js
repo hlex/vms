@@ -7,10 +7,12 @@ import SummaryList from './SummaryList';
 import Layout from './Layout';
 import Loading from './Loading';
 import Thankyou from './Thankyou';
-import TopupProviderItems from './TopupProviderItems';
 import InputWithPad from './InputWithPad';
 import Jumbotron from './Jumbotron';
 import Modal from './Modal';
+import ListWithTwoColumnItems from './ListWithTwoColumnItems';
+import TopUpProviderItem from './TopUpProviderItem';
+import EventItem from './EventItem';
 
 export {
   PaymentConfirmation,
@@ -22,8 +24,10 @@ export {
   Layout,
   Loading,
   Thankyou,
-  TopupProviderItems,
   InputWithPad,
   Jumbotron,
   Modal,
+  ListWithTwoColumnItems,
+  TopUpProviderItem,
+  EventItem,
 };
