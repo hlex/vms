@@ -16,7 +16,6 @@ import Layout from '../../Layout';
 // Actions
 // ======================================================
 import * as ApplicationActions from '../../../actions/applicationActions';
-import * as Actions from './actions';
 
 // ======================================================
 // Selectors
@@ -33,7 +32,6 @@ const mapStateToProps = (state) => {
 
 const actions = {
   ...ApplicationActions,
-  ...Actions,
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
@@ -45,10 +43,17 @@ class PromotionSetPage extends Component {
     baseURL: PropTypes.string.isRequired,
     submitPromotionSet: PropTypes.func.isRequired,
     verifyDiscountCode: PropTypes.func.isRequired,
+    enableMoneyBox: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
     productPrice: 0,
+  }
+
+  componentDidMount = () => {
+    const { enableMoneyBox } = this.props;
+    // if mount enable money box
+    enableMoneyBox();
   }
 
   render() {

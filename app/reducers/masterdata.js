@@ -32,23 +32,83 @@ const normalizeStripAds = ad => ({
   duration: Number(ad.timeout) / 1000,
 });
 
+/*
+  # เติมเงินฟรี 5 บาท
+  rewardType: 'MOBILE_TOPUP',
+  rewardValue: 5,
+  rewardChannel: 'SMS',
+
+  # รับส่วนลด 3 บาท
+  rewardType: 'DISCOUNT',
+  rewardValue: 3,
+  rewardChannel: 'EMAIL',
+
+  # รับสินค้าฟรี
+  rewardType: 'PRODUCT',
+  rewardValue: 0,
+  rewardChannel: 'VENDING_MACHINE',
+
+  # รับสินค้าฟรี
+  rewardType: 'DISCOUNT',
+  rewardValue: 5,
+  rewardChannel: 'VENDING_MACHINE',
+
+*/
+
 const eventItemGenerator = (id, input, rewardType, rewardValue) => ({
   id: 1,
   cuid: cuid(),
-  eventType: '', // MSISDN, EMAIL, LINE_QRCODE, BARCODE, ADD_LINE,
-  receivedChannel: 'MSISDN', // MSISDN, LINE, EMAIL, INSTANT,
-  rewardValue,
+  eventType: '', // FREE_MOBILE_TOPUP_WATCH_ADS
+  eventActivities: [
+    {
+      name: 'INPUT_MSISDN', // INPUT_MSISDN, INPUT_EMAIL, SCAN_BARCODE, SCAN_QRCODE, ADD_LINE_ID
+      value: null
+    },
+    {
+      name: 'WATCH_ADS', // 'WATCH_ADS', 'SCAN_LINE_QRCODE'
+      value: 15
+    }
+  ],
+  rewards: [
+    {
+      name: 'DISCOUNT', // DISCOUNT, MOBILE_TOPUP, PRODUCT
+      value: 5, // 5 10 100
+      channel: 'VENDING_MACHINE', // 'SMS', 'EMAIL', 'VENDING_MACHINE',
+      expireDate: '', // null, '2017-09-26'
+    },
+  ],
+  remarks: [
+    {
+      th: 'จำกัด 1 สิทธิ์ต่อ 1 LINE_ID',
+      en: '',
+      verifyKey: 'EMAIL', // MSISDN, EMAIl, ID_NUMBER, ...
+    }
+  ],
   product: {
-    ...productGenerator(1)[0],
+    "Po_ID": "PO0001",
+    "Po_Name": {
+        "th": "แบรนด์ Gen U",
+        "en": "แบรนด์ Gen U"
+    },
+    "Po_Price": "45",
+    "Po_Img": "/uploads/images/product-20170819110019.png",
+    "Po_Imgbig": "/uploads/images/product-bg-20170819110019.png",
+    "Row": "1",
+    "Column": "1"
   },
-    // label
-  rewardTitleLabel: 'ส่วนลด',
-  rewardUnitLabel: '5 บาท',
-  remark: '',
+  tags: [
+    {
+      name: 'A', // B
+      color: 'RED', // RED GREEN BLUE MINT YELLOW PURPLE
+      label: 'เติมเงินฟรี', // free text..
+      unit: 'บาท', // free text..
+      value: 5 // integer.. เช่น 10, 20, 100
+    }
+  ],
   howTo: [
     {
       order: 1,
-      th: 'ใส่ เบอร์มือถือ MSISDN',
+      th: 'ใส่ หมายเลข',
       en: '',
     },
     {
@@ -58,7 +118,8 @@ const eventItemGenerator = (id, input, rewardType, rewardValue) => ({
     },
     {
       order: 3,
-      th: 'รับส่วนลด 5 บาททาง SMS',
+      highlight: 'รับส่วนลด 5 บาท',
+      th: '|ับส่วนลด 5 บาท',
       en: '',
     },
   ],

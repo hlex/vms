@@ -14,13 +14,21 @@ console.log('process.env', process.env);
 let isFirstTime = false;
 
 class Server {
+  canReceiveCoin;
   baht1;
   baht5;
   baht10;
   constructor() {
+    this.canReceiveCoin = false;
     this.baht1 = 10;
     this.baht5 = 10;
     this.baht10 = 10;
+  }
+  getCanReceiveCoin() {
+    return this.canReceiveCoin;
+  }
+  setCanReceiveCoin(canReceiveCoin) {
+    this.canReceiveCoin = canReceiveCoin;
   }
   getCoinOneBaht() {
     return this.baht1;
@@ -201,12 +209,14 @@ if (process.env.NODE_ENV !== 'production') {
           result: 'failed',
           description: 'failed please try again'
         };
+        const isSuccess = _.random(1, 5) <= 4;
+        if (isSuccess) sv.setCanReceiveCoin(true);
         socket.write(
-          JSON.stringify(_.random(1, 5) <= 4 ? success : failed),
+          JSON.stringify(isSuccess ? success : failed),
         );
       }
       if (objectData.action === 2 && objectData.mode === 'both' && objectData.msg === '021') {
-        // enable money box
+        // disable money box
         const success = {
           action: 2,
           msg: '021',
@@ -219,12 +229,14 @@ if (process.env.NODE_ENV !== 'production') {
           result: 'failed',
           description: 'failed please try again'
         };
+        const isSuccess = _.random(1, 5) <= 4;
+        if (isSuccess) sv.setCanReceiveCoin(false);
         socket.write(
-          JSON.stringify(_.random(1, 5) <= 4 ? success : failed),
+          JSON.stringify(isSuccess ? success : failed),
         );
       }
       // insert coin
-      if (objectData.action === 999) {
+      if (objectData.action === 999 && sv.getCanReceiveCoin()) {
         const insertedValue = Number(objectData.msg);
         if (insertedValue === 1) {
           sv.addCoinOneBaht(1);

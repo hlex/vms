@@ -112,6 +112,7 @@ export const selectTopupProvider = (context, topupProvider) => dispatch => {
 // Server Command
 // ======================================================
 const runFlowCashInserted = () => async (dispatch, getState) => {
+  dispatch(changePage('/payment'));
   const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
   const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
   console.log(
@@ -285,7 +286,7 @@ export const productDropProcessCompletely = () => dispatch => {
   dispatch(Actions.productDropProcessCompletely());
   setTimeout(() => {
     dispatch(backToHome());
-  }, 5000);
+  }, 3000);
 };
 
 export const confirmMobileTopupMSISDN = MSISDN => dispatch => {
