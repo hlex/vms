@@ -6,10 +6,24 @@ const getPromotionSets = state => state.promotionSets;
 const getMobileTopup = state => state.mobileTopup;
 const getDiscounts = state => state.discounts;
 
+const getDiscount = createSelector(
+  [getDiscounts],
+  (discounts) => {
+    return _.head(discounts);
+  }
+);
+
 const getDiscountAmount = createSelector(
   [getDiscounts],
   (discounts) => {
     return Number(_.sumBy(discounts, discount => Number(discount.value)));
+  }
+);
+
+const verifyOrderHasDiscount = createSelector(
+  [getDiscounts],
+  (discounts) => {
+    return _.size(discounts) > 0;
   }
 );
 
@@ -184,5 +198,7 @@ export default {
   // Discount
   // ======================================================
   getDiscounts,
-  getDiscountAmount
+  getDiscount,
+  getDiscountAmount,
+  verifyOrderHasDiscount
 };

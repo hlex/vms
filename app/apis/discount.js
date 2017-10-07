@@ -24,3 +24,24 @@ export const serviceVerifyDiscountCode = ({ code }) => {
     return responseDiscount;
   });
 };
+
+export const serviceUseDiscountCode = ({ code }) => {
+  // return new Promise((resolve, reject) => {
+  //   setTimeout(() => {
+  //     resolve(true);
+  //   }, 1000);
+  // });
+  const data = {
+    vtype: 'usediscountcode',
+    code: '1111111111111',
+  };
+  return fetchFacade(`${URL.verifyDiscount}${convertToURLParam(data)}`).then((response) => {
+    console.log('serviceUseDiscountCode', response);
+    const responseDiscount = _.head(response);
+    // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    if (responseDiscount.status === 1) {
+      throw new Error('serviceVerifyDiscountCode');
+    }
+    return responseDiscount;
+  });
+};
