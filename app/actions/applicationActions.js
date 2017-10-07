@@ -465,6 +465,7 @@ export const verifyDiscountCode = (code) => {
       console.log('verifyDiscountCodeResponse', verifyDiscountCodeResponse);
       const discountItem = {
         code,
+        ...verifyDiscountCodeResponse,
       };
       dispatch(Actions.addDiscount(discountItem));
     } catch (error) {
