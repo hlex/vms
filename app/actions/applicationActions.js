@@ -12,8 +12,15 @@ import OrderSelector from '../selectors/order';
 // ======================================================
 // Helpers
 // ======================================================
-import { getServerCommand, needToChangeCash } from '../helpers/tcp';
-import { createLog } from '../helpers/global';
+import {
+  getServerCommand,
+  needToChangeCash
+} from '../helpers/tcp';
+import {
+  createLog,
+  verifyLessThanThreshold,
+  verifyCanUseDiscount
+} from '../helpers/global';
 // ======================================================
 // APIs
 // ======================================================
@@ -197,6 +204,19 @@ const runFlowProductDropSuccess = () => (dispatch, getState) => {
   }
 };
 
+export const receivedCashRemaining = (data) => {
+  return (dispatch, getState) => {
+    // ======================================================
+    // Check < 100 baht
+    // ======================================================
+    const thresHold = 100;
+    const isLessThanThreshold = verifyLessThanThreshold(data.remain, thresHold);
+    const canChangeCash = isLessThanThreshold === false;
+    dispatch(Actions.setCanChangeCash(canChangeCash));
+    dispatch(Actions.receivedCashRemaining(data));
+  };
+};
+
 export const receivedDataFromServer = data => (dispatch, getState) => {
   if (data.sensor) return;
   console.log('%c App Received: ', createLog(null, 'lime', 'black'), data);
@@ -275,6 +295,11 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
         retryNo = 0;
         alert('Retry 3 times max quota');
       }
+      break;
+    case 'CASH_REMAINING_SUCCESS':
+      dispatch(receivedCashRemaining(data));
+      break;
+    case 'CASH_REMAINING_FAIL':
       break;
     default:
       console.log('%c App Do nothing:', createLog('app'), data);
@@ -459,23 +484,62 @@ export const selectEvent = (context, item) => {
 
 export const verifyDiscountCode = (code) => {
   console.log('verifyDiscountCode', code);
-  return async (dispatch) => {
-    try {
-      const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code);
-      console.log('verifyDiscountCodeResponse', verifyDiscountCodeResponse);
-      const discountItem = {
-        code,
-        ...verifyDiscountCodeResponse,
-      };
-      dispatch(Actions.addDiscount(discountItem));
-    } catch (error) {
+  return async (dispatch, getState) => {
+    // ======================================================
+    // Check code is already exist
+    // ======================================================
+    const canUseDiscount = verifyCanUseDiscount(OrderSelector.getDiscounts(getState().order), code);
+    if (canUseDiscount) {
+      try {
+        const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code);
+        console.log('verifyDiscountCodeResponse', verifyDiscountCodeResponse);
+        const discountItem = {
+          code,
+          ...verifyDiscountCodeResponse,
+          value: 10
+        };
+        dispatch(Actions.addDiscount(discountItem));
+      } catch (error) {
 
+      }
+    } else {
+      alert('Cannot use discount');
     }
-  }
-}
+  };
+};
 
 export const submitPlayEvent = (value) => {
   return (dispatch) => {
     dispatch(changePage('/event/ads'));
+  };
+};
+
+export const initHomePage = () => {
+  return (dispatch, getState) => {
+    // get cash remaining
+    dispatch(getCashRemaining());
+    dispatch(clearOrder());
+  };
+};
+
+export const initSingleProductPage = () => {
+  return (dispatch, getState) => {
+    const canChangeCash = MasterappSelector.verifyCanChangeCash(getState().masterapp);
+    if (!canChangeCash) {
+      dispatch(Actions.showModal('warningSystemWillNotChangeCash'));
+    }
+    // if mount enable money box
+    enableMoneyBox();
+  };
+};
+
+export const initPromotionSetPage = () => {
+  return (dispatch, getState) => {
+    const canChangeCash = MasterappSelector.verifyCanChangeCash(getState().masterapp);
+    if (!canChangeCash) {
+      dispatch(Actions.showModal('warningSystemWillNotChangeCash'));
+    }
+    // if mount enable money box
+    enableMoneyBox();
   };
 };

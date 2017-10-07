@@ -85,6 +85,7 @@ export default class InputWithPad extends PureComponent {
       onConfirm(this.state.inputValue);
       this.setState({
         inputValue: '',
+        show: false
       });
     }
   };

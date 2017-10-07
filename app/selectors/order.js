@@ -4,6 +4,14 @@ import _ from 'lodash';
 const getProducts = state => state.products;
 const getPromotionSets = state => state.promotionSets;
 const getMobileTopup = state => state.mobileTopup;
+const getDiscounts = state => state.discounts;
+
+const getDiscountAmount = createSelector(
+  [getDiscounts],
+  (discounts) => {
+    return Number(_.sumBy(discounts, discount => Number(discount.value)));
+  }
+);
 
 const getTopupMSISDN = createSelector([getMobileTopup], mobileTopup => mobileTopup.MSISDN || '');
 
@@ -170,4 +178,9 @@ export default {
   // Payment
   // ======================================================
   getOrderGrandTotalAmount,
+  // ======================================================
+  // Discount
+  // ======================================================
+  getDiscounts,
+  getDiscountAmount
 };

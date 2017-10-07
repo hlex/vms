@@ -29,6 +29,7 @@ const mapStateToProps = (state) => {
   return {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     productPrice: OrderSelector.getSingleProductPrice(state.order),
+    discountAmount: OrderSelector.getDiscountAmount(state.order)
   };
 };
 
@@ -42,6 +43,7 @@ class SingleProductPage extends Component {
 
   static propTypes = {
     productPrice: PropTypes.number,
+    discountAmount: PropTypes.number,
     baseURL: PropTypes.string.isRequired,
     back: PropTypes.func.isRequired,
     submitProduct: PropTypes.func.isRequired,
@@ -62,6 +64,7 @@ class SingleProductPage extends Component {
   render() {
     const {
       productPrice,
+      discountAmount,
       baseURL,
       submitProduct,
       verifyDiscountCode,
@@ -77,7 +80,7 @@ class SingleProductPage extends Component {
           <ProductSummary
             title={'ยืนยันชำระเงินค่าสินค้า'}
             productPrice={productPrice}
-            discountAmount={0}
+            discountAmount={discountAmount}
             onSubmit={submitProduct}
             onSubmitDiscount={verifyDiscountCode}
           />

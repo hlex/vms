@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const changeCoin = (value) => {
   const baht10 = Math.floor(value / 10);
   const baht5 = Math.floor((value - (baht10 * 10)) / 5);
@@ -13,4 +15,11 @@ export const createLog = (type = '', bgColor = 'green', color = '#fff') => {
   if (type === 'app') return 'background: #333; color: #fff';
   if (type === 'client') return 'background: green; color: #fff';
   return `background: ${bgColor}; color: ${color}`;
+};
+
+export const verifyCanUseDiscount = (discounts, code) => {
+  console.log('verifyCanUseDiscount', discounts, code);
+  const discountAlreadyExist = _.find(discounts, discount => discount.code === code);
+  if (discountAlreadyExist) return false;
+  return true;
 };

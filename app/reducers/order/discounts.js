@@ -1,9 +1,7 @@
 import { CLEAR_ORDER, ADD_DISCOUNT } from '../../actions/actionTypes';
 
 const initialState = [];
-const getInitialState = () => ({
-  ...initialState,
-});
+const getInitialState = () => initialState;
 
 export default (state = getInitialState(), action) => {
   switch (action.type) {
