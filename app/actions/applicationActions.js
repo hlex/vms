@@ -504,3 +504,25 @@ export const initHomePage = () => {
     dispatch(clearOrder());
   };
 };
+
+export const initSingleProductPage = () => {
+  return (dispatch, getState) => {
+    const canChangeCash = MasterappSelector.verifyCanChangeCash(getState().masterapp);
+    if (!canChangeCash) {
+      dispatch(Actions.showModal('warningSystemWillNotChangeCash'));
+    }
+    // if mount enable money box
+    enableMoneyBox();
+  };
+};
+
+export const initPromotionSetPage = () => {
+  return (dispatch, getState) => {
+    const canChangeCash = MasterappSelector.verifyCanChangeCash(getState().masterapp);
+    if (!canChangeCash) {
+      dispatch(Actions.showModal('warningSystemWillNotChangeCash'));
+    }
+    // if mount enable money box
+    enableMoneyBox();
+  };
+};

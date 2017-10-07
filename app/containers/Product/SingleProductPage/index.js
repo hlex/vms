@@ -46,7 +46,7 @@ class SingleProductPage extends Component {
     back: PropTypes.func.isRequired,
     submitProduct: PropTypes.func.isRequired,
     verifyDiscountCode: PropTypes.func.isRequired,
-    enableMoneyBox: PropTypes.func.isRequired,
+    initSingleProductPage: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -54,9 +54,8 @@ class SingleProductPage extends Component {
   }
 
   componentDidMount = () => {
-    const { enableMoneyBox } = this.props;
-    // if mount enable money box
-    enableMoneyBox();
+    const { initSingleProductPage } = this.props;
+    initSingleProductPage();
   }
 
   render() {

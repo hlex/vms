@@ -43,7 +43,7 @@ class PromotionSetPage extends Component {
     baseURL: PropTypes.string.isRequired,
     submitPromotionSet: PropTypes.func.isRequired,
     verifyDiscountCode: PropTypes.func.isRequired,
-    enableMoneyBox: PropTypes.func.isRequired,
+    initPromotionSetPage: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -51,9 +51,8 @@ class PromotionSetPage extends Component {
   }
 
   componentDidMount = () => {
-    const { enableMoneyBox } = this.props;
-    // if mount enable money box
-    enableMoneyBox();
+    const { initPromotionSetPage } = this.props;
+    initPromotionSetPage();
   }
 
   render() {

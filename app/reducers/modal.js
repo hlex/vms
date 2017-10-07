@@ -1,15 +1,17 @@
 import _ from 'lodash';
 
-import { SHOW_MODAL, HIDE_MODAL, HIDE_ALL_MODAL } from '../actions/actionTypes';
+import {
+  SHOW_MODAL,
+  HIDE_MODAL,
+  HIDE_ALL_MODAL,
+} from '../actions/actionTypes';
 
-const initModal = () => {
-  return {
-    collectPoint: false,
-    cashChangeError: false,
-    productDropError: false,
-    warningSystemWillNotChangeCash: false
-  };
-};
+const initModal = () => ({
+  collectPoint: false,
+  cashChangeError: false,
+  productDropError: false,
+  warningSystemWillNotChangeCash: false,
+});
 
 const initialState = {
   type: initModal(),
