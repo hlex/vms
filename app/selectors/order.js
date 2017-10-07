@@ -124,6 +124,7 @@ const getOrderGrandTotalAmount = createSelector(
     getSelectedMobileTopupTotalPrice,
     getSingleProductPrice,
     getPromotionSetPrice,
+    getDiscountAmount,
   ],
   (
     hasPromotionSet,
@@ -131,9 +132,10 @@ const getOrderGrandTotalAmount = createSelector(
     selectedMobileTopupTotalPrice,
     singleProductPrice,
     promotionSetPrice,
+    discountAmount,
   ) => {
     if (hasMobileTopup) return selectedMobileTopupTotalPrice;
-    return hasPromotionSet ? promotionSetPrice : singleProductPrice;
+    return hasPromotionSet ? promotionSetPrice - discountAmount : singleProductPrice - discountAmount;
   },
 );
 
