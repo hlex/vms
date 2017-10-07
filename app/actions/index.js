@@ -26,6 +26,7 @@ import {
   CLEAR_MOBILE_TOPUP_MSISDN,
   SELECT_EVENT,
   ADD_DISCOUNT,
+  SET_CAN_CHANGE_CASH
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -108,7 +109,7 @@ export const confirmMobileTopupMSISDN = (MSISDN) => {
   };
 };
 
-export const getCashRemaining = (data) => {
+export const receivedCashRemaining = (data) => {
   return {
     type: RECEIVED_CASH_REMAINING,
     data,
@@ -204,5 +205,12 @@ export const addDiscount = (discount) => {
   return {
     type: ADD_DISCOUNT,
     discount,
-  }
-}
+  };
+};
+
+export const setCanChangeCash = (canChangeCash) => {
+  return {
+    type: SET_CAN_CHANGE_CASH,
+    canChangeCash
+  };
+};

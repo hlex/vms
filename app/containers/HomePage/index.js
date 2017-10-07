@@ -60,7 +60,7 @@ class HomePage extends Component {
     selectProduct: PropTypes.func.isRequired,
     baseURL: PropTypes.string.isRequired,
     temp: PropTypes.number,
-    clearOrder: PropTypes.func.isRequired
+    initHomePage: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -72,8 +72,8 @@ class HomePage extends Component {
   };
 
   componentDidMount = () => {
-    const { clearOrder } = this.props;
-    clearOrder();
+    const { initHomePage } = this.props;
+    initHomePage();
   }
 
   render() {

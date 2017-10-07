@@ -13,7 +13,7 @@ import OrderSelector from '../selectors/order';
 // Helpers
 // ======================================================
 import { getServerCommand, needToChangeCash } from '../helpers/tcp';
-import { createLog } from '../helpers/global';
+import { createLog, verifyLessThanThreshold } from '../helpers/global';
 // ======================================================
 // APIs
 // ======================================================
@@ -197,6 +197,19 @@ const runFlowProductDropSuccess = () => (dispatch, getState) => {
   }
 };
 
+export const receivedCashRemaining = (data) => {
+  return (dispatch, getState) => {
+    // ======================================================
+    // Check < 100 baht
+    // ======================================================
+    const thresHold = 100;
+    const isLessThanThreshold = verifyLessThanThreshold(data.remain, thresHold);
+    const canChangeCash = isLessThanThreshold === false;
+    dispatch(Actions.setCanChangeCash(canChangeCash));
+    dispatch(Actions.receivedCashRemaining(data));
+  };
+};
+
 export const receivedDataFromServer = data => (dispatch, getState) => {
   if (data.sensor) return;
   console.log('%c App Received: ', createLog(null, 'lime', 'black'), data);
@@ -275,6 +288,11 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
         retryNo = 0;
         alert('Retry 3 times max quota');
       }
+      break;
+    case 'CASH_REMAINING_SUCCESS':
+      dispatch(receivedCashRemaining(data));
+      break;
+    case 'CASH_REMAINING_FAIL':
       break;
     default:
       console.log('%c App Do nothing:', createLog('app'), data);
@@ -476,5 +494,13 @@ export const verifyDiscountCode = (code) => {
 export const submitPlayEvent = (value) => {
   return (dispatch) => {
     dispatch(changePage('/event/ads'));
+  };
+};
+
+export const initHomePage = () => {
+  return (dispatch, getState) => {
+    // get cash remaining
+    dispatch(getCashRemaining());
+    dispatch(clearOrder());
   };
 };

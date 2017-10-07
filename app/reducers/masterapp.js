@@ -4,7 +4,8 @@ import {
   READY_TO_DROP_PRODUCT,
   NOT_READY_TO_DROP_PRODUCT,
   DROPPING_PRODUCT,
-  PRODUCT_DROP_SUCCESS
+  PRODUCT_DROP_SUCCESS,
+  SET_CAN_CHANGE_CASH
 } from '../actions/actionTypes';
 
 const initialTcp = process.env.NODE_ENV !== 'production'
@@ -80,6 +81,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         droppingProduct: {},
+      };
+    case SET_CAN_CHANGE_CASH:
+      return {
+        ...state,
+        canChangeCash: action.canChangeCash
       };
     default:
       return state;

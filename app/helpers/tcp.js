@@ -140,6 +140,16 @@ export const isConnected = ({ action, msg, result, description, initialized }) =
   return true;
 };
 
+export const isGetCashRemainingSuccess = ({ action, remain }) => {
+  if (action !== actionCode.cash || !remain) return false;
+  return true;
+};
+
+export const isGetCashRemainingFail = ({ action, remain, result }) => {
+  if (action !== actionCode.cash || !remain || result === resultCode.unsuccess) return false;
+  return true;
+};
+
 export const getServerCommand = (data) => {
   const normalizeData = {
     action: _.get(data, 'action', ''),
@@ -147,6 +157,7 @@ export const getServerCommand = (data) => {
     msg: _.get(data, 'msg', ''),
     description: _.get(data, 'description', '').toLowerCase(),
     initialized: _.get(data, 'initialized', ''),
+    remain: _.get(data, 'remain', '')
   };
   console.log('%c App getServerCommand:normalizeData', createLog('app'), normalizeData);
   if (isConnectionEstablish(normalizeData)) return 'CONNECTION_ESTABLISH';
@@ -154,6 +165,9 @@ export const getServerCommand = (data) => {
   if (isSensor(normalizeData)) return 'SENSOR';
   if (isResetTAIKOSuccess(normalizeData)) return 'RESET_TAIKO_SUCCESS';
   if (isResetTAIKOFail(normalizeData)) return 'RESET_TAIKO_FAIL';
+  if (isGetCashRemainingSuccess(normalizeData)) return 'CASH_REMAINING_SUCCESS';
+  // if (isGetCashRemainingFail(normalizeData)) return 'CASH_REMAINING_FAIL';
+  if (isEnableMoneyBoxSuccess(normalizeData)) return 'ENABLE_MONEY_BOX_SUCCESS';
   if (isEnableMoneyBoxSuccess(normalizeData)) return 'ENABLE_MONEY_BOX_SUCCESS';
   if (isEnableMoneyBoxFail(normalizeData)) return 'ENABLE_MONEY_BOX_FAIL';
   if (isDisabledMoneyBoxSuccess(normalizeData)) return 'DISABLE_MONEY_BOX_SUCCESS';
