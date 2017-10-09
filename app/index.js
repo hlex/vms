@@ -121,6 +121,9 @@ if (process.env.NODE_ENV !== 'production') {
       // ======================================================
       // Declare Protocols
       // ======================================================
+      // ======================================================
+      // DROP PRODUCT
+      // ======================================================
       if (objectData.action === 1 && objectData.msg !== 'failed') {
         console.log('%c Server: Drop product', serverLog, data);
         const successPercent = Math.floor(((Math.random() * 10))) + 1;
@@ -149,6 +152,9 @@ if (process.env.NODE_ENV !== 'production') {
           }, 5000);
         }
       }
+      // ======================================================
+      // CASH CHANGE
+      // ======================================================
       if (objectData.action === 2 && objectData.mode === 'coin') {
         console.log('%c Server: Cash Change', serverLog, Number(objectData.msg), changeCoin(Number(objectData.msg)));
         const changeCoins = changeCoin(Number(objectData.msg));
@@ -170,6 +176,9 @@ if (process.env.NODE_ENV !== 'production') {
           );
         }
       }
+      // ======================================================
+      // CASH REMAINING
+      // ======================================================
       if (objectData.action === 2 && objectData.mode === 'remain') {
         console.log('%c Server: Cash remaining', serverLog, sv);
         socket.write(
@@ -184,6 +193,9 @@ if (process.env.NODE_ENV !== 'production') {
           }),
         );
       }
+      // ======================================================
+      // RESET TAIKO
+      // ======================================================
       if (objectData.action === 2 && objectData.mode === 'bill' && objectData.msg === '01') {
         // reset TAIKO
         socket.write(
@@ -195,6 +207,9 @@ if (process.env.NODE_ENV !== 'production') {
           }),
         );
       }
+      // ======================================================
+      // ENABLE MONEY BOX
+      // ======================================================
       if (objectData.action === 2 && objectData.mode === 'both' && objectData.msg === '020') {
         // enable money box
         const success = {
@@ -215,6 +230,9 @@ if (process.env.NODE_ENV !== 'production') {
           JSON.stringify(isSuccess ? success : failed),
         );
       }
+      // ======================================================
+      // DISABLE MONEY BOX
+      // ======================================================
       if (objectData.action === 2 && objectData.mode === 'both' && objectData.msg === '021') {
         // disable money box
         const success = {
@@ -235,7 +253,28 @@ if (process.env.NODE_ENV !== 'production') {
           JSON.stringify(isSuccess ? success : failed),
         );
       }
-      // insert coin
+      if (objectData.action === 2 && objectData.mode === 'limit') {
+        // const success = {
+        //   action: 2,
+        //   msg: '021',
+        //   result: 'success',
+        //   description: 'Disable On.'
+        // };
+        // const failed = {
+        //   action: 2,
+        //   msg: '021',
+        //   result: 'failed',
+        //   description: 'failed please try again'
+        // };
+        // const isSuccess = _.random(1, 5) <= 4;
+        // if (isSuccess) sv.setCanReceiveCoin(false);
+        // socket.write(
+        //   JSON.stringify(isSuccess ? success : failed),
+        // );
+      }
+      // ======================================================
+      // INSERT COIN
+      // ======================================================
       if (objectData.action === 999 && sv.getCanReceiveCoin()) {
         const insertedValue = Number(objectData.msg);
         if (insertedValue === 1) {
