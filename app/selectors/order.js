@@ -4,6 +4,28 @@ import _ from 'lodash';
 const getProducts = state => state.products;
 const getPromotionSets = state => state.promotionSets;
 const getMobileTopup = state => state.mobileTopup;
+const getDiscounts = state => state.discounts;
+
+const getDiscount = createSelector(
+  [getDiscounts],
+  (discounts) => {
+    return _.head(discounts);
+  }
+);
+
+const getDiscountAmount = createSelector(
+  [getDiscounts],
+  (discounts) => {
+    return Number(_.sumBy(discounts, discount => Number(discount.value)));
+  }
+);
+
+const verifyOrderHasDiscount = createSelector(
+  [getDiscounts],
+  (discounts) => {
+    return _.size(discounts) > 0;
+  }
+);
 
 const getTopupMSISDN = createSelector([getMobileTopup], mobileTopup => mobileTopup.MSISDN || '');
 
@@ -116,6 +138,7 @@ const getOrderGrandTotalAmount = createSelector(
     getSelectedMobileTopupTotalPrice,
     getSingleProductPrice,
     getPromotionSetPrice,
+    getDiscountAmount,
   ],
   (
     hasPromotionSet,
@@ -123,9 +146,10 @@ const getOrderGrandTotalAmount = createSelector(
     selectedMobileTopupTotalPrice,
     singleProductPrice,
     promotionSetPrice,
+    discountAmount,
   ) => {
     if (hasMobileTopup) return selectedMobileTopupTotalPrice;
-    return hasPromotionSet ? promotionSetPrice : singleProductPrice;
+    return hasPromotionSet ? promotionSetPrice - discountAmount : singleProductPrice - discountAmount;
   },
 );
 
@@ -170,4 +194,11 @@ export default {
   // Payment
   // ======================================================
   getOrderGrandTotalAmount,
+  // ======================================================
+  // Discount
+  // ======================================================
+  getDiscounts,
+  getDiscount,
+  getDiscountAmount,
+  verifyOrderHasDiscount
 };

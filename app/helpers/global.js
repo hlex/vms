@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _ from 'lodash';
 
 export const changeCoin = (value) => {
   const baht10 = Math.floor(value / 10);
@@ -22,4 +22,11 @@ export const verifyLessThanThreshold = (remain, thresHold) => {
   const fiveBahtRemaining = _.get(remain, 'baht5', 0);
   const tenBahtRemaining = _.get(remain, 'baht10', 0);
   return (tenBahtRemaining * 10) + (fiveBahtRemaining * 5) + oneBahtRemaining < thresHold;
+};
+
+export const verifyCanUseDiscount = (discounts, code) => {
+  console.log('verifyCanUseDiscount', discounts, code);
+  const discountAlreadyExist = _.find(discounts, discount => discount.code === code);
+  if (discountAlreadyExist) return false;
+  return true;
 };

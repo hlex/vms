@@ -12,13 +12,26 @@ import OrderSelector from '../selectors/order';
 // ======================================================
 // Helpers
 // ======================================================
-import { getServerCommand, needToChangeCash } from '../helpers/tcp';
-import { createLog, verifyLessThanThreshold } from '../helpers/global';
+import {
+  getServerCommand,
+  needToChangeCash
+} from '../helpers/tcp';
+import {
+  createLog,
+  verifyLessThanThreshold,
+  verifyCanUseDiscount
+} from '../helpers/global';
 // ======================================================
 // APIs
 // ======================================================
 import { serviceTopupMobile } from '../apis/mobileTopup';
-import { serviceVerifyDiscountCode } from '../apis/discount';
+import {
+  serviceVerifyDiscountCode,
+  serviceUseDiscountCode
+} from '../apis/discount';
+import {
+  serviceSubmitOrder,
+} from '../apis/order';
 
 let cmdNo = 0;
 let retryNo = 0;
@@ -106,6 +119,32 @@ export const productDrop = () => (dispatch, getState) => {
 export const selectTopupProvider = (context, topupProvider) => dispatch => {
   dispatch(changePage(context));
   dispatch(Actions.selectTopupProvider(topupProvider));
+};
+
+export const submitOrder = () => {
+  return async (dispatch, getState) => {
+    return new Promise(async (resolve, reject) => {
+      // ======================================================
+      // Check has discount or not ?
+      // ======================================================
+      try {
+        const hasDiscount = OrderSelector.verifyOrderHasDiscount(getState().order);
+        if (hasDiscount) {
+          const discounts = OrderSelector.getDiscounts(getState().order);
+          _.forEach(discounts, async (discount) => {
+            const serviceUseDiscountCodeResponse = await serviceUseDiscountCode(discount.code);
+            console.log('serviceUseDiscountCodeResponse', serviceUseDiscountCodeResponse);
+          });
+          console.log('serviceUseDiscountCodeResponse:finish');
+        }
+        const serviceSubmitOrderResponse = await serviceSubmitOrder();
+        console.log('serviceSubmitOrderResponse', serviceSubmitOrderResponse);
+        resolve(serviceSubmitOrderResponse);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  };
 };
 
 // ======================================================
@@ -300,11 +339,18 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
   }
 };
 
-export const productDropProcessCompletely = () => dispatch => {
-  dispatch(Actions.productDropProcessCompletely());
-  setTimeout(() => {
-    dispatch(backToHome());
-  }, 3000);
+export const productDropProcessCompletely = () => async (dispatch) => {
+  // submitOrder
+  try {
+    const submitOrderResponse = await dispatch(submitOrder());
+    console.log('productDropProcessCompletely.submitOrderResponse', submitOrderResponse);
+    dispatch(Actions.productDropProcessCompletely());
+    setTimeout(() => {
+      dispatch(backToHome());
+    }, 3000);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const confirmMobileTopupMSISDN = MSISDN => dispatch => {
@@ -477,19 +523,29 @@ export const selectEvent = (context, item) => {
 
 export const verifyDiscountCode = (code) => {
   console.log('verifyDiscountCode', code);
-  return async (dispatch) => {
-    try {
-      const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code);
-      console.log('verifyDiscountCodeResponse', verifyDiscountCodeResponse);
-      const discountItem = {
-        code,
-      };
-      dispatch(Actions.addDiscount(discountItem));
-    } catch (error) {
+  return async (dispatch, getState) => {
+    // ======================================================
+    // Check code is already exist
+    // ======================================================
+    const canUseDiscount = verifyCanUseDiscount(OrderSelector.getDiscounts(getState().order), code);
+    if (canUseDiscount) {
+      try {
+        const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code);
+        console.log('verifyDiscountCodeResponse', verifyDiscountCodeResponse);
+        const discountItem = {
+          code,
+          ...verifyDiscountCodeResponse,
+          value: 10
+        };
+        dispatch(Actions.addDiscount(discountItem));
+      } catch (error) {
 
+      }
+    } else {
+      alert('Cannot use discount');
     }
-  }
-}
+  };
+};
 
 export const submitPlayEvent = (value) => {
   return (dispatch) => {
