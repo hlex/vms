@@ -5,6 +5,14 @@ const getProducts = state => state.products;
 const getPromotionSets = state => state.promotionSets;
 const getMobileTopup = state => state.mobileTopup;
 const getDiscounts = state => state.discounts;
+const getEvent = state => state.event;
+
+const getSelectedEvent = createSelector(
+  [getEvent],
+  (event) => {
+    return event.selectedEvent;
+  }
+);
 
 const getDiscount = createSelector(
   [getDiscounts],
@@ -154,6 +162,11 @@ const getOrderGrandTotalAmount = createSelector(
 );
 
 export default {
+  // ======================================================
+  // Event
+  // ======================================================
+  getEvent,
+  getSelectedEvent,
   // ======================================================
   // Mobile Topup
   // ======================================================
