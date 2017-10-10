@@ -1,9 +1,13 @@
 import _ from 'lodash';
 
-export const changeCoin = (value) => {
+export const isEmpty = value => _.isUndefined(value) || _.isEmpty(value);
+
+export const isNotEmpty = value => !isEmpty(value);
+
+export const changeCoin = value => {
   const baht10 = Math.floor(value / 10);
-  const baht5 = Math.floor((value - (baht10 * 10)) / 5);
-  const baht1 = Math.floor((value - (baht10 * 10) - (baht5 * 5)) / 1);
+  const baht5 = Math.floor((value - baht10 * 10) / 5);
+  const baht1 = Math.floor((value - baht10 * 10 - baht5 * 5) / 1);
   return {
     baht1,
     baht5,
@@ -21,7 +25,7 @@ export const verifyLessThanThreshold = (remain, thresHold) => {
   const oneBahtRemaining = _.get(remain, 'baht1', 0);
   const fiveBahtRemaining = _.get(remain, 'baht5', 0);
   const tenBahtRemaining = _.get(remain, 'baht10', 0);
-  return (tenBahtRemaining * 10) + (fiveBahtRemaining * 5) + oneBahtRemaining < thresHold;
+  return tenBahtRemaining * 10 + fiveBahtRemaining * 5 + oneBahtRemaining < thresHold;
 };
 
 export const verifyCanUseDiscount = (discounts, code) => {
