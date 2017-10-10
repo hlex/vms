@@ -329,7 +329,7 @@ export default class InputWithPad extends PureComponent {
     const { type, show, rules } = this.props;
     const { inputValue, validationMessage } = this.state;
     let displayInputValue = '';
-    if (show && type === 'num') {
+    if (type === 'num') {
       for (let i = 0; i < inputValue.length; i += 1) {
         if (i === 3 || i === 6) displayInputValue += '-';
         displayInputValue += inputValue[i];
