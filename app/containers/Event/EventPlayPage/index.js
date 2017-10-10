@@ -31,6 +31,7 @@ import OrderSelectors from '../../../selectors/order';
 const mapStateToProps = (state) => {
   return {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
+    selectedEvent: OrderSelectors.getSelectedEvent(state.order)
   };
 };
 
@@ -48,17 +49,23 @@ class EventPlayPage extends Component {
 
   static propTypes = {
     baseURL: PropTypes.string.isRequired,
+    selectedEvent: PropTypes.shape({}),
     submitPlayEvent: PropTypes.func.isRequired,
   }
 
+  static defaultProps = {
+    selectedEvent: {}
+  }
+
   render() {
-    console.log('EventPlayPage', this.props);
-    const { baseURL, submitPlayEvent } = this.props;
+    console.log(this);
+    const { baseURL, selectedEvent, submitPlayEvent } = this.props;
     return (
       <div className="input-msisdn">
         <Layout.Title>
           <EventTitle
             title={'เล่นกิจกรรมรับส่วนลด'}
+            item={selectedEvent}
             baseURL={baseURL}
           />
         </Layout.Title>
