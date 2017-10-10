@@ -1,7 +1,7 @@
 import { CLEAR_ORDER, SELECT_EVENT } from '../../actions/actionTypes';
 
 const initialState = {
-  event: {},
+  selectedEvent: {},
 };
 const getInitialState = () => ({
   ...initialState,
@@ -14,7 +14,7 @@ export default (state = getInitialState(), action) => {
     case SELECT_EVENT:
       return {
         ...state,
-        event: action.event,
+        selectedEvent: action.event,
       };
     default:
       return state;
