@@ -196,9 +196,10 @@ export const clearMobileTopupMSISDN = () => {
   };
 };
 
-export const selectEvent = () => {
+export const selectEvent = (item) => {
   return {
     type: SELECT_EVENT,
+    event: item
   };
 };
 
