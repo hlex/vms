@@ -123,11 +123,11 @@ class EventItem extends Component {
     // ======================================================
     // Ribbon
     // ======================================================
-    const ribbonType = this.convertToRibbonType(item.tag.name);
-    const ribbonColor = this.convertToRibbonColor(item.tag.color);
-    const ribbonLabel = item.tag.label;
-    const ribbonValue = item.tag.value;
-    const ribbonUnit = item.tag.unit;
+    const ribbonType = this.convertToRibbonType(_.get(item, 'tag.name', ''));
+    const ribbonColor = this.convertToRibbonColor(_.get(item, 'tag.color', ''));
+    const ribbonLabel = _.get(item, 'tag.label', '');
+    const ribbonValue = _.get(item, 'tag.value', '');
+    const ribbonUnit = _.get(item, 'tag.unit', '');
 
     return (
       <a className="box" key={cuid()} onClick={() => handleClick('/event/play', item)}>
@@ -139,14 +139,14 @@ class EventItem extends Component {
           </p>
         </div>
         <div className="photo-item">
-          <img src={`${baseURL}/${item.product.image || ''}`} />
+          <img src={`${baseURL}/${_.get(item, 'product.image', '')}`} />
           <div className="price">
-            <span>{item.product.price || ''}</span> <b>฿</b>
+            <span>{_.get(item, 'product.price', '')}</span> <b>฿</b>
           </div>
         </div>
         <div className="requirements">
           {
-            _.map(item.howTo, (instruction, index) => {
+            _.map(_.get(item, 'howTo', []), (instruction, index) => {
               return this.renderHowToParagraph(instruction[lang], index + 1);
             })
           }
