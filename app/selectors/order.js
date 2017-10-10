@@ -19,7 +19,7 @@ const getEventNextInput = createSelector(
   (selectedEvent) => {
     if (_.size(selectedEvent.inputs || []) <= 0) return '';
     const nextInput = _.find(selectedEvent.inputs, input => input.completed === false);
-    return nextInput.name.toUpperCase() || '';
+    return nextInput ? nextInput.name.toUpperCase() : '';
   }
 );
 
