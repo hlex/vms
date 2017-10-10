@@ -38,6 +38,7 @@ const mapStateToProps = state => ({
   navMenus: state.masterapp.navMenus,
   products: MasterdataSelector.getProducts(state.masterdata),
   promotionSets: MasterdataSelector.getPromotionSets(state.masterdata),
+  events: MasterdataSelector.getEvents(state.masterdata),
   mobileTopupProviders: MasterdataSelector.getTopupProviders(state.masterdata),
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
   temp: MasterappSelector.getTemp(state.masterapp),
@@ -56,10 +57,11 @@ class HomePage extends Component {
     products: PropTypes.arrayOf(PropTypes.shape({})),
     promotionSets: PropTypes.arrayOf(PropTypes.shape({})),
     events: PropTypes.arrayOf(PropTypes.shape({})),
-    changePage: PropTypes.func.isRequired,
-    selectProduct: PropTypes.func.isRequired,
+    mobileTopupProviders: PropTypes.arrayOf(PropTypes.shape({})),
     baseURL: PropTypes.string.isRequired,
     temp: PropTypes.number,
+    selectProduct: PropTypes.func.isRequired,
+    changePage: PropTypes.func.isRequired,
     initHomePage: PropTypes.func.isRequired
   };
 
@@ -68,6 +70,7 @@ class HomePage extends Component {
     products: [],
     promotionSets: [],
     events: [],
+    mobileTopupProviders: [],
     temp: 35,
   };
 
@@ -83,6 +86,7 @@ class HomePage extends Component {
       products,
       promotionSets,
       events,
+      mobileTopupProviders,
       changePage,
       selectProduct,
       baseURL,
@@ -124,9 +128,11 @@ class HomePage extends Component {
             promotionSets={promotionSets}
             products={products}
             events={events}
+            mobileTopupProviders={mobileTopupProviders}
             promotionSetPerPage={3}
             productPerPage={10}
             eventPerPage={6}
+            mobileTopupProviderPerPage={6}
             onClickItem={selectProduct}
             baseURL={baseURL}
           />
