@@ -6235,6 +6235,10 @@ hr {
   box-shadow: 0px 10px 35px -5px rgba(0, 0, 0, 0.42); }
 .input-with-pad .pads-keyboard.open {
   display: block; }
+  .input-with-pad .pads-keyboard.open.is-fixed {
+    position: fixed;
+    left: 0;
+    right: 0; }
 .input-with-pad .pads-keyboard ul {
   float: left;
   width: 100%;

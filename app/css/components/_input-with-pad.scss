@@ -155,6 +155,11 @@
     }
     .pads-keyboard.open {
         display: block;
+        &.is-fixed {
+            position: fixed;
+            left: 0;
+            right: 0;
+        }
     }
     .pads-keyboard ul {
         float: left;
