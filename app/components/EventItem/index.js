@@ -23,13 +23,19 @@ class EventItem extends Component {
   renderHowToParagraph = (howTo, order) => {
     const { baseURL } = this.props;
     const orderLabel = `${order}. `;
+    const shouldRenderGetReward = howTo.indexOf('รับ') >= 0 || howTo.indexOf('Get') >= 0;
     const shouldRenderIconPhone = howTo.indexOf('หมายเลข') >= 0 || howTo.indexOf('phone') >= 0;
     const shouldRenderIconEmail = howTo.indexOf('อีเมล') >= 0 || howTo.indexOf('email') >= 0;
     const shouldRenderIconLineId = howTo.indexOf('ไลน์') >= 0 || howTo.indexOf('LINE') >= 0;
     const shouldRenderIconBarCode = howTo.indexOf('บาร์') >= 0 || howTo.indexOf('Bar') >= 0;
     const shouldRenderIconQRCode = howTo.indexOf('คิวอาร์') >= 0 || howTo.indexOf('QR') >= 0;
-    const shouldRenderGetReward = howTo.indexOf('รับ') >= 0 || howTo.indexOf('Get') >= 0;
-    if (shouldRenderIconPhone) {
+    if (shouldRenderGetReward) {
+      return (
+        <p>
+          {orderLabel}<span className="color-red">{`${howTo}`}</span>
+        </p>
+      );
+    } else if (shouldRenderIconPhone) {
       return (
         <p>
           {orderLabel}
@@ -99,12 +105,6 @@ class EventItem extends Component {
           />
         </p>
       );
-    } else if (shouldRenderGetReward) {
-      return (
-        <p>
-          {orderLabel}<span className="color-red">{`${howTo}`}</span>
-        </p>
-      );
     }
     return (
       <p>{`${orderLabel} ${howTo}`}</p>
@@ -114,7 +114,7 @@ class EventItem extends Component {
   render() {
     const { baseURL, item, handleClick } = this.props;
     console.log('EventItem', this.props);
-
+    const lang = 'th';
     // ======================================================
     // Ribbon
     // ======================================================
@@ -134,15 +134,15 @@ class EventItem extends Component {
           </p>
         </div>
         <div className="photo-item">
-          <img src={`${baseURL}/${item.productImage || ''}`} />
+          <img src={`${baseURL}/${item.product.image || ''}`} />
           <div className="price">
-            <span>{item.productPrice || ''}</span> <b>฿</b>
+            <span>{item.product.price || ''}</span> <b>฿</b>
           </div>
         </div>
         <div className="requirements">
           {
             _.map(item.howTo, (instruction, index) => {
-              return this.renderHowToParagraph(instruction, index + 1);
+              return this.renderHowToParagraph(instruction[lang], index + 1);
             })
           }
           <div className="box-play-event">
