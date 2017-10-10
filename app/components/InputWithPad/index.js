@@ -1,6 +1,14 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
+const isThaiMobileNumber = (value) => {
+  return /^(0)\d{9}$/.test(value);
+}
+
+const isEmail = (value) => {
+  return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
+}
+
 export default class InputWithPad extends PureComponent {
   static propTypes = {
     show: PropTypes.bool,
@@ -8,6 +16,7 @@ export default class InputWithPad extends PureComponent {
     value: PropTypes.string,
     rules: PropTypes.shape({}),
     onConfirm: PropTypes.func,
+    isFixed: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -16,6 +25,7 @@ export default class InputWithPad extends PureComponent {
     value: '',
     onConfirm: () => console.log('Please send any onConfirm(inputValue)'),
     rules: {},
+    isFixed: false
   };
 
   state = {
@@ -48,7 +58,10 @@ export default class InputWithPad extends PureComponent {
           validationMessage = !value || value === '' || value === null ? message : '';
           break;
         case 'mobileNumber':
-          validationMessage = /^(0)\d{9}$/.test(value) ? '' : message;
+          validationMessage = isThaiMobileNumber(value) ? '' : message;
+          break;
+        case 'email':
+          validationMessage = isEmail(value) ? '' : message;
           break;
         default:
           return '';
@@ -97,10 +110,10 @@ export default class InputWithPad extends PureComponent {
 
   renderPad = () => {
     const { show } = this.state;
-    const { type } = this.props;
+    const { type, isFixed } = this.props;
     if (type === 'num') {
       return (
-        <div className={`pads-number ${show ? 'open' : ''}`}>
+        <div className={`pads-number ${isFixed ? 'is-fixed' : ''} ${show ? 'open' : ''}`}>
           {
             this.renderOverlay()
           }
@@ -150,7 +163,7 @@ export default class InputWithPad extends PureComponent {
       );
     }
     return (
-      <div className={`pads-keyboard ${show ? 'open' : ''}`}>
+      <div className={`pads-keyboard ${isFixed ? 'is-fixed' : ''} ${show ? 'open' : ''}`}>
         {
           this.renderOverlay()
         }
@@ -313,10 +326,10 @@ export default class InputWithPad extends PureComponent {
   };
 
   render() {
-    const { show, rules } = this.props;
+    const { type, show, rules } = this.props;
     const { inputValue, validationMessage } = this.state;
     let displayInputValue = '';
-    if (show) {
+    if (show && type === 'num') {
       for (let i = 0; i < inputValue.length; i += 1) {
         if (i === 3 || i === 6) displayInputValue += '-';
         displayInputValue += inputValue[i];
