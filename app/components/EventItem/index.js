@@ -8,7 +8,12 @@ class EventItem extends Component {
     baseURL: PropTypes.string.isRequired,
     item: PropTypes.shape({}).isRequired,
     handleClick: PropTypes.func.isRequired,
+    hasButton: PropTypes.bool,
   };
+
+  static defaultProps = {
+    hasButton: true
+  }
 
   convertToRibbonType = (ribbonType) => {
     return ribbonType === 'A' ? 'one' : 'two';
@@ -112,7 +117,7 @@ class EventItem extends Component {
   }
 
   render() {
-    const { baseURL, item, handleClick } = this.props;
+    const { baseURL, item, hasButton, handleClick } = this.props;
     console.log('EventItem', this.props);
     const lang = 'th';
     // ======================================================
@@ -145,11 +150,14 @@ class EventItem extends Component {
               return this.renderHowToParagraph(instruction[lang], index + 1);
             })
           }
-          <div className="box-play-event">
-            <span className="play-event">
-              <i className="play">&nbsp;</i>เล่นกิจกรรมนี้
-            </span>
-          </div>
+          {
+            hasButton &&
+            <div className="box-play-event">
+              <span className="play-event">
+                <i className="play">&nbsp;</i>เล่นกิจกรรมนี้
+              </span>
+            </div>
+          }
         </div>
       </a>
     );
