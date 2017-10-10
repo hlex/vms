@@ -183,8 +183,7 @@ class ProductItems extends PureComponent {
       eventPerPage,
       mobileTopupProviderPerPage,
     } = this.props;
-    console.log('>>>>>>>>>>>', this.props);
-    let pages = [];
+    const pages = [];
     // ======================================================
     // Products
     // ======================================================
@@ -240,13 +239,6 @@ class ProductItems extends PureComponent {
         }
       });
     }
-
-    console.log('ProductItems:promotionItems', promotionItems);
-    console.log('ProductItems:productItems', productItems);
-    console.log('ProductItems:promotionItems', promotionItems);
-    console.log('ProductItems:productItems', productItems);
-    console.log('ProductItems:pages', pages);
-
     return (
       <div style={{ position: 'relative' }}>
         <Slider ref={c => (this.slider = c)} {...productSettings}>
