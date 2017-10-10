@@ -16,12 +16,10 @@ import MasterappSelector from '../selectors/masterapp';
 // ======================================================
 // APIs
 // ======================================================
-import { createTcpClient } from '../apis/tcp';
 
 const mapStateToProps = state => ({
   location: state.router.location,
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
-  tcp: MasterappSelector.getTcp(state.masterapp),
   modal: state.modal,
 });
 
@@ -34,16 +32,15 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 class App extends Component {
   props: {
     children: Children,
-    tcp: Object,
     baseURL: string,
     location: Object,
     backToHome: Function,
-    initTcpClient: Function
+    initApplication: Function
   };
 
   componentWillMount = () => {
-    const { tcp: { ip, port }, initTcpClient } = this.props;
-    initTcpClient(createTcpClient(ip, port));
+    const { initApplication } = this.props;
+    initApplication();
   };
 
   render() {

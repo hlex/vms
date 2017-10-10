@@ -1,5 +1,9 @@
 import _ from 'lodash';
 import cuid from 'cuid';
+import {
+  RECEIVED_MASTERDATA
+} from '../actions/actionTypes';
+
 
 const isSoldout = () => _.random(1, 5) === 5;
 
@@ -55,113 +59,150 @@ const normalizeStripAds = ad => ({
 
 */
 
-const eventItemGenerator = (id, input, rewardType, rewardValue) => ({
-  id: 1,
-  cuid: cuid(),
-  eventType: '', // FREE_MOBILE_TOPUP_WATCH_ADS
-  eventActivities: [
-    {
-      name: 'INPUT_MSISDN', // INPUT_MSISDN, INPUT_EMAIL, SCAN_BARCODE, SCAN_QRCODE, ADD_LINE_ID
-      value: null
+// const eventItemGenerator = (id, input, rewardType, rewardValue) => ({
+//   id: 1,
+//   cuid: cuid(),
+//   eventType: '', // FREE_MOBILE_TOPUP_WATCH_ADS
+//   eventActivities: [
+//     {
+//       type: 'input',
+//       name: 'INPUT_MSISDN', // INPUT_MSISDN, INPUT_EMAIL, SCAN_BARCODE, SCAN_QRCODE, ADD_LINE_ID
+//       value: null
+//     },
+//     {
+//       type: 'ads',
+//       name: 'WATCH_ADS', // 'WATCH_ADS', 'SCAN_LINE_QRCODE'
+//       value: 15
+//     }
+//   ],
+//   rewards: [
+//     {
+//       name: 'DISCOUNT', // DISCOUNT, MOBILE_TOPUP, PRODUCT
+//       value: 5, // 5 10 100
+//       channel: 'VENDING_MACHINE', // 'SMS', 'EMAIL', 'VENDING_MACHINE',
+//       expireDate: '', // null, '2017-09-26'
+//     },
+//   ],
+//   remarks: [
+//     {
+//       th: 'จำกัด 1 สิทธิ์ต่อ 1 LINE_ID',
+//       en: '',
+//       verifyKey: 'EMAIL', // MSISDN, EMAIl, ID_NUMBER, ...
+//     }
+//   ],
+//   product: {
+//     "Po_ID": "PO0001",
+//     "Po_Name": {
+//         "th": "แบรนด์ Gen U",
+//         "en": "แบรนด์ Gen U"
+//     },
+//     "Po_Price": "45",
+//     "Po_Img": "/uploads/images/product-20170819110019.png",
+//     "Po_Imgbig": "/uploads/images/product-bg-20170819110019.png",
+//     "Row": "1",
+//     "Column": "1"
+//   },
+//   tags: [
+//     {
+//       name: 'A', // B
+//       color: 'RED', // RED GREEN BLUE MINT YELLOW PURPLE
+//       label: 'เติมเงินฟรี', // free text..
+//       unit: 'บาท', // free text..
+//       value: 5 // integer.. เช่น 10, 20, 100
+//     }
+//   ],
+//   howTo: [
+//     {
+//       order: 1,
+//       th: 'ใส่ หมายเลข',
+//       en: '',
+//     },
+//     {
+//       order: 2,
+//       th: 'ชมโฆษณา 15 วินาที',
+//       en: '',
+//     },
+//     {
+//       order: 3,
+//       highlight: 'รับส่วนลด 5 บาท',
+//       th: '|ับส่วนลด 5 บาท',
+//       en: '',
+//     },
+//   ],
+// });
+
+const mockupEvents = [
+  {
+    id: 1001,
+    eventType: '',
+    eventActivities: [
+      {
+        type: 'input',
+        name: 'MSISDN',
+        value: null,
+      },
+      {
+        type: 'watch',
+        name: 'WATCH_ADS',
+        value: '15',
+      },
+    ],
+    rewards: [
+      {
+        name: 'TOPUP',
+        value: '5',
+        channel: 'SMS',
+        expireDate: '',
+      },
+    ],
+    remarks: [
+      {
+        th: '',
+        en: '',
+        verifyKey: '',
+      },
+    ],
+    tags: [
+      {
+        name: 'A', // B
+        color: 'RED', // RED GREEN BLUE MINT YELLOW PURPLE
+        label: 'เติมเงินฟรี', // free text..
+        unit: 'บาท', // free text..
+        value: 5 // integer.. เช่น 10, 20, 100
+      }
+    ],
+    howTo: [
+      {
+        order: 1,
+        th: 'ใส่ หมายเลข',
+        en: 'ใส่ หมายเลข',
+      },
+      {
+        order: 2,
+        th: 'ชมโฆษณา 15 วินาที',
+        en: 'ชมโฆษณา 15 วินาที',
+      },
+      {
+        order: 3,
+        highlight: 'รับส่วนลด 5 บาท',
+        th: 'รับส่วนลด 5 บาท',
+        en: 'รับส่วนลด 5 บาท',
+      },
+    ],
+    product: {
+      Po_ID: 'PO0001',
+      Po_Name: {
+        th: 'แบรนด์ Gen U',
+        en: 'แบรนด์ Gen U',
+      },
+      Po_Price: '45',
+      Po_Img: '/uploads/images/product-20170819110019.png',
+      Po_Imgbig: '/uploads/images/product-bg-20170819110019.png',
+      Row: '1',
+      Column: '1',
     },
-    {
-      name: 'WATCH_ADS', // 'WATCH_ADS', 'SCAN_LINE_QRCODE'
-      value: 15
-    }
-  ],
-  rewards: [
-    {
-      name: 'DISCOUNT', // DISCOUNT, MOBILE_TOPUP, PRODUCT
-      value: 5, // 5 10 100
-      channel: 'VENDING_MACHINE', // 'SMS', 'EMAIL', 'VENDING_MACHINE',
-      expireDate: '', // null, '2017-09-26'
-    },
-  ],
-  remarks: [
-    {
-      th: 'จำกัด 1 สิทธิ์ต่อ 1 LINE_ID',
-      en: '',
-      verifyKey: 'EMAIL', // MSISDN, EMAIl, ID_NUMBER, ...
-    }
-  ],
-  product: {
-    "Po_ID": "PO0001",
-    "Po_Name": {
-        "th": "แบรนด์ Gen U",
-        "en": "แบรนด์ Gen U"
-    },
-    "Po_Price": "45",
-    "Po_Img": "/uploads/images/product-20170819110019.png",
-    "Po_Imgbig": "/uploads/images/product-bg-20170819110019.png",
-    "Row": "1",
-    "Column": "1"
   },
-  tags: [
-    {
-      name: 'A', // B
-      color: 'RED', // RED GREEN BLUE MINT YELLOW PURPLE
-      label: 'เติมเงินฟรี', // free text..
-      unit: 'บาท', // free text..
-      value: 5 // integer.. เช่น 10, 20, 100
-    }
-  ],
-  howTo: [
-    {
-      order: 1,
-      th: 'ใส่ หมายเลข',
-      en: '',
-    },
-    {
-      order: 2,
-      th: 'ชมโฆษณา 15 วินาที',
-      en: '',
-    },
-    {
-      order: 3,
-      highlight: 'รับส่วนลด 5 บาท',
-      th: '|ับส่วนลด 5 บาท',
-      en: '',
-    },
-  ],
-});
-
-// HOW TO TYPE
-// MSISDN
-// EMAIL
-// LINE ID
-// BARCODE
-// QRCODE
-// PLAIN_TEXT
-
-// MSISDN + ADS + DISCOUNT_SMS
-const eventTypeA = () => ({});
-
-const eventGenerator = number => _.map(_.range(number), index => {
-  let rand = _.random(1, 2);
-  const inputType = rand === 1 ? 'MSISDN' : 'EMAIL';
-  rand = _.random(1, 1);
-  let rewardType = '';
-  switch (rand) {
-    case 1:
-      rewardType = 'discount';
-      break;
-    case 2:
-      rewardType = 'discount';
-      break;
-    case 3:
-      rewardType = 'discount';
-      break;
-    case 4:
-      rewardType = 'discount';
-      break;
-    default:
-      rewardType = 'discount';
-  }
-  const rewardValue = 5;
-  return eventItemGenerator(index + 1, inputType, rewardType, rewardValue);
-});
-
-const mockupEvents = eventGenerator(20);
+];
 
 const mockupTopupProviders = [
   {
@@ -429,7 +470,7 @@ const initialState = {
   promotionSets: promotionGenerator(10),
   topupProviders: mockupTopupProviders,
   mobileTopupValues: mockupMobileTopupValues,
-  events: mockupEvents,
+  events: [], // mockupEvents,
   stripAds: _.map(stripAds, ad => normalizeStripAds(ad)),
 };
 
@@ -439,6 +480,11 @@ const getInitialState = () => ({
 
 export default function masterdata(state = getInitialState(), action) {
   switch (action.type) {
+    case RECEIVED_MASTERDATA:
+      return {
+        ...state,
+        [action.key]: action.value
+      };
     default:
       return state;
   }

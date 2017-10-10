@@ -24,7 +24,9 @@ import {
 // ======================================================
 // APIs
 // ======================================================
-import { serviceTopupMobile } from '../apis/mobileTopup';
+import {
+  serviceTopupMobile
+} from '../apis/mobileTopup';
 import {
   serviceVerifyDiscountCode,
   serviceUseDiscountCode
@@ -32,9 +34,32 @@ import {
 import {
   serviceSubmitOrder,
 } from '../apis/order';
+import {
+  createTcpClient
+} from '../apis/tcp';
+import {
+  serviceGetEvents
+} from '../apis/masterdata';
 
 let cmdNo = 0;
 let retryNo = 0;
+
+export const initApplication = () => {
+  return async (dispatch, getState) => {
+    const tcp = MasterappSelector.getTcp(getState().masterapp);
+    dispatch(initTcpClient(createTcpClient(tcp.ip, tcp.port)));
+    // ======================================================
+    // GET MASTER DATA
+    // ======================================================
+    try {
+      const serviceGetEventsResponse = await serviceGetEvents();
+      console.log('serviceGetEventsResponse', serviceGetEventsResponse);
+      dispatch(Actions.receivedMasterdata('events', serviceGetEventsResponse));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
 
 export const clearOrder = () => dispatch => {
   dispatch(Actions.clearOrder());

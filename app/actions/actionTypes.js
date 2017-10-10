@@ -24,6 +24,7 @@ export const CLEAR_MOBILE_TOPUP_MSISDN = 'CLEAR_MOBILE_TOPUP_MSISDN';
 export const SELECT_EVENT = 'SELECT_EVENT';
 export const ADD_DISCOUNT = 'ADD_DISCOUNT';
 export const SET_CAN_CHANGE_CASH = 'SET_CAN_CHANGE_CASH';
+export const RECEIVED_MASTERDATA = 'RECEIVED_MASTERDATA';
 // ======================================================
 // TCP
 // ======================================================

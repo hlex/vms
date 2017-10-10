@@ -26,7 +26,8 @@ import {
   CLEAR_MOBILE_TOPUP_MSISDN,
   SELECT_EVENT,
   ADD_DISCOUNT,
-  SET_CAN_CHANGE_CASH
+  SET_CAN_CHANGE_CASH,
+  RECEIVED_MASTERDATA
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -212,5 +213,13 @@ export const setCanChangeCash = (canChangeCash) => {
   return {
     type: SET_CAN_CHANGE_CASH,
     canChangeCash
+  };
+};
+
+export const receivedMasterdata = (key, items) => {
+  return {
+    type: RECEIVED_MASTERDATA,
+    key,
+    value: items
   };
 };
