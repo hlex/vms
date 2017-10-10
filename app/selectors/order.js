@@ -14,6 +14,15 @@ const getSelectedEvent = createSelector(
   }
 );
 
+const getEventNextInput = createSelector(
+  [getSelectedEvent],
+  (selectedEvent) => {
+    if (_.size(selectedEvent.inputs || []) <= 0) return '';
+    const nextInput = _.find(selectedEvent.inputs, input => input.completed === false);
+    return nextInput.name.toUpperCase() || '';
+  }
+);
+
 const getDiscount = createSelector(
   [getDiscounts],
   (discounts) => {
@@ -167,6 +176,7 @@ export default {
   // ======================================================
   getEvent,
   getSelectedEvent,
+  getEventNextInput,
   // ======================================================
   // Mobile Topup
   // ======================================================
