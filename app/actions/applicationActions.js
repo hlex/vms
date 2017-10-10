@@ -574,7 +574,7 @@ export const verifyDiscountCode = (code) => {
   };
 };
 
-export const submitPlayEvent = (value) => {
+export const submitPlayEvent = () => {
   return (dispatch) => {
     dispatch(changePage('/event/ads'));
   };
@@ -607,5 +607,11 @@ export const initPromotionSetPage = () => {
     }
     // if mount enable money box
     enableMoneyBox();
+  };
+};
+
+export const updateEventInput = (inputName, inputValue) => {
+  return (dispatch, getState) => {
+    dispatch(Actions.updateEventInput(inputName, inputValue));
   };
 };

@@ -27,6 +27,10 @@ import * as Actions from './actions';
 // ======================================================
 import MasterappSelector from '../../../selectors/masterapp';
 import OrderSelectors from '../../../selectors/order';
+// ======================================================
+// Helpers
+// ======================================================
+import { isEmpty } from '../../../helpers/global';
 
 const mapStateToProps = (state) => {
   return {
@@ -58,9 +62,18 @@ class EventPlayPage extends Component {
     selectedEvent: {}
   }
 
-  handleSubmitPage = (inputValue) => {
+  componentWillReceiveProps = (nextProps, nextState) => {
     const { submitPlayEvent } = this.props;
-    submitPlayEvent(inputValue);
+    if (isEmpty(nextProps.nextInput)) submitPlayEvent();
+  }
+
+  handleSubmitPage = (inputValue) => {
+    const { nextInput, updateEventInput, submitPlayEvent } = this.props;
+    // ======================================================
+    // Update nextInput
+    // ======================================================
+    updateEventInput(nextInput, inputValue);
+    // submitPlayEvent(inputValue);
   }
 
   renderInputMSISDN = () => {

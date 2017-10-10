@@ -27,7 +27,8 @@ import {
   SELECT_EVENT,
   ADD_DISCOUNT,
   SET_CAN_CHANGE_CASH,
-  RECEIVED_MASTERDATA
+  RECEIVED_MASTERDATA,
+  EVENT_UPDATE_INPUT_VALUE
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -220,6 +221,14 @@ export const setCanChangeCash = (canChangeCash) => {
 export const receivedMasterdata = (key, items) => {
   return {
     type: RECEIVED_MASTERDATA,
+    key,
+    value: items
+  };
+};
+
+export const updateEventInput = (key, items) => {
+  return {
+    type: EVENT_UPDATE_INPUT_VALUE,
     key,
     value: items
   };
