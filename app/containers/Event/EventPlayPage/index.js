@@ -31,7 +31,8 @@ import OrderSelectors from '../../../selectors/order';
 const mapStateToProps = (state) => {
   return {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
-    selectedEvent: OrderSelectors.getSelectedEvent(state.order)
+    selectedEvent: OrderSelectors.getSelectedEvent(state.order),
+    nextInput: OrderSelectors.getEventNextInput(state.order)
   };
 };
 
@@ -57,9 +58,67 @@ class EventPlayPage extends Component {
     selectedEvent: {}
   }
 
+  handleSubmitPage = (inputValue) => {
+    const { submitPlayEvent } = this.props;
+    submitPlayEvent(inputValue);
+  }
+
+  renderInputMSISDN = () => {
+    return (
+      <div className="input-msisdn-box-wrapper">
+        <div className="input-msisdn-box">
+          <div className="content _center">
+            <h2>ใส่ เบอร์มือถือ ของคุณ</h2>
+            <p className="sm"><small>กรุณาตรวจสอบ หมายเลขโทรศัพท์ ให้ถูกต้อง</small></p>
+            <InputWithPad
+              type={'num'}
+              rules={{
+                required: 'กรุณาระบุหมายเลขโทรศัพท์',
+                mobileNumber: 'รูปแบบหมายเลขโทรศัพท์ไม่ถูกต้อง'
+              }}
+              onConfirm={this.handleSubmitPage}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderInputEmail = () => {
+    return (
+      <div className="input-msisdn-box-wrapper">
+        <div className="input-msisdn-box">
+          <div className="content _center">
+            <h2>ใส่ อีเมล ของคุณ</h2>
+            <p className="sm"><small>กรุณาตรวจสอบ อีเมล ให้ถูกต้อง</small></p>
+            <InputWithPad
+              type={'keyboard'}
+              rules={{
+                required: 'กรุณาระบุอีเมล',
+                email: 'รูปแบบอีเมลไม่ถูกต้อง'
+              }}
+              isFixed
+              onConfirm={this.handleSubmitPage}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderInputUI = (inputType) => {
+    if (inputType === 'EMAIL') {
+      return this.renderInputEmail();
+    } else if (inputType === 'MSISDN') {
+      return this.renderInputMSISDN();
+    }
+    return '';
+  }
+
   render() {
     console.log(this);
-    const { baseURL, selectedEvent, submitPlayEvent } = this.props;
+    const { baseURL, selectedEvent, nextInput } = this.props;
+    // const nextInput = 'EMAIL';
     return (
       <div className="input-msisdn">
         <Layout.Title>
@@ -70,23 +129,9 @@ class EventPlayPage extends Component {
           />
         </Layout.Title>
         <Layout.Content>
-          <div className="input-msisdn-box-wrapper">
-            <div className="input-msisdn-box">
-              <div className="content _center">
-                <h2>ใส่เบอร์มือถือของคุณ</h2>
-                <p className="sm"><small>กรุณาตรวจสอบหมายเลขโทรศัพท์ให้ถูกต้อง</small></p>
-                <InputWithPad
-                  show
-                  type={'num'}
-                  rules={{
-                    required: 'กรุณาระบุหมายเลขโทรศัพท์',
-                    mobileNumber: 'รูปแบบหมายเลขโทรศัพท์ไม่ถูกต้อง'
-                  }}
-                  onConfirm={submitPlayEvent}
-                />
-              </div>
-            </div>
-          </div>
+          {
+            this.renderInputUI(nextInput)
+          }
           <FooterAction />
         </Layout.Content>
       </div>
