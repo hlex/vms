@@ -58,9 +58,8 @@ const mockupEvents = [
       },
       {
         order: 3,
-        highlight: 'รับส่วนลด 5 บาท',
-        th: 'รับส่วนลด 5 บาท ทาง SMS',
-        en: 'รับส่วนลด 5 บาท ทาง SMS',
+        th: 'รับเติมเงินฟรี 5 บาท ทาง SMS',
+        en: 'รับเติมเงินฟรี 5 บาท ทาง SMS',
       },
     ],
     product: {
@@ -70,8 +69,77 @@ const mockupEvents = [
         en: 'แบรนด์ Gen U',
       },
       Po_Price: '45',
-      Po_Img: '/uploads/images/product-20170819110019.png',
-      Po_Imgbig: '/uploads/images/product-bg-20170819110019.png',
+      Po_Img: 'images/product-1.png',
+      Po_Imgbig: 'images/product-1.png',
+      Row: '1',
+      Column: '1',
+    },
+  },
+  {
+    id: 1002,
+    eventType: '',
+    eventActivities: [
+      {
+        type: 'input',
+        name: 'EMAIL',
+        value: null,
+      },
+      {
+        type: 'watch',
+        name: 'WATCH_ADS',
+        value: '15',
+      },
+    ],
+    rewards: [
+      {
+        name: 'DISCOUNT',
+        value: '3',
+        channel: 'EMAIL',
+        expireDate: '',
+      },
+    ],
+    remarks: [
+      {
+        th: '',
+        en: '',
+        verifyKey: '',
+      },
+    ],
+    tags: [
+      {
+        name: 'B', // B
+        color: 'BLUE', // RED GREEN BLUE MINT YELLOW PURPLE
+        label: 'ส่วนลด', // free text..
+        unit: 'บาท', // free text..
+        value: 3 // integer.. เช่น 10, 20, 100
+      }
+    ],
+    howTo: [
+      {
+        order: 1,
+        th: 'ใส่ อีเมล',
+        en: 'ใส่ อีเมล',
+      },
+      {
+        order: 2,
+        th: 'ชมโฆษณา 15 วินาที',
+        en: 'ชมโฆษณา 15 วินาที',
+      },
+      {
+        order: 3,
+        th: 'รับส่วนลด 3 บาท ทาง อีเมล',
+        en: 'รับส่วนลด 3 บาท ทาง อีเมล',
+      },
+    ],
+    product: {
+      Po_ID: 'PO0002',
+      Po_Name: {
+        th: 'แบรนด์ Gen U',
+        en: 'แบรนด์ Gen U',
+      },
+      Po_Price: '35',
+      Po_Img: 'images/product-2.png',
+      Po_Imgbig: 'images/product-2.png',
       Row: '1',
       Column: '1',
     },
