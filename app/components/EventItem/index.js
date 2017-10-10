@@ -31,13 +31,13 @@ class EventItem extends Component {
     const shouldRenderIconQRCode = howTo.indexOf('คิวอาร์') >= 0 || howTo.indexOf('QR') >= 0;
     if (shouldRenderGetReward) {
       return (
-        <p>
+        <p key={cuid()}>
           {orderLabel}<span className="color-red">{`${howTo}`}</span>
         </p>
       );
     } else if (shouldRenderIconPhone) {
       return (
-        <p>
+        <p key={cuid()}>
           {orderLabel}
           <span className="color-orange">
             {`${howTo} `}
@@ -51,7 +51,7 @@ class EventItem extends Component {
       );
     } else if (shouldRenderIconEmail) {
       return (
-        <p>
+        <p key={cuid()}>
           {orderLabel}
           <span className="color-blue">
             เบอร์มือถือ{' '}
@@ -65,7 +65,7 @@ class EventItem extends Component {
       );
     } else if (shouldRenderIconLineId) {
       return (
-        <p>
+        <p key={cuid()}>
           {orderLabel}
           <span className="color-green">
             เบอร์มือถือ{' '}
@@ -79,7 +79,7 @@ class EventItem extends Component {
       );
     } else if (shouldRenderIconBarCode) {
       return (
-        <p>
+        <p key={cuid()}>
           {orderLabel}
           <span className="color-purple">
             เบอร์มือถือ{' '}
@@ -93,7 +93,7 @@ class EventItem extends Component {
       );
     } else if (shouldRenderIconQRCode) {
       return (
-        <p>
+        <p key={cuid()}>
           {orderLabel}
           <span className="color-pink">
             เบอร์มือถือ{' '}
@@ -107,7 +107,7 @@ class EventItem extends Component {
       );
     }
     return (
-      <p>{`${orderLabel} ${howTo}`}</p>
+      <p key={cuid()}>{`${orderLabel} ${howTo}`}</p>
     );
   }
 

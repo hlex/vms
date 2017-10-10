@@ -99,6 +99,8 @@ export const selectProduct = (context, item, module) => dispatch => {
       });
       break;
     case 'mobileTopup':
+      dispatch(selectTopupProvider(context, item));
+      break;
     case 'event':
     default:
       console.warn('module not matching', module);

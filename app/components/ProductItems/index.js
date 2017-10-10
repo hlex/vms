@@ -131,7 +131,7 @@ class ProductItems extends PureComponent {
                         key={cuid()}
                         baseURL={baseURL}
                         item={event}
-                        handleClick={() => console.log('!!!!!!!! EventItem')}
+                        handleClick={(context, item) => this.handleClickItem(context, item, 'event')}
                       />
                     );
                   })
@@ -159,7 +159,7 @@ class ProductItems extends PureComponent {
                         key={cuid()}
                         baseURL={baseURL}
                         item={mobileTopupProviderItem}
-                        handleClick={() => console.log('!!!!!!!! TopUpProviderItem')}
+                        handleClick={(context, item) => this.handleClickItem(context, item, 'mobileTopup')}
                       />
                     );
                   })
