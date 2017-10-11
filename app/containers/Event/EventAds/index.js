@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 // ======================================================
 // Containers
@@ -25,6 +26,9 @@ import OrderSelectors from '../../../selectors/order';
 const mapStateToProps = (state) => {
   return {
     stripAds: state.masterdata.stripAds,
+    shouldSendReward: OrderSelectors.verifyEventShouldSendReward(state.order),
+    shouldUseRewardInstantly: OrderSelectors.verifyEventShouldUseRewardInstantly(state.order),
+    nextWatch: OrderSelectors.getEventNextWatch(state.order),
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
   };
 };
@@ -42,7 +46,12 @@ const mapDispatchToProps = (dispatch) => {
 class EventAds extends Component {
 
   static propTypes = {
-    baseURL: PropTypes.string.isRequired,
+    nextWatch: PropTypes.shape({}).isRequired,
+    shouldSendReward: PropTypes.bool.isRequired,
+    shouldUseRewardInstantly: PropTypes.bool.isRequired,
+    eventGetReward: PropTypes.func.isRequired,
+    eventUseRewardInstantly: PropTypes.func.isRequired,
+    backToHome: PropTypes.func.isRequired,
   }
 
   state = {
@@ -51,9 +60,22 @@ class EventAds extends Component {
   }
 
   handleAdsEnd = () => {
+    const { shouldSendReward, shouldUseRewardInstantly, eventGetReward, eventUseRewardInstantly } = this.props;
+    // ======================================================
+    // POPUP 100%
+    // ======================================================
     this.setState({
       adFinished: true
     });
+    // ======================================================
+    // Rewards
+    // ======================================================
+    if (shouldSendReward) {
+      eventGetReward();
+    }
+    if (shouldUseRewardInstantly) {
+      eventUseRewardInstantly();
+    }
   }
 
   handleNext = () => {
@@ -68,11 +90,13 @@ class EventAds extends Component {
   }
 
   render() {
+    console.log(this);
     const { adFinished, count } = this.state;
-    const { baseURL, stripAds } = this.props;
-    const sources = [_.head(stripAds)];
-    const maxCount = _.get(sources, '0.duration', 0);
+    const { nextWatch } = this.props;
+    const source = _.get(nextWatch, 'data', {});  // [_.head(stripAds)];
+    const maxCount = _.get(source, 'duration', 0);
     const remainingCount = maxCount - count;
+    const playlist = [source];
     return (
       <div className="event-ads">
         <Layout.FullScreen>
@@ -80,7 +104,7 @@ class EventAds extends Component {
           <MediaPlayer
             width={1080}
             height={1920}
-            sources={sources}
+            sources={playlist}
             onTicked={this.handleTicked}
             onEnded={this.handleAdsEnd}
           />

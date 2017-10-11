@@ -18,7 +18,13 @@ const mockupEvents = [
       {
         type: 'watch',
         name: 'WATCH_ADS',
-        value: '15',
+        value: null,
+        data: {
+          name: 'EMP_EMPMag_EMPStripAds',
+          type: 'image',
+          src: 'http://localhost:8888/vms/StripAds/20161007_emp_magazine-no33_344.jpg',
+          duration: Number('5000') / 1000,
+        }
       },
     ],
     rewards: [
@@ -62,18 +68,20 @@ const mockupEvents = [
         en: 'รับเติมเงินฟรี 5 บาท ทาง SMS',
       },
     ],
-    product: {
-      Po_ID: 'PO0001',
-      Po_Name: {
-        th: 'แบรนด์ Gen U',
-        en: 'แบรนด์ Gen U',
-      },
-      Po_Price: '45',
-      Po_Img: 'images/product-1.png',
-      Po_Imgbig: 'images/product-1.png',
-      Row: '1',
-      Column: '1',
-    },
+    products: [
+      {
+        Po_ID: 'PO0001',
+        Po_Name: {
+          th: 'แบรนด์ Gen U',
+          en: 'แบรนด์ Gen U',
+        },
+        Po_Price: '45',
+        Po_Img: 'images/product-1.png',
+        Po_Imgbig: 'images/product-1.png',
+        Row: '1',
+        Column: '1',
+      }
+    ],
   },
   {
     id: 1002,

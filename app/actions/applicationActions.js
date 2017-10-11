@@ -615,8 +615,12 @@ export const verifyDiscountCode = (code) => {
 };
 
 export const submitPlayEvent = () => {
-  return (dispatch) => {
-    dispatch(changePage('/event/ads'));
+  return (dispatch, getState) => {
+    const eventWatches = OrderSelector.getEventWatches(getState().order);
+    debugger;
+    if (_.size(eventWatches) > 0) {
+      dispatch(changePage('/event/ads'));
+    }
   };
 };
 

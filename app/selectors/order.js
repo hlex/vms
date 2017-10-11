@@ -14,14 +14,61 @@ const getSelectedEvent = createSelector(
   }
 );
 
-const getEventNextInput = createSelector(
+const getEventRewards = createSelector(
+  [getSelectedEvent],
+  (event) => {
+    return event.rewards || [];
+  }
+);
+
+const getEventInputs = createSelector(
   [getSelectedEvent],
   (selectedEvent) => {
-    if (_.size(selectedEvent.inputs || []) <= 0) return '';
-    const nextInput = _.find(selectedEvent.inputs, input => input.completed === false);
+    return selectedEvent.inputs || [];
+  }
+);
+
+const getEventNextInput = createSelector(
+  [getEventInputs],
+  (eventInputs) => {
+    if (_.size(eventInputs) <= 0) return '';
+    const nextInput = _.find(eventInputs, input => input.completed === false);
     return nextInput ? nextInput.name.toUpperCase() : '';
   }
 );
+
+const getEventWatches = createSelector(
+  [getSelectedEvent],
+  (selectedEvent) => {
+    return selectedEvent.watches || [];
+  }
+);
+
+const getEventNextWatch = createSelector(
+  [getEventWatches],
+  (eventWatches) => {
+    if (_.size(eventWatches) <= 0) return '';
+    const nextWatch = _.find(eventWatches, input => input.completed === false);
+    return nextWatch;
+  }
+);
+
+const verifyEventShouldSendReward = createSelector(
+  [getEventRewards],
+  (eventRewards) => {
+    const foundChannel = _.some(eventRewards, reward => _.includes(['SMS', 'MOBILE'], reward.channel.toUpperCase()));
+    return foundChannel;
+  }
+);
+
+const verifyEventShouldUseRewardInstantly = createSelector(
+  [getEventRewards],
+  (eventRewards) => {
+    const foundChannel = _.some(eventRewards, reward => _.includes(['VENDING_MACHINE'], reward.channel.toUpperCase()));
+    return foundChannel;
+  }
+);
+
 
 const getDiscount = createSelector(
   [getDiscounts],
@@ -176,7 +223,12 @@ export default {
   // ======================================================
   getEvent,
   getSelectedEvent,
+  getEventInputs,
   getEventNextInput,
+  getEventWatches,
+  getEventNextWatch,
+  verifyEventShouldSendReward,
+  verifyEventShouldUseRewardInstantly,
   // ======================================================
   // Mobile Topup
   // ======================================================

@@ -55,25 +55,27 @@ class EventPlayPage extends Component {
   static propTypes = {
     baseURL: PropTypes.string.isRequired,
     selectedEvent: PropTypes.shape({}),
+    nextInput: PropTypes.string,
     submitPlayEvent: PropTypes.func.isRequired,
+    updateEventInput: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
-    selectedEvent: {}
+    selectedEvent: {},
+    nextInput: ''
   }
 
-  componentWillReceiveProps = (nextProps, nextState) => {
+  componentWillReceiveProps = (nextProps) => {
     const { submitPlayEvent } = this.props;
     if (isEmpty(nextProps.nextInput)) submitPlayEvent();
   }
 
   handleSubmitPage = (inputValue) => {
-    const { nextInput, updateEventInput, submitPlayEvent } = this.props;
+    const { nextInput, updateEventInput } = this.props;
     // ======================================================
     // Update nextInput
     // ======================================================
     updateEventInput(nextInput, inputValue);
-    // submitPlayEvent(inputValue);
   }
 
   renderInputMSISDN = () => {

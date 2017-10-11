@@ -32,12 +32,37 @@ export const convertToAppProduct = (product) => {
   };
 };
 
+export const convertToAppAd = (ad) => {
+  return {
+    id: '4094',
+    type: 'image',
+    name: 'EMP_AIS_EMPStripAds',
+    path: 'StripAds/20151204_ais_344.jpg',
+    filename: '20151204_ais_344.jpg',
+    expire: '2026-11-21',
+    timeout: '5000',
+    checksum: '47e93aec13f7c9115ebbcfaacb309ccd',
+  };
+  // return {
+  //   cuid: cuid(),
+  //   id: product.Po_ID || '',
+  //   name: product.Po_Name || '',
+  //   price: product.Po_Price || '',
+  //   isSoldout: isSoldout() || true,
+  //   image: product.Po_Img || '',
+  //   imageBig: product.Po_Imgbig || '',
+  //   row: product.Row || '',
+  //   col: product.Column || '',
+  //   isDropped: false,
+  // };
+};
+
 export const convertToAppEvent = (event) => {
   const eventInputActivities = _.filter(event.eventActivities || [], activity => activity.type === 'input');
   const eventWatchActivities = _.filter(event.eventActivities || [], activity => activity.type === 'watch');
   return {
     tag: _.head(event.tags),
-    product: convertToAppProduct(event.product || {}),
+    product: convertToAppProduct(_.get(event, 'products.0', {})),
     howTo: _.map(event.howTo, (instruction) => {
       // const th = instruction.th || '';
       // const isMSISDN = /เบอร์มือถือ/i.test(th);
