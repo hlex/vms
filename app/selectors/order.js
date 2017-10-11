@@ -14,10 +14,40 @@ const getSelectedEvent = createSelector(
   }
 );
 
+const getEventId = createSelector(
+  [getSelectedEvent],
+  (event) => {
+    return event.eventId;
+  }
+);
+
+const getEventProduct = createSelector(
+  [getSelectedEvent],
+  (event) => {
+    return event.product || {}
+  }
+);
+
 const getEventRewards = createSelector(
   [getSelectedEvent],
   (event) => {
     return event.rewards || [];
+  }
+);
+
+const getEventNextReward = createSelector(
+  [getEventRewards],
+  (eventRewards) => {
+    if (_.size(eventRewards) <= 0) return '';
+    const nextItem = _.find(eventRewards, item => item.completed === false);
+    return nextItem;
+  }
+);
+
+const getEventRewardInstantly = createSelector(
+  [getEventRewards],
+  (eventRewards) => {
+    return _.find(eventRewards, eventReward => _.includes(['VENDING_MACHINE'], eventReward.channel.toUpperCase()));
   }
 );
 
@@ -32,8 +62,8 @@ const getEventNextInput = createSelector(
   [getEventInputs],
   (eventInputs) => {
     if (_.size(eventInputs) <= 0) return '';
-    const nextInput = _.find(eventInputs, input => input.completed === false);
-    return nextInput ? nextInput.name.toUpperCase() : '';
+    const nextItem = _.find(eventInputs, item => item.completed === false);
+    return nextItem ? nextItem.name.toUpperCase() : '';
   }
 );
 
@@ -48,8 +78,8 @@ const getEventNextWatch = createSelector(
   [getEventWatches],
   (eventWatches) => {
     if (_.size(eventWatches) <= 0) return '';
-    const nextWatch = _.find(eventWatches, input => input.completed === false);
-    return nextWatch;
+    const nextItem = _.find(eventWatches, item => item.completed === false);
+    return nextItem;
   }
 );
 
@@ -223,6 +253,11 @@ export default {
   // ======================================================
   getEvent,
   getSelectedEvent,
+  getEventId,
+  getEventProduct,
+  getEventRewards,
+  getEventRewardInstantly,
+  getEventNextReward,
   getEventInputs,
   getEventNextInput,
   getEventWatches,
