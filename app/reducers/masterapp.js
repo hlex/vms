@@ -5,7 +5,8 @@ import {
   NOT_READY_TO_DROP_PRODUCT,
   DROPPING_PRODUCT,
   PRODUCT_DROP_SUCCESS,
-  SET_CAN_CHANGE_CASH
+  SET_CAN_CHANGE_CASH,
+  SET_LIMIT_BANKNOTE
 } from '../actions/actionTypes';
 
 const initialTcp = process.env.NODE_ENV !== 'production'
@@ -48,6 +49,7 @@ const initialState = {
   readyToDropProduct: false,
   canChangeCash: true,
   droppingProduct: {},
+  limitBanknote: 500,
 };
 
 export default (state = initialState, action) => {
@@ -87,6 +89,11 @@ export default (state = initialState, action) => {
         ...state,
         canChangeCash: action.canChangeCash
       };
+    case SET_LIMIT_BANKNOTE:
+      return {
+        ...state,
+        limitBanknote: action.banknoteValue
+      }
     default:
       return state;
   }

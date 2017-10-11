@@ -7,6 +7,7 @@ const getTcpClient = state => state.tcpClient;
 const verifyReadyToDropProduct = state => state.readyToDropProduct;
 const getDroppedProduct = state => state.droppingProduct;
 const verifyCanChangeCash = state => state.canChangeCash;
+const getLimitBanknote = state => state.limitBanknote;
 
 export default {
   getBaseURL,
@@ -15,5 +16,6 @@ export default {
   getTcpClient,
   verifyReadyToDropProduct,
   getDroppedProduct,
-  verifyCanChangeCash
+  verifyCanChangeCash,
+  getLimitBanknote
 };

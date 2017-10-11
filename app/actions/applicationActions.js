@@ -264,7 +264,7 @@ const runFlowProductDropSuccess = () => (dispatch, getState) => {
   }
 };
 
-export const limitBanknote = (limitAmount) => {
+export const setLimitBanknote = (limitAmount) => {
   return (dispatch, getState) => {
     const client = MasterappSelector.getTcpClient(getState().masterapp);
     client.send({
@@ -288,16 +288,22 @@ export const receivedCashRemaining = (data) => {
     // Check should disable bank note
     // ======================================================
     const cashRemainingAmount = getCashRemainingAmount(data.remain);
-    if (cashRemainingAmount > 100) {
+    const currentLimitBanknote = MasterappSelector.getLimitBanknote(getState().masterapp);
+    if (cashRemainingAmount > 100 && currentLimitBanknote < 500) {
       // disable 500
+      dispatch(setLimitBanknote(500));
     } else if (cashRemainingAmount <= 100 && cashRemainingAmount > 50) {
       // disable 100
+      dispatch(setLimitBanknote(100));
     } else if (cashRemainingAmount <= 50 && cashRemainingAmount > 20) {
-      // disable 100
+      // disable 50
+      dispatch(setLimitBanknote(50));
     } else if (cashRemainingAmount < 20) {
       // disable 20
+      dispatch(setLimitBanknote(20));
     } else {
       // do nothing
+      console.log('Do not limit any banknotes');
     }
     dispatch(Actions.receivedCashRemaining(data));
   };

@@ -26,6 +26,7 @@ export const ADD_DISCOUNT = 'ADD_DISCOUNT';
 export const SET_CAN_CHANGE_CASH = 'SET_CAN_CHANGE_CASH';
 export const RECEIVED_MASTERDATA = 'RECEIVED_MASTERDATA';
 export const EVENT_UPDATE_INPUT_VALUE = 'EVENT_UPDATE_INPUT_VALUE';
+export const SET_LIMIT_BANKNOTE = 'SET_LIMIT_BANKNOTE';
 // ======================================================
 // TCP
 // ======================================================
