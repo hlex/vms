@@ -41,6 +41,9 @@ import {
 import {
   serviceGetEvents
 } from '../apis/masterdata';
+import {
+  serviceGetEventReward
+} from '../apis/event';
 
 let cmdNo = 0;
 let retryNo = 0;
@@ -617,7 +620,6 @@ export const verifyDiscountCode = (code) => {
 export const submitPlayEvent = () => {
   return (dispatch, getState) => {
     const eventWatches = OrderSelector.getEventWatches(getState().order);
-    debugger;
     if (_.size(eventWatches) > 0) {
       dispatch(changePage('/event/ads'));
     }
@@ -659,3 +661,95 @@ export const updateEventInput = (inputName, inputValue) => {
     dispatch(Actions.updateEventInput(inputName, inputValue));
   };
 };
+
+export const eventGetReward = () => {
+  return async (dispatch, getState) => {
+    const eventId = OrderSelector.getEventId(getState().order);
+    const eventRewards = OrderSelector.getEventRewards(getState().order);
+    _.forEach(eventRewards, async (reward) => {
+      // ======================================================
+      // Check should get reward
+      // ======================================================
+      if (_.includes(['SMS', 'EMAIL'], reward.channel.toUpperCase())) {
+        console.log('eventGetReward', reward);
+        const rewardToServiceItem = {
+          eventId,
+          discountType: reward.name,
+          amount: reward.value,
+          channel: reward.channel,
+        };
+        const serviceGetEventRewardResponse = await serviceGetEventReward(rewardToServiceItem);
+        console.log('serviceGetEventRewardResponse', serviceGetEventRewardResponse);
+        dispatch({
+          type: 'EVENT_SENT_REWARD',
+          rewardToServiceItem
+        });
+      }
+    });
+  };
+};
+
+export const eventUseDiscountRewardInstantly = () => {
+  return (dispatch, getState) => {
+    const eventRewardInstantly = OrderSelector.getEventRewardInstantly(getState().order);
+    // ======================================================
+    // ADD DISCOUNT
+    // ======================================================
+    const discountItem = {
+      code: eventRewardInstantly.code,
+      value: eventRewardInstantly.value
+    };
+    dispatch(Actions.addDiscount(discountItem));
+    dispatch(changePage('/product/single'));
+  };
+};
+
+export const eventUseMobileTopupRewardInstantly = () => {
+  return (dispatch, getState) => {
+    const eventRewardInstantly = OrderSelector.getEventRewardInstantly(getState().order);
+    // ======================================================
+    // ADD DISCOUNT
+    // ======================================================
+    const discountItem = {
+      code: eventRewardInstantly.code,
+      value: eventRewardInstantly.value
+    };
+    dispatch(Actions.addDiscount(discountItem));
+    dispatch(changePage('/topup'));
+  };
+};
+
+export const eventUseProductRewardInstantly = () => {
+  return (dispatch, getState) => {
+    // 1) SELECT PRODUCT
+    const rewardProduct = OrderSelector.getEventProduct(getState().order);
+    dispatch(Actions.selectProduct(rewardProduct));
+    // 2) DROP PRODUCT
+    dispatch(productDrop());
+  };
+};
+
+export const eventUseRewardInstantly = () => {
+  return async (dispatch, getState) => {
+    const eventRewardInstantly = OrderSelector.getEventRewardInstantly(getState().order);
+    if (eventRewardInstantly) {
+      // ======================================================
+      // Check reward type
+      // ======================================================
+      const rewardType = eventRewardInstantly.name;
+      switch (rewardType) {
+        case 'DISCOUNT':
+          dispatch(eventUseDiscountRewardInstantly());
+          break;
+        case 'MOBILE_TOPUP':
+          dispatch(eventUseMobileTopupRewardInstantly());
+          break;
+        case 'PRODUCT':
+          dispatch(eventUseProductRewardInstantly());
+          break;
+        default:
+          break;
+      }
+    }
+  }
+}
