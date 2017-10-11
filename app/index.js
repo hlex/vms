@@ -18,11 +18,13 @@ class Server {
   baht1;
   baht5;
   baht10;
+  limitBanknote;
   constructor() {
     this.canReceiveCoin = false;
     this.baht1 = 10;
     this.baht5 = 10;
     this.baht10 = 10;
+    this.limitBanknote = 500;
   }
   getCanReceiveCoin() {
     return this.canReceiveCoin;
@@ -63,6 +65,16 @@ class Server {
     if (changeCoins.baht1 > 0 && this.getCoinOneBaht() <= minimumExistingCoin) return false;
     if (changeCoins.baht5 > 0 && this.getCoinFiveBaht() <= minimumExistingCoin) return false;
     if (changeCoins.baht10 > 0 && this.getCoinTenBaht() <= minimumExistingCoin) return false;
+    return true;
+  }
+  getLimitBanknote() {
+    return this.limitBanknote;
+  }
+  setLimitBanknote(banknoteValue) {
+    this.limitBanknote = banknoteValue;
+  }
+  verifyCanReceiveBanknote(banknoteValue) {
+    if (banknoteValue >= this.getLimitBanknote()) return false;
     return true;
   }
 }
@@ -254,42 +266,51 @@ if (process.env.NODE_ENV !== 'production') {
         );
       }
       if (objectData.action === 2 && objectData.mode === 'limit') {
-        // const success = {
-        //   action: 2,
-        //   msg: '021',
-        //   result: 'success',
-        //   description: 'Disable On.'
-        // };
+        const success = {
+          action: 2,
+          result: 'success',
+          description: `Cash is now limit to ${objectData.msg}`
+        };
+        sv.setLimitBanknote(Number(objectData.msg));
         // const failed = {
         //   action: 2,
         //   msg: '021',
         //   result: 'failed',
         //   description: 'failed please try again'
         // };
-        // const isSuccess = _.random(1, 5) <= 4;
-        // if (isSuccess) sv.setCanReceiveCoin(false);
-        // socket.write(
-        //   JSON.stringify(isSuccess ? success : failed),
-        // );
+        // const isSuccess = true; // _.random(1, 5) <= 4;
+        socket.write(
+          // JSON.stringify(isSuccess ? success : failed),
+          JSON.stringify(success),
+        );
       }
       // ======================================================
       // INSERT COIN
       // ======================================================
       if (objectData.action === 999 && sv.getCanReceiveCoin()) {
         const insertedValue = Number(objectData.msg);
-        if (insertedValue === 1) {
-          sv.addCoinOneBaht(1);
-        } else if (insertedValue === 5) {
-          sv.addCoinFiveBaht(1);
-        } else if (insertedValue === 10) {
-          sv.addCoinTenBaht(1);
+        const canReceiveBanknote = sv.verifyCanReceiveBanknote(insertedValue);
+        if (canReceiveBanknote) {
+          if (insertedValue === 1) {
+            sv.addCoinOneBaht(1);
+          } else if (insertedValue === 5) {
+            sv.addCoinFiveBaht(1);
+          } else if (insertedValue === 10) {
+            sv.addCoinTenBaht(1);
+          }
+          socket.write(
+            JSON.stringify({
+              action: 2,
+              msg: insertedValue,
+            }),
+          );
+        } else {
+          // คืนเงิน
+          console.log('Cannot receive this banknote', insertedValue);
         }
-        socket.write(
-          JSON.stringify({
-            action: 2,
-            msg: insertedValue,
-          }),
-        );
+      } else {
+        // MONEY BOX IS DISABLE
+        console.log('Cannot receive money because money box is disable');
       }
     });
     socket.on('error', err => {
