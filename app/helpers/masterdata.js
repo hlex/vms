@@ -61,6 +61,7 @@ export const convertToAppEvent = (event) => {
   const eventInputActivities = _.filter(event.eventActivities || [], activity => activity.type === 'input');
   const eventWatchActivities = _.filter(event.eventActivities || [], activity => activity.type === 'watch');
   return {
+    eventId: event.id,
     tag: _.head(event.tags),
     product: convertToAppProduct(_.get(event, 'products.0', {})),
     howTo: _.map(event.howTo, (instruction) => {
