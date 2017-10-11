@@ -72,6 +72,12 @@ class App extends Component {
               <li>
                 <a onClick={() => insetCoin(100)}>100B</a>
               </li>
+              <li>
+                <a onClick={() => insetCoin(500)}>500B</a>
+              </li>
+              <li>
+                <a onClick={() => insetCoin(1000)}>1000B</a>
+              </li>
             </ul>
           </div>
         )}
