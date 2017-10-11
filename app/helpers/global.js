@@ -21,11 +21,16 @@ export const createLog = (type = '', bgColor = 'green', color = '#fff') => {
   return `background: ${bgColor}; color: ${color}`;
 };
 
+const getCashRemaining = (remain) => {
+  return {
+    oneBahtCount: _.get(remain, 'baht1', 0),
+    fiveBahtCount: _.get(remain, 'baht1', 0),
+    tenBahtCount: _.get(remain, 'baht1', 0),
+  };
+};
+
 export const verifyLessThanThreshold = (remain, thresHold) => {
-  const oneBahtRemaining = _.get(remain, 'baht1', 0);
-  const fiveBahtRemaining = _.get(remain, 'baht5', 0);
-  const tenBahtRemaining = _.get(remain, 'baht10', 0);
-  return tenBahtRemaining * 10 + fiveBahtRemaining * 5 + oneBahtRemaining < thresHold;
+  return getCashRemainingAmount(remain) < thresHold;
 };
 
 export const verifyCanUseDiscount = (discounts, code) => {
@@ -34,3 +39,9 @@ export const verifyCanUseDiscount = (discounts, code) => {
   if (discountAlreadyExist) return false;
   return true;
 };
+
+export const getCashRemainingAmount = (remain) => {
+  const { oneBahtCount, fiveBahtCount, tenBahtCount } = getCashRemaining(remain);
+  return ((oneBahtCount * 10) + (fiveBahtCount * 5) + tenBahtCount);
+};
+
