@@ -33,7 +33,7 @@ const mockupEvents = [
         code: '12345',
         value: '5',
         channel: 'SMS',
-        expireDate: '',
+        expireDate: '2017-12-01',
       },
     ],
     remarks: [
@@ -60,8 +60,8 @@ const mockupEvents = [
       },
       {
         order: 2,
-        th: 'ชมโฆษณา 15 วินาที',
-        en: 'ชมโฆษณา 15 วินาที',
+        th: 'ชมโฆษณา 5 วินาที',
+        en: 'ชมโฆษณา 5 วินาที',
       },
       {
         order: 3,
@@ -96,15 +96,22 @@ const mockupEvents = [
       {
         type: 'watch',
         name: 'WATCH_ADS',
-        value: '15',
+        value: null,
+        data: {
+          name: 'EMP_TripAdvisor_EMPStripAds',
+          type: 'image',
+          src: 'http://localhost:8888/vms/StripAds/20160205_emporium_en_trioadvisor_1080_344.png',
+          duration: Number('3000') / 1000,
+        }
       },
     ],
     rewards: [
       {
         name: 'DISCOUNT',
         value: '3',
+        code: '12345',
         channel: 'EMAIL',
-        expireDate: '',
+        expireDate: '2017-11-01',
       },
     ],
     remarks: [
@@ -131,8 +138,8 @@ const mockupEvents = [
       },
       {
         order: 2,
-        th: 'ชมโฆษณา 15 วินาที',
-        en: 'ชมโฆษณา 15 วินาที',
+        th: 'ชมโฆษณา 3 วินาที',
+        en: 'ชมโฆษณา 3 วินาที',
       },
       {
         order: 3,
@@ -140,18 +147,20 @@ const mockupEvents = [
         en: 'รับส่วนลด 3 บาท ทาง อีเมล',
       },
     ],
-    product: {
-      Po_ID: 'PO0002',
-      Po_Name: {
-        th: 'แบรนด์ Gen U',
-        en: 'แบรนด์ Gen U',
-      },
-      Po_Price: '35',
-      Po_Img: 'images/product-2.png',
-      Po_Imgbig: 'images/product-2.png',
-      Row: '1',
-      Column: '1',
-    },
+    products: [
+      {
+        Po_ID: 'PO0002',
+        Po_Name: {
+          th: 'แบรนด์ Gen U',
+          en: 'แบรนด์ Gen U',
+        },
+        Po_Price: '35',
+        Po_Img: 'images/product-2.png',
+        Po_Imgbig: 'images/product-2.png',
+        Row: '1',
+        Column: '1',
+      }
+    ],
   },
 ];
 

@@ -86,7 +86,7 @@ const getEventNextWatch = createSelector(
 const verifyEventShouldSendReward = createSelector(
   [getEventRewards],
   (eventRewards) => {
-    const foundChannel = _.some(eventRewards, reward => _.includes(['SMS', 'MOBILE'], reward.channel.toUpperCase()));
+    const foundChannel = _.some(eventRewards, reward => _.includes(['SMS', 'EMAIL'], reward.channel.toUpperCase()));
     return foundChannel;
   }
 );

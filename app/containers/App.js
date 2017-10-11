@@ -17,12 +17,15 @@ import MasterappSelector from '../selectors/masterapp';
 // APIs
 // ======================================================
 
-const mapStateToProps = state => ({
-  location: state.router.location,
-  baseURL: MasterappSelector.getBaseURL(state.masterapp),
-  isConnectionEstablish: MasterappSelector.verifyConnectionEstablish(state.masterapp),
-  modal: state.modal,
-});
+const mapStateToProps = state => {
+  console.log('%c App@state:', 'color: #4CAF50; font-weight: 700;', state);
+  return {
+    location: state.router.location,
+    baseURL: MasterappSelector.getBaseURL(state.masterapp),
+    isConnectionEstablish: MasterappSelector.verifyConnectionEstablish(state.masterapp),
+    modal: state.modal,
+  };
+};
 
 const actions = {
   ...ApplicationActions,
@@ -47,7 +50,6 @@ class App extends Component {
 
   render() {
     const { backToHome, baseURL, location, isConnectionEstablish, insetCoin, modal } = this.props;
-    console.log('App@render', this.props, location.pathname);
     return (
       <div className="smart-vending-machine-app">
         {
