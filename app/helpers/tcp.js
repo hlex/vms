@@ -150,6 +150,11 @@ export const isGetCashRemainingFail = ({ action, remain, result }) => {
   return true;
 };
 
+export const isLimitBanknoteSuccess = ({ action, result, description }) => {
+  if (action !== actionCode.cash || result !== resultCode.success) return false;
+  return true;
+};
+
 export const getServerCommand = (data) => {
   const normalizeData = {
     action: _.get(data, 'action', ''),
@@ -165,6 +170,7 @@ export const getServerCommand = (data) => {
   if (isSensor(normalizeData)) return 'SENSOR';
   if (isResetTAIKOSuccess(normalizeData)) return 'RESET_TAIKO_SUCCESS';
   if (isResetTAIKOFail(normalizeData)) return 'RESET_TAIKO_FAIL';
+  if (isLimitBanknoteSuccess(normalizeData)) return 'LIMIT_BANKNOTE_SUCCESS';
   if (isGetCashRemainingSuccess(normalizeData)) return 'CASH_REMAINING_SUCCESS';
   // if (isGetCashRemainingFail(normalizeData)) return 'CASH_REMAINING_FAIL';
   if (isEnableMoneyBoxSuccess(normalizeData)) return 'ENABLE_MONEY_BOX_SUCCESS';

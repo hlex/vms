@@ -266,12 +266,15 @@ const runFlowProductDropSuccess = () => (dispatch, getState) => {
 
 export const setLimitBanknote = (limitAmount) => {
   return (dispatch, getState) => {
-    const client = MasterappSelector.getTcpClient(getState().masterapp);
-    client.send({
-      action: 2,
-      msg: `${limitAmount}`,
-      mode: 'limit',
-    });
+    setTimeout(() => {
+      const client = MasterappSelector.getTcpClient(getState().masterapp);
+      client.send({
+        action: 2,
+        msg: `${limitAmount}`,
+        mode: 'limit',
+      });
+      dispatch(Actions.setLimitBanknote(limitAmount));
+    }, 500);
   };
 };
 
@@ -292,6 +295,7 @@ export const receivedCashRemaining = (data) => {
     if (cashRemainingAmount > 100 && currentLimitBanknote < 500) {
       // disable 500
       dispatch(setLimitBanknote(500));
+
     } else if (cashRemainingAmount <= 100 && cashRemainingAmount > 50) {
       // disable 100
       dispatch(setLimitBanknote(100));
@@ -393,6 +397,8 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       dispatch(receivedCashRemaining(data));
       break;
     case 'CASH_REMAINING_FAIL':
+      break;
+    case 'LIMIT_BANKNOTE_SUCCESS':
       break;
     default:
       console.log('%c App Do nothing:', createLog('app'), data);

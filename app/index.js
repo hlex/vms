@@ -13,17 +13,42 @@ console.log('process.env', process.env);
 
 let isFirstTime = false;
 
+/*
+  case1: disable 20
+  case2: disable 50
+  case3: disable 100
+  default: disable 500
+*/
 class Server {
   canReceiveCoin;
   baht1;
   baht5;
   baht10;
   limitBanknote;
-  constructor() {
+  constructor(mode) {
     this.canReceiveCoin = false;
-    this.baht1 = 10;
-    this.baht5 = 10;
-    this.baht10 = 10;
+    switch (mode) {
+      case 1:
+        this.baht1 = 1;
+        this.baht5 = 1;
+        this.baht10 = 1;
+        break;
+      case 2:
+        this.baht1 = 1;
+        this.baht5 = 1;
+        this.baht10 = 20;
+        break;
+      case 3:
+        this.baht1 = 5;
+        this.baht5 = 5;
+        this.baht10 = 5;
+        break;
+      default:
+        this.baht1 = 10;
+        this.baht5 = 10;
+        this.baht10 = 10;
+        break;
+    }
     this.limitBanknote = 500;
   }
   getCanReceiveCoin() {
@@ -84,7 +109,7 @@ const serverLog = 'background: blue; color: #fff';
 if (process.env.NODE_ENV !== 'production') {
   console.log('development:createServer at 127.0.0.1:1337');
   const server = net.createServer(socket => {
-    const sv = new Server();
+    const sv = new Server(1);
     console.log('%c Init Server:', serverLog, sv);
     setTimeout(() => {
       socket.write(
