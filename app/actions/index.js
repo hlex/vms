@@ -28,7 +28,8 @@ import {
   ADD_DISCOUNT,
   SET_CAN_CHANGE_CASH,
   RECEIVED_MASTERDATA,
-  EVENT_UPDATE_INPUT_VALUE
+  EVENT_UPDATE_INPUT_VALUE,
+  SET_LIMIT_BANKNOTE
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -231,5 +232,12 @@ export const updateEventInput = (key, items) => {
     type: EVENT_UPDATE_INPUT_VALUE,
     key,
     value: items
+  };
+};
+
+export const setLimitBanknote = (banknoteValue) => {
+  return {
+    type: SET_LIMIT_BANKNOTE,
+    banknoteValue
   };
 };
