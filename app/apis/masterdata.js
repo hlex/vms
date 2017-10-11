@@ -30,6 +30,7 @@ const mockupEvents = [
     rewards: [
       {
         name: 'TOPUP',
+        code: '12345',
         value: '5',
         channel: 'SMS',
         expireDate: '',
