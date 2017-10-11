@@ -19,7 +19,8 @@ import {
 import {
   createLog,
   verifyLessThanThreshold,
-  verifyCanUseDiscount
+  verifyCanUseDiscount,
+  getCashRemainingAmount,
 } from '../helpers/global';
 // ======================================================
 // APIs
@@ -263,6 +264,17 @@ const runFlowProductDropSuccess = () => (dispatch, getState) => {
   }
 };
 
+export const limitBanknote = (limitAmount) => {
+  return (dispatch, getState) => {
+    const client = MasterappSelector.getTcpClient(getState().masterapp);
+    client.send({
+      action: 2,
+      msg: `${limitAmount}`,
+      mode: 'limit',
+    });
+  };
+};
+
 export const receivedCashRemaining = (data) => {
   return (dispatch, getState) => {
     // ======================================================
@@ -272,6 +284,21 @@ export const receivedCashRemaining = (data) => {
     const isLessThanThreshold = verifyLessThanThreshold(data.remain, thresHold);
     const canChangeCash = isLessThanThreshold === false;
     dispatch(Actions.setCanChangeCash(canChangeCash));
+    // ======================================================
+    // Check should disable bank note
+    // ======================================================
+    const cashRemainingAmount = getCashRemainingAmount(data.remain);
+    if (cashRemainingAmount > 100) {
+      // disable 500
+    } else if (cashRemainingAmount <= 100 && cashRemainingAmount > 50) {
+      // disable 100
+    } else if (cashRemainingAmount <= 50 && cashRemainingAmount > 20) {
+      // disable 100
+    } else if (cashRemainingAmount < 20) {
+      // disable 20
+    } else {
+      // do nothing
+    }
     dispatch(Actions.receivedCashRemaining(data));
   };
 };
@@ -595,7 +622,7 @@ export const initSingleProductPage = () => {
       dispatch(Actions.showModal('warningSystemWillNotChangeCash'));
     }
     // if mount enable money box
-    enableMoneyBox();
+    dispatch(enableMoneyBox());
   };
 };
 
@@ -606,7 +633,7 @@ export const initPromotionSetPage = () => {
       dispatch(Actions.showModal('warningSystemWillNotChangeCash'));
     }
     // if mount enable money box
-    enableMoneyBox();
+    dispatch(enableMoneyBox());
   };
 };
 
