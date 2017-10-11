@@ -287,30 +287,32 @@ if (process.env.NODE_ENV !== 'production') {
       // ======================================================
       // INSERT COIN
       // ======================================================
-      if (objectData.action === 999 && sv.getCanReceiveCoin()) {
-        const insertedValue = Number(objectData.msg);
-        const canReceiveBanknote = sv.verifyCanReceiveBanknote(insertedValue);
-        if (canReceiveBanknote) {
-          if (insertedValue === 1) {
-            sv.addCoinOneBaht(1);
-          } else if (insertedValue === 5) {
-            sv.addCoinFiveBaht(1);
-          } else if (insertedValue === 10) {
-            sv.addCoinTenBaht(1);
+      if (objectData.action === 999) {
+        if (sv.getCanReceiveCoin()) {
+          const insertedValue = Number(objectData.msg);
+          const canReceiveBanknote = sv.verifyCanReceiveBanknote(insertedValue);
+          if (canReceiveBanknote) {
+            if (insertedValue === 1) {
+              sv.addCoinOneBaht(1);
+            } else if (insertedValue === 5) {
+              sv.addCoinFiveBaht(1);
+            } else if (insertedValue === 10) {
+              sv.addCoinTenBaht(1);
+            }
+            socket.write(
+              JSON.stringify({
+                action: 2,
+                msg: insertedValue,
+              }),
+            );
+          } else {
+            // คืนเงิน
+            console.log('Cannot receive this banknote', insertedValue);
           }
-          socket.write(
-            JSON.stringify({
-              action: 2,
-              msg: insertedValue,
-            }),
-          );
         } else {
-          // คืนเงิน
-          console.log('Cannot receive this banknote', insertedValue);
+          // MONEY BOX IS DISABLE
+          console.log('Cannot receive money because money box is disable');
         }
-      } else {
-        // MONEY BOX IS DISABLE
-        console.log('Cannot receive money because money box is disable');
       }
     });
     socket.on('error', err => {
