@@ -30,6 +30,7 @@ export const SET_LIMIT_BANKNOTE = 'SET_LIMIT_BANKNOTE';
 // ======================================================
 // TCP
 // ======================================================
+export const CONNECTION_ESTABLISH = 'CONNECTION_ESTABLISH';
 export const RECEIVED_SENSOR_INFORMATION = 'RECEIVED_SENSOR_INFORMATION';
 export const RECEIVED_CASH = 'RECEIVED_CASH';
 export const PRODUCT_DROP_SUCCESS = 'PRODUCT_DROP_SUCCESS';

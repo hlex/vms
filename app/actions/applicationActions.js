@@ -319,6 +319,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
   switch (cmd) {
     case 'CONNECTION_ESTABLISH':
       console.log('%c App connectionEstablish:', createLog('app'));
+      dispatch(Actions.connectionEstablish());
       break;
     case 'CONNECTED':
       console.log('%c App connected:', createLog('app'));

@@ -20,6 +20,7 @@ import MasterappSelector from '../selectors/masterapp';
 const mapStateToProps = state => ({
   location: state.router.location,
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
+  isConnectionEstablish: MasterappSelector.verifyConnectionEstablish(state.masterapp),
   modal: state.modal,
 });
 
@@ -35,7 +36,8 @@ class App extends Component {
     baseURL: string,
     location: Object,
     backToHome: Function,
-    initApplication: Function
+    initApplication: Function,
+    isConnectionEstablish: boolean
   };
 
   componentWillMount = () => {
@@ -44,43 +46,51 @@ class App extends Component {
   };
 
   render() {
-    const { backToHome, baseURL, location, insetCoin, modal } = this.props;
+    const { backToHome, baseURL, location, isConnectionEstablish, insetCoin, modal } = this.props;
     console.log('App@render', this.props, location.pathname);
     return (
       <div className="smart-vending-machine-app">
-        <Layout.Header backToHome={backToHome} baseURL={baseURL} />
-        {this.props.children}
-        <Layout.Footer />
-        {process.env.NODE_ENV !== 'production' && (
-          <div className="development-toolbar">
-            <ul>
-              <li>
-                <a onClick={() => insetCoin(1)}>1B</a>
-              </li>
-              <li>
-                <a onClick={() => insetCoin(5)}>5B</a>
-              </li>
-              <li>
-                <a onClick={() => insetCoin(10)}>10B</a>
-              </li>
-              <li>
-                <a onClick={() => insetCoin(20)}>20B</a>
-              </li>
-              <li>
-                <a onClick={() => insetCoin(50)}>50B</a>
-              </li>
-              <li>
-                <a onClick={() => insetCoin(100)}>100B</a>
-              </li>
-              <li>
-                <a onClick={() => insetCoin(500)}>500B</a>
-              </li>
-              <li>
-                <a onClick={() => insetCoin(1000)}>1000B</a>
-              </li>
-            </ul>
+        {
+          isConnectionEstablish &&
+          <div className="smart-vending-machine-app-connected">
+            <Layout.Header backToHome={backToHome} baseURL={baseURL} />
+            {this.props.children}
+            <Layout.Footer />
+            {process.env.NODE_ENV !== 'production' && (
+              <div className="development-toolbar">
+                <ul>
+                  <li>
+                    <a onClick={() => insetCoin(1)}>1B</a>
+                  </li>
+                  <li>
+                    <a onClick={() => insetCoin(5)}>5B</a>
+                  </li>
+                  <li>
+                    <a onClick={() => insetCoin(10)}>10B</a>
+                  </li>
+                  <li>
+                    <a onClick={() => insetCoin(20)}>20B</a>
+                  </li>
+                  <li>
+                    <a onClick={() => insetCoin(50)}>50B</a>
+                  </li>
+                  <li>
+                    <a onClick={() => insetCoin(100)}>100B</a>
+                  </li>
+                  <li>
+                    <a onClick={() => insetCoin(500)}>500B</a>
+                  </li>
+                  <li>
+                    <a onClick={() => insetCoin(1000)}>1000B</a>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
-        )}
+        }
+        {
+          !isConnectionEstablish && <div>Loading...</div>
+        }
       </div>
     );
   }

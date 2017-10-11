@@ -29,7 +29,8 @@ import {
   SET_CAN_CHANGE_CASH,
   RECEIVED_MASTERDATA,
   EVENT_UPDATE_INPUT_VALUE,
-  SET_LIMIT_BANKNOTE
+  SET_LIMIT_BANKNOTE,
+  CONNECTION_ESTABLISH
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -239,5 +240,11 @@ export const setLimitBanknote = (banknoteValue) => {
   return {
     type: SET_LIMIT_BANKNOTE,
     banknoteValue
+  };
+};
+
+export const connectionEstablish = () => {
+  return {
+    type: CONNECTION_ESTABLISH,
   };
 };
