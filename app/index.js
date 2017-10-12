@@ -240,7 +240,7 @@ if (process.env.NODE_ENV !== 'production') {
             action: 2,
             msg: '01',
             result: 'success',
-            description: 'reset completed'
+            description: 'taiko reset completed'
           }),
         );
       }
