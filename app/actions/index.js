@@ -254,6 +254,7 @@ export const connectionEstablish = () => {
 export const openAlertMessage = (data) => {
   return {
     type: OPEN_ALERT_MESSAGE,
+    data
   };
 };
 
