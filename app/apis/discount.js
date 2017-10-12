@@ -26,7 +26,7 @@ export const serviceVerifyDiscountCode = (code) => {
   });
 };
 
-export const serviceUseDiscountCode = ({ code }) => {
+export const serviceUseDiscountCode = (code) => {
   // return new Promise((resolve, reject) => {
   //   setTimeout(() => {
   //     resolve(true);
@@ -34,7 +34,8 @@ export const serviceUseDiscountCode = ({ code }) => {
   // });
   const data = {
     vtype: 'usediscountcode',
-    code: '1111111111111',
+    // code: '1111111111111',
+    code
   };
   return fetchFacade(`${URL.verifyDiscount}${convertToURLParam(data)}`).then((response) => {
     console.log('serviceUseDiscountCode', response);
