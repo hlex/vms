@@ -7,17 +7,9 @@ import {
 
 const initialState = {
   show: false,
-  title: {
-    th: '',
-    en: ''
-  },
   messages: {
     th: '',
     en: '',
-  },
-  technical: {
-    message: '',
-    code: '',
   },
 };
 const getInitialState = () => ({
@@ -30,9 +22,7 @@ export default (state = getInitialState(), action) => {
       return {
         ...state,
         show: true,
-        title: action.data.title,
         messages: action.data.messages,
-        technical: action.data.technical,
       };
     case CLOSE_ALERT_MESSAGE:
       return getInitialState();
