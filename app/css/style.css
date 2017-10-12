@@ -6300,7 +6300,7 @@ hr {
   top: 0;
   left: 0;
   opacity: 0;
-  visibility: hidden;
+  display: none;
   transition: all 0.3s 0.5s ease-in-out;
   -o-transition: all 0.3s 0.5s ease-in-out;
   -moz-transition: all 0.3s 0.5s ease-in-out;
@@ -6314,7 +6314,7 @@ hr {
     -moz-transition: all 0.3s 0.3s ease-in-out;
     -webkit-transition: all 0.3s 0.3s ease-in-out;
     opacity: 1;
-    visibility: visible; }
+    display: block; }
   .box-modal .content-modal {
     background: #fff;
     margin: 80px auto 80px auto;
