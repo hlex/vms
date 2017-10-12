@@ -22,6 +22,9 @@ import {
   verifyCanUseDiscount,
   getCashRemainingAmount,
 } from '../helpers/global';
+import {
+  convertApplicationErrorToError,
+} from '../helpers/error';
 // ======================================================
 // APIs
 // ======================================================
@@ -655,44 +658,18 @@ export const verifyDiscountCode = (code) => {
         const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code);
         console.log('verifyDiscountCodeResponse', verifyDiscountCodeResponse);
         const discountItem = {
-          code,
           ...verifyDiscountCodeResponse,
-          value: 10
+          code,
         };
         dispatch(Actions.addDiscount(discountItem));
       } catch (error) {
-        const data = {
-          title: {
-            th: 'ไม่สามารถใช้รหัสส่วนลดนี้ได้',
-            en: '',
-          },
-          messages: {
-            th: `เนื่องจากส่วนลด ${code} ไม่มีในระบบ กรุณากรอกรหัสใหม่อีกครั้ง`,
-            en: '',
-          },
-          technical: {
-            message: '',
-            code: ''
-          },
-        };
-        dispatch(openAlertMessage(data));
+        dispatch(openAlertMessage(error));
       }
     } else {
-      const data = {
-        title: {
-          th: 'ไม่สามารถใช้รหัสส่วนลดนี้ได้',
-          en: '',
-        },
-        messages: {
-          th: `เนื่องจากส่วนลด ${code} ถูกใช้ไปแล้วในการขายครั้งนี้ กรุณากรอกรหัสใหม่อีกครั้ง`,
-          en: '',
-        },
-        technical: {
-          message: '',
-          code: ''
-        },
-      };
-      dispatch(openAlertMessage(data));
+      dispatch(openAlertMessage(convertApplicationErrorToError({
+        th: `ไม่สามารถใช้รหัสส่วนลด ${code} ได้ เนื่องจากใช้ไปแล้ว`,
+        en: '',
+      })));
     }
   };
 };
