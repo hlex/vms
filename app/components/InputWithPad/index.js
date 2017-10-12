@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import iconDelete from '../../images/icon-delete.png';
 
 const isThaiMobileNumber = (value) => {
   return /^(0)\d{9}$/.test(value);
@@ -8,6 +9,7 @@ const isThaiMobileNumber = (value) => {
 const isEmail = (value) => {
   return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
 }
+
 
 export default class InputWithPad extends PureComponent {
   static propTypes = {
@@ -148,7 +150,7 @@ export default class InputWithPad extends PureComponent {
             </li>
             <li>
               <a onClick={() => this.handleSelectBackspace()}>
-                <img src="images/icon-delete.png" width="50" />
+                <img src={iconDelete} width="50" />
               </a>
             </li>
             <li>
@@ -201,7 +203,7 @@ export default class InputWithPad extends PureComponent {
           </li>
           <li>
             <a onClick={() => this.handleSelectBackspace()}>
-              <img src="images/icon-delete.png" width="40" />
+              <img src={iconDelete} width="40" />
             </a>
           </li>
         </ul>
