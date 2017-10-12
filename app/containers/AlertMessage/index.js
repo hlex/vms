@@ -31,11 +31,15 @@ class AlertMessage extends Component {
 
   static propTypes = {
     show: PropTypes.bool.isRequired,
+    title: PropTypes.shape({}).isRequired,
+    messages: PropTypes.shape({}).isRequired,
+    technical: PropTypes.shape({}).isRequired,
     closeAlertMessage: PropTypes.func.isRequired,
   }
 
   render() {
-    const { show, closeAlertMessage } = this.props;
+    const { show, title, messages, technical, closeAlertMessage } = this.props;
+    const lang = 'th';
     return (
       <Modal
         show={show}
@@ -48,8 +52,8 @@ class AlertMessage extends Component {
         }}
       >
         <div className="app-error">
-          <h2>ไม่สามารถใช้รหัสส่วนลดนี้ได้</h2>
-          <p>กรุณาใส่รหัสส่วนลดที่ถูกต้องใหม่อีกครั้ง</p>
+          <h2>{title[lang]}</h2>
+          <p>{messages[lang]}</p>
           <button onClick={closeAlertMessage} className="button purple">ตกลง</button>
         </div>
       </Modal>

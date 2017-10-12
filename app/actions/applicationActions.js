@@ -65,9 +65,25 @@ export const initApplication = () => {
   };
 };
 
-export const openAlertMessage = () => {
+/*
+const data = {
+  title: {
+    th: `ไม่สามารถใช้ส่วนลด ${code} ได้`,
+    en: '',
+  },
+  messages: {
+    th: `เนื่องจากส่วนลด ${code} ไม่มีในระบบ กรุณากรอกรหัสใหม่อีกครั้ง`,
+    en: '',
+  },
+  technical: {
+    message: '',
+    code: ''
+  },
+};
+*/
+export const openAlertMessage = (data) => {
   return (dispatch) => {
-    dispatch(Actions.openAlertMessage());
+    dispatch(Actions.openAlertMessage(data));
   };
 };
 
@@ -645,10 +661,38 @@ export const verifyDiscountCode = (code) => {
         };
         dispatch(Actions.addDiscount(discountItem));
       } catch (error) {
-        dispatch(openAlertMessage());
+        const data = {
+          title: {
+            th: 'ไม่สามารถใช้รหัสส่วนลดนี้ได้',
+            en: '',
+          },
+          messages: {
+            th: `เนื่องจากส่วนลด ${code} ไม่มีในระบบ กรุณากรอกรหัสใหม่อีกครั้ง`,
+            en: '',
+          },
+          technical: {
+            message: '',
+            code: ''
+          },
+        };
+        dispatch(openAlertMessage(data));
       }
     } else {
-      dispatch(openAlertMessage());
+      const data = {
+        title: {
+          th: 'ไม่สามารถใช้รหัสส่วนลดนี้ได้',
+          en: '',
+        },
+        messages: {
+          th: `เนื่องจากส่วนลด ${code} ถูกใช้ไปแล้วในการขายครั้งนี้ กรุณากรอกรหัสใหม่อีกครั้ง`,
+          en: '',
+        },
+        technical: {
+          message: '',
+          code: ''
+        },
+      };
+      dispatch(openAlertMessage(data));
     }
   };
 };
