@@ -295,17 +295,18 @@ export const receivedCashRemaining = (data) => {
     // ======================================================
     const cashRemainingAmount = getCashRemainingAmount(data.remain);
     const currentLimitBanknote = MasterappSelector.getLimitBanknote(getState().masterapp);
-    if (cashRemainingAmount > 100 && currentLimitBanknote < 500) {
+    console.log('cashRemainingAmount', cashRemainingAmount, currentLimitBanknote);
+    if (cashRemainingAmount > 100 && currentLimitBanknote !== 500) {
       // disable 500
       dispatch(setLimitBanknote(500));
 
-    } else if (cashRemainingAmount <= 100 && cashRemainingAmount > 50) {
+    } else if (cashRemainingAmount <= 100 && cashRemainingAmount > 50 && currentLimitBanknote !== 100) {
       // disable 100
       dispatch(setLimitBanknote(100));
-    } else if (cashRemainingAmount <= 50 && cashRemainingAmount > 20) {
+    } else if (cashRemainingAmount <= 50 && cashRemainingAmount > 20 && currentLimitBanknote !== 50) {
       // disable 50
       dispatch(setLimitBanknote(50));
-    } else if (cashRemainingAmount < 20) {
+    } else if (cashRemainingAmount < 20 && currentLimitBanknote !== 20) {
       // disable 20
       dispatch(setLimitBanknote(20));
     } else {
