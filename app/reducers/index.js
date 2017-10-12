@@ -6,9 +6,11 @@ import masterapp from './masterapp';
 import masterdata from './masterdata';
 import order from './order';
 import modal from './modal';
+import alertMessage from './alertMessage';
 
 const rootReducer = combineReducers({
   router,
+  alertMessage,
   masterapp,
   masterdata,
   payment,

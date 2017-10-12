@@ -65,6 +65,19 @@ export const initApplication = () => {
   };
 };
 
+export const openAlertMessage = () => {
+  return (dispatch) => {
+    dispatch(Actions.openAlertMessage());
+  };
+};
+
+export const closeAlertMessage = () => {
+  return (dispatch) => {
+    dispatch(Actions.closeAlertMessage());
+  };
+};
+
+
 export const clearOrder = () => dispatch => {
   dispatch(Actions.clearOrder());
 };
@@ -610,10 +623,10 @@ export const verifyDiscountCode = (code) => {
         };
         dispatch(Actions.addDiscount(discountItem));
       } catch (error) {
-
+        dispatch(openAlertMessage());
       }
     } else {
-      alert('Cannot use discount');
+      dispatch(openAlertMessage());
     }
   };
 };

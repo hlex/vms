@@ -30,7 +30,9 @@ import {
   RECEIVED_MASTERDATA,
   EVENT_UPDATE_INPUT_VALUE,
   SET_LIMIT_BANKNOTE,
-  CONNECTION_ESTABLISH
+  CONNECTION_ESTABLISH,
+  OPEN_ALERT_MESSAGE,
+  CLOSE_ALERT_MESSAGE,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -246,5 +248,17 @@ export const setLimitBanknote = (banknoteValue) => {
 export const connectionEstablish = () => {
   return {
     type: CONNECTION_ESTABLISH,
+  };
+};
+
+export const openAlertMessage = (data) => {
+  return {
+    type: OPEN_ALERT_MESSAGE,
+  };
+};
+
+export const closeAlertMessage = () => {
+  return {
+    type: CLOSE_ALERT_MESSAGE,
   };
 };

@@ -16,6 +16,10 @@ import MasterappSelector from '../selectors/masterapp';
 // ======================================================
 // APIs
 // ======================================================
+// ======================================================
+// Containers
+// ======================================================
+import AlertMessage from './AlertMessage';
 
 const mapStateToProps = state => {
   console.log('%c App@state:', 'color: #4CAF50; font-weight: 700;', state);
@@ -55,6 +59,7 @@ class App extends Component {
         {
           isConnectionEstablish &&
           <div className="smart-vending-machine-app-connected">
+            <AlertMessage />
             <Layout.Header backToHome={backToHome} baseURL={baseURL} />
             {this.props.children}
             <Layout.Footer />
