@@ -193,6 +193,9 @@ export default class InputWithPad extends PureComponent {
             <a onClick={() => this.handleSelectChar('8')}>8</a>
           </li>
           <li>
+            <a onClick={() => this.handleSelectChar('9')}>9</a>
+          </li>
+          <li>
             <a onClick={() => this.handleSelectChar('0')}>0</a>
           </li>
           <li>
