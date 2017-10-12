@@ -37,22 +37,21 @@ const getErrorType = (res) => {
   return 'ERROR'; // _.get(res, 'display-messages.0.message-type', 'ERROR');
 };
 
-const isVMSServiceError = (res) => {
-  return _.get(res, '0.message', '').toUpperCase() === 'SUCCESSFUL';
+const isVMSServiceError = (response) => {
+  return response.fault;
 };
 
-const convertVMSServiceResponseToError = (res) => {
+const convertVMSServiceResponseToError = (response) => {
   return new ApplicationError({
-    type: getErrorType(res),
-    trxId: _.get(res, 'trx-id', ''),
-    processInstance: _.get(res, 'process-instance', ''),
-    status: _.get(res, 'status', ''),
-    fault: _.get(res, 'fault', {}),
-    displayMessages: _.get(res, 'display-messages', []),
+    type: getErrorType(response),
+    trxId: _.get(response, 'trx-id', ''),
+    processInstance: _.get(response, 'process-instance', ''),
+    status: _.get(response, 'status', ''),
+    fault: _.get(response, 'fault', {}),
   });
 };
 
-const convertApplicationErrorToError = (errorMessage) => {
+const convertApplicationErrorToError = (message, type = 'ERRRO') => {
   /*
     type: '',
     code: '',
@@ -61,38 +60,26 @@ const convertApplicationErrorToError = (errorMessage) => {
     technical: '',
   */
   return new ApplicationError({
-    type: _.get(errorMessage, 'type', ''),
+    trxId: Date.now(),
+    processInstance: 'Frontend',
+    type,
     fault: {
-      name: '',
-      code: _.get(errorMessage, 'code', ''),
-      message: '',
-      'detailed-message': '',
+      'th-message': message.th || '',
+      'en-message': message.en || '',
     },
-    displayMessages: [
-      {
-        'th-message': _.get(errorMessage, 'th', ''),
-        'en-message': _.get(errorMessage, 'en', ''),
-        'technical-message': _.get(errorMessage, 'technical', ''),
-      },
-    ],
   });
 };
 
 class ApplicationError extends Error {
-  constructor({ type, trxId, processInstance, fault, displayMessages }) {
+  constructor({ type, trxId, processInstance, fault }) {
     super(type);
     this.type = type || 'ERROR';
     this.trxId = trxId;
     this.processInstance = processInstance;
-    // key of fault object
-    this.code = _.get(fault, 'code', '');
-    this.fault = fault || {};
-    // key of display messages arrays
-    this.displayMessages = displayMessages;
-    this.message = {
-      th: _.get(displayMessages, '0.th-message', ''),
-      en: _.get(displayMessages, '0.en-message', ''),
-      technical: _.get(displayMessages, '0.technical-message', ''),
+    this.messages = {
+      th: _.get(fault, 'th-message', ''),
+      en: _.get(fault, 'en-message', ''),
+      technical: _.get(fault, 'technical-message', ''),
     };
     if (typeof Error.captureStackTrace === 'function') {
       Error.captureStackTrace(this, this.constructor);
