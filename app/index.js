@@ -36,7 +36,7 @@ class Server {
       case 2:
         this.baht1 = 1;
         this.baht5 = 1;
-        this.baht10 = 20;
+        this.baht10 = 2;
         break;
       case 3:
         this.baht1 = 5;
@@ -109,7 +109,7 @@ const serverLog = 'background: blue; color: #fff';
 if (process.env.NODE_ENV !== 'production') {
   console.log('development:createServer at 127.0.0.1:1337');
   const server = net.createServer(socket => {
-    const sv = new Server(1);
+    const sv = new Server(2);
     console.log('%c Init Server:', serverLog, sv);
     setTimeout(() => {
       socket.write(
