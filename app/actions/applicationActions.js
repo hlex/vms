@@ -191,6 +191,23 @@ export const submitOrder = () => {
   };
 };
 
+const endProcess = () => {
+  return (dispatch, getState) => {
+    const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
+    const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
+    if (needToChangeCash(grandTotalAmount, currentCash)) {
+      console.log(
+          '%c App cashChange:',
+          createLog('app'),
+          'cashChange =',
+          currentCash - grandTotalAmount,
+        );
+      dispatch(cashChange());
+    }
+    dispatch(productDropProcessCompletely());
+  };
+};
+
 // ======================================================
 // Server Command
 // ======================================================
@@ -218,7 +235,7 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
           OrderSelector.getMobileTopupToService(getState().order),
         );
       console.log('serviceTopupMobile', serviceTopupMobileResponse);
-      dispatch(productDropProcessCompletely());
+      dispatch(endProcess());
     }
   }
     //   if (needToChangeCash(grandTotalAmount, currentCash)) {
@@ -260,21 +277,22 @@ const runFlowProductDropSuccess = () => (dispatch, getState) => {
     // check hasPromotionSet ?
     // ======================================================
   if (OrderSelector.verifyAllOrderDropped(getState().order)) {
-    const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
-    const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
-      // ======================================================
-      // Cash Change
-      // ======================================================
-    if (needToChangeCash(grandTotalAmount, currentCash)) {
-      console.log(
-          '%c App cashChange:',
-          createLog('app'),
-          'cashChange =',
-          currentCash - grandTotalAmount,
-        );
-      dispatch(cashChange());
-    }
-    dispatch(productDropProcessCompletely());
+    dispatch(endProcess());
+    // const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
+    // const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
+    //   // ======================================================
+    //   // Cash Change
+    //   // ======================================================
+    // if (needToChangeCash(grandTotalAmount, currentCash)) {
+    //   console.log(
+    //       '%c App cashChange:',
+    //       createLog('app'),
+    //       'cashChange =',
+    //       currentCash - grandTotalAmount,
+    //     );
+    //   dispatch(cashChange());
+    // }
+    // dispatch(productDropProcessCompletely());
   } else {
     dispatch(productDrop());
   }
@@ -431,7 +449,7 @@ export const productDropProcessCompletely = () => async (dispatch) => {
     dispatch(Actions.productDropProcessCompletely());
     setTimeout(() => {
       dispatch(backToHome());
-    }, 3000);
+    }, 3500);
   } catch (error) {
     console.error(error);
   }
@@ -450,7 +468,11 @@ export const clearPaymentAmount = () => dispatch => {
 
 export const sendCashChangeToServer = () => (dispatch, getState) => {
   const cashChangeAmount = PaymentSelector.getCashChangeAmount(getState().payment);
+  console.log('=======================================');
+  console.log('=======================================');
   console.log('sendCashChangeToServer:cashChangeAmount', cashChangeAmount);
+  console.log('=======================================');
+  console.log('=======================================');
     // ======================================================
     // if cashReturn > 0 then call api to return cash
     // ======================================================
@@ -643,7 +665,9 @@ export const submitPlayEvent = () => {
 export const initHomePage = () => {
   return (dispatch, getState) => {
     // get cash remaining
-    dispatch(getCashRemaining());
+    setTimeout(() => {
+      dispatch(getCashRemaining());
+    }, 500);
     dispatch(clearOrder());
   };
 };
