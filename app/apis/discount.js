@@ -4,7 +4,7 @@ import { fetchFacade } from '../helpers/api';
 import { isVMSServiceError, convertVMSServiceResponseToError } from '../helpers/error';
 import URL from './url';
 
-export const serviceVerifyDiscountCode = ({ code }) => {
+export const serviceVerifyDiscountCode = (code) => {
   // return new Promise((resolve, reject) => {
   //   setTimeout(() => {
   //     resolve(true);
@@ -12,7 +12,8 @@ export const serviceVerifyDiscountCode = ({ code }) => {
   // });
   const data = {
     vtype: 'verifydiscountcode',
-    code: '1111111111111',
+    // code: '1111111111111',
+    code
   };
   return fetchFacade(`${URL.verifyDiscount}${convertToURLParam(data)}`).then((response) => {
     console.log('serviceVerifyDiscountCode', response);
