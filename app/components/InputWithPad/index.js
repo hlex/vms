@@ -71,7 +71,8 @@ export default class InputWithPad extends PureComponent {
   }
 
   handleSelectChar = char => {
-    const { type, inputValue } = this.state;
+    const { type } = this.props;
+    const { inputValue } = this.state;
     if (type === 'num' && inputValue.length === 10) {
       return '';
     }
