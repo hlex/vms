@@ -151,7 +151,7 @@ export const isGetCashRemainingFail = ({ action, remain, result }) => {
 };
 
 export const isLimitBanknoteSuccess = ({ action, result, description }) => {
-  if (action !== actionCode.cash || result !== resultCode.success) return false;
+  if (action !== actionCode.cash || result !== resultCode.success || description.indexOf('limit') < 0) return false;
   return true;
 };
 
