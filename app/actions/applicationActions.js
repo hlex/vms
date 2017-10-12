@@ -415,7 +415,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       dispatch(Actions.showModal('productDropError'));
       break;
     case 'RESET_TAIKO_SUCCESS':
-      dispatch(Actions.connectionEstablish());
+      dispatch(Actions.hardwareReady());
       break;
     case 'RESET_TAIKO_FAIL':
       break;
@@ -685,10 +685,6 @@ export const submitPlayEvent = () => {
 
 export const initHomePage = () => {
   return (dispatch, getState) => {
-    // get cash remaining
-    setTimeout(() => {
-      dispatch(getCashRemaining());
-    }, 500);
     dispatch(clearOrder());
   };
 };

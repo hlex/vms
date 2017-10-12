@@ -26,7 +26,7 @@ const mapStateToProps = state => {
   return {
     location: state.router.location,
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
-    isConnectionEstablish: MasterappSelector.verifyConnectionEstablish(state.masterapp),
+    appReady: MasterappSelector.verifyAppReady(state.masterapp),
     modal: state.modal,
   };
 };
@@ -44,7 +44,7 @@ class App extends Component {
     location: Object,
     backToHome: Function,
     initApplication: Function,
-    isConnectionEstablish: boolean
+    appReady: boolean
   };
 
   componentWillMount = () => {
@@ -53,11 +53,11 @@ class App extends Component {
   };
 
   render() {
-    const { backToHome, baseURL, location, isConnectionEstablish, insetCoin, modal } = this.props;
+    const { backToHome, baseURL, location, appReady, insetCoin, modal } = this.props;
     return (
       <div className="smart-vending-machine-app">
         {
-          isConnectionEstablish &&
+          appReady &&
           <div className="smart-vending-machine-app-connected">
             <AlertMessage />
             <Layout.Header backToHome={backToHome} baseURL={baseURL} />
@@ -96,7 +96,7 @@ class App extends Component {
           </div>
         }
         {
-          !isConnectionEstablish && <div>Loading...</div>
+          !appReady && <div>Loading...</div>
         }
       </div>
     );

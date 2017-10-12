@@ -8,7 +8,7 @@ const verifyReadyToDropProduct = state => state.readyToDropProduct;
 const getDroppedProduct = state => state.droppingProduct;
 const verifyCanChangeCash = state => state.canChangeCash;
 const getLimitBanknote = state => state.limitBanknote;
-const verifyConnectionEstablish = state => state.connectionEstablish;
+const verifyAppReady = state => state.hardwareReady;
 
 export default {
   getBaseURL,
@@ -19,5 +19,5 @@ export default {
   getDroppedProduct,
   verifyCanChangeCash,
   getLimitBanknote,
-  verifyConnectionEstablish
+  verifyAppReady
 };

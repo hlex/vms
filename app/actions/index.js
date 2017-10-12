@@ -30,7 +30,7 @@ import {
   RECEIVED_MASTERDATA,
   EVENT_UPDATE_INPUT_VALUE,
   SET_LIMIT_BANKNOTE,
-  CONNECTION_ESTABLISH,
+  HARDWARE_READY,
   OPEN_ALERT_MESSAGE,
   CLOSE_ALERT_MESSAGE,
 } from './actionTypes';
@@ -245,9 +245,9 @@ export const setLimitBanknote = (banknoteValue) => {
   };
 };
 
-export const connectionEstablish = () => {
+export const hardwareReady = () => {
   return {
-    type: CONNECTION_ESTABLISH,
+    type: HARDWARE_READY,
   };
 };
 

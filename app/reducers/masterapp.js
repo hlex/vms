@@ -7,7 +7,7 @@ import {
   PRODUCT_DROP_SUCCESS,
   SET_CAN_CHANGE_CASH,
   SET_LIMIT_BANKNOTE,
-  CONNECTION_ESTABLISH
+  HARDWARE_READY
 } from '../actions/actionTypes';
 
 const initialTcp = process.env.NODE_ENV !== 'production'
@@ -51,15 +51,15 @@ const initialState = {
   canChangeCash: true,
   droppingProduct: {},
   limitBanknote: 500,
-  connectionEstablish: false,
+  hardwareReady: false,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case CONNECTION_ESTABLISH:
+    case HARDWARE_READY:
       return {
         ...state,
-        connectionEstablish: true,
+        hardwareReady: true,
       };
     case RECEIVED_SENSOR_INFORMATION:
       return {
