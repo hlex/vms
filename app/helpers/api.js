@@ -20,3 +20,7 @@ export const addUrlParameter = (url, params) => {
 export const fetchFacade = (url, options) => fetchWithJarvis(`${baseURL}/${addUrlParameter(url, { t: Date.now() })}`, {
   ...options,
 }).then(response => response);
+
+export const extractResponseData = (response) => {
+  return _.get(response, 'response-data', {});
+};
