@@ -109,7 +109,7 @@ const serverLog = 'background: blue; color: #fff';
 if (process.env.NODE_ENV !== 'production') {
   console.log('development:createServer at 127.0.0.1:1337');
   const server = net.createServer(socket => {
-    const sv = new Server(2);
+    const sv = new Server(4);
     console.log('%c Init Server:', serverLog, sv);
     setTimeout(() => {
       socket.write(
@@ -166,7 +166,7 @@ if (process.env.NODE_ENV !== 'production') {
         const successPercent = Math.floor(((Math.random() * 10))) + 1;
         console.log('successPercent', successPercent);
         if (successPercent <= 10 && !isFirstTime) {
-          isFirstTime = true;
+          // isFirstTime = true;
           setTimeout(() => {
             socket.write(
               JSON.stringify({
@@ -193,42 +193,50 @@ if (process.env.NODE_ENV !== 'production') {
       // CASH CHANGE
       // ======================================================
       if (objectData.action === 2 && objectData.mode === 'coin') {
-        console.log('%c Server: Cash Change', serverLog, Number(objectData.msg), changeCoin(Number(objectData.msg)));
-        const changeCoins = changeCoin(Number(objectData.msg));
-        if (sv.canChange(changeCoins)) {
-          socket.write(
-            JSON.stringify({
-              action: 2,
-              result: 'success',
-              description: 'cash change completed',
-            }),
-          );
+        if (!sv.getCanReceiveCoin()) {
+          console.log('%c Server: Cash Change', serverLog, Number(objectData.msg), changeCoin(Number(objectData.msg)));
+          const changeCoins = changeCoin(Number(objectData.msg));
+          if (sv.canChange(changeCoins)) {
+            socket.write(
+              JSON.stringify({
+                action: 2,
+                result: 'success',
+                description: 'cash change completed',
+              }),
+            );
+          } else {
+            socket.write(
+              JSON.stringify({
+                action: 2,
+                result: 'fail',
+                description: 'cash change failed',
+              }),
+            );
+          }
         } else {
-          socket.write(
-            JSON.stringify({
-              action: 2,
-              result: 'fail',
-              description: 'cash change failed',
-            }),
-          );
+          console.error('Server cannot change cash because Money Box is enable');
         }
       }
       // ======================================================
       // CASH REMAINING
       // ======================================================
       if (objectData.action === 2 && objectData.mode === 'remain') {
-        console.log('%c Server: Cash remaining', serverLog, sv);
-        socket.write(
-          JSON.stringify({
-            action: 2,
-            result: 'success',
-            remain: {
-              baht1: sv.getCoinOneBaht(),
-              baht5: sv.getCoinFiveBaht(),
-              baht10: sv.getCoinTenBaht(),
-            },
-          }),
-        );
+        if (!sv.getCanReceiveCoin()) {
+          console.log('%c Server: Cash remaining', serverLog, sv);
+          socket.write(
+            JSON.stringify({
+              action: 2,
+              result: 'success',
+              remain: {
+                baht1: sv.getCoinOneBaht(),
+                baht5: sv.getCoinFiveBaht(),
+                baht10: sv.getCoinTenBaht(),
+              },
+            }),
+          );
+        } else {
+          console.error('Server cannot show remaining because Money Box is enable');
+        }
       }
       // ======================================================
       // RESET TAIKO
