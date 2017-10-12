@@ -84,7 +84,7 @@ export const isResetTAIKOSuccess = ({ action, msg, result, description }) => {
   if (action !== actionCode.cash
     || msg !== messageCode.resetTAIKO
     || result !== resultCode.success
-    || description.indexOf('completed') < 0) return false;
+    || description.indexOf('taiko') < 0) return false;
   return true;
 };
 
@@ -92,7 +92,7 @@ export const isResetTAIKOFail = ({ action, msg, result, description }) => {
   if (action !== actionCode.cash
     || msg !== messageCode.resetTAIKO
     || result !== resultCode.unsuccess
-    || description.indexOf('failed') < 0) return false;
+    || description.indexOf('taiko') < 0) return false;
   return true;
 };
 
