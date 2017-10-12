@@ -31,14 +31,12 @@ class AlertMessage extends Component {
 
   static propTypes = {
     show: PropTypes.bool.isRequired,
-    title: PropTypes.shape({}).isRequired,
     messages: PropTypes.shape({}).isRequired,
-    technical: PropTypes.shape({}).isRequired,
     closeAlertMessage: PropTypes.func.isRequired,
   }
 
   render() {
-    const { show, title, messages, technical, closeAlertMessage } = this.props;
+    const { show, messages, closeAlertMessage } = this.props;
     const lang = 'th';
     return (
       <Modal
@@ -52,8 +50,7 @@ class AlertMessage extends Component {
         }}
       >
         <div className="app-error">
-          <h2>{title[lang]}</h2>
-          <p>{messages[lang]}</p>
+          <h2>{messages[lang]}</h2>
           <button onClick={closeAlertMessage} className="button purple">ตกลง</button>
         </div>
       </Modal>
