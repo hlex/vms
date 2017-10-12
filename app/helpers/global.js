@@ -24,8 +24,8 @@ export const createLog = (type = '', bgColor = 'green', color = '#fff') => {
 const getCashRemaining = (remain) => {
   return {
     oneBahtCount: _.get(remain, 'baht1', 0),
-    fiveBahtCount: _.get(remain, 'baht1', 0),
-    tenBahtCount: _.get(remain, 'baht1', 0),
+    fiveBahtCount: _.get(remain, 'baht5', 0),
+    tenBahtCount: _.get(remain, 'baht10', 0),
   };
 };
 
@@ -42,6 +42,6 @@ export const verifyCanUseDiscount = (discounts, code) => {
 
 export const getCashRemainingAmount = (remain) => {
   const { oneBahtCount, fiveBahtCount, tenBahtCount } = getCashRemaining(remain);
-  return ((oneBahtCount * 10) + (fiveBahtCount * 5) + tenBahtCount);
+  return ((tenBahtCount * 10) + (fiveBahtCount * 5) + oneBahtCount);
 };
 
