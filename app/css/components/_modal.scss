@@ -31,7 +31,8 @@
   top: 0;
   left: 0;
   opacity: 0;
-  visibility: hidden;
+  display: none;
+  // visibility: hidden;
   @include transition(0.3s, 0.5s);
   z-index: 8;
   &.overlay {
@@ -41,7 +42,8 @@
     @include transition(0.3s);
     // transform:scale(1);
     opacity: 1;
-    visibility: visible;
+    display: block;
+    // visibility: visible;
   }
   .content-modal {
     background: #fff;
