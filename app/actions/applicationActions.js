@@ -326,7 +326,6 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
   switch (cmd) {
     case 'CONNECTION_ESTABLISH':
       console.log('%c App connectionEstablish:', createLog('app'));
-      dispatch(Actions.connectionEstablish());
       break;
     case 'CONNECTED':
       console.log('%c App connected:', createLog('app'));
@@ -365,6 +364,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       dispatch(Actions.showModal('productDropError'));
       break;
     case 'RESET_TAIKO_SUCCESS':
+      dispatch(Actions.connectionEstablish());
       break;
     case 'RESET_TAIKO_FAIL':
       break;
