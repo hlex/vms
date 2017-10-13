@@ -6560,6 +6560,17 @@ hr {
     color: #fff;
     font-size: 25px; }
 
+.event-lineid-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; }
+  .event-lineid-box img {
+    padding: 40px; }
+  .event-lineid-box .desc {
+    text-align: center;
+    margin-bottom: 30px; }
+
 .checkbox-style input, .form-input-checkbox input, .input-checkbox input {
   height: 0;
   width: 0;

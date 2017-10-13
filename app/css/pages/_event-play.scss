@@ -1,0 +1,13 @@
+.event-lineid-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  img {
+    padding: 40px;
+  }
+  .desc {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+}
