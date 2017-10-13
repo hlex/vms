@@ -162,6 +162,65 @@ const mockupEvents = [
       }
     ],
   },
+  {
+    id: 1003,
+    eventType: '',
+    eventActivities: [
+      {
+        type: 'input',
+        name: 'LINE_ID',
+        value: null,
+      },
+    ],
+    rewards: [],
+    remarks: [
+      {
+        th: '',
+        en: '',
+        verifyKey: '',
+      },
+    ],
+    tags: [
+      {
+        name: 'B', // B
+        color: 'MINT', // RED GREEN BLUE MINT YELLOW PURPLE
+        label: 'รับฟรี', // free text..
+        unit: 'ชิ้น', // free text..
+        value: 1 // integer.. เช่น 10, 20, 100
+      }
+    ],
+    howTo: [
+      {
+        order: 1,
+        th: 'เพิ่มเพื่อนใน LINE ID',
+        en: 'เพิ่มเพื่อนใน LINE ID',
+      },
+      {
+        order: 2,
+        th: 'ชมโฆษณาใน LINE',
+        en: 'ชมโฆษณาใน LINE',
+      },
+      {
+        order: 3,
+        th: 'รับรหัสส่วนลดใน LINE',
+        en: 'รับรหัสส่วนลดใน LINE',
+      },
+    ],
+    products: [
+      {
+        Po_ID: 'PO0002',
+        Po_Name: {
+          th: 'แบรนด์ Gen U',
+          en: 'แบรนด์ Gen U',
+        },
+        Po_Price: '35',
+        Po_Img: 'images/product-2.png',
+        Po_Imgbig: 'images/product-2.png',
+        Row: '1',
+        Column: '1',
+      }
+    ],
+  },
 ];
 
 export const serviceGetEvents = () => {
