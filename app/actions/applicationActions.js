@@ -675,15 +675,6 @@ export const verifyDiscountCode = (code) => {
   };
 };
 
-export const submitPlayEvent = () => {
-  return (dispatch, getState) => {
-    const eventWatches = OrderSelector.getEventWatches(getState().order);
-    if (_.size(eventWatches) > 0) {
-      dispatch(changePage('/event/ads'));
-    }
-  };
-};
-
 export const initHomePage = () => {
   return (dispatch, getState) => {
     dispatch(clearOrder());
@@ -709,6 +700,37 @@ export const initPromotionSetPage = () => {
     }
     // if mount enable money box
     dispatch(enableMoneyBox());
+  };
+};
+
+// ======================================================
+// EVENTS
+// ======================================================
+export const submitPlayEvent = () => {
+  return (dispatch, getState) => {
+    const eventWatches = OrderSelector.getEventWatches(getState().order);
+    console.log('submitPlayEvent', eventWatches);
+    debugger;
+    if (_.size(eventWatches) > 0) {
+      dispatch(changePage('/event/ads'));
+    } else {
+      dispatch(eventInitGetReward());
+    }
+  };
+};
+
+export const eventInitGetReward = () => {
+  return (dispatch, getState) => {
+    const shouldSendReward = OrderSelector.verifyEventShouldSendReward(getState().order);
+    // const shouldUseRewardInstantly = OrderSelector.verifyEventShouldUseRewardInstantly(getState().order);
+    const targetRoute = OrderSelector.getEventNextRewardRoute(getState().order);
+    console.log('eventInitGetReward', shouldSendReward, targetRoute);
+    debugger;
+    if (shouldSendReward) {
+      dispatch(eventGetReward());
+    } else if (targetRoute.indexOf('/') >= 0) {
+      dispatch(changePage(targetRoute));
+    }
   };
 };
 
