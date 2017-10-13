@@ -87,7 +87,7 @@ class EventPlayPage extends Component {
         </div>
       </div>
     </div>
-    );
+  );
 
   renderInputEmail = () => (
     <div className="input-msisdn-box-wrapper">
@@ -109,22 +109,23 @@ class EventPlayPage extends Component {
         </div>
       </div>
     </div>
-    );
+  );
 
-  renderInputLineId = () => (
-    <div className="event-lineid-box">
-      <img alt="line" src={lineId} />
-      <div className="desc">
-        <h2>กรุณาแสกน LINE QR CODE</h2>
-        <p>เมื่อได้รับรหัสส่วนลดแล้ว กดปุ่มทำรายการต่อ</p>
+  renderInputLineId = () => {
+    const { submitPlayEvent } = this.props;
+    return (
+      <div className="event-lineid-box">
+        <img alt="line" src={lineId} />
+        <div className="desc">
+          <h2>กรุณาแสกน LINE QR CODE</h2>
+          <p>เมื่อได้รับรหัสส่วนลดแล้ว กดปุ่มทำรายการต่อ</p>
+        </div>
+        <a className="button blue submit-button" onClick={submitPlayEvent}>
+          <p className="fade-flash">ทำรายการต่อ </p>
+        </a>
       </div>
-      <a className="button blue submit-button" onClick={() => console.log()}>
-        <p className="fade-flash">
-          ทำรายการต่อ{' '}
-        </p>
-      </a>
-    </div>
     );
+  };
 
   renderInputUI = inputType => {
     if (inputType === 'EMAIL') {
