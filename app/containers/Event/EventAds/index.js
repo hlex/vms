@@ -22,15 +22,12 @@ import * as Actions from './actions';
 // Selectors
 // ======================================================
 import MasterappSelector from '../../../selectors/masterapp';
-import OrderSelectors from '../../../selectors/order';
+import OrderSelector from '../../../selectors/order';
 
 const mapStateToProps = (state) => {
   return {
-    stripAds: state.masterdata.stripAds,
-    selectedEvent: OrderSelectors.getSelectedEvent(state.order),
-    shouldSendReward: OrderSelectors.verifyEventShouldSendReward(state.order),
-    shouldUseRewardInstantly: OrderSelectors.verifyEventShouldUseRewardInstantly(state.order),
-    nextWatch: OrderSelectors.getEventNextWatch(state.order),
+    selectedEvent: OrderSelector.getSelectedEvent(state.order),
+    nextWatch: OrderSelector.getEventNextWatch(state.order),
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
   };
 };
@@ -50,10 +47,7 @@ class EventAds extends Component {
   static propTypes = {
     selectedEvent: PropTypes.shape({}).isRequired,
     nextWatch: PropTypes.shape({}).isRequired,
-    shouldSendReward: PropTypes.bool.isRequired,
-    shouldUseRewardInstantly: PropTypes.bool.isRequired,
-    eventGetReward: PropTypes.func.isRequired,
-    eventUseRewardInstantly: PropTypes.func.isRequired,
+    eventInitGetReward: PropTypes.func.isRequired,
     backToHome: PropTypes.func.isRequired,
   }
 
@@ -63,23 +57,14 @@ class EventAds extends Component {
   }
 
   handleAdsEnd = () => {
-    const { shouldSendReward, shouldUseRewardInstantly, eventGetReward, eventUseRewardInstantly } = this.props;
+    const { eventInitGetReward } = this.props;
     // ======================================================
     // POPUP 100%
     // ======================================================
     this.setState({
       adFinished: true
     });
-    // ======================================================
-    // Rewards
-    // ======================================================
-    console.log('handleAdsEnd', 'shouldSendReward', shouldSendReward, 'shouldUseRewardInstantly', shouldUseRewardInstantly);
-    if (shouldSendReward) {
-      eventGetReward();
-    }
-    if (shouldUseRewardInstantly) {
-      eventUseRewardInstantly();
-    }
+    eventInitGetReward();
   }
 
   handleNext = () => {
