@@ -135,7 +135,16 @@ class EventAds extends Component {
             onTicked={this.handleTicked}
             onEnded={this.handleAdsEnd}
           />
-          <Modal show={adFinished}>
+          <Modal
+            show={adFinished}
+            options={{
+              className: {
+                margin: '0 auto',
+                top: '50%',
+                marginTop: '-200px'
+              },
+            }}
+          >
             <div className="ads-confirm">
               {
                 this.renderUI()
