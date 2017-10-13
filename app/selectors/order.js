@@ -47,7 +47,23 @@ const getEventNextReward = createSelector(
 const getEventRewardInstantly = createSelector(
   [getEventRewards],
   (eventRewards) => {
-    return _.find(eventRewards, eventReward => _.includes(['VENDING_MACHINE'], eventReward.channel.toUpperCase()));
+    return _.find(eventRewards, eventReward => _.includes(['VENDING_MACHINE_NOW'], eventReward.channel.toUpperCase()));
+  }
+);
+
+const getEventNextRewardRoute = createSelector(
+  [getEventNextReward],
+  (eventNextReward) => {
+    if (!eventNextReward) return 'REWARD_NOT_FOUND';
+    const targetProduct = eventNextReward.name;
+    switch (targetProduct) {
+      case 'MOBILE_TOPUP':
+        return '/topup';
+      case 'PRODUCT':
+        return '/product/single';
+      default:
+        return 'PAGE_NOT_FOUND';
+    }
   }
 );
 
@@ -258,6 +274,7 @@ export default {
   getEventRewards,
   getEventRewardInstantly,
   getEventNextReward,
+  getEventNextRewardRoute,
   getEventInputs,
   getEventNextInput,
   getEventWatches,
