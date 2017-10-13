@@ -68,6 +68,103 @@ export const initApplication = () => {
   };
 };
 
+export const receivedDataFromServer = data => (dispatch, getState) => {
+  if (data.sensor) return;
+  console.log('%c App Received: ', createLog(null, 'lime', 'black'), data);
+  // classify data
+  const cmd = getServerCommand(data);
+  cmdNo += 1;
+  console.log(`%c App cmd: ${cmd}`, createLog(null, 'pink', 'red'), 'trx:cmd =', cmdNo);
+  switch (cmd) {
+    case 'CONNECTION_ESTABLISH':
+      console.log('%c App connectionEstablish:', createLog('app'));
+      break;
+    case 'CONNECTED':
+      console.log('%c App connected:', createLog('app'));
+      dispatch(resetTAIKO());
+      break;
+    case 'SENSOR':
+      console.log('%c App getSensor:', createLog('app'));
+      dispatch(Actions.receivedSensorInformation(data));
+      break;
+    case 'INSERT_CASH':
+      console.log('%c App insertCoin:', createLog('app'));
+      dispatch(Actions.receivedCash(data));
+      dispatch(runFlowCashInserted());
+      break;
+    case 'CASH_CHANGE_SUCCESS':
+      console.log('%c App cashChange success:', createLog('app'));
+      dispatch(runFlowCashChangeSuccess());
+      break;
+    case 'CASH_CHANGE_FAIL':
+      console.log('%c App cashChange fail:', createLog('app'));
+      dispatch(Actions.showModal('cashChangeError'));
+      break;
+    case 'PRODUCT_DROP_SUCCESS':
+      console.log('%c App productDrop success:', createLog('app'));
+      dispatch(runFlowProductDropSuccess());
+      break;
+    case 'PRODUCT_DROP_FAIL':
+      console.log('%c App productDrop fail:', createLog('app'), data);
+      // return cash eql product price
+      dispatch(setNotReadyToDropProduct());
+      if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
+        dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
+      } else {
+        dispatch(cashChangeEqualToCurrentCashAmount());
+      }
+      dispatch(Actions.showModal('productDropError'));
+      break;
+    case 'RESET_TAIKO_SUCCESS':
+      dispatch(getCashRemaining());
+      break;
+    case 'RESET_TAIKO_FAIL':
+      break;
+    case 'ENABLE_MONEY_BOX_SUCCESS':
+      // Do nothing
+      retryNo = 0;
+      break;
+    case 'ENABLE_MONEY_BOX_FAIL':
+      // Retry
+      // if (retryNo <= 3) {
+      dispatch(enableMoneyBox());
+        // retryNo += 1;
+      // } else {
+        // retryNo = 0;
+        // alert('Retry 3 times max quota');
+      // }
+      break;
+    case 'DISABLE_MONEY_BOX_SUCCESS':
+      dispatch(sendCashChangeToServer());
+      retryNo = 0;
+      break;
+    case 'DISABLE_MONEY_BOX_FAIL':
+      // Retry
+      // if (retryNo <= 3) {
+      dispatch(disableMoneyBox());
+        // retryNo += 1;
+      // } else {
+        // retryNo = 0;
+        // alert('Retry 3 times max quota');
+      // }
+      break;
+    case 'CASH_REMAINING_SUCCESS':
+      dispatch(receivedCashRemaining(data));
+      if (MasterappSelector.verifyAppReady(getState().masterapp) === false) {
+        dispatch(Actions.hardwareReady());
+      }
+      break;
+    case 'CASH_REMAINING_FAIL':
+      dispatch(getCashRemaining());
+      break;
+    case 'LIMIT_BANKNOTE_SUCCESS':
+      break;
+    default:
+      console.log('%c App Do nothing:', createLog('app'), data);
+      break;
+  }
+};
+
 /*
 const data = {
   title: {
@@ -285,8 +382,17 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
     // }
 };
 
-const runFlowCashChangeSuccess = () => dispatch => {
-  dispatch(Actions.setCashChangeAmount(0));
+const runFlowCashChangeSuccess = () => {
+  return (dispatch, getState) => {
+    dispatch(Actions.setCashChangeAmount(0));
+    dispatch(getCashRemaining());
+    console.log('isFinish', getState().payment.isFinish);
+    if (getState().payment.isFinish) {
+      setTimeout(() => {
+        dispatch(backToHome());
+      }, 500);
+    }
+  };
 };
 
 const runFlowProductDropSuccess = () => (dispatch, getState) => {
@@ -345,7 +451,7 @@ export const receivedCashRemaining = (data) => {
     // ======================================================
     const cashRemainingAmount = getCashRemainingAmount(data.remain);
     const currentLimitBanknote = MasterappSelector.getLimitBanknote(getState().masterapp);
-    console.log('cashRemainingAmount', cashRemainingAmount, currentLimitBanknote);
+    console.log('get', cashRemainingAmount, currentLimitBanknote);
     if (cashRemainingAmount > 100 && currentLimitBanknote !== 500) {
       // disable 500
       dispatch(setLimitBanknote(500));
@@ -367,108 +473,12 @@ export const receivedCashRemaining = (data) => {
   };
 };
 
-export const receivedDataFromServer = data => (dispatch, getState) => {
-  if (data.sensor) return;
-  console.log('%c App Received: ', createLog(null, 'lime', 'black'), data);
-  // classify data
-  const cmd = getServerCommand(data);
-  cmdNo += 1;
-  console.log(`%c App cmd: ${cmd}`, createLog(null, 'pink', 'red'), 'trx:cmd =', cmdNo);
-  switch (cmd) {
-    case 'CONNECTION_ESTABLISH':
-      console.log('%c App connectionEstablish:', createLog('app'));
-      break;
-    case 'CONNECTED':
-      console.log('%c App connected:', createLog('app'));
-      dispatch(resetTAIKO());
-      break;
-    case 'SENSOR':
-      console.log('%c App getSensor:', createLog('app'));
-      dispatch(Actions.receivedSensorInformation(data));
-      break;
-    case 'INSERT_CASH':
-      console.log('%c App insertCoin:', createLog('app'));
-      dispatch(Actions.receivedCash(data));
-      dispatch(runFlowCashInserted());
-      break;
-    case 'CASH_CHANGE_SUCCESS':
-      console.log('%c App cashChange success:', createLog('app'));
-      dispatch(runFlowCashChangeSuccess());
-      break;
-    case 'CASH_CHANGE_FAIL':
-      console.log('%c App cashChange fail:', createLog('app'));
-      dispatch(Actions.showModal('cashChangeError'));
-      break;
-    case 'PRODUCT_DROP_SUCCESS':
-      console.log('%c App productDrop success:', createLog('app'));
-      dispatch(runFlowProductDropSuccess());
-      break;
-    case 'PRODUCT_DROP_FAIL':
-      console.log('%c App productDrop fail:', createLog('app'), data);
-      // return cash eql product price
-      dispatch(setNotReadyToDropProduct());
-      if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
-        dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
-      } else {
-        dispatch(cashChangeEqualToCurrentCashAmount());
-      }
-      dispatch(Actions.showModal('productDropError'));
-      break;
-    case 'RESET_TAIKO_SUCCESS':
-      dispatch(Actions.hardwareReady());
-      break;
-    case 'RESET_TAIKO_FAIL':
-      break;
-    case 'ENABLE_MONEY_BOX_SUCCESS':
-      // Do nothing
-      retryNo = 0;
-      break;
-    case 'ENABLE_MONEY_BOX_FAIL':
-      // Retry
-      if (retryNo <= 3) {
-        dispatch(enableMoneyBox());
-        retryNo += 1;
-      } else {
-        retryNo = 0;
-        alert('Retry 3 times max quota');
-      }
-      break;
-    case 'DISABLE_MONEY_BOX_SUCCESS':
-      dispatch(sendCashChangeToServer());
-      retryNo = 0;
-      break;
-    case 'DISABLE_MONEY_BOX_FAIL':
-      // Retry
-      if (retryNo <= 3) {
-        dispatch(disableMoneyBox());
-        retryNo += 1;
-      } else {
-        retryNo = 0;
-        alert('Retry 3 times max quota');
-      }
-      break;
-    case 'CASH_REMAINING_SUCCESS':
-      dispatch(receivedCashRemaining(data));
-      break;
-    case 'CASH_REMAINING_FAIL':
-      break;
-    case 'LIMIT_BANKNOTE_SUCCESS':
-      break;
-    default:
-      console.log('%c App Do nothing:', createLog('app'), data);
-      break;
-  }
-};
-
 export const productDropProcessCompletely = () => async (dispatch) => {
   // submitOrder
+  dispatch(Actions.productDropProcessCompletely());
   try {
     const submitOrderResponse = await dispatch(submitOrder());
     console.log('productDropProcessCompletely.submitOrderResponse', submitOrderResponse);
-    dispatch(Actions.productDropProcessCompletely());
-    setTimeout(() => {
-      dispatch(backToHome());
-    }, 3500);
   } catch (error) {
     console.error(error);
   }
@@ -808,3 +818,4 @@ export const eventUseRewardInstantly = () => {
     }
   }
 }
+
