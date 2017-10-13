@@ -71,6 +71,12 @@ export const initApplication = () => {
 export const receivedDataFromServer = data => (dispatch, getState) => {
   if (data.sensor) return;
   console.log('%c App Received: ', createLog(null, 'lime', 'black'), data);
+
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  console.log('TCP:', client);
+  client.setFree();
+  client.doSend();
+
   // classify data
   const cmd = getServerCommand(data);
   cmdNo += 1;
