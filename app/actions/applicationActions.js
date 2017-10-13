@@ -729,6 +729,13 @@ export const eventInitGetReward = () => {
     if (shouldSendReward) {
       dispatch(eventGetReward());
     } else if (targetRoute.indexOf('/') >= 0) {
+      // add discount
+      const reward = OrderSelector.getEventNextReward(getState().order);
+      const discountItem = {
+        code: reward.code,
+        value: reward.value
+      };
+      dispatch(Actions.addDiscount(discountItem));
       dispatch(changePage(targetRoute));
     }
   };
