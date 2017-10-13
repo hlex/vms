@@ -53,7 +53,7 @@ class App extends Component {
   };
 
   render() {
-    const { backToHome, baseURL, location, appReady, insetCoin, modal } = this.props;
+    const { backToHome, baseURL, location, appReady, insertCoin, scanCode, modal } = this.props;
     return (
       <div className="smart-vending-machine-app">
         {
@@ -67,28 +67,28 @@ class App extends Component {
               <div className="development-toolbar">
                 <ul>
                   <li>
-                    <a onClick={() => insetCoin(1)}>1B</a>
+                    <a onClick={() => insertCoin(1)}>1B</a>
                   </li>
                   <li>
-                    <a onClick={() => insetCoin(5)}>5B</a>
+                    <a onClick={() => insertCoin(5)}>5B</a>
                   </li>
                   <li>
-                    <a onClick={() => insetCoin(10)}>10B</a>
+                    <a onClick={() => insertCoin(10)}>10B</a>
                   </li>
                   <li>
-                    <a onClick={() => insetCoin(20)}>20B</a>
+                    <a onClick={() => insertCoin(20)}>20B</a>
                   </li>
                   <li>
-                    <a onClick={() => insetCoin(50)}>50B</a>
+                    <a onClick={() => insertCoin(50)}>50B</a>
                   </li>
                   <li>
-                    <a onClick={() => insetCoin(100)}>100B</a>
+                    <a onClick={() => insertCoin(100)}>100B</a>
                   </li>
                   <li>
-                    <a onClick={() => insetCoin(500)}>500B</a>
+                    <a onClick={() => scanCode('qrcode')}>QR</a>
                   </li>
                   <li>
-                    <a onClick={() => insetCoin(1000)}>1000B</a>
+                    <a onClick={() => scanCode('barcode')}>BC</a>
                   </li>
                 </ul>
               </div>
