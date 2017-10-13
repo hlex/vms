@@ -347,6 +347,19 @@ if (process.env.NODE_ENV !== 'production') {
           console.log('Cannot receive money because money box is disable');
         }
       }
+      // ======================================================
+      // QR CODE
+      // ======================================================
+      if (objectData.action === 998) {
+        const scannedValue = objectData.msg;
+        socket.write(
+          JSON.stringify({
+            action: 0,
+            sensor: 'qrcode',
+            msg: scannedValue,
+          }),
+        );
+      }
     });
     socket.on('error', err => {
       console.error(err);
