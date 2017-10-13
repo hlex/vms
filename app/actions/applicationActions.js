@@ -69,7 +69,7 @@ export const initApplication = () => {
 };
 
 export const receivedDataFromServer = data => (dispatch, getState) => {
-  if (data.sensor) return;
+  if (data.sensor && data.sensor === 'temp') return;
   console.log('%c App Received: ', createLog(null, 'lime', 'black'), data);
 
   const client = MasterappSelector.getTcpClient(getState().masterapp);
@@ -83,35 +83,38 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
   console.log(`%c App cmd: ${cmd}`, createLog(null, 'pink', 'red'), 'trx:cmd =', cmdNo);
   switch (cmd) {
     case 'CONNECTION_ESTABLISH':
-      console.log('%c App connectionEstablish:', createLog('app'));
+      console.log('%c App CONNECTION_ESTABLISH:', createLog('app'));
       break;
     case 'CONNECTED':
-      console.log('%c App connected:', createLog('app'));
+      console.log('%c App CONNECTED:', createLog('app'));
       dispatch(resetTAIKO());
       break;
-    case 'SENSOR':
-      console.log('%c App getSensor:', createLog('app'));
+    case 'UPDATE_TEMP':
+      console.log('%c App UPDATE_TEMP:', createLog('app'));
       dispatch(Actions.receivedSensorInformation(data));
       break;
+    case 'SCANNED_QR_CODE':
+      console.log('%c App SCANNED_QR_CODE:', createLog('app'));
+      break;
     case 'INSERT_CASH':
-      console.log('%c App insertCoin:', createLog('app'));
+      console.log('%c App INSERT_CASH:', createLog('app'));
       dispatch(Actions.receivedCash(data));
       dispatch(runFlowCashInserted());
       break;
     case 'CASH_CHANGE_SUCCESS':
-      console.log('%c App cashChange success:', createLog('app'));
+      console.log('%c App CASH_CHANGE_SUCCESS:', createLog('app'));
       dispatch(runFlowCashChangeSuccess());
       break;
     case 'CASH_CHANGE_FAIL':
-      console.log('%c App cashChange fail:', createLog('app'));
+      console.log('%c App CASH_CHANGE_FAIL:', createLog('app'));
       dispatch(Actions.showModal('cashChangeError'));
       break;
     case 'PRODUCT_DROP_SUCCESS':
-      console.log('%c App productDrop success:', createLog('app'));
+      console.log('%c App PRODUCT_DROP_SUCCESS:', createLog('app'));
       dispatch(runFlowProductDropSuccess());
       break;
     case 'PRODUCT_DROP_FAIL':
-      console.log('%c App productDrop fail:', createLog('app'), data);
+      console.log('%c App PRODUCT_DROP_FAIL:', createLog('app'), data);
       // return cash eql product price
       dispatch(setNotReadyToDropProduct());
       if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
@@ -122,15 +125,19 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       dispatch(Actions.showModal('productDropError'));
       break;
     case 'RESET_TAIKO_SUCCESS':
+      console.log('%c App RESET_TAIKO_SUCCESS:', createLog('app'), data);
       dispatch(getCashRemaining());
       break;
     case 'RESET_TAIKO_FAIL':
+      console.log('%c App RESET_TAIKO_FAIL:', createLog('app'), data);
       break;
     case 'ENABLE_MONEY_BOX_SUCCESS':
+      console.log('%c App ENABLE_MONEY_BOX_SUCCESS:', createLog('app'), data);
       // Do nothing
       retryNo = 0;
       break;
     case 'ENABLE_MONEY_BOX_FAIL':
+      console.log('%c App ENABLE_MONEY_BOX_FAIL:', createLog('app'), data);
       // Retry
       // if (retryNo <= 3) {
       dispatch(enableMoneyBox());
@@ -141,10 +148,12 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       // }
       break;
     case 'DISABLE_MONEY_BOX_SUCCESS':
+      console.log('%c App DISABLE_MONEY_BOX_SUCCESS:', createLog('app'), data);
       dispatch(sendCashChangeToServer());
       retryNo = 0;
       break;
     case 'DISABLE_MONEY_BOX_FAIL':
+      console.log('%c App DISABLE_MONEY_BOX_FAIL:', createLog('app'), data);
       // Retry
       // if (retryNo <= 3) {
       dispatch(disableMoneyBox());
@@ -155,15 +164,18 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       // }
       break;
     case 'CASH_REMAINING_SUCCESS':
+      console.log('%c App CASH_REMAINING_SUCCESS:', createLog('app'), data);
       dispatch(receivedCashRemaining(data));
       if (MasterappSelector.verifyAppReady(getState().masterapp) === false) {
         dispatch(Actions.hardwareReady());
       }
       break;
     case 'CASH_REMAINING_FAIL':
+      console.log('%c App CASH_REMAINING_FAIL:', createLog('app'), data);
       dispatch(getCashRemaining());
       break;
     case 'LIMIT_BANKNOTE_SUCCESS':
+      console.log('%c App LIMIT_BANKNOTE_SUCCESS:', createLog('app'), data);
       break;
     default:
       console.log('%c App Do nothing:', createLog('app'), data);
@@ -545,10 +557,19 @@ export const getCashRemaining = () => (dispatch, getState) => {
 // ======================================================
 // Dev
 // ======================================================
-export const insetCoin = value => (dispatch, getState) => {
+export const insertCoin = value => (dispatch, getState) => {
   const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.setFree();
   client.send({
     action: 999,
+    msg: value,
+  });
+};
+export const scanCode = value => (dispatch, getState) => {
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.setFree();
+  client.send({
+    action: 998,
     msg: value,
   });
 };
