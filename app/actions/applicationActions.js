@@ -602,7 +602,7 @@ export const selectMobileTopupValue = item => dispatch => {
 
 export const submitMobileTopupValue = mobileTopupValue => dispatch => {
   dispatch(Actions.submitMobileTopupValue(mobileTopupValue));
-  dispatch(changePage('/payment'));
+  dispatch(changePage('/topup/confirm'));
 };
 
 export const clearMobileTopupValue = () => dispatch => {

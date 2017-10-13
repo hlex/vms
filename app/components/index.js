@@ -15,6 +15,7 @@ import TopUpProviderItem from './TopUpProviderItem';
 import EventItem from './EventItem';
 import EventTitle from './EventTitle';
 import MediaPlayer from './MediaPlayer';
+import MobileTopupTitle from './MobileTopupTitle';
 
 export {
   PaymentConfirmation,
@@ -34,4 +35,5 @@ export {
   EventItem,
   EventTitle,
   MediaPlayer,
+  MobileTopupTitle,
 };

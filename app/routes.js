@@ -23,6 +23,7 @@ export default () =>
       <Route path="/event" component={Event.EventSelectionPage} />
       <Route path="/topup/inputMSISDN" component={Topup.InputMSISDNPage} />
       <Route path="/topup/selectTopupValue" component={Topup.SelectTopupValuePage} />
+      <Route path="/topup/confirm" component={Topup.MobileTopupPage} />
       <Route path="/topup" component={Topup.TopupProviderSelectionPage} />
       <Route path="/confirm" component={Payment.ConfirmToPayPage} />
       <Route path="/payment" component={Payment.PaymentPage} />
