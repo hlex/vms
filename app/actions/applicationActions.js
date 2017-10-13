@@ -360,32 +360,6 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
       dispatch(endProcess());
     }
   }
-    //   if (needToChangeCash(grandTotalAmount, currentCash)) {
-    //     // cashChange
-    //     console.log('%c App cashChange:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
-    //     setTimeout(() => {
-    //       dispatch(cashChange());
-    //     }, 1000);
-    //   } else {
-    //     // clear amount because no need to return money to customer even if cannot drop product
-    //     setTimeout(() => {
-    //       dispatch(clearPaymentAmount());
-    //     }, 1000);
-    //     // no change
-    //     console.log('%c App productDrop:', createLog('app'), 'cashChange =', currentCash - grandTotalAmount);
-    //     if (OrderSelector.verifyOrderHasProduct(getState().order)) {
-    //       setTimeout(() => {
-    //         dispatch(receivedCashCompletely());
-    //         dispatch(productDrop());
-    //       }, 1000);
-    //     } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
-    //       dispatch(receivedCashCompletely());
-    //       setTimeout(() => {
-    //         dispatch(productDropProcessCompletely());
-    //       }, 1000);
-    //     }
-    //   }
-    // }
 };
 
 const runFlowCashChangeSuccess = () => {
@@ -409,21 +383,6 @@ const runFlowProductDropSuccess = () => (dispatch, getState) => {
     // ======================================================
   if (OrderSelector.verifyAllOrderDropped(getState().order)) {
     dispatch(endProcess());
-    // const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
-    // const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
-    //   // ======================================================
-    //   // Cash Change
-    //   // ======================================================
-    // if (needToChangeCash(grandTotalAmount, currentCash)) {
-    //   console.log(
-    //       '%c App cashChange:',
-    //       createLog('app'),
-    //       'cashChange =',
-    //       currentCash - grandTotalAmount,
-    //     );
-    //   dispatch(cashChange());
-    // }
-    // dispatch(productDropProcessCompletely());
   } else {
     dispatch(productDrop());
   }
@@ -479,12 +438,18 @@ export const receivedCashRemaining = (data) => {
   };
 };
 
-export const productDropProcessCompletely = () => async (dispatch) => {
-  // submitOrder
+export const productDropProcessCompletely = () => async (dispatch, getState) => {
   dispatch(Actions.productDropProcessCompletely());
+  const cashChangeAmount = PaymentSelector.getCashChangeAmount(getState().payment);
+  // submitOrder
   try {
     const submitOrderResponse = await dispatch(submitOrder());
     console.log('productDropProcessCompletely.submitOrderResponse', submitOrderResponse);
+    if (cashChangeAmount === 0) {
+      setTimeout(() => {
+        dispatch(backToHome());
+      }, 1000);
+    }
   } catch (error) {
     console.error(error);
   }
@@ -544,7 +509,6 @@ export const cashChangeEqualToCurrentCashAmountMinusDroppedProduct = () => (disp
 
 export const cashChangeEqualToCurrentCashAmount = () => (dispatch, getState) => {
   const currentAmount = PaymentSelector.getCurrentAmount(getState().payment);
-  debugger;
   dispatch(Actions.setCashChangeAmount(currentAmount));
     // ======================================================
     // Disable Moneybox before sendCashChange
