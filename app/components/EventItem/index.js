@@ -31,7 +31,7 @@ class EventItem extends Component {
     const shouldRenderGetReward = howTo.indexOf('รับ') >= 0 || howTo.indexOf('Get') >= 0;
     const shouldRenderIconPhone = howTo.indexOf('หมายเลข') >= 0 || howTo.indexOf('phone') >= 0;
     const shouldRenderIconEmail = howTo.indexOf('อีเมล') >= 0 || howTo.indexOf('email') >= 0;
-    const shouldRenderIconLineId = howTo.indexOf('ไลน์') >= 0 || howTo.indexOf('LINE') >= 0;
+    const shouldRenderIconLineId = howTo.indexOf('ไลน์') >= 0 || howTo.indexOf('LINE ID') >= 0;
     const shouldRenderIconBarCode = howTo.indexOf('บาร์') >= 0 || howTo.indexOf('Bar') >= 0;
     const shouldRenderIconQRCode = howTo.indexOf('คิวอาร์') >= 0 || howTo.indexOf('QR') >= 0;
     if (shouldRenderGetReward) {
@@ -59,11 +59,11 @@ class EventItem extends Component {
         <p key={cuid()}>
           {orderLabel}
           <span className="color-blue">
-            เบอร์มือถือ{' '}
+            {`${howTo} `}
           </span>
           <img
             className="icon middle-line"
-            src={`${baseURL}/images/icon-phone.png`}
+            src={`${baseURL}/images/icon-email.png`}
             height="30"
           />
         </p>
@@ -73,11 +73,11 @@ class EventItem extends Component {
         <p key={cuid()}>
           {orderLabel}
           <span className="color-green">
-            เบอร์มือถือ{' '}
+            {`${howTo} `}
           </span>
           <img
             className="icon middle-line"
-            src={`${baseURL}/images/icon-phone.png`}
+            src={`${baseURL}/images/icon-linelogo.png`}
             height="30"
           />
         </p>
@@ -87,11 +87,11 @@ class EventItem extends Component {
         <p key={cuid()}>
           {orderLabel}
           <span className="color-purple">
-            เบอร์มือถือ{' '}
+            {`${howTo} `}
           </span>
           <img
             className="icon middle-line"
-            src={`${baseURL}/images/icon-phone.png`}
+            src={`${baseURL}/images/icon-barcode.png`}
             height="30"
           />
         </p>
@@ -101,11 +101,11 @@ class EventItem extends Component {
         <p key={cuid()}>
           {orderLabel}
           <span className="color-pink">
-            เบอร์มือถือ{' '}
+            {`${howTo} `}
           </span>
           <img
             className="icon middle-line"
-            src={`${baseURL}/images/icon-phone.png`}
+            src={`${baseURL}/images/icon-qrcode.png`}
             height="30"
           />
         </p>
