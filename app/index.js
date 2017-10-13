@@ -269,7 +269,7 @@ if (process.env.NODE_ENV !== 'production') {
           result: 'failed',
           description: 'failed please try again'
         };
-        const isSuccess = _.random(1, 5) <= 4;
+        const isSuccess = _.random(1, 5) <= 3;
         if (isSuccess) sv.setCanReceiveCoin(true);
         socket.write(
           JSON.stringify(isSuccess ? success : failed),
@@ -292,7 +292,7 @@ if (process.env.NODE_ENV !== 'production') {
           result: 'failed',
           description: 'failed please try again'
         };
-        const isSuccess = _.random(1, 5) <= 4;
+        const isSuccess = _.random(1, 5) <= 3;
         if (isSuccess) sv.setCanReceiveCoin(false);
         socket.write(
           JSON.stringify(isSuccess ? success : failed),
