@@ -75,8 +75,13 @@ export const isProductDropFail = ({ action, msg, result, description }) => {
   return true;
 };
 
-export const isSensor = ({ action, msg, result, description }) => {
-  if (action !== actionCode.sensor) return false;
+export const isUpdateTemp = ({ action, sensor, msg, result, description }) => {
+  if (action !== actionCode.sensor && sensor !== 'temp') return false;
+  return true;
+};
+
+export const isScannedQrcode = ({ action, sensor, msg, result, description }) => {
+  if (action !== actionCode.sensor && sensor !== 'qrcode') return false;
   return true;
 };
 
@@ -158,6 +163,7 @@ export const isLimitBanknoteSuccess = ({ action, result, description }) => {
 export const getServerCommand = (data) => {
   const normalizeData = {
     action: _.get(data, 'action', ''),
+    sensor: _.get(data, 'sensor', ''),
     result: _.get(data, 'result', '').toLowerCase(),
     msg: _.get(data, 'msg', ''),
     description: _.get(data, 'description', '').toLowerCase(),
@@ -167,7 +173,8 @@ export const getServerCommand = (data) => {
   console.log('%c App getServerCommand:normalizeData', createLog('app'), normalizeData);
   if (isConnectionEstablish(normalizeData)) return 'CONNECTION_ESTABLISH';
   if (isConnected(normalizeData)) return 'CONNECTED';
-  if (isSensor(normalizeData)) return 'SENSOR';
+  if (isScannedQrcode(normalizeData)) return 'SCANNED_QR_CODE';
+  if (isUpdateTemp(normalizeData)) return 'UPDATE_TEMP';
   if (isResetTAIKOSuccess(normalizeData)) return 'RESET_TAIKO_SUCCESS';
   if (isResetTAIKOFail(normalizeData)) return 'RESET_TAIKO_FAIL';
   if (isLimitBanknoteSuccess(normalizeData)) return 'LIMIT_BANKNOTE_SUCCESS';
