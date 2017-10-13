@@ -119,7 +119,6 @@ class EventItem extends Component {
 
   render() {
     const { baseURL, item, hasButton, handleClick } = this.props;
-    console.log('EventItem', this.props);
     const lang = 'th';
     // ======================================================
     // Ribbon
