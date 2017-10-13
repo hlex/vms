@@ -50,7 +50,7 @@ class EventSelectionPage extends Component {
   };
 
   render() {
-    const { events, baseURL, back, selectEvent } = this.props;
+    const { events, baseURL, selectEvent } = this.props;
     return (
       <div>
         <Layout.Subheader>
