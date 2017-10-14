@@ -685,10 +685,6 @@ export const initHomePage = () => {
 
 export const enableMoneyBoxWhenInitPage = () => {
   return (dispatch, getState) => {
-    const canChangeCash = MasterappSelector.verifyCanChangeCash(getState().masterapp);
-    if (!canChangeCash) {
-      dispatch(Actions.showModal('warningSystemWillNotChangeCash'));
-    }
     const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
     // if mount with moneyBoxActive not active enable money box
     if (!moneyBoxActive) {
@@ -703,8 +699,17 @@ export const enableMoneyBoxWhenInitPage = () => {
 export const willReceivePropsEnableMoneyBoxWhenInitPage = (props, nextProps) => {
   return (dispatch, getState) => {
     if (props.moneyBoxActive && !nextProps.moneyBoxActive) {
-      hideLoading();
-      enableMoneyBoxWhenInitPage();
+      dispatch(hideLoading());
+      dispatch(enableMoneyBoxWhenInitPage());
+    }
+  };
+};
+
+export const warningSystemWillNotChangeCash = () => {
+  return (dispatch, getState) => {
+    const canChangeCash = MasterappSelector.verifyCanChangeCash(getState().masterapp);
+    if (!canChangeCash) {
+      dispatch(Actions.showModal('warningSystemWillNotChangeCash'));
     }
   };
 };
@@ -712,18 +717,21 @@ export const willReceivePropsEnableMoneyBoxWhenInitPage = (props, nextProps) => 
 export const initSingleProductPage = () => {
   return (dispatch, getState) => {
     dispatch(enableMoneyBoxWhenInitPage());
+    dispatch(warningSystemWillNotChangeCash());
   };
 };
 
 export const initPromotionSetPage = () => {
   return (dispatch, getState) => {
     dispatch(enableMoneyBoxWhenInitPage());
+    dispatch(warningSystemWillNotChangeCash());
   };
 };
 
 export const initMobileTopupPage = () => {
   return (dispatch, getState) => {
     dispatch(enableMoneyBoxWhenInitPage());
+    dispatch(warningSystemWillNotChangeCash());
   };
 };
 
