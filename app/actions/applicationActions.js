@@ -694,13 +694,8 @@ export const enableMoneyBoxWhenInitPage = () => {
     if (!moneyBoxActive) {
       dispatch(enableMoneyBox());
     } else {
-      console.log('LOADING PLZ');
-      dispatch(openAlertMessage({
-        messages: {
-          th: 'Loading...',
-          en: ''
-        }
-      }));
+      console.log('enableMoneyBoxWhenInitPage: LOADING PLZ');
+      dispatch(showLoading('ระบบกำลังทอนเงิน'));
     }
   };
 };
@@ -719,6 +714,16 @@ export const initPromotionSetPage = () => {
     }
     // if mount enable money box
     dispatch(enableMoneyBox());
+  };
+};
+
+export const initPaymentPage = () => {
+  return (dispatch, getState) => {
+    const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
+    // if mount with moneyBoxActive not active enable money box
+    if (!moneyBoxActive) {
+      dispatch(enableMoneyBox());
+    }
   };
 };
 
@@ -867,5 +872,17 @@ export const activateMoneyBox = () => {
 export const deactivateMoneyBox = () => {
   return (dispatch) => {
     dispatch(Actions.deactivateMoneyBox());
+  };
+};
+
+export const showLoading = (message) => {
+  return (dispatch) => {
+    dispatch(Actions.showLoading(message));
+  };
+};
+
+export const hideLoading = () => {
+  return (dispatch) => {
+    dispatch(Actions.hideLoading());
   };
 };

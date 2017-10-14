@@ -48,17 +48,14 @@ class PaymentPage extends PureComponent {
     summaryList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     isFinish: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
-    back: PropTypes.func.isRequired,
     returnAllInsertCash: PropTypes.func.isRequired,
-    enableMoneyBox: PropTypes.func.isRequired,
+    initPaymentPage: PropTypes.func.isRequired,
     canChangeCash: PropTypes.bool.isRequired
   };
 
   componentDidMount = () => {
-    const { enableMoneyBox } = this.props;
-    console.log('inPaymentPage !!!!');
-    // if mount enable money box
-    enableMoneyBox();
+    const { initPaymentPage } = this.props;
+    initPaymentPage();
   }
 
   componentWillUnmount = () => {

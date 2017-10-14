@@ -9,7 +9,9 @@ import {
   SET_LIMIT_BANKNOTE,
   HARDWARE_READY,
   ACTIVE_MONEY_BOX,
-  DEACTIVE_MONEY_BOX
+  DEACTIVE_MONEY_BOX,
+  SHOW_LOADING,
+  HIDE_LOADING
 } from '../actions/actionTypes';
 
 const initialTcp = process.env.NODE_ENV !== 'production'
@@ -54,11 +56,40 @@ const initialState = {
   droppingProduct: {},
   limitBanknote: 500,
   hardwareReady: false,
-  moneyBoxActive: false
+  moneyBoxActive: false,
+  loading: {
+    show: false,
+    messages: {
+      th: '',
+      en: ''
+    }
+  }
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case SHOW_LOADING:
+      return {
+        ...state,
+        loading: {
+          show: true,
+          messages: {
+            ...state.loading.messages,
+            th: action.message,
+          }
+        }
+      };
+    case HIDE_LOADING:
+      return {
+        ...state,
+        loading: {
+          show: false,
+          messages: {
+            th: '',
+            en: ''
+          }
+        }
+      };
     case ACTIVE_MONEY_BOX:
       return {
         ...state,

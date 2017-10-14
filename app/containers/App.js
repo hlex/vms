@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import type { Children } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Modal } from '../components';
-import Layout from '../containers/Layout';
 // ======================================================
 // Actions
 // ======================================================
@@ -19,7 +17,9 @@ import MasterappSelector from '../selectors/masterapp';
 // ======================================================
 // Containers
 // ======================================================
+import Layout from './Layout';
 import AlertMessage from './AlertMessage';
+import LoadingScreen from './LoadingScreen';
 
 const mapStateToProps = state => {
   console.log('%c App@state:', 'color: #4CAF50; font-weight: 700;', state);
@@ -60,6 +60,7 @@ class App extends Component {
           appReady &&
           <div className="smart-vending-machine-app-connected">
             <AlertMessage />
+            <LoadingScreen />
             <Layout.Header backToHome={backToHome} baseURL={baseURL} />
             {this.props.children}
             <Layout.Footer />

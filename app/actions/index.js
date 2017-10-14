@@ -34,7 +34,9 @@ import {
   OPEN_ALERT_MESSAGE,
   CLOSE_ALERT_MESSAGE,
   ACTIVE_MONEY_BOX,
-  DEACTIVE_MONEY_BOX
+  DEACTIVE_MONEY_BOX,
+  SHOW_LOADING,
+  HIDE_LOADING
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -275,6 +277,19 @@ export const activateMoneyBox = () => {
 export const deactivateMoneyBox = () => {
   return {
     type: DEACTIVE_MONEY_BOX,
+  };
+};
+
+export const showLoading = (message) => {
+  return {
+    type: SHOW_LOADING,
+    message
+  };
+};
+
+export const hideLoading = () => {
+  return {
+    type: HIDE_LOADING,
   };
 };
 
