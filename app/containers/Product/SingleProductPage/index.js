@@ -28,8 +28,9 @@ import OrderSelector from '../../../selectors/order';
 const mapStateToProps = (state) => {
   return {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
+    moneyBoxActive: MasterappSelector.verifyIsMoneyBoxActive(state.masterapp),
     productPrice: OrderSelector.getSingleProductPrice(state.order),
-    discountAmount: OrderSelector.getDiscountAmount(state.order)
+    discountAmount: OrderSelector.getDiscountAmount(state.order),
   };
 };
 
@@ -43,9 +44,9 @@ class SingleProductPage extends Component {
 
   static propTypes = {
     productPrice: PropTypes.number,
+    moneyBoxActive: PropTypes.bool.isRequired,
     discountAmount: PropTypes.number,
     baseURL: PropTypes.string.isRequired,
-    back: PropTypes.func.isRequired,
     submitProduct: PropTypes.func.isRequired,
     verifyDiscountCode: PropTypes.func.isRequired,
     initSingleProductPage: PropTypes.func.isRequired,
@@ -53,11 +54,21 @@ class SingleProductPage extends Component {
 
   static defaultProps = {
     productPrice: 0,
+    discountAmount: 0,
   }
 
   componentDidMount = () => {
     const { initSingleProductPage } = this.props;
     initSingleProductPage();
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    const { enableMoneyBoxWhenInitPage, closeAlertMessage, moneyBoxActive } = this.props;
+    if (moneyBoxActive && !nextProps.moneyBoxActive) {
+      console.log('hideLoading');
+      closeAlertMessage();
+      enableMoneyBoxWhenInitPage();
+    }
   }
 
   render() {
