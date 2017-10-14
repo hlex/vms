@@ -33,6 +33,8 @@ import {
   HARDWARE_READY,
   OPEN_ALERT_MESSAGE,
   CLOSE_ALERT_MESSAGE,
+  ACTIVE_MONEY_BOX,
+  DEACTIVE_MONEY_BOX
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -263,3 +265,16 @@ export const closeAlertMessage = () => {
     type: CLOSE_ALERT_MESSAGE,
   };
 };
+
+export const activateMoneyBox = () => {
+  return {
+    type: ACTIVE_MONEY_BOX,
+  };
+};
+
+export const deactivateMoneyBox = () => {
+  return {
+    type: DEACTIVE_MONEY_BOX,
+  };
+};
+

@@ -7,7 +7,9 @@ import {
   PRODUCT_DROP_SUCCESS,
   SET_CAN_CHANGE_CASH,
   SET_LIMIT_BANKNOTE,
-  HARDWARE_READY
+  HARDWARE_READY,
+  ACTIVE_MONEY_BOX,
+  DEACTIVE_MONEY_BOX
 } from '../actions/actionTypes';
 
 const initialTcp = process.env.NODE_ENV !== 'production'
@@ -52,10 +54,21 @@ const initialState = {
   droppingProduct: {},
   limitBanknote: 500,
   hardwareReady: false,
+  moneyBoxActive: false
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case ACTIVE_MONEY_BOX:
+      return {
+        ...state,
+        moneyBoxActive: true,
+      };
+    case DEACTIVE_MONEY_BOX:
+      return {
+        ...state,
+        moneyBoxActive: false,
+      };
     case HARDWARE_READY:
       return {
         ...state,

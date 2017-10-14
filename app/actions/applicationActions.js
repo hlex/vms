@@ -135,6 +135,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       console.log('%c App ENABLE_MONEY_BOX_SUCCESS:', createLog('app'), data);
       // Do nothing
       retryNo = 0;
+      dispatch(activateMoneyBox());
       break;
     case 'ENABLE_MONEY_BOX_FAIL':
       console.log('%c App ENABLE_MONEY_BOX_FAIL:', createLog('app'), data);
@@ -150,6 +151,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
     case 'DISABLE_MONEY_BOX_SUCCESS':
       console.log('%c App DISABLE_MONEY_BOX_SUCCESS:', createLog('app'), data);
       dispatch(sendCashChangeToServer());
+      dispatch(deactivateMoneyBox());
       retryNo = 0;
       break;
     case 'DISABLE_MONEY_BOX_FAIL':
@@ -681,14 +683,31 @@ export const initHomePage = () => {
   };
 };
 
-export const initSingleProductPage = () => {
+export const enableMoneyBoxWhenInitPage = () => {
   return (dispatch, getState) => {
     const canChangeCash = MasterappSelector.verifyCanChangeCash(getState().masterapp);
     if (!canChangeCash) {
       dispatch(Actions.showModal('warningSystemWillNotChangeCash'));
     }
-    // if mount enable money box
-    dispatch(enableMoneyBox());
+    const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
+    // if mount with moneyBoxActive not active enable money box
+    if (!moneyBoxActive) {
+      dispatch(enableMoneyBox());
+    } else {
+      console.log('LOADING PLZ');
+      dispatch(openAlertMessage({
+        messages: {
+          th: 'Loading...',
+          en: ''
+        }
+      }));
+    }
+  };
+};
+
+export const initSingleProductPage = () => {
+  return (dispatch, getState) => {
+    dispatch(enableMoneyBoxWhenInitPage());
   };
 };
 
@@ -836,6 +855,17 @@ export const eventUseRewardInstantly = () => {
           break;
       }
     }
-  }
-}
+  };
+};
 
+export const activateMoneyBox = () => {
+  return (dispatch) => {
+    dispatch(Actions.activateMoneyBox());
+  };
+};
+
+export const deactivateMoneyBox = () => {
+  return (dispatch) => {
+    dispatch(Actions.deactivateMoneyBox());
+  };
+};
