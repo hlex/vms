@@ -44,6 +44,7 @@ class PromotionSetPage extends Component {
     submitPromotionSet: PropTypes.func.isRequired,
     verifyDiscountCode: PropTypes.func.isRequired,
     initPromotionSetPage: PropTypes.func.isRequired,
+    willReceivePropsEnableMoneyBoxWhenInitPage: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -53,6 +54,11 @@ class PromotionSetPage extends Component {
   componentDidMount = () => {
     const { initPromotionSetPage } = this.props;
     initPromotionSetPage();
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    const { willReceivePropsEnableMoneyBoxWhenInitPage } = this.props;
+    willReceivePropsEnableMoneyBoxWhenInitPage(this.props, nextProps);
   }
 
   render() {

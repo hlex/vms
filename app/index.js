@@ -271,9 +271,11 @@ if (process.env.NODE_ENV !== 'production') {
         };
         const isSuccess = _.random(1, 5) <= 3;
         if (isSuccess) sv.setCanReceiveCoin(true);
-        socket.write(
-          JSON.stringify(isSuccess ? success : failed),
-        );
+        setTimeout(() => {
+          socket.write(
+            JSON.stringify(isSuccess ? success : failed),
+          );
+        }, 1500);
       }
       // ======================================================
       // DISABLE MONEY BOX
@@ -294,9 +296,11 @@ if (process.env.NODE_ENV !== 'production') {
         };
         const isSuccess = _.random(1, 5) <= 3;
         if (isSuccess) sv.setCanReceiveCoin(false);
-        socket.write(
-          JSON.stringify(isSuccess ? success : failed),
-        );
+        setTimeout(() => {
+          socket.write(
+            JSON.stringify(isSuccess ? success : failed),
+          );
+        }, 1500);
       }
       if (objectData.action === 2 && objectData.mode === 'limit') {
         const success = {

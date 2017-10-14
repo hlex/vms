@@ -47,7 +47,8 @@ class MobileTopupPage extends Component {
     baseURL: PropTypes.string.isRequired,
     submitProduct: PropTypes.func.isRequired,
     verifyDiscountCode: PropTypes.func.isRequired,
-    initSingleProductPage: PropTypes.func.isRequired,
+    initMobileTopupPage: PropTypes.func.isRequired,
+    willReceivePropsEnableMoneyBoxWhenInitPage: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -56,8 +57,13 @@ class MobileTopupPage extends Component {
   }
 
   componentDidMount = () => {
-    const { initSingleProductPage } = this.props;
-    initSingleProductPage();
+    const { initMobileTopupPage } = this.props;
+    initMobileTopupPage();
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    const { willReceivePropsEnableMoneyBoxWhenInitPage } = this.props;
+    willReceivePropsEnableMoneyBoxWhenInitPage(this.props, nextProps);
   }
 
   render() {

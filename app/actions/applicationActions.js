@@ -700,6 +700,15 @@ export const enableMoneyBoxWhenInitPage = () => {
   };
 };
 
+export const willReceivePropsEnableMoneyBoxWhenInitPage = (props, nextProps) => {
+  return (dispatch, getState) => {
+    if (props.moneyBoxActive && !nextProps.moneyBoxActive) {
+      hideLoading();
+      enableMoneyBoxWhenInitPage();
+    }
+  };
+};
+
 export const initSingleProductPage = () => {
   return (dispatch, getState) => {
     dispatch(enableMoneyBoxWhenInitPage());
@@ -708,12 +717,13 @@ export const initSingleProductPage = () => {
 
 export const initPromotionSetPage = () => {
   return (dispatch, getState) => {
-    const canChangeCash = MasterappSelector.verifyCanChangeCash(getState().masterapp);
-    if (!canChangeCash) {
-      dispatch(Actions.showModal('warningSystemWillNotChangeCash'));
-    }
-    // if mount enable money box
-    dispatch(enableMoneyBox());
+    dispatch(enableMoneyBoxWhenInitPage());
+  };
+};
+
+export const initMobileTopupPage = () => {
+  return (dispatch, getState) => {
+    dispatch(enableMoneyBoxWhenInitPage());
   };
 };
 

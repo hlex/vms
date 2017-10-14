@@ -44,14 +44,12 @@ class SingleProductPage extends Component {
 
   static propTypes = {
     productPrice: PropTypes.number,
-    moneyBoxActive: PropTypes.bool.isRequired,
     discountAmount: PropTypes.number,
     baseURL: PropTypes.string.isRequired,
     submitProduct: PropTypes.func.isRequired,
     verifyDiscountCode: PropTypes.func.isRequired,
     initSingleProductPage: PropTypes.func.isRequired,
-    hideLoading: PropTypes.func.isRequired,
-    enableMoneyBoxWhenInitPage: PropTypes.func.isRequired,
+    willReceivePropsEnableMoneyBoxWhenInitPage: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -65,12 +63,8 @@ class SingleProductPage extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    const { enableMoneyBoxWhenInitPage, hideLoading, moneyBoxActive } = this.props;
-    if (moneyBoxActive && !nextProps.moneyBoxActive) {
-      console.log('hideLoading');
-      hideLoading();
-      enableMoneyBoxWhenInitPage();
-    }
+    const { willReceivePropsEnableMoneyBoxWhenInitPage } = this.props;
+    willReceivePropsEnableMoneyBoxWhenInitPage(this.props, nextProps);
   }
 
   render() {
