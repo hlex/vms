@@ -679,7 +679,10 @@ export const verifyDiscountCode = (code) => {
 export const initHomePage = () => {
   return (dispatch, getState) => {
     dispatch(clearOrder());
-    dispatch(disableMoneyBox());
+    const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
+    if (moneyBoxActive) {
+      dispatch(disableMoneyBox());
+    }
   };
 };
 
