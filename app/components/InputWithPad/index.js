@@ -238,6 +238,9 @@ export default class InputWithPad extends PureComponent {
           <li>
             <a onClick={() => this.handleSelectChar('p')}>p</a>
           </li>
+          <li>
+            <a onClick={() => this.handleSelectChar('#')}>#</a>
+          </li>
         </ul>
         <ul>
           <li>
@@ -267,6 +270,9 @@ export default class InputWithPad extends PureComponent {
           <li>
             <a onClick={() => this.handleSelectChar('l')}>l</a>
           </li>
+          <li>
+            <a onClick={() => this.handleSelectChar('@')}>@</a>
+          </li>
         </ul>
         <ul>
           <li>
@@ -291,18 +297,18 @@ export default class InputWithPad extends PureComponent {
             <a onClick={() => this.handleSelectChar('m')}>m</a>
           </li>
           <li>
+            <a onClick={() => this.handleSelectChar('.')}>.</a>
+          </li>
+          <li>
             <a onClick={() => this.handleSelectChar('-')}>-</a>
           </li>
           <li>
             <a onClick={() => this.handleSelectChar('_')}>_</a>
           </li>
-          <li>
-            <a onClick={() => this.handleSelectChar('@')}>@</a>
-          </li>
         </ul>
         <ul>
           <li className="width-250">
-            <a onClick={() => this.handleSelectChar('gmail.com')}>@gmail.com</a>
+            <a onClick={() => this.handleSelectChar('@gmail.com')}>@gmail.com</a>
           </li>
           <li className="width-250">
             <a onClick={() => this.handleSelectChar('@hotmail.com')}>@hotmail.com</a>
