@@ -45,3 +45,7 @@ export const getCashRemainingAmount = (remain) => {
   return ((tenBahtCount * 10) + (fiveBahtCount * 5) + oneBahtCount);
 };
 
+export const getEventInputByChannel = (eventInputs, channel) => {
+  const channelToInput = channel === 'SMS' ? 'MSISDN' : 'EMAIL';
+  return _.find(eventInputs, input => input.name === channelToInput);
+};

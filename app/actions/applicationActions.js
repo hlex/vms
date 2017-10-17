@@ -21,6 +21,7 @@ import {
   verifyLessThanThreshold,
   verifyCanUseDiscount,
   getCashRemainingAmount,
+  getEventInputByChannel,
 } from '../helpers/global';
 import {
   convertApplicationErrorToError,
@@ -791,26 +792,34 @@ export const eventGetReward = () => {
   return async (dispatch, getState) => {
     const eventId = OrderSelector.getEventId(getState().order);
     const eventRewards = OrderSelector.getEventRewards(getState().order);
-    _.forEach(eventRewards, async (reward) => {
-      // ======================================================
-      // Check should get reward
-      // ======================================================
-      if (_.includes(['SMS', 'EMAIL'], reward.channel.toUpperCase())) {
-        console.log('eventGetReward', reward);
-        const rewardToServiceItem = {
-          eventId,
-          discountType: reward.name,
-          amount: reward.value,
-          channel: reward.channel,
-        };
-        const serviceGetEventRewardResponse = await serviceGetEventReward(rewardToServiceItem);
-        console.log('serviceGetEventRewardResponse', serviceGetEventRewardResponse);
-        dispatch({
-          type: 'EVENT_SENT_REWARD',
-          rewardToServiceItem
-        });
-      }
-    });
+    const eventInputs = OrderSelector.getEventInputs(getState().order);
+    try {
+      _.forEach(eventRewards, async (reward) => {
+        // ======================================================
+        // Check should get reward
+        // ======================================================
+        if (_.includes(['SMS', 'EMAIL'], reward.channel.toUpperCase())) {
+          console.log('eventGetReward', reward);
+          const channel = reward.channel;
+          const eventInput = getEventInputByChannel(eventInputs, channel);
+          const rewardToServiceItem = {
+            eventId,
+            discountType: reward.name,
+            amount: reward.value,
+            channel: reward.channel,
+            value: eventInput.value
+          };
+          const serviceGetEventRewardResponse = await serviceGetEventReward(rewardToServiceItem);
+          console.log('serviceGetEventRewardResponse', serviceGetEventRewardResponse);
+          dispatch({
+            type: 'EVENT_SENT_REWARD',
+            rewardToServiceItem
+          });
+        }
+      });
+    } catch (error) {
+      dispatch(openAlertMessage(error));
+    }
   };
 };
 
