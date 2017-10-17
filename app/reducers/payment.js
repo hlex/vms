@@ -31,6 +31,7 @@ export default function products(state = getInitialState(), action: actionType) 
       return {
         ...getInitialState(),
         amount: state.amount,
+        remain: state.remain,
       };
     case RECEIVED_CASH:
       return {
