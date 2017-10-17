@@ -23,12 +23,14 @@ export default class TcpClient {
     const data = this.queue.pop();
     console.log('doSend()', data);
     if (data) {
-      if (typeof data === 'string') {
-        this.client.write(data);
-      } else {
-        this.client.write(JSON.stringify(data));
-      }
-      this.busy = true;
+      setTimeout(() => {
+        if (typeof data === 'string') {
+          this.client.write(data);
+        } else {
+          this.client.write(JSON.stringify(data));
+        }
+        this.busy = true;
+      }, 1000);
     }
   }
   setFree() {
