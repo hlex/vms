@@ -57,6 +57,13 @@ class Server {
   setCanReceiveCoin(canReceiveCoin) {
     this.canReceiveCoin = canReceiveCoin;
   }
+  getCoins() {
+    return {
+      baht1: this.getCoinOneBaht(),
+      baht5: this.getCoinFiveBaht(),
+      baht10: this.getCoinTenBaht(),
+    }
+  }
   getCoinOneBaht() {
     return this.baht1;
   }
@@ -76,17 +83,18 @@ class Server {
     this.baht10 += number;
   }
   minusCoinOneBaht(number) {
-    this.baht1 += number;
+    this.baht1 -= number;
   }
   minusCoinFiveBaht(number) {
-    this.baht5 += number;
+    this.baht5 -= number;
   }
   minusCoinTenBaht(number) {
-    this.baht10 += number;
+    this.baht10 -= number;
   }
   canChange(changeCoins) {
     const minimumExistingCoin = 3;
     // {baht1: 0, baht5: 1, baht10: 4}
+    console.log(this.getCoins());
     if (changeCoins.baht1 > 0 && this.getCoinOneBaht() <= minimumExistingCoin) return false;
     if (changeCoins.baht5 > 0 && this.getCoinFiveBaht() <= minimumExistingCoin) return false;
     if (changeCoins.baht10 > 0 && this.getCoinTenBaht() <= minimumExistingCoin) return false;
@@ -197,6 +205,9 @@ if (process.env.NODE_ENV !== 'production') {
           console.log('%c Server: Cash Change', serverLog, Number(objectData.msg), changeCoin(Number(objectData.msg)));
           const changeCoins = changeCoin(Number(objectData.msg));
           if (sv.canChange(changeCoins)) {
+            sv.minusCoinOneBaht(changeCoins.baht1);
+            sv.minusCoinFiveBaht(changeCoins.baht5);
+            sv.minusCoinTenBaht(changeCoins.baht10);
             socket.write(
               JSON.stringify({
                 action: 2,
