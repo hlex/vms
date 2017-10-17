@@ -55,11 +55,12 @@ export const serviceUseDiscountCode = code => {
   };
   return fetchFacade(`${URL.verifyDiscount}${convertToURLParam(data)}`).then(response => {
     console.log('serviceUseDiscountCode', response);
-    const responseDiscount = _.head(response);
+    // const responseDiscount = _.head(response);
     // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
-    if (responseDiscount.status === 1) {
-      throw new Error('serviceVerifyDiscountCode');
-    }
-    return responseDiscount;
+    // if (responseDiscount.status === 1) {
+      // throw new Error('serviceVerifyDiscountCode');
+    // }
+    // return responseDiscount;
+    return true;
   });
 };

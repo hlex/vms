@@ -301,7 +301,7 @@ export const selectTopupProvider = (context, topupProvider) => dispatch => {
 };
 
 export const submitOrder = () => {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     return new Promise(async (resolve, reject) => {
       // ======================================================
       // Check has discount or not ?
