@@ -3,6 +3,13 @@ import React, { Component } from 'react';
 import type { Children } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
+// ======================================================
+// Helpers
+// ======================================================
+import {
+  getCashRemainingAmount,
+} from '../helpers/global';
 // ======================================================
 // Actions
 // ======================================================
@@ -23,6 +30,7 @@ import LoadingScreen from './LoadingScreen';
 
 const mapStateToProps = state => {
   console.log('%c App@state:', 'color: #4CAF50; font-weight: 700;', state);
+  console.log('%c เงินทอนคงเหลือ:', 'color: #307DFC; font-weight: 700;', getCashRemainingAmount(state.payment.remain));
   return {
     location: state.router.location,
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
