@@ -27,6 +27,7 @@ const mapStateToProps = (state) => {
   return {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     productPrice: OrderSelector.getPromotionSetPrice(state.order),
+    discountAmount: OrderSelector.getDiscountAmount(state.order),
   };
 };
 
@@ -40,6 +41,7 @@ class PromotionSetPage extends Component {
 
   static propTypes = {
     productPrice: PropTypes.number,
+    discountAmount: PropTypes.number,
     baseURL: PropTypes.string.isRequired,
     submitPromotionSet: PropTypes.func.isRequired,
     verifyDiscountCode: PropTypes.func.isRequired,
@@ -49,6 +51,7 @@ class PromotionSetPage extends Component {
 
   static defaultProps = {
     productPrice: 0,
+    discountAmount: 0,
   }
 
   componentDidMount = () => {
@@ -63,7 +66,7 @@ class PromotionSetPage extends Component {
 
   render() {
     console.log('PromotionSetPage', this.props);
-    const { baseURL, productPrice, submitPromotionSet, verifyDiscountCode } = this.props;
+    const { baseURL, discountAmount, productPrice, submitPromotionSet, verifyDiscountCode } = this.props;
     return (
       <div>
         <Layout.Title>
@@ -74,7 +77,7 @@ class PromotionSetPage extends Component {
         <Layout.Content>
           <ProductSummary
             productPrice={productPrice}
-            discountAmount={0}
+            discountAmount={discountAmount}
             onSubmit={submitPromotionSet}
             onSubmitDiscount={verifyDiscountCode}
           />
