@@ -26,6 +26,11 @@ import {
 import {
   convertApplicationErrorToError,
 } from '../helpers/error';
+import {
+  convertToAppProduct,
+  convertToAppPromotion,
+  convertToAppMobileTopupProvider,
+} from '../helpers/masterdata';
 // ======================================================
 // APIs
 // ======================================================
@@ -43,7 +48,10 @@ import {
   createTcpClient
 } from '../apis/tcp';
 import {
-  serviceGetEvents
+  serviceGetEvents,
+  serviceGetProducts,
+  serviceGetPromotions,
+  serviceGetMobileTopupProviders,
 } from '../apis/masterdata';
 import {
   serviceGetEventReward
@@ -60,9 +68,33 @@ export const initApplication = () => {
     // GET MASTER DATA
     // ======================================================
     try {
+      // ======================================================
+      // EVENTS
+      // ======================================================
       const serviceGetEventsResponse = await serviceGetEvents();
       console.log('serviceGetEventsResponse', serviceGetEventsResponse);
       dispatch(Actions.receivedMasterdata('events', serviceGetEventsResponse));
+      // ======================================================
+      // PRODUCTS
+      // ======================================================
+      const serviceGetProductsResponse = await serviceGetProducts();
+      console.log('serviceGetProductsResponse', serviceGetProductsResponse);
+      const sanitizedProducts = _.map(serviceGetProductsResponse, product => convertToAppProduct(product));
+      dispatch(Actions.receivedMasterdata('products', sanitizedProducts));
+      // ======================================================
+      // PROMOTION
+      // ======================================================
+      const serviceGetPromotionsResponse = await serviceGetPromotions();
+      console.log('serviceGetPromotionsResponse', serviceGetPromotionsResponse);
+      const sanitizedPromotions = _.map(serviceGetPromotionsResponse, promotion => convertToAppPromotion(promotion));
+      dispatch(Actions.receivedMasterdata('promotionSets', sanitizedPromotions));
+      // ======================================================
+      // MOBILE TOPUP PROVIDER
+      // ======================================================
+      const serviceGetMobileTopupProvidersResponse = await serviceGetMobileTopupProviders();
+      console.log('serviceGetMobileTopupProvidersResponse', serviceGetMobileTopupProvidersResponse);
+      const sanitizedMobileTopupProviders = _.map(serviceGetMobileTopupProvidersResponse, mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider));
+      dispatch(Actions.receivedMasterdata('topupProviders', sanitizedMobileTopupProviders));
     } catch (error) {
       console.error(error);
     }

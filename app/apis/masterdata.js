@@ -1045,3 +1045,33 @@ export const serviceGetEvents = () => {
   //   return responseDiscount;
   // });
 };
+
+export const serviceGetProducts = () => {
+  const data = {
+    vtype: 'product',
+  };
+  return fetchFacade(`${URL.getProducts}${convertToURLParam(data)}`).then((response) => {
+    // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return response;
+  });
+};
+
+export const serviceGetPromotions = () => {
+  const data = {
+    vtype: 'promotion',
+  };
+  return fetchFacade(`${URL.getPromotions}${convertToURLParam(data)}`).then((response) => {
+    // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return response;
+  });
+};
+
+export const serviceGetMobileTopupProviders = () => {
+  const data = {
+    vtype: 'topup',
+  };
+  return fetchFacade(`${URL.getMobileTopupProviders}${convertToURLParam(data)}`).then((response) => {
+    // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return response;
+  });
+};
