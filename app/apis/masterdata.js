@@ -1051,7 +1051,7 @@ export const serviceGetProducts = () => {
     vtype: 'product',
   };
   return fetchFacade(`${URL.getProducts}${convertToURLParam(data)}`).then((response) => {
-    // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });
 };

@@ -31,6 +31,9 @@ import {
   convertToAppPromotion,
   convertToAppMobileTopupProvider,
 } from '../helpers/masterdata';
+import {
+  extractResponseData,
+} from '../helpers/api';
 // ======================================================
 // APIs
 // ======================================================
@@ -79,7 +82,7 @@ export const initApplication = () => {
       // ======================================================
       const serviceGetProductsResponse = await serviceGetProducts();
       console.log('serviceGetProductsResponse', serviceGetProductsResponse);
-      const sanitizedProducts = _.map(serviceGetProductsResponse, product => convertToAppProduct(product));
+      const sanitizedProducts = _.map(extractResponseData(serviceGetProductsResponse), product => convertToAppProduct(product));
       dispatch(Actions.receivedMasterdata('products', sanitizedProducts));
       // ======================================================
       // PROMOTION
