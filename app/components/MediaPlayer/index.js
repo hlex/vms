@@ -22,9 +22,12 @@ class MediaPlayer extends Component {
   state = {
     index: 0,
   };
-  componentWillUnmount() {
-    // console.log('componentWillUnmount', this);
-    this.handlePlayerEnded = () => {};
+  componentWillReceiveProps = (nextProps) => {
+    if (this.props.sources.length !== nextProps.sources.length) {
+      this.setState({
+        index: 0
+      });
+    }
   }
   handlePlayerEnded = () => {
     const { index } = this.state;
@@ -36,18 +39,38 @@ class MediaPlayer extends Component {
     });
     onEnded(index, nextIndex);
   }
+  handleTouchMedia = () => {
+    console.log('handleTouchMedia');
+    const { index } = this.state;
+    const { sources } = this.props;
+    const nextNearestNotFullScreenAdIndex = _.findIndex(sources, (source, sourceIndex) => {
+      return sourceIndex > index && (source.adSize || '') !== 'FULLSCREEN';
+    });
+    console.log(nextNearestNotFullScreenAdIndex);
+    if (nextNearestNotFullScreenAdIndex) {
+      this.setState({
+        index: nextNearestNotFullScreenAdIndex
+      });
+    }
+  }
   render = () => {
     // console.debug('MediaPlayer:state', this.state);
-    // console.debug('MediaPlayer:props', this.props);
+    console.debug('MediaPlayer:props', this.props);
     const { index } = this.state;
     const { width, height, sources } = this.props;
     // -----------------------------
     const currentMedia = _.get(sources, `${index}`, {});
     const { type, src, duration } = currentMedia;
+    console.debug('MediaPlayer:currentMedia', index, currentMedia);
+    const isFullScreen = (currentMedia.adSize || '') === 'FULLSCREEN';
     // -----------------------------
-    if (_.size(sources) <= 0) return <div />;
+    if (_.size(sources) <= 0 || !currentMedia) return <div />;
     return (
-      <div className="react-mediaplayer">
+      <div
+        className="react-mediaplayer"
+        style={{ position: isFullScreen ? 'fixed' : 'absolute', top: isFullScreen ? '80px' : '0', zIndex: '999' }}
+        onClick={() => { if (isFullScreen) this.handleTouchMedia(); }}
+      >
         <FilePlayer
           key={`${index}-${src}`}
           duration={duration}

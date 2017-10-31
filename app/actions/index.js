@@ -36,7 +36,9 @@ import {
   ACTIVE_MONEY_BOX,
   DEACTIVE_MONEY_BOX,
   SHOW_LOADING,
-  HIDE_LOADING
+  HIDE_LOADING,
+  SET_FOOTER_ADS,
+  RESET_FOOTER_ADS,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -293,3 +295,15 @@ export const hideLoading = () => {
   };
 };
 
+export const setFooterAds = (ads) => {
+  return {
+    type: SET_FOOTER_ADS,
+    ads,
+  };
+};
+
+export const resetFooterAds = () => {
+  return {
+    type: RESET_FOOTER_ADS
+  };
+};

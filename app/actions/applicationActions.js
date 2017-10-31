@@ -258,6 +258,9 @@ export const selectProduct = (context, item, module) => dispatch => {
       console.warn('module not matching', module);
       break;
   }
+  if (item.ads) {
+    dispatch(Actions.setFooterAds(item.ads));
+  }
 };
 
 export const submitProduct = () => dispatch => {
@@ -433,7 +436,6 @@ export const receivedCashRemaining = (data) => {
     if (cashRemainingAmount > 100 && currentLimitBanknote !== 500) {
       // disable 500
       dispatch(setLimitBanknote(500));
-
     } else if (cashRemainingAmount <= 100 && cashRemainingAmount > 50 && currentLimitBanknote !== 100) {
       // disable 100
       dispatch(setLimitBanknote(100));
@@ -676,8 +678,22 @@ export const verifyDiscountCode = (code) => {
   };
 };
 
+export const resetFooterAds = () => {
+  return (dispatch) => {
+    dispatch(Actions.resetFooterAds());
+  };
+};
+
+export const initMobileTopupProviderSelectionPage = () => {
+  return (dispatch) => {
+    dispatch(clearMobileTopupMSISDN());
+    dispatch(resetFooterAds());
+  };
+};
+
 export const initHomePage = () => {
   return (dispatch, getState) => {
+    dispatch(resetFooterAds());
     dispatch(clearOrder());
     const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
     if (moneyBoxActive) {

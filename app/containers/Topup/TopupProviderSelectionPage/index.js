@@ -41,8 +41,8 @@ class TopupProviderSelectionPage extends Component {
   static propTypes = {
     baseURL: PropTypes.string.isRequired,
     topupProviders: PropTypes.arrayOf(PropTypes.shape({})),
-    selectTopupProvider: PropTypes.func.isRequired,
-    clearMobileTopupMSISDN: PropTypes.func.isRequired,
+    selectProduct: PropTypes.func.isRequired,
+    initMobileTopupProviderSelectionPage: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -50,8 +50,8 @@ class TopupProviderSelectionPage extends Component {
   }
 
   componentDidMount = () => {
-    const { clearMobileTopupMSISDN } = this.props;
-    clearMobileTopupMSISDN();
+    const { initMobileTopupProviderSelectionPage } = this.props;
+    initMobileTopupProviderSelectionPage();
   }
 
   renderItem = (renderItem, handleClick) => {
@@ -67,7 +67,7 @@ class TopupProviderSelectionPage extends Component {
   }
 
   render() {
-    const { baseURL, topupProviders, selectTopupProvider } = this.props;
+    const { baseURL, topupProviders, selectProduct } = this.props;
     return (
       <div>
         <Layout.Subheader>
@@ -97,7 +97,7 @@ class TopupProviderSelectionPage extends Component {
           items={topupProviders}
           itemPerPage={6}
           height={842}
-          onClickItem={selectTopupProvider}
+          onClickItem={(context, item) => selectProduct(context, item, 'mobileTopup')}
           baseURL={baseURL}
           renderComponent={this.renderItem}
         />

@@ -12,10 +12,12 @@ import { MediaPlayer } from '../../../components';
 // ======================================================
 import MasterappSelector from '../../../selectors/masterapp';
 
-const mapStateToProps = state => ({
-  stripAds: state.masterdata.stripAds,
-  baseURL: MasterappSelector.getBaseURL(state.masterapp),
-});
+const mapStateToProps = (state) => {
+  return {
+    footerAds: state.ads.footerAds,
+    baseURL: MasterappSelector.getBaseURL(state.masterapp),
+  };
+};
 
 const actions = {
 };
@@ -25,12 +27,13 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 class Footer extends Component {
 
   static propTypes = {
-    stripAds: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    footerAds: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   }
 
   render() {
+    console.log(this);
     const {
-      stripAds
+      footerAds
     } = this.props;
     return (
       <div className="footer-section">
@@ -41,7 +44,7 @@ class Footer extends Component {
           <MediaPlayer
             width={1080}
             height={860}
-            sources={stripAds}
+            sources={footerAds}
           />
         </div>
       </div>
