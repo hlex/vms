@@ -48,10 +48,11 @@ class MediaPlayer extends Component {
     const currentMedia = _.get(sources, `${index}`, {});
     const { type, src, duration } = currentMedia;
     console.debug('MediaPlayer:currentMedia', index, currentMedia);
+    const isFullScreen = currentMedia.adSize === 'FULLSCREEN';
     // -----------------------------
     if (_.size(sources) <= 0 || !currentMedia) return <div />;
     return (
-      <div className="react-mediaplayer">
+      <div className="react-mediaplayer" style={{ position: isFullScreen ? 'fixed' : 'absolute', top: isFullScreen ? '80px' : '0', zIndex: '999' }}>
         <FilePlayer
           key={`${index}-${src}`}
           duration={duration}

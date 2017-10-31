@@ -436,7 +436,6 @@ export const receivedCashRemaining = (data) => {
     if (cashRemainingAmount > 100 && currentLimitBanknote !== 500) {
       // disable 500
       dispatch(setLimitBanknote(500));
-
     } else if (cashRemainingAmount <= 100 && cashRemainingAmount > 50 && currentLimitBanknote !== 100) {
       // disable 100
       dispatch(setLimitBanknote(100));
