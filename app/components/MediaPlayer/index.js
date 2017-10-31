@@ -22,9 +22,12 @@ class MediaPlayer extends Component {
   state = {
     index: 0,
   };
-  componentWillUnmount() {
-    // console.log('componentWillUnmount', this);
-    this.handlePlayerEnded = () => {};
+  componentWillReceiveProps = (nextProps) => {
+    if (this.props.sources.length !== nextProps.sources.length) {
+      this.setState({
+        index: 0
+      });
+    }
   }
   handlePlayerEnded = () => {
     const { index } = this.state;
@@ -44,9 +47,9 @@ class MediaPlayer extends Component {
     // -----------------------------
     const currentMedia = _.get(sources, `${index}`, {});
     const { type, src, duration } = currentMedia;
-    console.debug('MediaPlayer:currentMedia', currentMedia);
+    console.debug('MediaPlayer:currentMedia', index, currentMedia);
     // -----------------------------
-    if (_.size(sources) <= 0) return <div />;
+    if (_.size(sources) <= 0 || !currentMedia) return <div />;
     return (
       <div className="react-mediaplayer">
         <FilePlayer
