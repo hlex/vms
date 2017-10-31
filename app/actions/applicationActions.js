@@ -258,6 +258,9 @@ export const selectProduct = (context, item, module) => dispatch => {
       console.warn('module not matching', module);
       break;
   }
+  if (item.ads) {
+    dispatch(Actions.setFooterAds(item.ads));
+  }
 };
 
 export const submitProduct = () => dispatch => {
@@ -678,6 +681,7 @@ export const verifyDiscountCode = (code) => {
 
 export const initHomePage = () => {
   return (dispatch, getState) => {
+    dispatch(Actions.initHomePage());
     dispatch(clearOrder());
     const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
     if (moneyBoxActive) {

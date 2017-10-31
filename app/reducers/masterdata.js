@@ -1,40 +1,9 @@
 import _ from 'lodash';
 import cuid from 'cuid';
 import {
-  RECEIVED_MASTERDATA
+  RECEIVED_MASTERDATA,
+  SET_FOOTER_ADS
 } from '../actions/actionTypes';
-
-
-const isSoldout = () => _.random(1, 5) === 5;
-
-const productGenerator = number =>
-  _.map(_.range(number), index => ({
-    cuid: cuid(),
-    id: index + 1,
-    name: cuid(),
-    price: 20, // _.random(1, 50),
-    isSoldout: isSoldout(),
-    image: `images/product-${index + 1}.png`,
-    row: 2, // _.random(1, 2),
-    col: 1, // _.random(1, 2),
-    isDropped: false,
-  }));
-
-const promotionGenerator = number =>
-  _.map(_.range(number), index => ({
-    cuid: cuid(),
-    id: index + 1,
-    products: productGenerator(2),
-    price: 30,
-    image: '',
-  }));
-
-const normalizeStripAds = ad => ({
-  name: ad.name,
-  type: ad.type,
-  src: `http://localhost:8888/vms/${ad.path}`,
-  duration: Number(ad.timeout) / 1000,
-});
 
 /*
   # เติมเงินฟรี 5 บาท
@@ -321,6 +290,7 @@ const stripAds = [
     filename: '20151204_ais_344.jpg',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: '47e93aec13f7c9115ebbcfaacb309ccd',
   },
   {
@@ -331,6 +301,7 @@ const stripAds = [
     filename: '20160205_emporium_cn_tripadvisor_1080_344.png',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: 'e0adb2162abf7192cb6060461e6af3fc',
   },
   {
@@ -341,6 +312,7 @@ const stripAds = [
     filename: '20160205_emporium_en_trioadvisor_1080_344.png',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: '02a7b50c2ec2f200e89d1f92052aa470',
   },
   {
@@ -351,6 +323,7 @@ const stripAds = [
     filename: '20160427_special-hotel-deals_344.png',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: '9ca44783007073c11ca9d7a2cd777a3a',
   },
   {
@@ -361,6 +334,7 @@ const stripAds = [
     filename: '20160519_mcard-privilege_344.png',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: '5248ed312ff9e6ee626e258a588535af',
   },
   {
@@ -371,6 +345,7 @@ const stripAds = [
     filename: '20160617_m-card-matsaya-ginza_344.png',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: '678482f9d3e27ea5ca12563b32997589',
   },
   {
@@ -381,6 +356,7 @@ const stripAds = [
     filename: '20160624_alipay_em_344.jpg',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: '74385118d288f3184a853e47c4fa9305',
   },
   {
@@ -391,6 +367,7 @@ const stripAds = [
     filename: '20160701_health-up-your-life_344.jpg',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: '61217232de7a8d9b6feb3cfea9052e4e',
   },
   {
@@ -401,6 +378,7 @@ const stripAds = [
     filename: '20160722_mpoint-discount-up-to-15_344.jpg',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: '242a51c978e7eaddd83f48bc2b13e2ae',
   },
   {
@@ -411,6 +389,7 @@ const stripAds = [
     filename: '20160805_visachinacrossborder_344.jpg',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: '0327072f92c0d3d8bac98519e274302d',
   },
   {
@@ -421,6 +400,7 @@ const stripAds = [
     filename: '20160916_citibank-asia-pacific_344.jpg',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: '9fe6731c3b6e2c65e7a0657662b876ef',
   },
   {
@@ -431,6 +411,7 @@ const stripAds = [
     filename: '20160916_magical-dining-experience_344.jpg',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: 'f4d0a6724f7eafb25266cb2088b515fd',
   },
   {
@@ -441,6 +422,7 @@ const stripAds = [
     filename: '20161007_ufc_344.mp4',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: '29e4304189c0d933efd3f121909e84b8',
   },
   {
@@ -451,6 +433,7 @@ const stripAds = [
     filename: '20161007_emp_magazine-no33_344.jpg',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: '0535ff9d83538353bd3a84c62028c845',
   },
   {
@@ -461,9 +444,68 @@ const stripAds = [
     filename: '20161111_betrend-gift-2017_344.png',
     expire: '2026-11-21',
     timeout: '5000',
+    adSize: 'STRIP',
     checksum: '0de9be00280a021661584f2a3af95319',
   },
 ];
+
+const productAds = [
+  {
+    id: '4199',
+    type: 'image',
+    name: 'EMP_diningexp_EMPStripAds',
+    path: 'StripAds/20160916_magical-dining-experience_344.jpg',
+    filename: '20160916_magical-dining-experience_344.jpg',
+    expire: '2026-11-21',
+    timeout: '5000',
+    adSize: 'STRIP',
+    checksum: 'f4d0a6724f7eafb25266cb2088b515fd',
+  },
+  {
+    id: '4211',
+    type: 'video',
+    name: 'EMP_UFC_EMPStripAds',
+    path: 'StripAds/20161007_ufc_344.mp4',
+    filename: '20161007_ufc_344.mp4',
+    expire: '2026-11-21',
+    timeout: '5000',
+    adSize: 'STRIP',
+    checksum: '29e4304189c0d933efd3f121909e84b8',
+  },
+];
+
+const isSoldout = () => _.random(1, 5) === 5;
+
+const productGenerator = number =>
+  _.map(_.range(number), index => ({
+    cuid: cuid(),
+    id: index + 1,
+    name: cuid(),
+    price: 20, // _.random(1, 50),
+    isSoldout: isSoldout(),
+    image: `images/product-${index + 1}.png`,
+    row: 2, // _.random(1, 2),
+    col: 1, // _.random(1, 2),
+    isDropped: false,
+    ads: _.map(productAds, ad => normalizeStripAds(ad)),
+  }));
+
+const promotionGenerator = number =>
+  _.map(_.range(number), index => ({
+    cuid: cuid(),
+    id: index + 1,
+    products: productGenerator(2),
+    price: 30,
+    image: '',
+  }));
+
+const normalizeStripAds = ad => ({
+  name: ad.name,
+  type: ad.type,
+  src: `http://localhost:8888/vms/${ad.path}`,
+  duration: Number(ad.timeout) / 1000,
+  adSize: ad.adSize,
+});
 
 const initialState = {
   products: productGenerator(36),
