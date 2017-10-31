@@ -38,7 +38,7 @@ import {
   SHOW_LOADING,
   HIDE_LOADING,
   SET_FOOTER_ADS,
-  INIT_HOME_PAGE,
+  RESET_FOOTER_ADS,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -302,8 +302,8 @@ export const setFooterAds = (ads) => {
   };
 };
 
-export const initHomePage = () => {
+export const resetFooterAds = () => {
   return {
-    type: INIT_HOME_PAGE
+    type: RESET_FOOTER_ADS
   };
 };

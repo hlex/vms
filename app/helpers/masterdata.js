@@ -1,6 +1,13 @@
 import _ from 'lodash';
 import cuid from 'cuid';
 
+export const normalizeStripAds = ad => ({
+  name: ad.name,
+  type: ad.type,
+  src: `http://localhost:8888/vms/${ad.path}`,
+  duration: Number(ad.timeout) / 1000,
+  adSize: ad.adSize,
+});
 const isSoldout = () => _.random(1, 5) === 5;
 
 /*

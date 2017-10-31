@@ -34,7 +34,7 @@ export const DEACTIVE_MONEY_BOX = 'DEACTIVE_MONEY_BOX';
 export const SHOW_LOADING = 'SHOW_LOADING';
 export const HIDE_LOADING = 'HIDE_LOADING';
 export const SET_FOOTER_ADS = 'SET_FOOTER_ADS';
-export const INIT_HOME_PAGE = 'INIT_HOME_PAGE';
+export const RESET_FOOTER_ADS = 'RESET_FOOTER_ADS';
 // ======================================================
 // TCP
 // ======================================================

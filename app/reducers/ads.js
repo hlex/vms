@@ -1,21 +1,10 @@
 import _ from 'lodash';
 import {
   SET_FOOTER_ADS,
-  INIT_HOME_PAGE
+  RESET_FOOTER_ADS
 } from '../actions/actionTypes';
 
 const stripAds = [
-  {
-    id: '4094',
-    type: 'image',
-    name: 'EMP_AIS_EMPStripAds',
-    path: 'StripAds/20151204_ais_344.jpg',
-    filename: '20151204_ais_344.jpg',
-    expire: '2026-11-21',
-    timeout: '5000',
-    adSize: 'STRIP',
-    checksum: '47e93aec13f7c9115ebbcfaacb309ccd',
-  },
   {
     id: '4103',
     type: 'image',
@@ -48,6 +37,17 @@ const stripAds = [
     timeout: '5000',
     adSize: 'STRIP',
     checksum: '9ca44783007073c11ca9d7a2cd777a3a',
+  },
+  {
+    id: '4094',
+    type: 'image',
+    name: 'EMP_AIS_EMPStripAds',
+    path: 'StripAds/20151204_ais_344.jpg',
+    filename: '20151204_ais_344.jpg',
+    expire: '2026-11-21',
+    timeout: '5000',
+    adSize: 'STRIP',
+    checksum: '47e93aec13f7c9115ebbcfaacb309ccd',
   },
   {
     id: '4136',
@@ -192,7 +192,7 @@ const getInitialState = () => ({
 
 export default (state = getInitialState(), action) => {
   switch (action.type) {
-    case INIT_HOME_PAGE:
+    case RESET_FOOTER_ADS:
       return getInitialState();
     case SET_FOOTER_ADS:
       return {

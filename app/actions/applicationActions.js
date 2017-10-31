@@ -679,9 +679,22 @@ export const verifyDiscountCode = (code) => {
   };
 };
 
+export const resetFooterAds = () => {
+  return (dispatch) => {
+    dispatch(Actions.resetFooterAds());
+  };
+};
+
+export const initMobileTopupProviderSelectionPage = () => {
+  return (dispatch) => {
+    dispatch(clearMobileTopupMSISDN());
+    dispatch(resetFooterAds());
+  };
+};
+
 export const initHomePage = () => {
   return (dispatch, getState) => {
-    dispatch(Actions.initHomePage());
+    dispatch(resetFooterAds());
     dispatch(clearOrder());
     const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
     if (moneyBoxActive) {

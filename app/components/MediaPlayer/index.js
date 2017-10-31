@@ -38,12 +38,13 @@ class MediaPlayer extends Component {
   }
   render = () => {
     // console.debug('MediaPlayer:state', this.state);
-    // console.debug('MediaPlayer:props', this.props);
+    console.debug('MediaPlayer:props', this.props);
     const { index } = this.state;
     const { width, height, sources } = this.props;
     // -----------------------------
     const currentMedia = _.get(sources, `${index}`, {});
     const { type, src, duration } = currentMedia;
+    console.debug('MediaPlayer:currentMedia', currentMedia);
     // -----------------------------
     if (_.size(sources) <= 0) return <div />;
     return (

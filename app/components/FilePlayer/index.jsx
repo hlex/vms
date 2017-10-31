@@ -43,8 +43,7 @@ class FilePlayer extends Component {
     clearInterval(this.timer2);
   }
   render = () => {
-    // console.debug('FilePlayer:state', this.state);
-    // console.debug('FilePlayer:props', this.props);
+    console.debug('FilePlayer:props', this.props);
     const key = Date.now();
     const {
       src,
