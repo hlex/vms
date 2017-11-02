@@ -10,8 +10,8 @@ const rewardEmailChannel = 'EMAIL';
 const rewardVendingMachineNow = 'VENDING_MACHINE_NOW';
 const rewardVendingMachineCode = 'VENDING_MACHINE_CODE';
 const rewardDiscountType = 'DISCOUNT';
-const rewardProductName = 'PRODUCT';
-const rewardMobileTopupName = 'MOBILE_TOPUP';
+const rewardProductName = 'product';
+const rewardMobileTopupName = 'topup';
 const tagDiscountLabel = 'ส่วนลด';
 const tagFreeLabel = 'รับฟรี';
 const tagMobileTopupLabel = 'เติมเงินฟรี';
@@ -974,21 +974,21 @@ const qrcodePlusLineQrcodeWithProductFreeCode =  {
 };
 let mockupEvents = [
   msisdnWithMobileTopup,
-  msisdnWithProductDiscount,
-  msisdnWithProductFree,
-  emailWithMobileTopup,
-  emailWithProductDiscount,
-  emailWithProductFree,
-  lineIdWithMobileTopup,
-  lineIdWithProductDiscount,
-  lineIdWithProductFree,
-  barcodePlusLineQrcodeWithMobileTopupNow,
-  barcodePlusLineQrcodeWithMobileTopupCode,
-  barcodePlusLineQrcodeWithProductDiscountNow,
+  // msisdnWithProductDiscount,
+  // msisdnWithProductFree,
+  // emailWithMobileTopup,
+  // emailWithProductDiscount,
+  // emailWithProductFree,
+  // lineIdWithMobileTopup,
+  // lineIdWithProductDiscount,
+  // lineIdWithProductFree,
+  // barcodePlusLineQrcodeWithMobileTopupNow,
+  // barcodePlusLineQrcodeWithMobileTopupCode,
+  // barcodePlusLineQrcodeWithProductDiscountNow,
   // barcodePlusLineQrcodeWithProductDiscountCode,
   // barcodePlusLineQrcodeWithProductFreeNow,
   // barcodePlusLineQrcodeWithProductFreeCode,
-  barcodeWithMobileTopupNow,
+  // barcodeWithMobileTopupNow,
   // barcodeWithMobileTopupCode,
   // barcodeWithProductDiscountNow,
   // barcodeWithProductDiscountCode,
@@ -999,7 +999,7 @@ let mockupEvents = [
   // qrcodePlusLineQrcodeWithProductDiscountNow,
   // qrcodePlusLineQrcodeWithProductDiscountCode,
   // qrcodePlusLineQrcodeWithProductFreeNow,
-  qrcodePlusLineQrcodeWithProductFreeCode,
+  // qrcodePlusLineQrcodeWithProductFreeCode,
   // qrcodeWithMobileTopupNow,
   // qrcodeWithMobileTopupCode,
   // qrcodeWithProductDiscountNow,
