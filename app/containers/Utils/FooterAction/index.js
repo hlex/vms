@@ -7,8 +7,16 @@ import { connect } from 'react-redux';
 // Actions
 // ======================================================
 import * as ApplicationActions from '../../../actions/applicationActions';
+// ======================================================
+// Selectors
+// ======================================================
+import * as OrderSelector from '../../../selectors/order';
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => {
+  return {
+    isEventOrder: OrderSelector.verifyIsEventOrder(state.order)
+  };
+};
 
 const actions = {
   ...ApplicationActions,
@@ -19,19 +27,23 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 class App extends Component {
   props: {
     children: Children,
-    back: Function
+    back: Function,
+    isEventOrder: boolean
   };
 
   render() {
-    const { back } = this.props;
+    const { isEventOrder, back } = this.props;
     return (
       <div className="action-back">
-        <a
-          className="button purple M"
-          onClick={back}
-        >
-          <i className="fa fa-chevron-left" />ย้อนกลับ
-        </a>
+        {
+          !isEventOrder &&
+          <a
+            className="button purple M"
+            onClick={back}
+          >
+            <i className="fa fa-chevron-left" />ย้อนกลับ
+          </a>
+        }
       </div>
     );
   }
