@@ -109,5 +109,16 @@ export const convertToAppEvent = (event) => {
         completed: false
       };
     }),
+    ads: [normalizeStripAds({
+      id: '4226',
+      type: 'image',
+      name: 'EMP_BT_Gift17_EMPStripAds',
+      path: 'StripAds/20161111_betrend-gift-2017_344.png',
+      filename: '20161111_betrend-gift-2017_344.png',
+      expire: '2026-11-21',
+      timeout: '2000',
+      adSize: 'STRIP',
+      checksum: '0de9be00280a021661584f2a3af95319',
+    })],
   };
 };
