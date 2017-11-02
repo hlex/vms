@@ -222,6 +222,7 @@ export const closeAlertMessage = () => {
 
 export const handleApiError = (error) => {
   return (dispatch) => {
+    dispatch(hideLoading());
     dispatch(Actions.openAlertMessage(error));
   };
 };
@@ -675,7 +676,9 @@ export const verifyDiscountCode = (code) => {
     const canUseDiscount = verifyCanUseDiscount(OrderSelector.getDiscounts(getState().order), code);
     if (canUseDiscount) {
       try {
+        dispatch(showLoading('ระบบกำลังตรวจสอบรหัสส่วนลด'));
         const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code);
+        dispatch(hideLoading());
         console.log('verifyDiscountCodeResponse', verifyDiscountCodeResponse);
         const discountItem = {
           value: verifyDiscountCodeResponse.discount,
@@ -687,6 +690,7 @@ export const verifyDiscountCode = (code) => {
         dispatch(handleApiError(error));
       }
     } else {
+      dispatch(hideLoading());
       dispatch(openAlertMessage(convertApplicationErrorToError({
         th: `ไม่สามารถใช้รหัสส่วนลด ${code} ได้ เนื่องจากใช้ไปแล้ว`,
         en: '',
