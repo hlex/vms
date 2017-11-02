@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 // ======================================================
 // Components
@@ -27,7 +28,14 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 class Footer extends Component {
 
   static propTypes = {
+    location: PropTypes.shape({}).isRequired,
     footerAds: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  }
+
+  shouldHideSignage = () => {
+    const { location } = this.props;
+    const blacklist = ['/event', '/product'];
+    return _.includes(blacklist, location.pathname);
   }
 
   render() {
@@ -40,16 +48,20 @@ class Footer extends Component {
         <div className="copy">
           <p>© 2017 ใจดี มินิมาร์ท</p>
         </div>
-        <div className="signage">
-          <MediaPlayer
-            width={1080}
-            height={860}
-            sources={footerAds}
-          />
-        </div>
+        {
+          !this.shouldHideSignage() &&
+          <div className="signage">
+            <MediaPlayer
+              width={1080}
+              height={860}
+              sources={footerAds}
+            />
+          </div>
+        }
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Footer);
+const connectedContainer = connect(mapStateToProps, mapDispatchToProps)(Footer);
+export default withRouter(connectedContainer);
