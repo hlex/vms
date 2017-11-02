@@ -521,15 +521,13 @@ export const clearPaymentAmount = () => dispatch => {
 
 export const sendCashChangeToServer = () => (dispatch, getState) => {
   const cashChangeAmount = PaymentSelector.getCashChangeAmount(getState().payment);
-  console.log('=======================================');
-  console.log('=======================================');
-  console.log('sendCashChangeToServer:cashChangeAmount', cashChangeAmount);
-  console.log('=======================================');
-  console.log('=======================================');
     // ======================================================
     // if cashReturn > 0 then call api to return cash
     // ======================================================
   if (cashChangeAmount > 0) {
+    console.log('=======================================');
+    console.log('sendCashChangeToServer:ระบบสั่งทอนเงินจำนวน =', cashChangeAmount);
+    console.log('=======================================');
     const client = MasterappSelector.getTcpClient(getState().masterapp);
     client.send({
       action: 2,
@@ -726,6 +724,12 @@ export const resetFooterAds = () => {
   };
 };
 
+export const clearInstantlyDiscount = () => {
+  return (dispatch) => {
+    dispatch(Actions.clearInstantlyDiscount());
+  };
+}
+
 export const initMobileTopupProviderSelectionPage = () => {
   return (dispatch) => {
     dispatch(clearMobileTopupMSISDN());
@@ -735,6 +739,7 @@ export const initMobileTopupProviderSelectionPage = () => {
 
 export const initHomePage = () => {
   return (dispatch, getState) => {
+    // dispatch(clearInstantlyDiscount()); // right now order is cleared.
     dispatch(resetFooterAds());
     dispatch(clearOrder());
     const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
@@ -751,8 +756,12 @@ export const enableMoneyBoxWhenInitPage = () => {
     if (!moneyBoxActive) {
       dispatch(enableMoneyBox());
     } else {
-      console.log('enableMoneyBoxWhenInitPage: LOADING PLZ');
       dispatch(showLoading('ระบบกำลังทอนเงิน'));
+      setTimeout(() => {
+        if (MasterappSelector.verifyIsLoading(getState().masterapp)) {
+          dispatch(hideLoading());
+        }
+      }, 5000);
     }
   };
 };

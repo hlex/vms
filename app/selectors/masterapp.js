@@ -10,6 +10,7 @@ const verifyCanChangeCash = state => state.canChangeCash;
 const getLimitBanknote = state => state.limitBanknote;
 const verifyAppReady = state => state.hardwareReady;
 const verifyIsMoneyBoxActive = state => state.moneyBoxActive;
+const verifyIsLoading = state => state.loading.show;
 
 export default {
   getBaseURL,
@@ -21,5 +22,6 @@ export default {
   verifyCanChangeCash,
   getLimitBanknote,
   verifyAppReady,
-  verifyIsMoneyBoxActive
+  verifyIsMoneyBoxActive,
+  verifyIsLoading
 };

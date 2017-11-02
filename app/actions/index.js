@@ -40,6 +40,7 @@ import {
   SET_FOOTER_ADS,
   RESET_FOOTER_ADS,
   USE_DISCOUNT_INSTANTLY,
+  CLEAR_INSTANTLY_DISCOUNT,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -312,5 +313,11 @@ export const resetFooterAds = () => {
 export const setFlagUseDiscountInstantly = () => {
   return {
     type: USE_DISCOUNT_INSTANTLY
+  };
+};
+
+export const clearInstantlyDiscount = () => {
+  return {
+    type: CLEAR_INSTANTLY_DISCOUNT
   };
 };
