@@ -678,7 +678,7 @@ export const verifyDiscountCode = (code) => {
         const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code);
         console.log('verifyDiscountCodeResponse', verifyDiscountCodeResponse);
         const discountItem = {
-          value: '5',
+          value: verifyDiscountCodeResponse.discount,
           ...verifyDiscountCodeResponse,
           code,
         };
@@ -734,9 +734,7 @@ export const enableMoneyBoxWhenInitPage = () => {
 
 export const willReceivePropsEnableMoneyBoxWhenInitPage = (props, nextProps) => {
   return (dispatch, getState) => {
-    console.log('------------------------------------------');
     console.log('willReceivePropsEnableMoneyBoxWhenInitPage', props.moneyBoxActive, !nextProps.moneyBoxActive);
-    console.log(('------------------------------------------'));
     if (props.moneyBoxActive && !nextProps.moneyBoxActive) {
       dispatch(hideLoading());
       dispatch(enableMoneyBoxWhenInitPage());
