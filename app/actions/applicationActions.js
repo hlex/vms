@@ -46,7 +46,8 @@ import {
   serviceGetEvents
 } from '../apis/masterdata';
 import {
-  serviceGetEventReward
+  serviceGetEventReward,
+  verifyBarcodeOrQrcode,
 } from '../apis/event';
 
 let cmdNo = 0;
@@ -94,6 +95,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       break;
     case 'SCANNED_QR_CODE':
       // console.log('%c App SCANNED_QR_CODE:', createLog('app'));
+      dispatch(receivedQRCode(data.msg || ''));
       break;
     case 'INSERT_CASH':
       // console.log('%c App INSERT_CASH:', createLog('app'));
@@ -190,6 +192,25 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       // console.log('%c App Do nothing:', createLog('app'), data);
       break;
   }
+};
+
+const verifyIsBarcodeOrQrCodeInput = (inputType) => {
+  return _.includes(['BARCODE', 'LINE_QR_CODE'], inputType);
+}
+
+export const receivedQRCode = (qrCode) => {
+  return async (dispatch, getState) => {
+    const nextInput = OrderSelector.getEventNextInput(getState().order);
+    console.log('receivedQRCode', qrCode, nextInput);
+    if (verifyIsBarcodeOrQrCodeInput(nextInput)) {
+      try {
+        await verifyBarcodeOrQrcode(qrCode);
+        dispatch(updateEventInput(nextInput, qrCode));
+      } catch (error) {
+
+      }
+    }
+  };
 };
 
 /*
@@ -804,7 +825,6 @@ export const submitPlayEvent = () => {
 export const eventInitGetReward = () => {
   return (dispatch, getState) => {
     const shouldSendReward = OrderSelector.verifyEventShouldSendReward(getState().order);
-    // const shouldUseRewardInstantly = OrderSelector.verifyEventShouldUseRewardInstantly(getState().order);
     const targetRoute = OrderSelector.getEventNextRewardRoute(getState().order);
     console.log('eventInitGetReward', shouldSendReward, targetRoute);
     if (shouldSendReward) {
