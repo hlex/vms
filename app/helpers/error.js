@@ -38,7 +38,7 @@ const getErrorType = (res) => {
 };
 
 const isVMSServiceError = (response) => {
-  return response.fault;
+  return response.fault !== undefined;
 };
 
 const convertVMSServiceResponseToError = (response) => {
@@ -79,7 +79,7 @@ class ApplicationError extends Error {
     this.messages = {
       th: _.get(fault, 'th-message', ''),
       en: _.get(fault, 'en-message', ''),
-      technical: _.get(fault, 'technical-message', ''),
+      technical: _.get(fault, 'vtype', ''),
     };
     if (typeof Error.captureStackTrace === 'function') {
       Error.captureStackTrace(this, this.constructor);
