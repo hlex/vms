@@ -676,6 +676,7 @@ export const verifyDiscountCode = (code) => {
         const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code);
         console.log('verifyDiscountCodeResponse', verifyDiscountCodeResponse);
         const discountItem = {
+          value: '5',
           ...verifyDiscountCodeResponse,
           code,
         };
