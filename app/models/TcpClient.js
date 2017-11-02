@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import moment from 'moment';
 import { createLog } from '../helpers/global';
 
 
@@ -6,10 +7,12 @@ export default class TcpClient {
   client;
   queue;
   busy;
+  histories;
   constructor(client) {
     this.client = client;
     this.queue = new Queue();
     this.busy = false;
+    this.histories = [];
   }
   send(data) {
     console.log('%c App Send Data:', createLog(null, 'orange', '#fff'), data);
@@ -30,6 +33,10 @@ export default class TcpClient {
           this.client.write(JSON.stringify(data));
         }
         this.busy = true;
+        this.histories.push({
+          ...data,
+          time: moment().format('HH:mm:ss'),
+        });
       }, 1000);
     }
   }
