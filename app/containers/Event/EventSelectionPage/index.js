@@ -50,7 +50,7 @@ class EventSelectionPage extends Component {
   };
 
   render() {
-    const { events, baseURL, selectEvent } = this.props;
+    const { events, baseURL, selectProduct } = this.props;
     return (
       <div>
         <Layout.Subheader>
@@ -88,7 +88,7 @@ class EventSelectionPage extends Component {
           items={events}
           itemPerPage={10}
           height={1450}
-          onClickItem={selectEvent}
+          onClickItem={(context, item) => selectProduct(context, item, 'event')}
           baseURL={baseURL}
           renderComponent={this.renderItem}
         />

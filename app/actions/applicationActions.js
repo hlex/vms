@@ -267,6 +267,8 @@ export const selectProduct = (context, item, module) => dispatch => {
       dispatch(selectTopupProvider(context, item));
       break;
     case 'event':
+      dispatch(selectEvent(context, item));
+      break;
     default:
       console.warn('module not matching', module);
       break;
@@ -789,7 +791,6 @@ export const submitPlayEvent = () => {
   return (dispatch, getState) => {
     const eventWatches = OrderSelector.getEventWatches(getState().order);
     console.log('submitPlayEvent', eventWatches);
-    debugger;
     if (_.size(eventWatches) > 0) {
       dispatch(changePage('/event/ads'));
     } else {
@@ -804,7 +805,6 @@ export const eventInitGetReward = () => {
     // const shouldUseRewardInstantly = OrderSelector.verifyEventShouldUseRewardInstantly(getState().order);
     const targetRoute = OrderSelector.getEventNextRewardRoute(getState().order);
     console.log('eventInitGetReward', shouldSendReward, targetRoute);
-    debugger;
     if (shouldSendReward) {
       dispatch(eventGetReward());
     } else if (targetRoute.indexOf('/') >= 0) {
