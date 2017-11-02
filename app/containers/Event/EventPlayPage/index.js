@@ -128,16 +128,25 @@ class EventPlayPage extends Component {
   };
 
   renderInputBarcode = () => {
-    const { baseURL, submitPlayEvent } = this.props;
+    const { baseURL } = this.props;
     return (
       <div className="event-lineid-box">
         <img alt="line" src={`${baseURL}/images/icon-barcode.png`} />
         <div className="desc">
           <h2>กรุณาแสกน BAR CODE</h2>
         </div>
-        <a className="button blue submit-button _hidden" onClick={submitPlayEvent}>
-          <p className="fade-flash">ทำรายการต่อ </p>
-        </a>
+      </div>
+    );
+  };
+
+  renderInputQrcode = () => {
+    const { baseURL } = this.props;
+    return (
+      <div className="event-lineid-box">
+        <img alt="line" src={`${baseURL}/images/icon-qrcode.png`} />
+        <div className="desc">
+          <h2>กรุณาแสกน QR CODE</h2>
+        </div>
       </div>
     );
   };
@@ -152,6 +161,8 @@ class EventPlayPage extends Component {
       return this.renderInputLineId();
     } else if (inputType === 'BARCODE') {
       return this.renderInputBarcode();
+    } else if (inputType === 'LINE_QR_CODE' || 'QR_CODE') {
+      return this.renderInputQrcode();
     }
     return '';
   };

@@ -39,6 +39,7 @@ import {
   HIDE_LOADING,
   SET_FOOTER_ADS,
   RESET_FOOTER_ADS,
+  USE_DISCOUNT_INSTANTLY,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -305,5 +306,11 @@ export const setFooterAds = (ads) => {
 export const resetFooterAds = () => {
   return {
     type: RESET_FOOTER_ADS
+  };
+};
+
+export const setFlagUseDiscountInstantly = () => {
+  return {
+    type: USE_DISCOUNT_INSTANTLY
   };
 };

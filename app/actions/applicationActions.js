@@ -824,20 +824,28 @@ export const submitPlayEvent = () => {
 
 export const eventInitGetReward = () => {
   return (dispatch, getState) => {
+    const selectedEvent = OrderSelector.getSelectedEvent(getState().order);
     const shouldSendReward = OrderSelector.verifyEventShouldSendReward(getState().order);
-    const targetRoute = OrderSelector.getEventNextRewardRoute(getState().order);
-    console.log('eventInitGetReward', shouldSendReward, targetRoute);
+    const reward = OrderSelector.getEventNextReward(getState().order);
+    console.log('eventInitGetReward', selectedEvent, shouldSendReward, reward);
     if (shouldSendReward) {
       dispatch(eventGetReward());
-    } else if (targetRoute.indexOf('/') >= 0) {
+    } else if (reward) {
       // add discount
-      const reward = OrderSelector.getEventNextReward(getState().order);
       const discountItem = {
         code: reward.code,
-        value: reward.value
+        value: reward.value,
+        instantly: true,
       };
       dispatch(Actions.addDiscount(discountItem));
-      dispatch(changePage(targetRoute));
+      // dispatch(Actions.setFlagUseDiscountInstantly(true));
+      if (reward.name === 'topup') {
+        dispatch(changePage('/topup'));
+      } else if (reward.name === 'product') {
+        dispatch(selectProduct('/product/single', selectedEvent.product, 'singleProduct'));
+      }
+    } else {
+      console.log('NO_REWARD');
     }
   };
 };

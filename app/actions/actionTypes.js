@@ -35,6 +35,7 @@ export const SHOW_LOADING = 'SHOW_LOADING';
 export const HIDE_LOADING = 'HIDE_LOADING';
 export const SET_FOOTER_ADS = 'SET_FOOTER_ADS';
 export const RESET_FOOTER_ADS = 'RESET_FOOTER_ADS';
+export const USE_DISCOUNT_INSTANTLY = 'USE_DISCOUNT_INSTANTLY';
 // ======================================================
 // TCP
 // ======================================================

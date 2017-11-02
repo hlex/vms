@@ -779,8 +779,8 @@ const barcodePlusLineQrcodeWithMobileTopupCode = {
     },
     {
       order: 3,
-      th: 'รับฟรีเติมเงิน 2 บาท',
-      en: 'รับฟรีเติมเงิน 2 บาท',
+      th: 'รับฟรีเติมเงิน 2 บาทต้องใช้ทันที',
+      en: 'รับฟรีเติมเงิน 2 บาทต้องใช้ทันที',
     },
   ],
   products: [
@@ -846,8 +846,8 @@ const barcodePlusLineQrcodeWithProductDiscountNow = {
     },
     {
       order: 3,
-      th: 'รับฟรีเติมเงิน 2 บาท',
-      en: 'รับฟรีเติมเงิน 2 บาท',
+      th: 'รับส่วนลด Brand Gen U 2 บาท',
+      en: 'รัยส่วนลด Brand Gen U 2 บาท',
     },
   ],
   products: [

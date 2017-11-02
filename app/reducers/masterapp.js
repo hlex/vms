@@ -144,7 +144,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         limitBanknote: action.banknoteValue
-      }
+      };
     default:
       return state;
   }
