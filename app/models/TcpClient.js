@@ -13,7 +13,7 @@ export default class TcpClient {
   }
   send(data) {
     console.log('%c App Send Data:', createLog(null, 'orange', '#fff'), data);
-    console.log('Queue --------->', this.queue, this.busy);
+    // console.log('Queue --------->', this.queue, this.busy);
     this.queue.push(data);
     if (!this.busy) {
       this.doSend();
@@ -21,7 +21,7 @@ export default class TcpClient {
   }
   doSend() {
     const data = this.queue.pop();
-    console.log('doSend()', data);
+    // console.log('doSend()', data);
     if (data) {
       setTimeout(() => {
         if (typeof data === 'string') {

@@ -28,7 +28,6 @@ class FilePlayer extends Component {
     this.timer2 = setInterval(this.alarm, Number(duration * 1000));
   }
   componentWillUnmount = () => {
-    console.log('componentWillUnmount');
     clearInterval(this.timer1);
     clearInterval(this.timer2);
   }
@@ -43,7 +42,7 @@ class FilePlayer extends Component {
     clearInterval(this.timer2);
   }
   render = () => {
-    console.debug('FilePlayer:props', this.props);
+    // console.debug('FilePlayer:props', this.props);
     const key = Date.now();
     const {
       src,
