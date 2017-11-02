@@ -25,6 +25,7 @@ import OrderSelector from '../../../selectors/order';
 
 const mapStateToProps = (state) => {
   return {
+    moneyBoxActive: MasterappSelector.verifyIsMoneyBoxActive(state.masterapp),
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     productPrice: OrderSelector.getPromotionSetPrice(state.order),
     discountAmount: OrderSelector.getDiscountAmount(state.order),
