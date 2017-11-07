@@ -54,7 +54,7 @@ const initialState = {
   readyToDropProduct: false,
   canChangeCash: true,
   droppingProduct: {},
-  limitBanknote: 500,
+  limitBanknote: undefined,
   hardwareReady: false,
   moneyBoxActive: false,
   loading: {

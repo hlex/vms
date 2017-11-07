@@ -756,7 +756,7 @@ export const enableMoneyBoxWhenInitPage = () => {
     if (!moneyBoxActive) {
       dispatch(enableMoneyBox());
     } else {
-      dispatch(showLoading('ระบบกำลังทอนเงิน'));
+      dispatch(showLoading('ระบบกำลังดำเนินการ'));
       setTimeout(() => {
         if (MasterappSelector.verifyIsLoading(getState().masterapp)) {
           dispatch(hideLoading());
