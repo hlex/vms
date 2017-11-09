@@ -206,6 +206,11 @@ const getSingleProductPrice = createSelector([getSingleProduct], singleProduct =
   Number(_.get(singleProduct, 'price', '')),
 );
 
+const getSingleProductBgImage = createSelector([getSingleProduct], singleProduct => {
+  const bgImage = _.get(singleProduct, 'imageBig', '');
+  return bgImage !== '' ? bgImage : undefined;
+});
+
 const getPromotionSetPrice = createSelector([getPromotionSet], promotionSet =>
   Number(_.get(promotionSet, 'price', '')),
 );
@@ -213,6 +218,11 @@ const getPromotionSetPrice = createSelector([getPromotionSet], promotionSet =>
 const getPromotionSetFirstProductPrice = createSelector([getPromotionSetProducts], products =>
   Number(_.head(products).price),
 );
+
+const getPromotionSetFirstProductBgImage = createSelector([getSingleProduct], (singleProduct) => {
+  const bgImage = _.get(singleProduct, 'imageBig', '');
+  return bgImage !== '' ? bgImage : undefined;
+});
 
 const getDroppedProducts = createSelector([getProducts], products =>
   _.filter(products, product => product.isDropped),
@@ -315,6 +325,7 @@ export default {
   getProducts,
   getSingleProduct,
   getSingleProductPrice,
+  getSingleProductBgImage,
   // ======================================================
   // PromotionSet
   // ======================================================
@@ -325,6 +336,7 @@ export default {
   getProductToDrop,
   getDropProductTargetRowColumn,
   getDroppedProductSummaryPrice,
+  getPromotionSetFirstProductBgImage,
   // ======================================================
   // Flag
   // ======================================================

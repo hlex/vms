@@ -31,6 +31,7 @@ const mapStateToProps = (state) => {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     productPrice: OrderSelector.getSingleProductPrice(state.order),
     discountAmount: OrderSelector.getDiscountAmount(state.order),
+    productBgImage: OrderSelector.getSingleProductBgImage(state.order),
   };
 };
 
@@ -50,6 +51,7 @@ class SingleProductPage extends Component {
     verifyDiscountCode: PropTypes.func.isRequired,
     initSingleProductPage: PropTypes.func.isRequired,
     willReceivePropsEnableMoneyBoxWhenInitPage: PropTypes.func.isRequired,
+    productBgImage: PropTypes.string,
   }
 
   static defaultProps = {
@@ -74,11 +76,13 @@ class SingleProductPage extends Component {
       baseURL,
       submitProduct,
       verifyDiscountCode,
+      productBgImage,
     } = this.props;
     return (
       <div>
         <Layout.Title>
           <ProductTitle
+            bgImage={productBgImage}
             baseURL={baseURL}
           />
         </Layout.Title>
