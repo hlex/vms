@@ -30,7 +30,7 @@ class EventItem extends Component {
     const orderLabel = `${order}. `;
     const howToLowerCase = howTo.toLowerCase();
     const shouldRenderGetReward = howTo.indexOf('รับ') >= 0 || howToLowerCase.indexOf('get') >= 0;
-    const shouldRenderIconPhone = howTo.indexOf('หมายเลข') >= 0 || howToLowerCase.indexOf('phone') >= 0;
+    const shouldRenderIconPhone = howTo.indexOf('หมายเลข') >= 0 || howTo.indexOf('มือถือ') >= 0 || howToLowerCase.indexOf('phone') >= 0;
     const shouldRenderIconEmail = howTo.indexOf('อีเมล') >= 0 || howToLowerCase.indexOf('email') >= 0;
     const shouldRenderIconLineId = howTo.indexOf('ไลน์') >= 0 || howToLowerCase.indexOf('line id') >= 0;
     const shouldRenderIconBarCode = howTo.indexOf('บาร์') >= 0 || howToLowerCase.indexOf('bar') >= 0;
