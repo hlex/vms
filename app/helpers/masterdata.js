@@ -23,7 +23,10 @@ product: {
   Column: '1',
 },
 */
-export const convertToAppProduct = (product) => {
+export const convertToAppProduct = (product, baseURL = '') => {
+  const ads = _.isArray(product.Po_ImgAd)
+  ? product.Po_ImgAd
+  : [{ Ad_Url: product.Po_ImgAd, Ad_Second: '5' }];
   return {
     cuid: cuid(),
     id: product.Po_ID || '',
@@ -35,10 +38,14 @@ export const convertToAppProduct = (product) => {
     row: product.Row || '',
     col: product.Column || '',
     isDropped: false,
+    ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),
   };
 };
 
-export const convertToAppPromotion = (promotion) => {
+export const convertToAppPromotion = (promotion, baseURL) => {
+  const ads = _.isArray(promotion.Pro_ImgAd)
+  ? promotion.Pro_ImgAd
+  : [{ Ad_Url: promotion.Pro_ImgAd, Ad_Second: '5' }];
   const products = _.map(promotion.Product_List || [], (product) => convertToAppProduct(product));
   return {
     cuid: cuid(),
@@ -46,6 +53,7 @@ export const convertToAppPromotion = (promotion) => {
     products,
     price: _.sumBy(products, product => Number(product.price)) - Number(promotion.Discount_Price),
     image: '',
+    ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),
   };
 };
 
@@ -61,7 +69,10 @@ export const convertToAppPromotion = (promotion) => {
   "Topup_Imgbig": "/uploads/images/topup-bg-20170819134443.png"
 },
 */
-export const convertToAppMobileTopupProvider = (mobileTopupProvider) => {
+export const convertToAppMobileTopupProvider = (mobileTopupProvider, baseURL) => {
+  const ads = _.isArray(mobileTopupProvider.Topup_ImgAd)
+  ? mobileTopupProvider.Topup_ImgAd
+  : [{ Ad_Url: mobileTopupProvider.Topup_ImgAd, Ad_Second: '5' }];
   return {
     cuid: cuid(),
     id: mobileTopupProvider.Topup_ID,
@@ -70,6 +81,7 @@ export const convertToAppMobileTopupProvider = (mobileTopupProvider) => {
     serviceCode: mobileTopupProvider.Topup_ServiceCode,
     name: mobileTopupProvider.Topup_Name.en,
     names: mobileTopupProvider.Topup_Name,
+    ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),
   };
 };
 
@@ -90,9 +102,10 @@ export const convertToAppMobileTopupProvider = (mobileTopupProvider) => {
 }
 */
 export const convertToAppAd = (ad) => {
+  const isVideo = (ad.Ad_Url || '').indexOf('.mp4') >= 0;
   return {
     id: ad.Ad_ID || cuid(),
-    type: ad.Ad_Type === 'V' ? 'video' : 'image',
+    type: ad.Ad_Type || '' === 'V' || isVideo ? 'video' : 'image',
     name: ad.Ad_ID || '',
     path: ad.Ad_Url || '',
     filename: ad.Ad_ID || '',

@@ -98,21 +98,21 @@ export const initApplication = () => {
       // ======================================================
       const serviceGetProductsResponse = await serviceGetProducts();
       console.log('serviceGetProductsResponse', serviceGetProductsResponse);
-      const sanitizedProducts = _.map(extractResponseData(serviceGetProductsResponse), product => convertToAppProduct(product));
+      const sanitizedProducts = _.map(extractResponseData(serviceGetProductsResponse), product => convertToAppProduct(product, baseURL));
       dispatch(Actions.receivedMasterdata('products', sanitizedProducts));
       // ======================================================
       // PROMOTION
       // ======================================================
       const serviceGetPromotionsResponse = await serviceGetPromotions();
       console.log('serviceGetPromotionsResponse', serviceGetPromotionsResponse);
-      const sanitizedPromotions = _.map(extractResponseData(serviceGetPromotionsResponse), promotion => convertToAppPromotion(promotion));
+      const sanitizedPromotions = _.map(extractResponseData(serviceGetPromotionsResponse), promotion => convertToAppPromotion(promotion, baseURL));
       dispatch(Actions.receivedMasterdata('promotionSets', sanitizedPromotions));
       // ======================================================
       // MOBILE TOPUP PROVIDER
       // ======================================================
       const serviceGetMobileTopupProvidersResponse = await serviceGetMobileTopupProviders();
       console.log('serviceGetMobileTopupProvidersResponse', serviceGetMobileTopupProvidersResponse);
-      const sanitizedMobileTopupProviders = _.map(extractResponseData(serviceGetMobileTopupProvidersResponse), mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider));
+      const sanitizedMobileTopupProviders = _.map(extractResponseData(serviceGetMobileTopupProvidersResponse), mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider, baseURL));
       dispatch(Actions.receivedMasterdata('topupProviders', sanitizedMobileTopupProviders));
     } catch (error) {
       console.error(error);
