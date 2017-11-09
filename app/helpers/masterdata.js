@@ -24,9 +24,9 @@ product: {
 },
 */
 export const convertToAppProduct = (product, baseURL = '') => {
-  const ads = _.isArray(product.Po_ImgAd)
-  ? product.Po_ImgAd
-  : [{ Ad_Url: product.Po_ImgAd, Ad_Second: '5' }];
+  const ads = _.isArray(product.Po_ImgAd || '')
+  ? product.Po_ImgAd || ''
+  : [{ Ad_Url: product.Po_ImgAd || '', Ad_Second: '5' }];
   return {
     cuid: cuid(),
     id: product.Po_ID || '',
@@ -128,27 +128,19 @@ export const convertToAppAd = (ad) => {
   // };
 };
 
-export const convertToAppEvent = (event) => {
+export const convertToAppEvent = (event, baseURL) => {
+  console.log('convertToAppEvent', event);
   const eventInputActivities = _.filter(event.eventActivities || [], activity => activity.type === 'input');
   const eventWatchActivities = _.filter(event.eventActivities || [], activity => activity.type === 'watch');
+  const ads = [];
+  // _.isArray(mobileTopupProvider.Topup_ImgAd)
+  // ? mobileTopupProvider.Topup_ImgAd
+  // : [{ Ad_Url: mobileTopupProvider.Topup_ImgAd, Ad_Second: '5' }];
   return {
     eventId: event.id,
     tag: _.head(event.tags),
-    product: convertToAppProduct(_.get(event, 'products.0', {})),
-    howTo: _.map(event.howTo, (instruction) => {
-      // const th = instruction.th || '';
-      // const isMSISDN = /เบอร์มือถือ/i.test(th);
-      // const isEmail = /อีเมล/i.test(th);
-      // const isLineId = /line/i.test(th);
-      // const isBarCode = /barcode/i.test(th);
-      // const isQrCode = /qr/i.test(th);
-      // if (isMSISDN) return (<span>{th}<img className="icon middle-line" src="images/icon-phone.png" height="30" /></span>);
-      // if (isEmail) return (<span>{th}<img className="icon middle-line" src="images/icon-email.png" height="30" /></span>);
-      // if (isLineId) return (<span>{th}<img className="icon middle-line" src="images/icon-linelogo.png" height="30" /></span>);
-      // if (isBarCode) return (<span>{th}<img className="icon middle-line" src="images/icon-barcode.png" height="30" /></span>);
-      // if (isQrCode) return (<span>{th}<img className="icon middle-line" src="images/icon-qrcode.png" height="30" /></span>);
-      return instruction;
-    }),
+    product: convertToAppProduct(_.get(event, 'products.0', _.get(event, 'product', {}))),
+    howTo: _.map(event.howTo, (instruction) => instruction),
     inputs: _.map(eventInputActivities || [], (eventInputActivity) => {
       return {
         ...eventInputActivity,
@@ -173,16 +165,6 @@ export const convertToAppEvent = (event) => {
         completed: false
       };
     }),
-    ads: [normalizeStripAds('xxx', {
-      id: '4226',
-      type: 'image',
-      name: 'EMP_BT_Gift17_EMPStripAds',
-      path: 'StripAds/20161111_betrend-gift-2017_344.png',
-      filename: '20161111_betrend-gift-2017_344.png',
-      expire: '2026-11-21',
-      timeout: '2000',
-      adSize: 'STRIP',
-      checksum: '0de9be00280a021661584f2a3af95319',
-    })],
+    ads,
   };
 };
