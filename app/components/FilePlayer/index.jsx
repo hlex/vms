@@ -53,7 +53,7 @@ class FilePlayer extends Component {
     if (type === 'video') {
       return (
         <div className="react-fileplayer" key={key}>
-          <video width={width} height={height} className="cg-video" muted autoPlay>
+          <video width={width} height={height} className="cg-video" autoPlay>
             <source src={`${src}`} type="video/mp4" />
           </video>
         </div>
