@@ -24,7 +24,7 @@ export const verifyBarcodeOrQrcode = ({ eventId, code, discountType }) => {
     vtype: 'verifybarcode',
     id: eventId,
     code,
-    discounttype: discountType
+    discounttype: discountType,
   };
   return fetchFacade(`${URL.verifyBarcodeOrQrcode}${convertToURLParam(data)}`).then((response) => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
@@ -35,12 +35,12 @@ export const verifyBarcodeOrQrcode = ({ eventId, code, discountType }) => {
   // });
 };
 
-export const verifyLineId = ({ eventId, code, discountType }) => {
+export const verifyLineId = ({ eventId, code, barcodeOrQrcode }) => {
   const data = {
     vtype: 'verifybarcode',
     id: eventId,
     code,
-    discounttype: discountType
+    Barcode: barcodeOrQrcode,
   };
   return fetchFacade(`${URL.verifyLineId}${convertToURLParam(data)}`).then((response) => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
@@ -48,3 +48,17 @@ export const verifyLineId = ({ eventId, code, discountType }) => {
   });
 };
 
+
+export const useLineId = ({ eventId, code, barcodeOrQrcode, productId }) => {
+  const data = {
+    vtype: 'verifybarcode',
+    id: eventId,
+    code,
+    Barcode: barcodeOrQrcode,
+    po_id: productId
+  };
+  return fetchFacade(`${URL.useLineId}${convertToURLParam(data)}`).then((response) => {
+    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return response;
+  });
+};
