@@ -32,6 +32,7 @@ import {
   convertToAppProduct,
   convertToAppPromotion,
   convertToAppMobileTopupProvider,
+  convertToAppEvent,
 } from '../helpers/masterdata';
 import {
   extractResponseData,
@@ -93,7 +94,8 @@ export const initApplication = () => {
       // ======================================================
       const serviceGetEventsResponse = await serviceGetEvents();
       console.log('serviceGetEventsResponse', serviceGetEventsResponse);
-      dispatch(Actions.receivedMasterdata('events', serviceGetEventsResponse));
+      const sanitizedEvents = _.map(extractResponseData(serviceGetEventsResponse), event => convertToAppEvent(event, baseURL));
+      dispatch(Actions.receivedMasterdata('events', sanitizedEvents));
       // ======================================================
       // PRODUCTS
       // ======================================================
@@ -276,7 +278,7 @@ export const receivedQRCode = (scannedCode) => {
         const dataToVerify = {
           eventId,
           code: scannedCode,
-          Barcode: barcodeOrQrcode
+          barcodeOrQrcode,
         };
         await verifyLineId(dataToVerify);
         dispatch(updateEventInput(nextInput, scannedCode));
