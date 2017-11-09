@@ -62,6 +62,7 @@ import {
 import {
   serviceGetEventReward,
   verifyBarcodeOrQrcode,
+  verifyLineId,
 } from '../apis/event';
 
 let cmdNo = 0;
@@ -245,20 +246,45 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
 };
 
 const verifyIsBarcodeOrQrCodeInput = (inputType) => {
-  return _.includes(['BARCODE', 'LINE_QR_CODE'], inputType);
-}
+  return _.includes(['BARCODE', 'QR_CODE'], inputType);
+};
 
-export const receivedQRCode = (qrCode) => {
+const verifyIsLineQrcodeInput = (inputType) => {
+  return _.includes(['LINE_QR_CODE'], inputType);
+};
+// code is scannedCode
+const isQrcode = (scannedCode) => {
+  return scannedCode.indexOf('http://') >= 0;
+};
+
+export const receivedQRCode = (scannedCode) => {
   return async (dispatch, getState) => {
     const nextInput = OrderSelector.getEventNextInput(getState().order);
-    console.log('receivedQRCode', qrCode, nextInput);
-    if (verifyIsBarcodeOrQrCodeInput(nextInput)) {
-      try {
-        await verifyBarcodeOrQrcode(qrCode);
-        dispatch(updateEventInput(nextInput, qrCode));
-      } catch (error) {
-
+    const eventId = OrderSelector.getEventId(getState().order);
+    console.log('receivedQRCode', eventId, scannedCode, nextInput);
+    try {
+      if (verifyIsBarcodeOrQrCodeInput(nextInput)) {
+        const dataToVerify = {
+          eventId,
+          code: scannedCode,
+          discountType: isQrcode(scannedCode) ? 'qrcode' : 'barcode'
+        };
+        await verifyBarcodeOrQrcode(dataToVerify);
+        dispatch(updateEventInput(nextInput, scannedCode));
+      } else if (verifyIsLineQrcodeInput) {
+        const barcodeOrQrcode = OrderSelector.getEventBarcodeOrQrcodeInput(getState().order);
+        const dataToVerify = {
+          eventId,
+          code: scannedCode,
+          Barcode: barcodeOrQrcode
+        };
+        await verifyLineId(dataToVerify);
+        dispatch(updateEventInput(nextInput, scannedCode));
+      } else {
+        console.error(`${scannedCode} is not barcode or qrcode or lineId`);
       }
+    } catch (error) {
+      console.error(error);
     }
   };
 };

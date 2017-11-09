@@ -75,6 +75,15 @@ const getEventInputs = createSelector(
   }
 );
 
+const getEventBarcodeOrQrcodeInput = createSelector(
+  [getEventInputs],
+  (eventInputs) => {
+    if (_.size(eventInputs) <= 0) return '';
+    const barcodeOrQrcodeInput = _.find(eventInputs, item => item.completed === true && _.includes(['BARCODE', 'QR_CODE'], item.name));
+    return barcodeOrQrcodeInput ? barcodeOrQrcodeInput.value : '';
+  }
+);
+
 const getEventNextInput = createSelector(
   [getEventInputs],
   (eventInputs) => {
@@ -283,6 +292,7 @@ export default {
   getEventNextRewardRoute,
   getEventInputs,
   getEventNextInput,
+  getEventBarcodeOrQrcodeInput,
   getEventWatches,
   getEventNextWatch,
   verifyEventShouldSendReward,

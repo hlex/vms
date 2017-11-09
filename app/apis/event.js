@@ -19,8 +19,32 @@ export const serviceGetEventReward = ({ eventId, discountType, amount, channel, 
   });
 };
 
-export const verifyBarcodeOrQrcode = (code) => {
-  return new Promise((resolve, reject) => {
-    resolve(true);
+export const verifyBarcodeOrQrcode = ({ eventId, code, discountType }) => {
+  const data = {
+    vtype: 'verifybarcode',
+    id: eventId,
+    code,
+    discounttype: discountType
+  };
+  return fetchFacade(`${URL.verifyBarcodeOrQrcode}${convertToURLParam(data)}`).then((response) => {
+    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return response;
+  });
+  // return new Promise((resolve, reject) => {
+  //   resolve(true);
+  // });
+};
+
+export const verifyLineId = ({ eventId, code, discountType }) => {
+  const data = {
+    vtype: 'verifybarcode',
+    id: eventId,
+    code,
+    discounttype: discountType
+  };
+  return fetchFacade(`${URL.verifyLineId}${convertToURLParam(data)}`).then((response) => {
+    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return response;
   });
 };
+
