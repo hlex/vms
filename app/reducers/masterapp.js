@@ -48,7 +48,8 @@ const initialState = {
       linkTo: 'play',
     },
   ],
-  baseURL: cloudURL, // 'http://localhost:8888/vms/html-v2',
+  // baseURL: 'http://localhost:8888/vms/html-v2',
+  baseURL: cloudURL,
   tcp: initialTcp,
   tcpClient: {},
   temp: 25, // celcius
