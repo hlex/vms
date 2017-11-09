@@ -89,14 +89,14 @@ export const initApplication = () => {
       // ======================================================
       const serviceGetPromotionsResponse = await serviceGetPromotions();
       console.log('serviceGetPromotionsResponse', serviceGetPromotionsResponse);
-      const sanitizedPromotions = _.map(serviceGetPromotionsResponse, promotion => convertToAppPromotion(promotion));
+      const sanitizedPromotions = _.map(extractResponseData(serviceGetPromotionsResponse), promotion => convertToAppPromotion(promotion));
       dispatch(Actions.receivedMasterdata('promotionSets', sanitizedPromotions));
       // ======================================================
       // MOBILE TOPUP PROVIDER
       // ======================================================
       const serviceGetMobileTopupProvidersResponse = await serviceGetMobileTopupProviders();
       console.log('serviceGetMobileTopupProvidersResponse', serviceGetMobileTopupProvidersResponse);
-      const sanitizedMobileTopupProviders = _.map(serviceGetMobileTopupProvidersResponse, mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider));
+      const sanitizedMobileTopupProviders = _.map(extractResponseData(serviceGetMobileTopupProvidersResponse), mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider));
       dispatch(Actions.receivedMasterdata('topupProviders', sanitizedMobileTopupProviders));
     } catch (error) {
       console.error(error);
