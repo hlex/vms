@@ -14,6 +14,7 @@ import {
   HIDE_LOADING
 } from '../actions/actionTypes';
 
+const cloudURL = 'http://27.254.160.247:81';
 const initialTcp = process.env.NODE_ENV !== 'production'
 ? {
   ip: '127.0.0.1',
@@ -47,7 +48,7 @@ const initialState = {
       linkTo: 'play',
     },
   ],
-  baseURL: 'http://27.254.160.247:81', // 'http://localhost:8888/vms/html-v2',
+  baseURL: cloudURL, // 'http://localhost:8888/vms/html-v2',
   tcp: initialTcp,
   tcpClient: {},
   temp: 25, // celcius
