@@ -22,13 +22,48 @@ export const convertToAppProduct = (product) => {
     cuid: cuid(),
     id: product.Po_ID || '',
     name: product.Po_Name || '',
-    price: product.Po_Price || '',
-    isSoldout: isSoldout() || true,
+    price: Number(product.Po_Price || ''),
+    isSoldout: isSoldout(),
     image: product.Po_Img || '',
     imageBig: product.Po_Imgbig || '',
     row: product.Row || '',
     col: product.Column || '',
     isDropped: false,
+  };
+};
+
+export const convertToAppPromotion = (promotion) => {
+  const products = _.map(promotion.Product_List || [], (product) => convertToAppProduct(product));
+  return {
+    cuid: cuid(),
+    id: promotion.Pro_ID,
+    products,
+    price: _.sumBy(products, product => Number(product.price)) - Number(promotion.Discount_Price),
+    image: '',
+  };
+};
+
+/*
+{
+  "Topup_ID": "1",
+  "Topup_Name": {
+      "th": "เอไอเอส",
+      "en": "เอไอเอส"
+  },
+  "Topup_ServiceCode": "1001",
+  "Topup_Img": "/uploads/images/topup-20170418141424.png",
+  "Topup_Imgbig": "/uploads/images/topup-bg-20170819134443.png"
+},
+*/
+export const convertToAppMobileTopupProvider = (mobileTopupProvider) => {
+  return {
+    cuid: cuid(),
+    id: mobileTopupProvider.Topup_ID,
+    banner: mobileTopupProvider.Topup_Imgbig,
+    src: mobileTopupProvider.Topup_Img,
+    serviceCode: mobileTopupProvider.Topup_ServiceCode,
+    name: mobileTopupProvider.Topup_Name.en,
+    names: mobileTopupProvider.Topup_Name,
   };
 };
 
