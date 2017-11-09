@@ -1,15 +1,14 @@
 import _ from 'lodash';
 import cuid from 'cuid';
 
-export const normalizeStripAds = ad => ({
-  name: ad.name,
-  type: ad.type,
-  src: `http://localhost:8888/vms/${ad.path}`,
-  duration: Number(ad.timeout) / 1000,
-  adSize: ad.adSize,
+export const normalizeStripAds = (ad, baseURL = '') => ({
+  name: ad.name || '',
+  type: ad.type || '',
+  src: `${baseURL}${ad.path || ''}`,
+  duration: Number(ad.timeout || 0) / 1000,
+  adSize: ad.adSize || '',
 });
 const isSoldout = () => _.random(1, 5) === 5;
-
 /*
 product: {
   Po_ID: 'PO0001',
@@ -74,16 +73,33 @@ export const convertToAppMobileTopupProvider = (mobileTopupProvider) => {
   };
 };
 
+/*
+{
+  "status": "SUCCESSFUL",
+  "trx-id": "20171109194928",
+  "response-data": [
+      {
+          "Ad_ID": "AD002",
+          "Ad_Type": "V",
+          "Ad_Point": 50,
+          "Ad_Second": 15,
+          "Ad_Display": "F",
+          "Ad_Url": "/uploads/banner/advertise-20170412095354.mp4"
+      }
+  ]
+}
+*/
 export const convertToAppAd = (ad) => {
   return {
-    id: '4094',
-    type: 'image',
-    name: 'EMP_AIS_EMPStripAds',
-    path: 'StripAds/20151204_ais_344.jpg',
-    filename: '20151204_ais_344.jpg',
-    expire: '2026-11-21',
-    timeout: '5000',
-    checksum: '47e93aec13f7c9115ebbcfaacb309ccd',
+    id: ad.Ad_ID || cuid(),
+    type: ad.Ad_Type === 'V' ? 'video' : 'image',
+    name: ad.Ad_ID || '',
+    path: ad.Ad_Url || '',
+    filename: ad.Ad_ID || '',
+    expire: '', // '2026-11-21',
+    timeout: Number(ad.Ad_Second) * 1000,
+    checksum: '', // '47e93aec13f7c9115ebbcfaacb309ccd',
+    adSize: 'STRIP', // ad.Ad_Display === 'F' ? 'FULLSCREEN' : 'STRIP',
   };
   // return {
   //   cuid: cuid(),
@@ -144,7 +160,7 @@ export const convertToAppEvent = (event) => {
         completed: false
       };
     }),
-    ads: [normalizeStripAds({
+    ads: [normalizeStripAds('xxx', {
       id: '4226',
       type: 'image',
       name: 'EMP_BT_Gift17_EMPStripAds',

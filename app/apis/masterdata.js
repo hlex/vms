@@ -1056,7 +1056,7 @@ export const serviceGetProducts = () => {
     vtype: 'product',
   };
   return fetchFacade(`${URL.getProducts}${convertToURLParam(data)}`).then((response) => {
-    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });
 };
@@ -1080,3 +1080,13 @@ export const serviceGetMobileTopupProviders = () => {
     return response;
   });
 };
+
+export const serviceGetBaseAds = () => {
+  const data = {
+    vtype: 'advertise',
+  };
+  return fetchFacade(`${URL.getMobileTopupProviders}${convertToURLParam(data)}`).then((response) => {
+    // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return response;
+  });
+}

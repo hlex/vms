@@ -1,5 +1,13 @@
 import _ from 'lodash';
-import { SET_FOOTER_ADS, RESET_FOOTER_ADS } from '../actions/actionTypes';
+import {
+  SET_FOOTER_ADS,
+  RESET_FOOTER_ADS,
+  SET_BASE_ADS
+} from '../actions/actionTypes';
+import {
+  normalizeStripAds
+} from '../helpers/masterdata';
+
 
 const stripAds = [
   {
@@ -202,19 +210,11 @@ const stripAds = [
   },
 ];
 
-const normalizeStripAds = ad => ({
-  name: ad.name,
-  type: ad.type,
-  src: `http://localhost:8888/vms/${ad.path}`,
-  duration: Number(ad.timeout) / 1000,
-  adSize: ad.adSize,
-});
-
 const baseAds = _.map(stripAds, ad => normalizeStripAds(ad));
 
 const initialState = {
-  baseAds,
-  footerAds: baseAds,
+  baseAds: [],
+  footerAds: [], // baseAds,
 };
 const getInitialState = () => ({
   ...initialState,
@@ -223,7 +223,15 @@ const getInitialState = () => ({
 export default (state = getInitialState(), action) => {
   switch (action.type) {
     case RESET_FOOTER_ADS:
-      return getInitialState();
+      return {
+        ...state,
+        footerAds: state.baseAds
+      };
+    case SET_BASE_ADS:
+      return {
+        ...state,
+        baseAds: action.ads,
+      };
     case SET_FOOTER_ADS:
       return {
         ...state,

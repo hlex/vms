@@ -27,6 +27,8 @@ import {
   convertApplicationErrorToError,
 } from '../helpers/error';
 import {
+  normalizeStripAds,
+  convertToAppAd,
   convertToAppProduct,
   convertToAppPromotion,
   convertToAppMobileTopupProvider,
@@ -51,6 +53,7 @@ import {
   createTcpClient
 } from '../apis/tcp';
 import {
+  serviceGetBaseAds,
   serviceGetEvents,
   serviceGetProducts,
   serviceGetPromotions,
@@ -72,6 +75,18 @@ export const initApplication = () => {
     // GET MASTER DATA
     // ======================================================
     try {
+      const baseURL = MasterappSelector.getBaseURL(getState().masterapp);
+      // ======================================================
+      // ADS
+      // ======================================================
+      const serviceGetBaseAdsResponse = await serviceGetBaseAds();
+      console.log('serviceGetBaseAdsResponse', serviceGetBaseAdsResponse);
+      const sanitizedBaseAds = _.map(extractResponseData(serviceGetBaseAdsResponse), (ad) => {
+        console.log('ad', ad);
+        return normalizeStripAds(convertToAppAd(ad), baseURL);
+      });
+      dispatch(Actions.setBaseAds(sanitizedBaseAds));
+      dispatch(Actions.setFooterAds(sanitizedBaseAds));
       // ======================================================
       // EVENTS
       // ======================================================
