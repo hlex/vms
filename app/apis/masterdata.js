@@ -10,12 +10,14 @@ const rewardEmailChannel = 'EMAIL';
 const rewardVendingMachineNow = 'VENDING_MACHINE_NOW';
 const rewardVendingMachineCode = 'VENDING_MACHINE_CODE';
 const rewardDiscountType = 'DISCOUNT';
-const rewardProductName = 'PRODUCT';
-const rewardMobileTopupName = 'MOBILE_TOPUP';
+const rewardProductName = 'product';
+const rewardMobileTopupName = 'topup';
 const tagDiscountLabel = 'ส่วนลด';
 const tagFreeLabel = 'รับฟรี';
 const tagMobileTopupLabel = 'เติมเงินฟรี';
 const tagValue = '2';
+const adDuration = '5';
+const rewardValue = '5';
 const discountTag = {
   name: 'A', // B
   color: 'RED', // RED GREEN BLUE MINT YELLOW PURPLE
@@ -37,6 +39,9 @@ const mobileTopupTag = {
   unit: 'บาท', // free text..
   value: tagValue // integer.. เช่น 10, 20, 100
 };
+// ======================================================
+// EVENTS
+// ======================================================
 const msisdnWithMobileTopup = {
   id: 1001,
   eventType: '',
@@ -54,7 +59,7 @@ const msisdnWithMobileTopup = {
         name: 'EMP_EMPMag_EMPStripAds',
         type: 'image',
         src: 'http://localhost:8888/vms/StripAds/20161007_emp_magazine-no33_344.jpg',
-        duration: Number('2000') / 1000,
+        duration: Number(adDuration),
       }
     },
   ],
@@ -63,7 +68,7 @@ const msisdnWithMobileTopup = {
       type: rewardDiscountType,
       name: rewardMobileTopupName,
       code: '1001',
-      value: '2',
+      value: rewardValue,
       channel: rewardSMSChannel,
       expireDate: '2017-12-01',
     },
@@ -86,13 +91,13 @@ const msisdnWithMobileTopup = {
     },
     {
       order: 2,
-      th: 'ชมโฆษณา 2 วินาที',
-      en: 'ชมโฆษณา 2 วินาที',
+      th: `ชม โฆษณา ${adDuration} วินาที`,
+      en: `ชม โฆษณา ${adDuration} วินาที`,
     },
     {
       order: 3,
-      th: 'รับเติมเงินฟรี 2 บาท ทาง SMS',
-      en: 'รับเติมเงินฟรี 2 บาท ทาง SMS',
+      th: `รับเติมเงินฟรี ${rewardValue} ทาง SMS`,
+      en: `รับเติมเงินฟรี ${rewardValue} ทาง SMS`,
     },
   ],
   products: [
@@ -126,7 +131,7 @@ const msisdnWithProductDiscount = {
         name: 'EMP_EMPMag_EMPStripAds',
         type: 'image',
         src: 'http://localhost:8888/vms/StripAds/20161007_emp_magazine-no33_344.jpg',
-        duration: Number('2000') / 1000,
+        duration: Number(adDuration),
       }
     },
   ],
@@ -135,7 +140,7 @@ const msisdnWithProductDiscount = {
       type: rewardDiscountType,
       name: rewardProductName,
       code: '1002',
-      value: '2',
+      value: rewardValue,
       channel: rewardSMSChannel,
       expireDate: '2017-12-01',
     },
@@ -158,13 +163,13 @@ const msisdnWithProductDiscount = {
     },
     {
       order: 2,
-      th: 'ชมโฆษณา 2 วินาที',
-      en: 'ชมโฆษณา 2 วินาที',
+      th: `ชม โฆษณา ${adDuration} วินาที`,
+      en: `ชม โฆษณา ${adDuration} วินาที`,
     },
     {
       order: 3,
-      th: 'รับส่วนลด 2 บาท ทาง SMS',
-      en: 'รับส่วนลด 2 บาท ทาง SMS',
+      th: `รับส่วนลด ${rewardValue} ทาง SMS`,
+      en: `รับส่วนลด ${rewardValue} ทาง SMS`,
     },
   ],
   products: [
@@ -199,7 +204,7 @@ const msisdnWithProductFree = {
         name: 'EMP_EMPMag_EMPStripAds',
         type: 'image',
         src: 'http://localhost:8888/vms/StripAds/20161007_emp_magazine-no33_344.jpg',
-        duration: Number('2000') / 1000,
+        duration: Number(adDuration),
       }
     },
   ],
@@ -231,8 +236,8 @@ const msisdnWithProductFree = {
     },
     {
       order: 2,
-      th: 'ชมโฆษณา 2 วินาที',
-      en: 'ชมโฆษณา 2 วินาที',
+      th: `ชม โฆษณา ${adDuration} วินาที`,
+      en: `ชม โฆษณา ${adDuration} วินาที`,
     },
     {
       order: 3,
@@ -272,7 +277,7 @@ const emailWithMobileTopup = {
         name: 'EMP_TripAdvisor_EMPStripAds',
         type: 'image',
         src: 'http://localhost:8888/vms/StripAds/20160205_emporium_en_trioadvisor_1080_344.png',
-        duration: Number('2000') / 1000,
+        duration: Number(adDuration),
       }
     },
   ],
@@ -280,7 +285,7 @@ const emailWithMobileTopup = {
     {
       type: rewardDiscountType,
       name: rewardMobileTopupName,
-      value: '2',
+      value: rewardValue,
       code: '1003',
       channel: rewardEmailChannel,
       expireDate: '2017-11-01',
@@ -304,13 +309,13 @@ const emailWithMobileTopup = {
     },
     {
       order: 2,
-      th: 'ชมโฆษณา 2 วินาที',
-      en: 'ชมโฆษณา 2 วินาที',
+      th: `ชม โฆษณา ${adDuration} วินาที`,
+      en: `ชม โฆษณา ${adDuration} วินาที`,
     },
     {
       order: 3,
-      th: 'รับเติมเงินฟรี 2 บาท ทาง อีเมล',
-      en: 'รับเติมเงินฟรี 2 บาท ทาง อีเมล',
+      th: `รับเติมเงินฟรี ${rewardValue} ทาง อีเมล`,
+      en: `รับเติมเงินฟรี ${rewardValue} ทาง อีเมล`,
     },
   ],
   products: [
@@ -345,7 +350,7 @@ const emailWithProductDiscount = {
         name: 'EMP_TripAdvisor_EMPStripAds',
         type: 'image',
         src: 'http://localhost:8888/vms/StripAds/20160205_emporium_en_trioadvisor_1080_344.png',
-        duration: Number('2000') / 1000,
+        duration: Number(adDuration),
       }
     },
   ],
@@ -353,7 +358,7 @@ const emailWithProductDiscount = {
     {
       type: rewardDiscountType,
       name: rewardProductName,
-      value: '2',
+      value: rewardValue,
       code: '12345',
       channel: rewardEmailChannel,
       expireDate: '2017-11-01',
@@ -377,13 +382,13 @@ const emailWithProductDiscount = {
     },
     {
       order: 2,
-      th: 'ชมโฆษณา 2 วินาที',
-      en: 'ชมโฆษณา 2 วินาที',
+      th: `ชม โฆษณา ${adDuration} วินาที`,
+      en: `ชม โฆษณา ${adDuration} วินาที`,
     },
     {
       order: 3,
-      th: 'รับส่วนลด 2 บาท ทาง อีเมล',
-      en: 'รับส่วนลด 2 บาท ทาง อีเมล',
+      th: `รับส่วนลด ${rewardValue} ทาง อีเมล`,
+      en: `รับส่วนลด ${rewardValue} ทาง อีเมล`,
     },
   ],
   products: [
@@ -418,7 +423,7 @@ const emailWithProductFree = {
         name: 'EMP_TripAdvisor_EMPStripAds',
         type: 'image',
         src: 'http://localhost:8888/vms/StripAds/20160205_emporium_en_trioadvisor_1080_344.png',
-        duration: Number('2000') / 1000,
+        duration: Number(adDuration),
       }
     },
   ],
@@ -450,8 +455,8 @@ const emailWithProductFree = {
     },
     {
       order: 2,
-      th: 'ชมโฆษณา 2 วินาที',
-      en: 'ชมโฆษณา 2 วินาที',
+      th: `ชม โฆษณา ${adDuration} วินาที`,
+      en: `ชม โฆษณา ${adDuration} วินาที`,
     },
     {
       order: 3,
@@ -549,7 +554,7 @@ const lineIdWithProductDiscount = {
     {
       type: rewardDiscountType,
       name: rewardProductName,
-      value: '2',
+      value: rewardValue,
       code: '1006',
       channel: 'LINE_ID',
       expireDate: '2017-11-01',
@@ -678,7 +683,7 @@ const barcodePlusLineQrcodeWithMobileTopupNow = {
     {
       type: rewardDiscountType,
       name: rewardMobileTopupName,
-      value: '2',
+      value: rewardValue,
       code: '1007',
       channel: rewardVendingMachineNow,
       expireDate: '2017-11-01',
@@ -745,7 +750,7 @@ const barcodePlusLineQrcodeWithMobileTopupCode = {
     {
       type: rewardDiscountType,
       name: rewardMobileTopupName,
-      value: '2',
+      value: rewardValue,
       code: '1007',
       channel: rewardVendingMachineCode,
       expireDate: '2017-11-01',
@@ -774,8 +779,8 @@ const barcodePlusLineQrcodeWithMobileTopupCode = {
     },
     {
       order: 3,
-      th: 'รับฟรีเติมเงิน 2 บาท',
-      en: 'รับฟรีเติมเงิน 2 บาท',
+      th: 'รับฟรีเติมเงิน 2 บาทต้องใช้ทันที',
+      en: 'รับฟรีเติมเงิน 2 บาทต้องใช้ทันที',
     },
   ],
   products: [
@@ -812,7 +817,7 @@ const barcodePlusLineQrcodeWithProductDiscountNow = {
     {
       type: rewardDiscountType,
       name: rewardProductName,
-      value: '2',
+      value: rewardValue,
       code: '1007',
       channel: rewardVendingMachineNow,
       expireDate: '2017-11-01',
@@ -841,8 +846,8 @@ const barcodePlusLineQrcodeWithProductDiscountNow = {
     },
     {
       order: 3,
-      th: 'รับฟรีเติมเงิน 2 บาท',
-      en: 'รับฟรีเติมเงิน 2 บาท',
+      th: 'รับส่วนลด Brand Gen U 2 บาท',
+      en: 'รัยส่วนลด Brand Gen U 2 บาท',
     },
   ],
   products: [
@@ -874,7 +879,7 @@ const barcodeWithMobileTopupNow = {
     {
       type: rewardDiscountType,
       name: rewardMobileTopupName,
-      value: '2',
+      value: rewardValue,
       code: '1007',
       channel: rewardVendingMachineNow,
       expireDate: '2017-11-01',
@@ -974,32 +979,32 @@ const qrcodePlusLineQrcodeWithProductFreeCode =  {
 };
 let mockupEvents = [
   msisdnWithMobileTopup,
-  msisdnWithProductDiscount,
-  msisdnWithProductFree,
-  emailWithMobileTopup,
+  // msisdnWithProductDiscount,
+  // msisdnWithProductFree,
+  // emailWithMobileTopup,
   emailWithProductDiscount,
-  emailWithProductFree,
-  lineIdWithMobileTopup,
-  lineIdWithProductDiscount,
+  // emailWithProductFree,
+  // lineIdWithMobileTopup,
+  // lineIdWithProductDiscount,
   lineIdWithProductFree,
   barcodePlusLineQrcodeWithMobileTopupNow,
-  barcodePlusLineQrcodeWithMobileTopupCode,
+  // barcodePlusLineQrcodeWithMobileTopupCode,
   barcodePlusLineQrcodeWithProductDiscountNow,
   // barcodePlusLineQrcodeWithProductDiscountCode,
   // barcodePlusLineQrcodeWithProductFreeNow,
   // barcodePlusLineQrcodeWithProductFreeCode,
-  barcodeWithMobileTopupNow,
-  // barcodeWithMobileTopupCode,
+  // barcodeWithMobileTopupNow,
+  // - barcodeWithMobileTopupCode,
   // barcodeWithProductDiscountNow,
   // barcodeWithProductDiscountCode,
   // barcodeWithProductFreeNow,
-  // barcodeWithProductFreeCode,
+  // - barcodeWithProductFreeCode,
   // qrcodePlusLineQrcodeWithMobileTopupNow,
   // qrcodePlusLineQrcodeWithMobileTopupCode,
   // qrcodePlusLineQrcodeWithProductDiscountNow,
   // qrcodePlusLineQrcodeWithProductDiscountCode,
-  // qrcodePlusLineQrcodeWithProductFreeNow,
-  qrcodePlusLineQrcodeWithProductFreeCode,
+  // - qrcodePlusLineQrcodeWithProductFreeNow,
+  // qrcodePlusLineQrcodeWithProductFreeCode,
   // qrcodeWithMobileTopupNow,
   // qrcodeWithMobileTopupCode,
   // qrcodeWithProductDiscountNow,

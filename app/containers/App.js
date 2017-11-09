@@ -29,7 +29,7 @@ import AlertMessage from './AlertMessage';
 import LoadingScreen from './LoadingScreen';
 
 const mapStateToProps = state => {
-  console.log('%c App@state:', 'color: #4CAF50; font-weight: 700;', state);
+  console.log('%c App@state:', 'color: #4CAF50; font-weight: 700;', state, state.masterapp.tcpClient.histories);
   console.log('%c เงินทอนคงเหลือ:', 'color: #307DFC; font-weight: 700;', getCashRemainingAmount(state.payment.remain));
   return {
     location: state.router.location,

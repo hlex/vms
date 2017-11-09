@@ -1,6 +1,13 @@
 import _ from 'lodash';
 import cuid from 'cuid';
 
+export const normalizeStripAds = ad => ({
+  name: ad.name,
+  type: ad.type,
+  src: `http://localhost:8888/vms/${ad.path}`,
+  duration: Number(ad.timeout) / 1000,
+  adSize: ad.adSize,
+});
 const isSoldout = () => _.random(1, 5) === 5;
 
 /*
@@ -137,5 +144,16 @@ export const convertToAppEvent = (event) => {
         completed: false
       };
     }),
+    ads: [normalizeStripAds({
+      id: '4226',
+      type: 'image',
+      name: 'EMP_BT_Gift17_EMPStripAds',
+      path: 'StripAds/20161111_betrend-gift-2017_344.png',
+      filename: '20161111_betrend-gift-2017_344.png',
+      expire: '2026-11-21',
+      timeout: '2000',
+      adSize: 'STRIP',
+      checksum: '0de9be00280a021661584f2a3af95319',
+    })],
   };
 };

@@ -36,7 +36,11 @@ import {
   ACTIVE_MONEY_BOX,
   DEACTIVE_MONEY_BOX,
   SHOW_LOADING,
-  HIDE_LOADING
+  HIDE_LOADING,
+  SET_FOOTER_ADS,
+  RESET_FOOTER_ADS,
+  USE_DISCOUNT_INSTANTLY,
+  CLEAR_INSTANTLY_DISCOUNT,
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -293,3 +297,27 @@ export const hideLoading = () => {
   };
 };
 
+export const setFooterAds = (ads) => {
+  return {
+    type: SET_FOOTER_ADS,
+    ads,
+  };
+};
+
+export const resetFooterAds = () => {
+  return {
+    type: RESET_FOOTER_ADS
+  };
+};
+
+export const setFlagUseDiscountInstantly = () => {
+  return {
+    type: USE_DISCOUNT_INSTANTLY
+  };
+};
+
+export const clearInstantlyDiscount = () => {
+  return {
+    type: CLEAR_INSTANTLY_DISCOUNT
+  };
+};

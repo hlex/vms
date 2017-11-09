@@ -15,6 +15,7 @@ import * as ApplicationActions from '../../../actions/applicationActions';
 
 const mapStateToProps = state => ({
   modal: state.modal,
+  moneyBoxActive: state.masterapp.moneyBoxActive,
 });
 
 const actions = {
@@ -26,13 +27,14 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 class Content extends Component {
 
   static propTypes = {
+    moneyBoxActive: PropTypes.bool.isRequired,
     modal: PropTypes.shape({}).isRequired,
     cancelPayment: PropTypes.func.isRequired,
     confirmWarningSystemWillNotChangeCash: PropTypes.func.isRequired,
   }
 
   render() {
-    const { modal, cancelPayment, confirmWarningSystemWillNotChangeCash } = this.props;
+    const { modal, moneyBoxActive, cancelPayment, confirmWarningSystemWillNotChangeCash } = this.props;
     return (
       <div className="content-wrapper">
         {
@@ -63,7 +65,11 @@ class Content extends Component {
             <h2>ขออภัย ไม่สามารถจำหน่ายสินค้าได้</h2>
             <small>เนื่องจากระบบขัดช้องหรือสินค้าหมด</small>
             <p>กรุณาเลือกสินค้าชนิดอื่น</p>
-            <button onClick={cancelPayment} className="button purple">ยกเลิกรายการ</button>
+            {
+              moneyBoxActive
+              ? <h2>ระบบกำลังทอนเงิน</h2>
+              : <button onClick={cancelPayment} className="button purple">ยกเลิกรายการ</button>
+            }
           </div>
         </Modal>
         <Modal show={modal.type.warningSystemWillNotChangeCash}>

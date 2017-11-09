@@ -40,6 +40,7 @@ const getEventNextReward = createSelector(
   (eventRewards) => {
     if (_.size(eventRewards) <= 0) return '';
     const nextItem = _.find(eventRewards, item => item.completed === false);
+    console.log('getEventNextReward', nextItem);
     return nextItem;
   }
 );
@@ -57,9 +58,9 @@ const getEventNextRewardRoute = createSelector(
     if (!eventNextReward) return 'REWARD_NOT_FOUND';
     const targetProduct = eventNextReward.name;
     switch (targetProduct) {
-      case 'MOBILE_TOPUP':
+      case 'topup':
         return '/topup';
-      case 'PRODUCT':
+      case 'product':
         return '/product/single';
       default:
         return 'PAGE_NOT_FOUND';
@@ -241,6 +242,11 @@ const verifyMobileTopupOrder = createSelector(
   selectedMobileTopup => !_.isEmpty(selectedMobileTopup),
 );
 
+const verifyIsEventOrder = createSelector(
+  [getSelectedEvent],
+  selectedEvent => !_.isEmpty(selectedEvent),
+);
+
 const getOrderGrandTotalAmount = createSelector(
   [
     verifyOrderHasPromotionSet,
@@ -317,6 +323,7 @@ export default {
   verifyAllOrderDropped,
   verifyOrderHasPromotionSet,
   verifyMobileTopupOrder,
+  verifyIsEventOrder,
   // ======================================================
   // Payment
   // ======================================================

@@ -55,7 +55,7 @@ const initialState = {
   readyToDropProduct: false,
   canChangeCash: true,
   droppingProduct: {},
-  limitBanknote: 500,
+  limitBanknote: undefined,
   hardwareReady: false,
   moneyBoxActive: false,
   loading: {
@@ -145,7 +145,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         limitBanknote: action.banknoteValue
-      }
+      };
     default:
       return state;
   }

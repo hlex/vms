@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 // ======================================================
 // Components
@@ -12,10 +13,12 @@ import { MediaPlayer } from '../../../components';
 // ======================================================
 import MasterappSelector from '../../../selectors/masterapp';
 
-const mapStateToProps = state => ({
-  stripAds: state.masterdata.stripAds,
-  baseURL: MasterappSelector.getBaseURL(state.masterapp),
-});
+const mapStateToProps = (state) => {
+  return {
+    footerAds: state.ads.footerAds,
+    baseURL: MasterappSelector.getBaseURL(state.masterapp),
+  };
+};
 
 const actions = {
 };
@@ -25,28 +28,40 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 class Footer extends Component {
 
   static propTypes = {
-    stripAds: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    location: PropTypes.shape({}).isRequired,
+    footerAds: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  }
+
+  shouldHideSignage = () => {
+    const { location } = this.props;
+    const blacklist = ['/event', '/product'];
+    return _.includes(blacklist, location.pathname);
   }
 
   render() {
+    console.log(this);
     const {
-      stripAds
+      footerAds
     } = this.props;
     return (
       <div className="footer-section">
         <div className="copy">
           <p>© 2017 ใจดี มินิมาร์ท</p>
         </div>
-        <div className="signage">
-          <MediaPlayer
-            width={1080}
-            height={860}
-            sources={stripAds}
-          />
-        </div>
+        {
+          !this.shouldHideSignage() &&
+          <div className="signage">
+            <MediaPlayer
+              width={1080}
+              height={860}
+              sources={footerAds}
+            />
+          </div>
+        }
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Footer);
+const connectedContainer = connect(mapStateToProps, mapDispatchToProps)(Footer);
+export default withRouter(connectedContainer);

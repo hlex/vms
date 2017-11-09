@@ -18,3 +18,9 @@ export const serviceGetEventReward = ({ eventId, discountType, amount, channel, 
     return response;
   });
 };
+
+export const verifyBarcodeOrQrcode = (code) => {
+  return new Promise((resolve, reject) => {
+    resolve(true);
+  });
+};

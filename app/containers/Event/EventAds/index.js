@@ -112,7 +112,7 @@ class EventAds extends Component {
     return (
       <div className="event-ads">
         <Layout.FullScreen>
-          { remainingCount > 0 && <div className="count-time"><span id="set_timer" className="style colorDefinition size_sm">{maxCount - count} วินาที</span></div> }
+          { remainingCount > 0 && <div className="count-time" style={{ position: 'fixed', zIndex: '99' }}><span id="set_timer" className="style colorDefinition size_sm">{maxCount - count} วินาที</span></div> }
           <MediaPlayer
             width={1080}
             height={1920}

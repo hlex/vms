@@ -4,63 +4,30 @@ import { fetchFacade, extractResponseData } from '../helpers/api';
 import { isVMSServiceError, convertVMSServiceResponseToError } from '../helpers/error';
 import URL from './url';
 
-export const serviceVerifyDiscountCode = code => {
+export const serviceVerifyDiscountCode = (code, discountType = 'product') => {
   const data = {
     vtype: 'verifydiscountcode',
+    discounttype: discountType,
+    po_id: 'SB-001', // fixed
     code,
   };
-  // return fetchFacade(`${URL.verifyDiscount}${convertToURLParam(data)}`).then(() => {
-  return fetchFacade(`${URL.verifyDiscount}${convertToURLParam(data)}`).then((response) => {
-    let mockupResponse = {};
+  return fetchFacade(`${URL.verifyDiscount}${convertToURLParam(data)}`)
+  .then((response) => {
     console.log('serviceVerifyDiscountCode', response);
-    if (_.get(response, '0.status', 1) === 1) {
-      // error
-      mockupResponse = {
-        status: 'SUCCESSFUL',
-        'trx-id': '20171011215412',
-        fault: {
-          exception: 'DAOException',
-          'http-error-code': 200,
-          'http-error': 'Internal Server Error',
-          'technical-error-code': 'XXXXXX',
-          'technical-error': '',
-          'th-message': 'ไม่พบรหัสส่วนลดที่ระบุ',
-          'en-message': 'Cannot found discount code',
-          'technical-message': 'Cannot found discount code',
-        },
-        'process-instance': 'instance: 27.254.160.247:81',
-        version: '1.16.0',
-      };
-    } else {
-      mockupResponse = {
-        status: 'SUCCESSFUL',
-        'trx-id': '20171011215412',
-        'response-data': {
-          value: 5,
-          expireDate: '2017-12-01',
-        },
-        'process-instance': 'instance: 27.254.160.247:81',
-        version: '1.16.0',
-      };
-    }
-    handleResponseCatchError(mockupResponse, isVMSServiceError, convertVMSServiceResponseToError);
-    return extractResponseData(mockupResponse);
+    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return extractResponseData(response);
   });
 };
 
-export const serviceUseDiscountCode = code => {
+export const serviceUseDiscountCode = (code, discountType) => {
   const data = {
     vtype: 'usediscountcode',
+    discounttype: discountType,
     code,
   };
   return fetchFacade(`${URL.verifyDiscount}${convertToURLParam(data)}`).then(response => {
     console.log('serviceUseDiscountCode', response);
-    // const responseDiscount = _.head(response);
-    // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
-    // if (responseDiscount.status === 1) {
-      // throw new Error('serviceVerifyDiscountCode');
-    // }
-    // return responseDiscount;
-    return true;
+    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return extractResponseData(response);
   });
 };

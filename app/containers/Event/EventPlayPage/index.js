@@ -120,20 +120,49 @@ class EventPlayPage extends Component {
           <h2>กรุณาแสกน LINE QR CODE</h2>
           <p>เมื่อได้รับรหัสส่วนลดแล้ว กดปุ่มทำรายการต่อ</p>
         </div>
-        <a className="button blue submit-button" onClick={submitPlayEvent}>
+        <a className="button blue submit-button _hidden" onClick={submitPlayEvent}>
           <p className="fade-flash">ทำรายการต่อ </p>
         </a>
       </div>
     );
   };
 
+  renderInputBarcode = () => {
+    const { baseURL } = this.props;
+    return (
+      <div className="event-lineid-box">
+        <img alt="line" src={`${baseURL}/images/icon-barcode.png`} />
+        <div className="desc">
+          <h2>กรุณาแสกน BAR CODE</h2>
+        </div>
+      </div>
+    );
+  };
+
+  renderInputQrcode = () => {
+    const { baseURL } = this.props;
+    return (
+      <div className="event-lineid-box">
+        <img alt="line" src={`${baseURL}/images/icon-qrcode.png`} />
+        <div className="desc">
+          <h2>กรุณาแสกน QR CODE</h2>
+        </div>
+      </div>
+    );
+  };
+
   renderInputUI = inputType => {
+    console.log(inputType);
     if (inputType === 'EMAIL') {
       return this.renderInputEmail();
     } else if (inputType === 'MSISDN') {
       return this.renderInputMSISDN();
     } else if (inputType === 'LINE_ID') {
       return this.renderInputLineId();
+    } else if (inputType === 'BARCODE') {
+      return this.renderInputBarcode();
+    } else if (inputType === 'LINE_QR_CODE' || 'QR_CODE') {
+      return this.renderInputQrcode();
     }
     return '';
   };
