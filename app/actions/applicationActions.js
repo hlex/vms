@@ -26,6 +26,17 @@ import {
 import {
   convertApplicationErrorToError,
 } from '../helpers/error';
+import {
+  normalizeStripAds,
+  convertToAppAd,
+  convertToAppProduct,
+  convertToAppPromotion,
+  convertToAppMobileTopupProvider,
+  convertToAppEvent,
+} from '../helpers/masterdata';
+import {
+  extractResponseData,
+} from '../helpers/api';
 // ======================================================
 // APIs
 // ======================================================
@@ -43,11 +54,16 @@ import {
   createTcpClient
 } from '../apis/tcp';
 import {
-  serviceGetEvents
+  serviceGetBaseAds,
+  serviceGetEvents,
+  serviceGetProducts,
+  serviceGetPromotions,
+  serviceGetMobileTopupProviders,
 } from '../apis/masterdata';
 import {
   serviceGetEventReward,
   verifyBarcodeOrQrcode,
+  verifyLineId,
 } from '../apis/event';
 
 let cmdNo = 0;
@@ -61,9 +77,46 @@ export const initApplication = () => {
     // GET MASTER DATA
     // ======================================================
     try {
+      const baseURL = MasterappSelector.getBaseURL(getState().masterapp);
+      // ======================================================
+      // ADS
+      // ======================================================
+      const serviceGetBaseAdsResponse = await serviceGetBaseAds();
+      console.log('serviceGetBaseAdsResponse', serviceGetBaseAdsResponse);
+      const sanitizedBaseAds = _.map(extractResponseData(serviceGetBaseAdsResponse), (ad) => {
+        console.log('ad', ad);
+        return normalizeStripAds(convertToAppAd(ad), baseURL);
+      });
+      dispatch(Actions.setBaseAds(sanitizedBaseAds));
+      dispatch(Actions.setFooterAds(sanitizedBaseAds));
+      // ======================================================
+      // EVENTS
+      // ======================================================
       const serviceGetEventsResponse = await serviceGetEvents();
       console.log('serviceGetEventsResponse', serviceGetEventsResponse);
-      dispatch(Actions.receivedMasterdata('events', serviceGetEventsResponse));
+      const sanitizedEvents = _.map(extractResponseData(serviceGetEventsResponse), event => convertToAppEvent(event, baseURL));
+      dispatch(Actions.receivedMasterdata('events', sanitizedEvents));
+      // ======================================================
+      // PRODUCTS
+      // ======================================================
+      const serviceGetProductsResponse = await serviceGetProducts();
+      console.log('serviceGetProductsResponse', serviceGetProductsResponse);
+      const sanitizedProducts = _.map(extractResponseData(serviceGetProductsResponse), product => convertToAppProduct(product, baseURL));
+      dispatch(Actions.receivedMasterdata('products', sanitizedProducts));
+      // ======================================================
+      // PROMOTION
+      // ======================================================
+      const serviceGetPromotionsResponse = await serviceGetPromotions();
+      console.log('serviceGetPromotionsResponse', serviceGetPromotionsResponse);
+      const sanitizedPromotions = _.map(extractResponseData(serviceGetPromotionsResponse), promotion => convertToAppPromotion(promotion, baseURL));
+      dispatch(Actions.receivedMasterdata('promotionSets', sanitizedPromotions));
+      // ======================================================
+      // MOBILE TOPUP PROVIDER
+      // ======================================================
+      const serviceGetMobileTopupProvidersResponse = await serviceGetMobileTopupProviders();
+      console.log('serviceGetMobileTopupProvidersResponse', serviceGetMobileTopupProvidersResponse);
+      const sanitizedMobileTopupProviders = _.map(extractResponseData(serviceGetMobileTopupProvidersResponse), mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider, baseURL));
+      dispatch(Actions.receivedMasterdata('topupProviders', sanitizedMobileTopupProviders));
     } catch (error) {
       console.error(error);
     }
@@ -195,20 +248,45 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
 };
 
 const verifyIsBarcodeOrQrCodeInput = (inputType) => {
-  return _.includes(['BARCODE', 'LINE_QR_CODE'], inputType);
-}
+  return _.includes(['BARCODE', 'QR_CODE'], inputType);
+};
 
-export const receivedQRCode = (qrCode) => {
+const verifyIsLineQrcodeInput = (inputType) => {
+  return _.includes(['LINE_QR_CODE'], inputType);
+};
+// code is scannedCode
+const isQrcode = (scannedCode) => {
+  return scannedCode.indexOf('http://') >= 0;
+};
+
+export const receivedQRCode = (scannedCode) => {
   return async (dispatch, getState) => {
     const nextInput = OrderSelector.getEventNextInput(getState().order);
-    console.log('receivedQRCode', qrCode, nextInput);
-    if (verifyIsBarcodeOrQrCodeInput(nextInput)) {
-      try {
-        await verifyBarcodeOrQrcode(qrCode);
-        dispatch(updateEventInput(nextInput, qrCode));
-      } catch (error) {
-
+    const eventId = OrderSelector.getEventId(getState().order);
+    console.log('receivedQRCode', eventId, scannedCode, nextInput);
+    try {
+      if (verifyIsBarcodeOrQrCodeInput(nextInput)) {
+        const dataToVerify = {
+          eventId,
+          code: scannedCode,
+          discountType: isQrcode(scannedCode) ? 'qrcode' : 'barcode'
+        };
+        await verifyBarcodeOrQrcode(dataToVerify);
+        dispatch(updateEventInput(nextInput, scannedCode));
+      } else if (verifyIsLineQrcodeInput) {
+        const barcodeOrQrcode = OrderSelector.getEventBarcodeOrQrcodeInput(getState().order);
+        const dataToVerify = {
+          eventId,
+          code: scannedCode,
+          barcodeOrQrcode,
+        };
+        await verifyLineId(dataToVerify);
+        dispatch(updateEventInput(nextInput, scannedCode));
+      } else {
+        console.error(`${scannedCode} is not barcode or qrcode or lineId`);
       }
+    } catch (error) {
+      console.error(error);
     }
   };
 };

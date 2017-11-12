@@ -75,6 +75,15 @@ const getEventInputs = createSelector(
   }
 );
 
+const getEventBarcodeOrQrcodeInput = createSelector(
+  [getEventInputs],
+  (eventInputs) => {
+    if (_.size(eventInputs) <= 0) return '';
+    const barcodeOrQrcodeInput = _.find(eventInputs, item => item.completed === true && _.includes(['BARCODE', 'QR_CODE'], item.name));
+    return barcodeOrQrcodeInput ? barcodeOrQrcodeInput.value : '';
+  }
+);
+
 const getEventNextInput = createSelector(
   [getEventInputs],
   (eventInputs) => {
@@ -197,6 +206,11 @@ const getSingleProductPrice = createSelector([getSingleProduct], singleProduct =
   Number(_.get(singleProduct, 'price', '')),
 );
 
+const getSingleProductBgImage = createSelector([getSingleProduct], singleProduct => {
+  const bgImage = _.get(singleProduct, 'imageBig', '');
+  return bgImage !== '' ? bgImage : undefined;
+});
+
 const getPromotionSetPrice = createSelector([getPromotionSet], promotionSet =>
   Number(_.get(promotionSet, 'price', '')),
 );
@@ -204,6 +218,11 @@ const getPromotionSetPrice = createSelector([getPromotionSet], promotionSet =>
 const getPromotionSetFirstProductPrice = createSelector([getPromotionSetProducts], products =>
   Number(_.head(products).price),
 );
+
+const getPromotionSetFirstProductBgImage = createSelector([getSingleProduct], (singleProduct) => {
+  const bgImage = _.get(singleProduct, 'imageBig', '');
+  return bgImage !== '' ? bgImage : undefined;
+});
 
 const getDroppedProducts = createSelector([getProducts], products =>
   _.filter(products, product => product.isDropped),
@@ -283,6 +302,7 @@ export default {
   getEventNextRewardRoute,
   getEventInputs,
   getEventNextInput,
+  getEventBarcodeOrQrcodeInput,
   getEventWatches,
   getEventNextWatch,
   verifyEventShouldSendReward,
@@ -305,6 +325,7 @@ export default {
   getProducts,
   getSingleProduct,
   getSingleProductPrice,
+  getSingleProductBgImage,
   // ======================================================
   // PromotionSet
   // ======================================================
@@ -315,6 +336,7 @@ export default {
   getProductToDrop,
   getDropProductTargetRowColumn,
   getDroppedProductSummaryPrice,
+  getPromotionSetFirstProductBgImage,
   // ======================================================
   // Flag
   // ======================================================

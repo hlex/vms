@@ -53,7 +53,7 @@ class Footer extends Component {
           <div className="signage">
             <MediaPlayer
               width={1080}
-              height={860}
+              height={610}
               sources={footerAds}
             />
           </div>
