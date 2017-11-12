@@ -547,7 +547,7 @@ const lineIdWithProductDiscount = {
     {
       type: 'input',
       name: 'LINE_ID',
-      value: null,
+      value: 'http://27.254.160.247:81/uploads/abc.jpg',
     },
   ],
   rewards: [
@@ -609,26 +609,11 @@ const lineIdWithProductFree = {
     {
       type: 'input',
       name: 'LINE_ID',
-      value: null,
+      value: 'http://27.254.160.247:81/uploads/abc.jpg',
     },
   ],
-  rewards: [
-    {
-      type: rewardDiscountType,
-      name: rewardProductName,
-      value: '35',
-      code: '1006',
-      channel: 'LINE_ID',
-      expireDate: '2017-11-01',
-    },
-  ],
-  remarks: [
-    {
-      th: '',
-      en: '',
-      verifyKey: '',
-    },
-  ],
+  rewards: [],
+  remarks: [],
   tags: [
     freeTag
   ],
@@ -1029,26 +1014,20 @@ mockupEvents = _.map(mockupEvents, (event, index) => {
 });
 
 export const serviceGetEvents = () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve(_.map(mockupEvents, (event) => {
-        return convertToAppEvent(event);
-      }));
-    }, 100);
-  });
-  // const data = {
-  //   vtype: 'verifydiscountcode',
-  //   code: '1111111111111',
-  // };
-  // return fetchFacade(`${URL.verifyDiscount}${convertToURLParam(data)}`).then((response) => {
-  //   console.log('serviceVerifyDiscountCode', response);
-  //   const responseDiscount = _.head(response);
-  //   // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
-  //   if (responseDiscount.status === 1) {
-  //     throw new Error('serviceVerifyDiscountCode');
-  //   }
-  //   return responseDiscount;
+  // return new Promise((resolve, reject) => {
+  //   setTimeout(() => {
+  //     resolve(_.map(mockupEvents, (event) => {
+  //       return convertToAppEvent(event);
+  //     }));
+  //   }, 100);
   // });
+  const data = {
+    vtype: 'activities',
+  };
+  return fetchFacade(`${URL.getEvents}${convertToURLParam(data)}`).then((response) => {
+    console.log('serviceGetEvents', response);
+    return response;
+  });
 };
 
 export const serviceGetProducts = () => {
