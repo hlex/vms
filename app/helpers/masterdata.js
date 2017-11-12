@@ -8,7 +8,9 @@ export const normalizeStripAds = (ad, baseURL = '') => ({
   duration: Number(ad.timeout || 0) / 1000,
   adSize: ad.adSize || '',
 });
-const isSoldout = () => _.random(1, 5) === 5;
+// const isSoldout = () => _.random(1, 5) === 5;
+const isSoldout = (qty) => qty === 0;
+const randomQty = () => _.random(0, 5);
 /*
 product: {
   Po_ID: 'PO0001',
@@ -32,7 +34,7 @@ export const convertToAppProduct = (product, baseURL = '') => {
     id: product.Po_ID || '',
     name: product.Po_Name || '',
     price: Number(product.Po_Price || ''),
-    isSoldout: isSoldout(),
+    isSoldout: isSoldout(product.Po_Qty || randomQty()),
     image: product.Po_Img || '',
     imageBig: product.Po_Imgbig || '',
     row: product.Row || '',
