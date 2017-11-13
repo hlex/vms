@@ -141,7 +141,7 @@ export const convertToAppEvent = (event, baseURL) => {
   return {
     eventId: event.id,
     tag: _.head(event.tags),
-    product: convertToAppProduct(_.get(event, 'products.0', _.get(event, 'product', {}))),
+    product: convertToAppProduct(_.get(event, 'products.0', _.get(event, 'product.0', {}), _.get(event, 'product', {}))),
     howTo: _.map(event.howTo, (instruction) => instruction),
     inputs: _.map(eventInputActivities || [], (eventInputActivity) => {
       return {
