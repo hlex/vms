@@ -119,15 +119,16 @@ class EventItem extends Component {
 
   render() {
     const { baseURL, item, hasButton, handleClick } = this.props;
+    console.log(this);
     const lang = 'th';
     // ======================================================
     // Ribbon
     // ======================================================
     const ribbonType = this.convertToRibbonType(_.get(item, 'tag.name', ''));
     const ribbonColor = this.convertToRibbonColor(_.get(item, 'tag.color', ''));
-    const ribbonLabel = _.get(item, 'tag.label', '');
+    const ribbonLabel = _.get(item, `tag.label.${lang}`, '');
     const ribbonValue = _.get(item, 'tag.value', '');
-    const ribbonUnit = _.get(item, 'tag.unit', '');
+    const ribbonUnit = _.get(item, `tag.unit.${lang}`, '');
 
     return (
       <a className="box" key={cuid()} onClick={() => handleClick('/event/play', item)}>
