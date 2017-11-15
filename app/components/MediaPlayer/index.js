@@ -33,7 +33,7 @@ class MediaPlayer extends Component {
     const { index } = this.state;
     const { sources, onEnded } = this.props;
     const nextIndex = index < sources.length - 1 ? index + 1 : 0;
-    // console.log('handlePlayerEnded', index, nextIndex);
+    console.log('handlePlayerEnded', index, nextIndex);
     this.setState({
       index: nextIndex,
     });
@@ -72,7 +72,7 @@ class MediaPlayer extends Component {
         onClick={() => { if (isFullScreen) this.handleTouchMedia(); }}
       >
         <FilePlayer
-          key={`${index}-${src}`}
+          key={`${Date.now()}-${src}`}
           duration={duration}
           src={src}
           width={width}
