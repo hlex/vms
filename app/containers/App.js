@@ -76,6 +76,9 @@ class App extends Component {
               <div className="development-toolbar">
                 <ul>
                   <li>
+                    <a onClick={() => backToHome()}>HOME</a>
+                  </li>
+                  <li>
                     <a onClick={() => insertCoin(1)}>1B</a>
                   </li>
                   <li>
