@@ -271,8 +271,12 @@ const verifyIsLineQrcodeInput = (inputType) => {
   return _.includes(['LINE_QR_CODE'], inputType);
 };
 // code is scannedCode
-const isQrcode = (scannedCode) => {
-  return scannedCode.indexOf('http://') >= 0;
+const verifyIsLineQrcode = (scannedCode) => {
+  return scannedCode.indexOf('http') >= 0;
+};
+
+const verifyIsBarcode = (scannedCode) => {
+  return /^\d+$/.test(scannedCode);
 };
 
 export const receivedQRCode = (scannedCode) => {
@@ -282,26 +286,33 @@ export const receivedQRCode = (scannedCode) => {
     console.log('receivedQRCode', eventId, scannedCode, nextInput);
     try {
       if (verifyIsBarcodeOrQrCodeInput(nextInput)) {
+        const isBarcode = verifyIsBarcode(scannedCode);
         const dataToVerify = {
           eventId,
           code: scannedCode,
-          discountType: isQrcode(scannedCode) ? 'qrcode' : 'barcode'
+          discountType: isBarcode ? 'barcode' : 'qrcode'
         };
         dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
         await verifyBarcodeOrQrcode(dataToVerify);
         dispatch(hideLoading());
         dispatch(updateEventInput(nextInput, scannedCode));
       } else if (verifyIsLineQrcodeInput) {
-        const barcodeOrQrcode = OrderSelector.getEventBarcodeOrQrcodeInput(getState().order);
-        const dataToVerify = {
-          eventId,
-          code: scannedCode,
-          barcodeOrQrcode,
-        };
-        dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
-        await verifyLineId(dataToVerify);
-        dispatch(hideLoading());
-        dispatch(updateEventInput(nextInput, scannedCode));
+        const isLineQrcode = verifyIsLineQrcode(scannedCode);
+        const exactLineId = _.last(_.split(scannedCode, '/'));
+        if (isLineQrcode) {
+          const barcodeOrQrcode = OrderSelector.getEventBarcodeOrQrcodeInput(getState().order);
+          const dataToVerify = {
+            eventId,
+            code: exactLineId,
+            barcodeOrQrcode,
+          };
+          dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
+          await verifyLineId(dataToVerify);
+          dispatch(hideLoading());
+          dispatch(updateEventInput(nextInput, scannedCode));
+        } else {
+          console.error(`${scannedCode} is not lineId`);
+        }
       } else {
         console.error(`${scannedCode} is not barcode or qrcode or lineId`);
       }
