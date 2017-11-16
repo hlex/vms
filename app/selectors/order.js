@@ -307,6 +307,40 @@ const getOrderGrandTotalAmount = createSelector(
   },
 );
 
+const getOrderType = createSelector(
+  [
+    verifyOrderHasPromotionSet,
+    verifyMobileTopupOrder,
+  ],
+  (
+    hasPromotionSet,
+    hasMobileTopup,
+  ) => {
+    if (hasPromotionSet) return 'promotionSet';
+    if (hasMobileTopup) return 'mobileTopup';
+    return 'singleProduct';
+  }
+);
+
+const getPaymentBgImage = createSelector(
+  [
+    getOrderType,
+    getSingleProductBgImage,
+    getPromotionSetFirstProductBgImage,
+    getMobileTopupBanner
+  ],
+  (
+    orderType,
+    singleProductBgImage,
+    promotionSetBgImage,
+    mobileTopupBgImage
+  ) => {
+    if (orderType === 'promotionSet') return promotionSetBgImage;
+    if (orderType === 'mobileTopup') return mobileTopupBgImage;
+    return singleProductBgImage;
+  }
+);
+
 export default {
   // ======================================================
   // Event
@@ -371,11 +405,16 @@ export default {
   // Payment
   // ======================================================
   getOrderGrandTotalAmount,
+  getPaymentBgImage,
   // ======================================================
   // Discount
   // ======================================================
   getDiscounts,
   getDiscount,
   getDiscountAmount,
-  verifyOrderHasDiscount
+  verifyOrderHasDiscount,
+  // ======================================================
+  // Order
+  // ======================================================
+  getOrderType
 };

@@ -30,7 +30,8 @@ const mapStateToProps = (state) => {
     moneyBoxActive: MasterappSelector.verifyIsMoneyBoxActive(state.masterapp),
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     mobileTopupTotalPrice: OrderSelector.getSelectedMobileTopupTotalPrice(state.order),
-    discountAmount: OrderSelector.getDiscountAmount(state.order)
+    discountAmount: OrderSelector.getDiscountAmount(state.order),
+    mobileTopupBanner: OrderSelector.getMobileTopupBanner(state.order)
   };
 };
 
@@ -50,6 +51,7 @@ class MobileTopupPage extends Component {
     verifyDiscountCode: PropTypes.func.isRequired,
     initMobileTopupPage: PropTypes.func.isRequired,
     willReceivePropsEnableMoneyBoxWhenInitPage: PropTypes.func.isRequired,
+    mobileTopupBanner: PropTypes.string,
   }
 
   static defaultProps = {
@@ -69,6 +71,7 @@ class MobileTopupPage extends Component {
 
   render() {
     const {
+      mobileTopupBanner,
       mobileTopupTotalPrice,
       discountAmount,
       baseURL,
@@ -80,6 +83,7 @@ class MobileTopupPage extends Component {
         <Layout.Title>
           <MobileTopupTitle
             baseURL={baseURL}
+            bgImage={mobileTopupBanner}
           />
         </Layout.Title>
         <Layout.Content>

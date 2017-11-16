@@ -12,7 +12,7 @@ import { FooterAction } from '../../Utils';
 // ======================================================
 // Components
 // ======================================================
-import { PromotionSetTitle, PaymentConfirmation, Loading, Thankyou } from '../../../components';
+import { MobileTopupTitle, ProductTitle, PromotionSetTitle, PaymentConfirmation, Loading, Thankyou } from '../../../components';
 
 // ======================================================
 // Actions
@@ -25,6 +25,7 @@ import * as Actions from './actions';
 // ======================================================
 import RootSelector from '../../../selectors/root';
 import MasterappSelector from '../../../selectors/masterapp';
+import OrderSelector from '../../../selectors/order';
 
 const mapStateToProps = state => {
   return {
@@ -32,6 +33,8 @@ const mapStateToProps = state => {
     canChangeCash: state.masterapp.canChangeCash,
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     summaryList: RootSelector.getPaymentSummaryList(state),
+    paymentBgImage: OrderSelector.getPaymentBgImage(state.order),
+    orderType: OrderSelector.getOrderType(state.order)
   };
 };
 
@@ -50,7 +53,9 @@ class PaymentPage extends PureComponent {
     isLoading: PropTypes.bool.isRequired,
     returnAllInsertCash: PropTypes.func.isRequired,
     initPaymentPage: PropTypes.func.isRequired,
-    canChangeCash: PropTypes.bool.isRequired
+    canChangeCash: PropTypes.bool.isRequired,
+    orderType: PropTypes.string,
+    paymentBgImage: PropTypes.string,
   };
 
   componentDidMount = () => {
@@ -79,15 +84,26 @@ class PaymentPage extends PureComponent {
     );
   }
 
+  renderTitle = () => {
+    const { baseURL, orderType, paymentBgImage } = this.props;
+    if (orderType === 'promotionSet') {
+      return <PromotionSetTitle baseURL={baseURL} bgImage={paymentBgImage} />;
+    }
+    if (orderType === 'mobileTopup') {
+      return <MobileTopupTitle baseURL={baseURL} bgImage={paymentBgImage} />;
+    }
+    return <ProductTitle baseURL={baseURL} bgImage={paymentBgImage} />;
+  }
+
   render() {
     const { baseURL, isLoading, isFinish } = this.props;
     const canBack = !isLoading && !isFinish;
     return (
       <div>
         <Layout.Title>
-          <PromotionSetTitle
-            baseURL={baseURL}
-          />
+          {
+            this.renderTitle()
+          }
         </Layout.Title>
         <Layout.Content>
           {
