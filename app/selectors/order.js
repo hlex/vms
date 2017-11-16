@@ -236,12 +236,27 @@ const getProductToDrop = createSelector([getProducts], products =>
   _.find(products, product => !product.isDropped),
 );
 
-const getDropProductTargetRowColumn = createSelector(
+const getDropProductTargetPhysical = createSelector(
   [getProductToDrop],
   productToDrop => {
-    const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.qty !== 0);
-    console.log('getDropProductTargetRowColumn', targetPhysical, targetPhysical.row, targetPhysical.col);
+    const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.canDrop === true);
+    console.log('getDropProductTargetRowColumn', targetPhysical);
+    return targetPhysical;
+  }
+);
+
+const getDropProductTargetRowColumn = createSelector(
+  [getDropProductTargetPhysical],
+  targetPhysical => {
+    console.log('=== PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
     return `${targetPhysical.row}${targetPhysical.col}`;
+  }
+);
+
+const verifyProductToDropHasAvailablePhysical = createSelector(
+  [getDropProductTargetPhysical],
+  (targetPhysical) => {
+    return targetPhysical !== undefined;
   }
 );
 
@@ -338,6 +353,8 @@ export default {
   getPromotionSetPrice,
   getPromotionSetFirstProductPrice,
   getProductToDrop,
+  getDropProductTargetPhysical,
+  verifyProductToDropHasAvailablePhysical,
   getDropProductTargetRowColumn,
   getDroppedProductSummaryPrice,
   getPromotionSetFirstProductBgImage,

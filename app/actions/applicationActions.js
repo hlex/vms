@@ -1,5 +1,6 @@
 import { push, goBack } from 'react-router-redux';
 import _ from 'lodash';
+import cuid from 'cuid';
 import * as Actions from './index';
 
 // ======================================================
@@ -78,7 +79,7 @@ export const initApplication = () => {
     // GET MASTER DATA
     // ======================================================
     try {
-      const baseURL = MasterappSelector.getBaseURL(getState().masterapp);
+      const baseURL = 'http://localhost:8888/vms/html-v2'; //MasterappSelector.getBaseURL(getState().masterapp);
       // ======================================================
       // ACTIVITY FREE
       // ======================================================
@@ -120,9 +121,11 @@ export const initApplication = () => {
           return [
             ...accPhysical,
             {
+              cuid: cuid(),
               row: product.row,
               col: product.col,
-              qty: product.qty
+              qty: product.qty,
+              canDrop: product.qty !== 0,
             }
           ];
         }, []);
@@ -191,14 +194,31 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       dispatch(runFlowProductDropSuccess());
       break;
     case 'PRODUCT_DROP_FAIL':
-      // return cash eql product price
-      dispatch(setNotReadyToDropProduct());
-      if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
-        dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
+      // ======================================================
+      // STAMP FAIL TO PHYSICAL
+      // ======================================================
+      const productToDrop = OrderSelector.getProductToDrop(getState().order);
+      const targetPhysical = OrderSelector.getDropProductTargetPhysical(getState().order);
+      dispatch({
+        type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
+        product: productToDrop,
+        physical: targetPhysical
+      });
+      const productToDropHasAvailablePhysical = OrderSelector.verifyProductToDropHasAvailablePhysical(getState().order);
+      console.log('productToDropHasAvailablePhysical', productToDropHasAvailablePhysical);
+      if (productToDropHasAvailablePhysical) {
+        // retry
+        dispatch(productDrop());
       } else {
-        dispatch(cashChangeEqualToCurrentCashAmount());
+        // return cash eql product price
+        dispatch(setNotReadyToDropProduct());
+        if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
+          dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
+        } else {
+          dispatch(cashChangeEqualToCurrentCashAmount());
+        }
+        dispatch(Actions.showModal('productDropError'));
       }
-      dispatch(Actions.showModal('productDropError'));
       break;
     case 'RESET_TAIKO_SUCCESS':
       dispatch(getCashRemaining());

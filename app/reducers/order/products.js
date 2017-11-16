@@ -35,6 +35,26 @@ export default function products(state = getInitialState(), action: actionType) 
           ...product,
         };
       });
+    case 'PRODUCT_MARK_CANNOT_USE_PHYSICAL':
+      return _.map(state, (product) => {
+        if (product.cuid === action.product.cuid) {
+          return {
+            ...product,
+            physicals: _.map(product.physicals, (physical) => {
+              if (physical.cuid === action.physical.cuid) {
+                return {
+                  ...physical,
+                  canDrop: false
+                };
+              }
+              return physical;
+            })
+          };
+        }
+        return {
+          ...product,
+        };
+      });
     default:
       return state;
   }
