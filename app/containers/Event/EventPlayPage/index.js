@@ -133,35 +133,39 @@ class EventPlayPage extends Component {
       <div className="event-lineid-box">
         <img alt="line" src={`${baseURL}/images/icon-barcode.png`} />
         <div className="desc">
-          <h2>กรุณาแสกน BAR CODE</h2>
+          <h2>กรุณาแสกน BARCODE</h2>
         </div>
       </div>
     );
   };
 
   renderInputQrcode = () => {
+    const { nextInput } = this.props;
     const { baseURL } = this.props;
+    const message = nextInput === 'LINE_QR_CODE'
+    ? 'กรุณาแสกน LINE QR CODE ของท่าน'
+    : 'กรุณาแสกน QR CODE ที่ได้รับมา';
     return (
       <div className="event-lineid-box">
         <img alt="line" src={`${baseURL}/images/icon-qrcode.png`} />
         <div className="desc">
-          <h2>กรุณาแสกน QR CODE</h2>
+          <h2>{message}</h2>
         </div>
       </div>
     );
   };
 
-  renderInputUI = inputType => {
-    console.log(inputType);
-    if (inputType === 'EMAIL') {
+  renderInputUI = () => {
+    const { nextInput } = this.props;
+    if (nextInput === 'EMAIL') {
       return this.renderInputEmail();
-    } else if (inputType === 'MSISDN') {
+    } else if (nextInput === 'MSISDN') {
       return this.renderInputMSISDN();
-    } else if (inputType === 'LINE_ID') {
+    } else if (nextInput === 'LINE_ID') {
       return this.renderInputLineId();
-    } else if (inputType === 'BARCODE') {
+    } else if (nextInput === 'BARCODE') {
       return this.renderInputBarcode();
-    } else if (inputType === 'LINE_QR_CODE' || 'QR_CODE') {
+    } else if (nextInput === 'LINE_QR_CODE' || 'QR_CODE') {
       return this.renderInputQrcode();
     }
     return '';
@@ -170,14 +174,13 @@ class EventPlayPage extends Component {
   render() {
     console.log(this);
     const { baseURL, selectedEvent, nextInput } = this.props;
-    // const nextInput = 'EMAIL';
     return (
       <div className="input-msisdn">
         <Layout.Title>
           <EventTitle title={'เล่นกิจกรรมรับส่วนลด'} item={selectedEvent} baseURL={baseURL} />
         </Layout.Title>
         <Layout.Content>
-          {this.renderInputUI(nextInput)}
+          {this.renderInputUI()}
           <FooterAction />
         </Layout.Content>
       </div>
