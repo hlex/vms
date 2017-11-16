@@ -34,12 +34,13 @@ export const convertToAppProduct = (product, baseURL = '') => {
     id: product.Po_ID || '',
     name: product.Po_Name || '',
     price: Number(product.Po_Price || ''),
-    isSoldout: isSoldout(product.Po_Qty || randomQty()),
+    isSoldout: isSoldout(product.Qty || randomQty()),
     image: product.Po_Img || '',
     imageBig: product.Po_Imgbig || '',
     row: product.Row || '',
     col: product.Column || '',
     isDropped: false,
+    isFree: (product.Free || '').toUpperCase() === 'YES',
     ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),
   };
 };
