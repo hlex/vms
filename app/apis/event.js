@@ -37,7 +37,7 @@ export const verifyBarcodeOrQrcode = ({ eventId, code, discountType }) => {
 
 export const verifyLineId = ({ eventId, code, barcodeOrQrcode }) => {
   const data = {
-    vtype: 'verifybarcode',
+    vtype: 'verifylineid',
     id: eventId,
     code,
     Barcode: barcodeOrQrcode,
