@@ -42,6 +42,7 @@ export const convertToAppProduct = (product, baseURL = '') => {
     isDropped: false,
     isFree: (product.Free || '').toUpperCase() === 'YES',
     ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),
+    qty: product.Qty || 0,
   };
 };
 
