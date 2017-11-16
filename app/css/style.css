@@ -2572,19 +2572,19 @@ input[type="checkbox"]:checked + label:after {
 - Fonts Web
 --------------------------------------------------------------*/
 @font-face {
-  font-family: 'thai_sans_literegular';
+  font-family: "thai_sans_literegular";
   src: url("../fonts/thaisan/thaisanslite_r1-webfont.eot");
   src: url("../fonts/thaisan/thaisanslite_r1-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/thaisan/thaisanslite_r1-webfont.woff") format("woff"), url("../fonts/thaisan/thaisanslite_r1-webfont.ttf") format("truetype");
   font-weight: normal;
   font-style: normal; }
 @font-face {
-  font-family: 'DB Helvethaica X 45 Li';
+  font-family: "DB Helvethaica X 45 Li";
   src: url("../fonts/db/DBHelvethaicaX-45Li.eot");
   src: url("../fonts/db/DBHelvethaicaX-45Li.eot?#iefix") format("embedded-opentype"), url("../fonts/db/DBHelvethaicaX-45Li.woff") format("woff"), url("../fonts/db/DBHelvethaicaX-45Li.ttf") format("truetype");
   font-weight: 300;
   font-style: normal; }
 @font-face {
-  font-family: 'robotobold';
+  font-family: "robotobold";
   src: url("../fonts/roboto/roboto-bold-webfont.woff2") format("woff2"), url("../fonts/roboto/roboto-bold-webfont.woff") format("woff");
   font-weight: normal;
   font-style: normal; }
@@ -6466,7 +6466,8 @@ hr {
   left: 0;
   width: 100%;
   background-color: black;
-  padding: 10px 0; }
+  padding: 10px 0;
+  z-index: 9999999; }
   .development-toolbar ul {
     margin: 0;
     padding: 0;
