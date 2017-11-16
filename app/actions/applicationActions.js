@@ -102,7 +102,32 @@ export const initApplication = () => {
       const serviceGetProductsResponse = await serviceGetProducts();
       console.log('serviceGetProductsResponse', serviceGetProductsResponse);
       const sanitizedProducts = _.map(extractResponseData(serviceGetProductsResponse), product => convertToAppProduct(product, baseURL));
-      dispatch(Actions.receivedMasterdata('products', sanitizedProducts));
+      // ======================================================
+      // Grouped PoId
+      // ======================================================
+      const groupedByPoId = _.groupBy(sanitizedProducts, 'id');
+      const mergedPhysicalProducts = _.reduce(groupedByPoId, (result, products) => {
+        const baseProduct = _.get(products, 0, {});
+        const physicals = _.reduce(products, (accPhysical, product) => {
+          return [
+            ...accPhysical,
+            {
+              row: product.row,
+              col: product.col,
+              qty: product.qty
+            }
+          ];
+        }, []);
+        return [
+          ...result,
+          {
+            ...baseProduct,
+            physicals,
+          }
+        ];
+      }, []);
+      console.log('mergedPhysicalProducts', mergedPhysicalProducts);
+      dispatch(Actions.receivedMasterdata('products', mergedPhysicalProducts));
       // ======================================================
       // PROMOTION
       // ======================================================
