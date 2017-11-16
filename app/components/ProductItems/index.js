@@ -184,19 +184,48 @@ class ProductItems extends PureComponent {
       mobileTopupProviderPerPage,
     } = this.props;
     const pages = [];
+    console.log(this);
     // ======================================================
-    // Products
+    // Amount
     // ======================================================
-    const promotionTotalPage = Math.ceil(_.size(promotionSets) / promotionSetPerPage);
-    const productTotalPage = Math.ceil(_.size(products) / productPerPage);
+    const promotionSetAmount = _.size(promotionSets);
+    const productAmount = _.size(products);
+    // ======================================================
+    // Pages
+    // ======================================================
+    const promotionTotalPage = Math.ceil(promotionSetAmount / promotionSetPerPage);
+    const productTotalPage = Math.ceil(productAmount / productPerPage);
     const productsToTalPage = _.max([0, promotionTotalPage, productTotalPage]);
+    // ======================================================
+    // Calculate and duplicate item to fullfill UI
+    // ======================================================
+    let fullfilledPromotionSet = promotionSets;
+    let fullfilledProduct = products;
+
+    const differentPage = Math.abs(productTotalPage - promotionTotalPage);
+    if (promotionTotalPage < productTotalPage) {
+      // console.log('promotionTotalPage < productTotalPage', differentPage, 'boost', differentPage * promotionSetPerPage);
+      const totalFullfillAmount = promotionSetAmount + (differentPage * promotionSetPerPage);
+      fullfilledPromotionSet = _.map(_.range(totalFullfillAmount), (index) => {
+        const promotionSetIndex = index % promotionSetAmount;
+        return promotionSets[promotionSetIndex];
+      });
+    } else if (promotionTotalPage > productTotalPage) {
+      // console.log('promotionTotalPage > productTotalPage', differentPage, 'boost', differentPage * productPerPage);
+      const totalFullfillAmount = productAmount + (differentPage * productPerPage);
+      fullfilledProduct = _.map(_.range(totalFullfillAmount), (index) => {
+        const productIndex = index % productAmount;
+        return products[productIndex];
+      });
+    }
+
     const promotionItems = _.map(
       _.range(productsToTalPage),
-      index => getPaginatedItems(promotionSets, index + 1, promotionSetPerPage).data,
+      index => getPaginatedItems(fullfilledPromotionSet, index + 1, promotionSetPerPage).data,
     );
     const productItems = _.map(
       _.range(productsToTalPage),
-      index => getPaginatedItems(products, index + 1, productPerPage).data,
+      index => getPaginatedItems(fullfilledProduct, index + 1, productPerPage).data,
     );
     for (let i = 0; i < productsToTalPage; i += 1) {
       pages.push({
