@@ -133,7 +133,7 @@ class EventPlayPage extends Component {
       <div className="event-lineid-box">
         <img alt="line" src={`${baseURL}/images/icon-barcode.png`} />
         <div className="desc">
-          <h2>กรุณาแสกน BARCODE</h2>
+          <h2>กรุณาแสกน BARCODE ที่ได้รับมา</h2>
         </div>
       </div>
     );
