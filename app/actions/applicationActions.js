@@ -96,12 +96,6 @@ export const initApplication = () => {
       dispatch(Actions.setBaseAds(sanitizedBaseAds));
       dispatch(Actions.setFooterAds(sanitizedBaseAds));
       // ======================================================
-      // EVENTS
-      // ======================================================
-      const serviceGetEventsResponse = await serviceGetEvents();
-      const sanitizedEvents = _.map(extractResponseData(serviceGetEventsResponse), event => convertToAppEvent(event, baseURL));
-      dispatch(Actions.receivedMasterdata('events', sanitizedEvents));
-      // ======================================================
       // PRODUCTS
       // ======================================================
       const serviceGetProductsResponse = await serviceGetProducts();
@@ -133,6 +127,18 @@ export const initApplication = () => {
         ];
       }, []);
       dispatch(Actions.receivedMasterdata('products', mergedPhysicalProducts));
+      // ======================================================
+      // EVENTS
+      // ======================================================
+      const serviceGetEventsResponse = await serviceGetEvents();
+      const sanitizedEvents = _.map(extractResponseData(serviceGetEventsResponse), event => convertToAppEvent(event, baseURL));
+      const eventsWhichMorphEventProductToMasterProduct = _.map(sanitizedEvents, (event) => {
+        return {
+          ...event,
+          product: _.find(mergedPhysicalProducts, product => product.id === event.product.id),
+        };
+      });
+      dispatch(Actions.receivedMasterdata('events', eventsWhichMorphEventProductToMasterProduct));
       // ======================================================
       // PROMOTION
       // ======================================================
@@ -281,7 +287,9 @@ export const receivedQRCode = (scannedCode) => {
           code: scannedCode,
           discountType: isQrcode(scannedCode) ? 'qrcode' : 'barcode'
         };
+        dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
         await verifyBarcodeOrQrcode(dataToVerify);
+        dispatch(hideLoading());
         dispatch(updateEventInput(nextInput, scannedCode));
       } else if (verifyIsLineQrcodeInput) {
         const barcodeOrQrcode = OrderSelector.getEventBarcodeOrQrcodeInput(getState().order);
@@ -290,7 +298,9 @@ export const receivedQRCode = (scannedCode) => {
           code: scannedCode,
           barcodeOrQrcode,
         };
+        dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
         await verifyLineId(dataToVerify);
+        dispatch(hideLoading());
         dispatch(updateEventInput(nextInput, scannedCode));
       } else {
         console.error(`${scannedCode} is not barcode or qrcode or lineId`);
