@@ -85,15 +85,12 @@ export const initApplication = () => {
       // ======================================================
       const getActivityFreeRuleResponse = await getActivityFreeRule();
       const activityFreeRule = extractResponseData(getActivityFreeRuleResponse);
-      console.log('activityFreeRule', activityFreeRule);
       dispatch(Actions.setActivityFreeRule(activityFreeRule));
       // ======================================================
       // ADS
       // ======================================================
       const serviceGetBaseAdsResponse = await serviceGetBaseAds();
-      console.log('serviceGetBaseAdsResponse', serviceGetBaseAdsResponse);
       const sanitizedBaseAds = _.map(extractResponseData(serviceGetBaseAdsResponse), (ad) => {
-        console.log('ad', ad);
         return normalizeStripAds(convertToAppAd(ad), baseURL);
       });
       dispatch(Actions.setBaseAds(sanitizedBaseAds));
@@ -102,14 +99,12 @@ export const initApplication = () => {
       // EVENTS
       // ======================================================
       const serviceGetEventsResponse = await serviceGetEvents();
-      console.log('serviceGetEventsResponse', serviceGetEventsResponse);
       const sanitizedEvents = _.map(extractResponseData(serviceGetEventsResponse), event => convertToAppEvent(event, baseURL));
       dispatch(Actions.receivedMasterdata('events', sanitizedEvents));
       // ======================================================
       // PRODUCTS
       // ======================================================
       const serviceGetProductsResponse = await serviceGetProducts();
-      console.log('serviceGetProductsResponse', serviceGetProductsResponse);
       const sanitizedProducts = _.map(extractResponseData(serviceGetProductsResponse), product => convertToAppProduct(product, baseURL));
       // ======================================================
       // Grouped PoId
@@ -137,20 +132,17 @@ export const initApplication = () => {
           }
         ];
       }, []);
-      console.log('mergedPhysicalProducts', mergedPhysicalProducts);
       dispatch(Actions.receivedMasterdata('products', mergedPhysicalProducts));
       // ======================================================
       // PROMOTION
       // ======================================================
       const serviceGetPromotionsResponse = await serviceGetPromotions();
-      console.log('serviceGetPromotionsResponse', serviceGetPromotionsResponse);
       const sanitizedPromotions = _.map(extractResponseData(serviceGetPromotionsResponse), promotion => convertToAppPromotion(promotion, baseURL));
       dispatch(Actions.receivedMasterdata('promotionSets', sanitizedPromotions));
       // ======================================================
       // MOBILE TOPUP PROVIDER
       // ======================================================
       const serviceGetMobileTopupProvidersResponse = await serviceGetMobileTopupProviders();
-      console.log('serviceGetMobileTopupProvidersResponse', serviceGetMobileTopupProvidersResponse);
       const sanitizedMobileTopupProviders = _.map(extractResponseData(serviceGetMobileTopupProvidersResponse), mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider, baseURL));
       dispatch(Actions.receivedMasterdata('topupProviders', sanitizedMobileTopupProviders));
     } catch (error) {
@@ -304,7 +296,7 @@ export const receivedQRCode = (scannedCode) => {
         console.error(`${scannedCode} is not barcode or qrcode or lineId`);
       }
     } catch (error) {
-      console.error(error);
+      dispatch(handleApiError(error));
     }
   };
 };
