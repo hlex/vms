@@ -238,7 +238,11 @@ const getProductToDrop = createSelector([getProducts], products =>
 
 const getDropProductTargetRowColumn = createSelector(
   [getProductToDrop],
-  productToDrop => `${productToDrop.row}${productToDrop.col}`,
+  productToDrop => {
+    const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.qty !== 0);
+    console.log('getDropProductTargetRowColumn', targetPhysical, targetPhysical.row, targetPhysical.col);
+    return `${targetPhysical.row}${targetPhysical.col}`;
+  }
 );
 
 const verifyOrderHasProduct = createSelector([getProducts], products => _.size(products) > 0);
