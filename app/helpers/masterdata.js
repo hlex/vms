@@ -134,7 +134,6 @@ export const convertToAppAd = (ad) => {
 };
 
 export const convertToAppEvent = (event, baseURL) => {
-  console.log('convertToAppEvent', event);
   const eventInputActivities = _.filter(event.eventActivities || [], activity => activity.type === 'input');
   const eventWatchActivities = _.filter(event.eventActivities || [], activity => activity.type === 'watch');
   const ads = [];
@@ -153,9 +152,14 @@ export const convertToAppEvent = (event, baseURL) => {
       };
     }),
     watches: _.map(eventWatchActivities, (eventWatchActivity) => {
+      const data = {
+        ...eventWatchActivity.data,
+        Ad_Second: eventWatchActivity.data.Ad_Second !== 0 ? eventWatchActivity.data.Ad_Second : 5,
+      };
       return {
         ...eventWatchActivity,
-        completed: false
+        completed: false,
+        data: normalizeStripAds(convertToAppAd(data), baseURL),
       };
     }),
     rewards: _.map(event.rewards || [], (reward) => {
