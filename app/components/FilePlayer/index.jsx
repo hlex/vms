@@ -18,18 +18,25 @@ class FilePlayer extends Component {
   }
 
   state = {
-    time: Date.now(),
+    id: Date.now(),
     duration: this.props.duration,
   }
 
   componentDidMount = () => {
-    const { duration } = this.props;
+    const { onEnded, src, duration } = this.props;
     this.timer1 = setInterval(this.tick, 1000);
     this.timer2 = setInterval(this.alarm, Number(duration * 1000));
+    document.getElementById(`${this.state.id}`).addEventListener('ended', () => {
+      onEnded(src);
+    });
   }
   componentWillUnmount = () => {
+    const { onEnded, src } = this.props;
     clearInterval(this.timer1);
     clearInterval(this.timer2);
+    document.getElementById(`${this.state.id}`).removeEventListener('ended', () => {
+      onEnded(src);
+    });
   }
   tick = () => {
     const { onTicked } = this.props;
@@ -53,7 +60,7 @@ class FilePlayer extends Component {
     if (type === 'video') {
       return (
         <div className="react-fileplayer" key={key}>
-          <video width={width} height={height} className="cg-video" autoPlay>
+          <video id={this.state.id} width={width} height={height} className="cg-video" autoPlay>
             <source src={`${src}`} type="video/mp4" />
           </video>
         </div>
