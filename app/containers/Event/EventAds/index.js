@@ -24,120 +24,132 @@ import * as Actions from './actions';
 import MasterappSelector from '../../../selectors/masterapp';
 import OrderSelector from '../../../selectors/order';
 
-const mapStateToProps = (state) => {
-  return {
-    selectedEvent: OrderSelector.getSelectedEvent(state.order),
-    nextWatch: OrderSelector.getEventNextWatch(state.order),
-    baseURL: MasterappSelector.getBaseURL(state.masterapp),
-  };
-};
+const mapStateToProps = state => ({
+  selectedEvent: OrderSelector.getSelectedEvent(state.order),
+  nextWatch: OrderSelector.getEventNextWatch(state.order),
+  baseURL: MasterappSelector.getBaseURL(state.masterapp),
+});
 
 const actions = {
   ...ApplicationActions,
   ...Actions,
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(actions, dispatch);
-};
-
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 class EventAds extends Component {
-
   static propTypes = {
     selectedEvent: PropTypes.shape({}).isRequired,
     nextWatch: PropTypes.shape({}).isRequired,
     eventInitGetReward: PropTypes.func.isRequired,
     backToHome: PropTypes.func.isRequired,
-  }
+  };
 
   state = {
     count: 0,
     adFinished: false,
-  }
+  };
 
   handleAdsEnd = () => {
     const { eventInitGetReward } = this.props;
     // ======================================================
     // POPUP 100%
     // ======================================================
+    console.log('handleAdsEnd');
     this.setState({
-      adFinished: true
+      adFinished: true,
     });
     eventInitGetReward();
-  }
+  };
 
   handleNext = () => {
     const { backToHome } = this.props;
     backToHome();
-  }
+  };
 
   handleTicked = () => {
     this.setState({
       count: this.state.count + 1,
     });
-  }
+    if (this.getRemainingCount() === 0) this.handleAdsEnd();
+  };
 
-  renderChannelLabel = (channelCode) => {
-    return channelCode === 'EMAIL' ? 'อีเมล' : 'SMS';
-  }
+  getRemainingCount = () => {
+    const { count } = this.state;
+    const { nextWatch } = this.props;
+    const source = _.get(nextWatch, 'data', {}); // [_.head(stripAds)];
+    const maxCount = _.get(source, 'duration', 0);
+    const remainingCount = maxCount - count;
+    return remainingCount;
+  };
+
+  renderChannelLabel = channelCode => channelCode === 'EMAIL' ? 'อีเมล' : 'SMS';
 
   renderDiscountUI = () => {
     const { selectedEvent } = this.props;
-    const label = _.get(selectedEvent, 'tag.label', '');
+    const lang = 'th';
+    const label = _.get(selectedEvent, `tag.label.${lang}`, '');
     const value = _.get(selectedEvent, 'tag.value', '');
-    const unit = _.get(selectedEvent, 'tag.unit', '');
+    const unit = _.get(selectedEvent, `tag.unit.${lang}`, '');
     const channelCode = _.get(selectedEvent, 'rewards.0.channel', '');
     return (
       <div>
-        <h2>รับรหัส <span className="highlight-red">{`${label} ${value} ${unit}`}</span></h2>
+        <h2>
+          รับรหัส <span className="highlight-red">{`${label} ${value} ${unit}`}</span>
+        </h2>
         <h2>ทาง {`${this.renderChannelLabel(channelCode)}`}</h2>
-        <p>ใช้ได้ภายใน <span className="highlight-red">{`${moment('2017-11-1', 'YYYY-MM-DD').format('DD/MM/YYYY')}`}</span></p>
+        <p>
+          ใช้ได้ภายใน{' '}
+          <span className="highlight-red">{`${moment('2017-11-1', 'YYYY-MM-DD').format(
+            'DD/MM/YYYY',
+          )}`}</span>
+        </p>
       </div>
     );
-  }
+  };
 
-  renderUI = () => {
-    return this.renderDiscountUI();
-  }
+  renderUI = () => this.renderDiscountUI();
 
   render() {
     console.log(this);
-    const { adFinished, count } = this.state;
+    const { adFinished } = this.state;
     const { nextWatch } = this.props;
-    const source = _.get(nextWatch, 'data', {});  // [_.head(stripAds)];
-    const maxCount = _.get(source, 'duration', 0);
-    const remainingCount = maxCount - count;
+    const source = _.get(nextWatch, 'data', {}); // [_.head(stripAds)];
+    const remainingCount = this.getRemainingCount();
     const playlist = [source];
     return (
       <div className="event-ads">
         <Layout.FullScreen>
-          { remainingCount > 0 && <div className="count-time" style={{ position: 'fixed', zIndex: '99' }}><span id="set_timer" className="style colorDefinition size_sm">{maxCount - count} วินาที</span></div> }
-          <MediaPlayer
-            width={1080}
-            height={1920}
-            sources={playlist}
-            onTicked={this.handleTicked}
-            onEnded={this.handleAdsEnd}
-          />
+          {remainingCount > 0 && (
+            <div className="count-time" style={{ position: 'fixed', zIndex: '99' }}>
+              <span id="set_timer" className="style colorDefinition size_sm">
+                {remainingCount} วินาที
+              </span>
+            </div>
+          )}
+          {remainingCount !== 0 && (
+            <MediaPlayer
+              playerKey={'eventAds'}
+              width={1080}
+              height={1920}
+              sources={playlist}
+              onTicked={this.handleTicked}
+              onEnded={this.handleAdsEnd}
+            />
+          )}
           <Modal
             show={adFinished}
             options={{
               className: {
                 margin: '0 auto',
                 top: '50%',
-                marginTop: '-200px'
+                marginTop: '-200px',
               },
             }}
           >
             <div className="ads-confirm">
-              {
-                this.renderUI()
-              }
-              <a
-                className="button purple M"
-                onClick={this.handleNext}
-              >
+              {this.renderUI()}
+              <a className="button purple M" onClick={this.handleNext}>
                 <i className="fa fa-check" />ยืนยัน
               </a>
             </div>

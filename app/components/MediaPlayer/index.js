@@ -29,6 +29,10 @@ class MediaPlayer extends Component {
       });
     }
   }
+  shouldComponentUpdate = () => {
+    const { playerKey } = this.props;
+    return playerKey === undefined;
+  }
   handlePlayerEnded = () => {
     const { index } = this.state;
     const { sources, onEnded } = this.props;
@@ -57,7 +61,7 @@ class MediaPlayer extends Component {
     // console.debug('MediaPlayer:state', this.state);
     // console.debug('MediaPlayer:props', this.props);
     const { index } = this.state;
-    const { width, height, sources } = this.props;
+    const { width, height, sources, playerKey } = this.props;
     // -----------------------------
     const currentMedia = _.get(sources, `${index}`, {});
     const { type, src, duration } = currentMedia;
@@ -65,6 +69,7 @@ class MediaPlayer extends Component {
     const isFullScreen = (currentMedia.adSize || '') === 'FULLSCREEN';
     // -----------------------------
     if (_.size(sources) <= 0 || !currentMedia) return <div />;
+    const itemKey = playerKey !== undefined ? playerKey : `${Date.now()}-${src}`;
     return (
       <div
         className="react-mediaplayer"
@@ -72,7 +77,7 @@ class MediaPlayer extends Component {
         onClick={() => { if (isFullScreen) this.handleTouchMedia(); }}
       >
         <FilePlayer
-          key={`${Date.now()}-${src}`}
+          key={itemKey}
           duration={duration}
           src={src}
           width={width}
