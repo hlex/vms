@@ -11,9 +11,9 @@ export const serviceGetEventReward = ({ eventId, discountType, amount, channel, 
     discounttype: discountType,
     amount,
     channel: channel.toLowerCase(),
-    value
+    value,
   };
-  return fetchFacade(`${URL.getEventReward}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.getEventReward}${convertToURLParam(data)}`).then(response => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });
@@ -26,7 +26,7 @@ export const verifyBarcodeOrQrcode = ({ eventId, code, discountType }) => {
     code,
     discounttype: discountType,
   };
-  return fetchFacade(`${URL.verifyBarcodeOrQrcode}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.verifyBarcodeOrQrcode}${convertToURLParam(data)}`).then(response => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });
@@ -42,12 +42,11 @@ export const verifyLineId = ({ eventId, code, barcodeOrQrcode }) => {
     code,
     Barcode: barcodeOrQrcode,
   };
-  return fetchFacade(`${URL.verifyLineId}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.verifyLineId}${convertToURLParam(data)}`).then(response => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });
 };
-
 
 export const useLineId = ({ eventId, code, barcodeOrQrcode, productId }) => {
   const data = {
@@ -55,10 +54,32 @@ export const useLineId = ({ eventId, code, barcodeOrQrcode, productId }) => {
     id: eventId,
     code,
     Barcode: barcodeOrQrcode,
-    po_id: productId
+    po_id: productId,
   };
-  return fetchFacade(`${URL.useLineId}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.useLineId}${convertToURLParam(data)}`).then(response => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });
+};
+
+export const getActivityFreeRule = () => {
+  const data = {
+    vtype: 'activityFreeRule',
+  };
+  return new Promise((resolve, reject) => {
+    const response = {
+      status: 'SUCCESSFUL',
+      'trx-id': '20171116204950',
+      'response-data': {
+        rule: 'ALL',
+      },
+    };
+    setTimeout(() => {
+      resolve(response);
+    }, 100);
+  });
+  // return fetchFacade(`${URL.getActivityFreeRule}${convertToURLParam(data)}`).then((response) => {
+  //   handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+  //   return response;
+  // });
 };

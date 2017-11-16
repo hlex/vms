@@ -42,6 +42,7 @@ import {
   USE_DISCOUNT_INSTANTLY,
   CLEAR_INSTANTLY_DISCOUNT,
   SET_BASE_ADS,
+  SET_ACTIVITY_FREE_RULE
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -327,5 +328,12 @@ export const setBaseAds = (ads) => {
   return {
     type: SET_BASE_ADS,
     ads
+  };
+};
+
+export const setActivityFreeRule = ({ rule }) => {
+  return {
+    type: SET_ACTIVITY_FREE_RULE,
+    rule
   };
 };

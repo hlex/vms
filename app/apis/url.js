@@ -9,4 +9,5 @@ export default {
   getProducts: 'api/main.php',
   getPromotions: 'api/main.php',
   getMobileTopupProviders: 'api/main.php',
+  getActivityFreeRule: 'api/main.php',
 };

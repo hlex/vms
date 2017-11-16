@@ -64,6 +64,7 @@ import {
   serviceGetEventReward,
   verifyBarcodeOrQrcode,
   verifyLineId,
+  getActivityFreeRule
 } from '../apis/event';
 
 let cmdNo = 0;
@@ -78,6 +79,13 @@ export const initApplication = () => {
     // ======================================================
     try {
       const baseURL = MasterappSelector.getBaseURL(getState().masterapp);
+      // ======================================================
+      // ACTIVITY FREE
+      // ======================================================
+      const getActivityFreeRuleResponse = await getActivityFreeRule();
+      const activityFreeRule = extractResponseData(getActivityFreeRuleResponse);
+      console.log('activityFreeRule', activityFreeRule);
+      dispatch(Actions.setActivityFreeRule(activityFreeRule));
       // ======================================================
       // ADS
       // ======================================================

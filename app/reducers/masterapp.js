@@ -11,7 +11,8 @@ import {
   ACTIVE_MONEY_BOX,
   DEACTIVE_MONEY_BOX,
   SHOW_LOADING,
-  HIDE_LOADING
+  HIDE_LOADING,
+  SET_ACTIVITY_FREE_RULE
 } from '../actions/actionTypes';
 
 const cloudURL = 'http://27.254.160.247:81';
@@ -65,7 +66,8 @@ const initialState = {
       th: '',
       en: ''
     }
-  }
+  },
+  activityFreeRule: 'ALL'
 };
 
 export default (state = initialState, action) => {
@@ -146,6 +148,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         limitBanknote: action.banknoteValue
+      };
+    case SET_ACTIVITY_FREE_RULE:
+      return {
+        ...state,
+        activityFreeRule: action.rule
       };
     default:
       return state;
