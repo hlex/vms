@@ -107,6 +107,7 @@ export const convertToAppMobileTopupProvider = (mobileTopupProvider, baseURL) =>
 */
 export const convertToAppAd = (ad) => {
   const isVideo = (ad.Ad_Url || '').indexOf('.mp4') >= 0;
+  const second = ad.Ad_Second === 0 ? 10000 : (ad.Ad_Second || 1000);
   return {
     id: ad.Ad_ID || cuid(),
     type: ad.Ad_Type || '' === 'V' || isVideo ? 'video' : 'image',
@@ -114,7 +115,7 @@ export const convertToAppAd = (ad) => {
     path: ad.Ad_Url || '',
     filename: ad.Ad_ID || '',
     expire: '', // '2026-11-21',
-    timeout: Number(ad.Ad_Second) * 1000,
+    timeout: Number(second) * 1000,
     checksum: '', // '47e93aec13f7c9115ebbcfaacb309ccd',
     adSize: 'STRIP', // ad.Ad_Display === 'F' ? 'FULLSCREEN' : 'STRIP',
   };
