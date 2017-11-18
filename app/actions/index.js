@@ -42,7 +42,8 @@ import {
   USE_DISCOUNT_INSTANTLY,
   CLEAR_INSTANTLY_DISCOUNT,
   SET_BASE_ADS,
-  SET_ACTIVITY_FREE_RULE
+  SET_ACTIVITY_FREE_RULE,
+  EVENT_UPDATE_REWARD_DISCOUNT
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -335,5 +336,13 @@ export const setActivityFreeRule = ({ rule }) => {
   return {
     type: SET_ACTIVITY_FREE_RULE,
     rule
+  };
+};
+
+export const updateEventReward = ({ cuid }, discount) => {
+  return {
+    type: EVENT_UPDATE_REWARD_DISCOUNT,
+    cuid,
+    discount
   };
 };

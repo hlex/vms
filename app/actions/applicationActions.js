@@ -64,7 +64,7 @@ import {
 import {
   serviceGetEventReward,
   verifyBarcodeOrQrcode,
-  verifyLineId,
+  verifyLineQrcode,
   getActivityFreeRule
 } from '../apis/event';
 
@@ -176,7 +176,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       dispatch(Actions.receivedSensorInformation(data));
       break;
     case 'SCANNED_QR_CODE':
-      dispatch(receivedQRCode(data.msg || ''));
+      dispatch(receivedScannedCode(data.msg || ''));
       break;
     case 'INSERT_CASH':
       dispatch(Actions.receivedCash(data));
@@ -279,11 +279,24 @@ const verifyIsBarcode = (scannedCode) => {
   return /^\d+$/.test(scannedCode);
 };
 
-export const receivedQRCode = (scannedCode) => {
+const extractDiscountFromResponseData = (responseData) => {
+  return {
+    code: responseData.discountcode || 0,
+    value: responseData.discountprice || '',
+    expireDate: responseData.expiredate,
+  };
+};
+
+const verifyDiscountIsExist = (discount) => {
+  return discount.code !== '' && discount.value !== 0;
+}
+
+export const receivedScannedCode = (scannedCode) => {
   return async (dispatch, getState) => {
     const nextInput = OrderSelector.getEventNextInput(getState().order);
+    const nextReward = OrderSelector.getEventNextReward(getState().order);
     const eventId = OrderSelector.getEventId(getState().order);
-    console.log('receivedQRCode', eventId, scannedCode, nextInput);
+    console.log('receivedScannedCode', eventId, scannedCode, nextInput);
     try {
       if (verifyIsBarcodeOrQrCodeInput(nextInput)) {
         const isBarcode = verifyIsBarcode(scannedCode);
@@ -293,8 +306,14 @@ export const receivedQRCode = (scannedCode) => {
           discountType: isBarcode ? 'barcode' : 'qrcode'
         };
         dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
-        await verifyBarcodeOrQrcode(dataToVerify);
+        const verifyBarcodeOrQrcodeResponse = await verifyBarcodeOrQrcode(dataToVerify);
+        const responseData = extractResponseData(verifyBarcodeOrQrcodeResponse);
+        const discount = extractDiscountFromResponseData(responseData);
         dispatch(hideLoading());
+        if (verifyDiscountIsExist(discount)) {
+          // update reward
+          dispatch(updateEventReward(nextReward, discount));
+        }
         dispatch(updateEventInput(nextInput, scannedCode));
       } else if (verifyIsLineQrcodeInput) {
         const isLineQrcode = verifyIsLineQrcode(scannedCode);
@@ -307,7 +326,7 @@ export const receivedQRCode = (scannedCode) => {
             barcodeOrQrcode,
           };
           dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
-          await verifyLineId(dataToVerify);
+          await verifyLineQrcode(dataToVerify);
           dispatch(hideLoading());
           dispatch(updateEventInput(nextInput, scannedCode));
         } else {
@@ -972,8 +991,14 @@ export const eventInitGetReward = () => {
 };
 
 export const updateEventInput = (inputName, inputValue) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(Actions.updateEventInput(inputName, inputValue));
+  };
+};
+
+export const updateEventReward = (reward, discount) => {
+  return (dispatch) => {
+    dispatch(Actions.updateEventReward(reward, discount));
   };
 };
 
