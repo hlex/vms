@@ -100,7 +100,7 @@ class App extends Component {
                     <a onClick={() => insertCoin(100)}>100B</a>
                   </li>
                   <li>
-                    <a onClick={() => scanCode('B12345')}>QR</a>
+                    <a onClick={() => scanCode('Q12345R')}>QR</a>
                   </li>
                   <li>
                     <a onClick={() => scanCode('1111111111111')}>BC</a>

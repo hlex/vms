@@ -311,7 +311,6 @@ export const receivedScannedCode = (scannedCode) => {
         const discount = extractDiscountFromResponseData(responseData);
         dispatch(hideLoading());
         if (verifyDiscountIsExist(discount)) {
-          // update reward
           dispatch(updateEventReward(nextReward, discount));
         }
         dispatch(updateEventInput(nextInput, scannedCode));
@@ -326,8 +325,13 @@ export const receivedScannedCode = (scannedCode) => {
             barcodeOrQrcode,
           };
           dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
-          await verifyLineQrcode(dataToVerify);
+          const verifyLineQrcodeResponse = await verifyLineQrcode(dataToVerify);
+          const responseData = extractResponseData(verifyLineQrcodeResponse);
+          const discount = extractDiscountFromResponseData(responseData);
           dispatch(hideLoading());
+          if (verifyDiscountIsExist(discount)) {
+            dispatch(updateEventReward(nextReward, discount));
+          }
           dispatch(updateEventInput(nextInput, scannedCode));
         } else {
           console.error(`${scannedCode} is not lineId`);
