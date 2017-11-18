@@ -830,8 +830,24 @@ export const verifyDiscountCode = (code) => {
     const canUseDiscount = verifyCanUseDiscount(OrderSelector.getDiscounts(getState().order), code);
     if (canUseDiscount) {
       try {
+        const orderType = OrderSelector.getOrderType(getState().order);
+        const discountType = orderType === 'mobileTopup' ? 'topup' : 'product';
+        let poId;
+        switch (orderType) {
+          case 'promotionSet':
+            poId = OrderSelector.getPromotionSet(getState().order).id;
+            break;
+          case 'singleProduct':
+            poId = OrderSelector.getSingleProduct(getState().order).id;
+            break;
+          case 'mobileTopup':
+            poId = OrderSelector.getMobileTopup(getState().order).id;
+            break;
+          default:
+            break;
+        }
         dispatch(showLoading('ระบบกำลังตรวจสอบรหัสส่วนลด'));
-        const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code);
+        const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code, poId, discountType);
         dispatch(hideLoading());
         console.log('verifyDiscountCodeResponse', verifyDiscountCodeResponse);
         const discountItem = {

@@ -164,6 +164,11 @@ const getSelectedMobileTopupPrice = createSelector(
   selectedMobileTopupValue => Number(selectedMobileTopupValue.value),
 );
 
+const getSelectedMobileTopupFee = createSelector(
+  [getSelectedMobileTopupValue],
+  selectedMobileTopupValue => Number(selectedMobileTopupValue.fee),
+);
+
 const getSelectedMobileTopupTotalPrice = createSelector(
   [getSelectedMobileTopupValue, getSelectedMobileTopupPrice],
   (selectedMobileTopupValue, selectedMobileTopupPrice) =>
@@ -186,11 +191,12 @@ const getMobileTopupServiceCode = createSelector(
 );
 
 const getMobileTopupToService = createSelector(
-  [getMobileTopupServiceCode, getTopupMSISDN, getSelectedMobileTopupPrice],
-  (serviceCode, MSISDN, mobileTopupValue) => ({
+  [getMobileTopupServiceCode, getTopupMSISDN, getSelectedMobileTopupPrice, getSelectedMobileTopupFee],
+  (serviceCode, MSISDN, mobileTopupValue, mobileTopupFee) => ({
     serviceCode,
     MSISDN,
     mobileTopupValue,
+    mobileTopupFee
   }),
 );
 
