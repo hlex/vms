@@ -42,7 +42,8 @@ import {
   USE_DISCOUNT_INSTANTLY,
   CLEAR_INSTANTLY_DISCOUNT,
   SET_BASE_ADS,
-  SET_ACTIVITY_FREE_RULE
+  SET_ACTIVITY_FREE_RULE,
+  SWITCH_LANGUAGE_TO
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -335,5 +336,12 @@ export const setActivityFreeRule = ({ rule }) => {
   return {
     type: SET_ACTIVITY_FREE_RULE,
     rule
+  };
+};
+
+export const switchLanguageTo = (lang) => {
+  return {
+    type: SWITCH_LANGUAGE_TO,
+    lang
   };
 };

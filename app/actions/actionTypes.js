@@ -39,6 +39,7 @@ export const USE_DISCOUNT_INSTANTLY = 'USE_DISCOUNT_INSTANTLY';
 export const CLEAR_INSTANTLY_DISCOUNT = 'CLEAR_INSTANTLY_DISCOUNT';
 export const SET_BASE_ADS = 'SET_BASE_ADS';
 export const SET_ACTIVITY_FREE_RULE = 'SET_ACTIVITY_FREE_RULE';
+export const SWITCH_LANGUAGE_TO = 'SWITCH_LANGUAGE_TO';
 // ======================================================
 // TCP
 // ======================================================

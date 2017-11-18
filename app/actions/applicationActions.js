@@ -1100,3 +1100,9 @@ export const hideLoading = () => {
     dispatch(Actions.hideLoading());
   };
 };
+
+export const switchLanguageTo = (lang) => {
+  return (dispatch) => {
+    dispatch(Actions.switchLanguageTo(lang));
+  };
+};

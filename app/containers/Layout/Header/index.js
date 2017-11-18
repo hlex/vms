@@ -6,6 +6,32 @@ class Header extends Component {
   static propTypes = {
     backToHome: PropTypes.func.isRequired,
     baseURL: PropTypes.string.isRequired,
+    switchLanguageTo: PropTypes.func.isRequired,
+    lang: PropTypes.string,
+  }
+
+  static defaultProps = {
+    lang: 'th'
+  }
+
+  renderLanguageButton = () => {
+    const { lang, switchLanguageTo } = this.props;
+    const oppositeLang = lang === 'th' ? 'en' : 'th';
+    let buttonLang;
+    switch (oppositeLang) {
+      case 'th':
+        buttonLang = 'Thai';
+        break;
+      case 'en':
+        buttonLang = 'English';
+        break;
+      default:
+        buttonLang = 'English';
+        break;
+    }
+    return (
+      <a className="button" onClick={switchLanguageTo(oppositeLang)}>{buttonLang}</a>
+    );
   }
 
   render() {
@@ -25,7 +51,7 @@ class Header extends Component {
             <a className="button yellow" onClick={backToHome}>
               <i className="home">&nbsp;</i>หน้าหลัก
             </a>
-            <a className="button">English</a>
+            {this.renderLanguageButton()}
           </div>
         </div>
       </div>

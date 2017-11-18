@@ -61,7 +61,7 @@ class App extends Component {
   };
 
   render() {
-    const { backToHome, baseURL, location, appReady, insertCoin, scanCode, modal } = this.props;
+    const { backToHome, baseURL, location, appReady, insertCoin, scanCode, modal, switchLanguageTo } = this.props;
     return (
       <div className="smart-vending-machine-app">
         {
@@ -69,7 +69,7 @@ class App extends Component {
           <div className="smart-vending-machine-app-connected">
             <AlertMessage />
             <LoadingScreen />
-            <Layout.Header backToHome={backToHome} baseURL={baseURL} />
+            <Layout.Header switchLanguageTo={switchLanguageTo} backToHome={backToHome} baseURL={baseURL} />
             {this.props.children}
             <Layout.Footer />
             {process.env.NODE_ENV !== 'production' && (
