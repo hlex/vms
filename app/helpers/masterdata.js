@@ -39,6 +39,7 @@ export const convertToAppProduct = (product, baseURL = '') => {
     imageBig: product.Po_Imgbig || '',
     row: product.Row || '',
     col: product.Column || '',
+    slotNo: product.SlotNo || '',
     isDropped: false,
     isFree: (product.Free || '').toUpperCase() === 'YES',
     ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),

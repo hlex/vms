@@ -49,3 +49,9 @@ export const getEventInputByChannel = (eventInputs, channel) => {
   const channelToInput = channel === 'SMS' ? 'MSISDN' : 'EMAIL';
   return _.find(eventInputs, input => input.name === channelToInput);
 };
+
+export const getPhysicalUsedSlotNo = (product) => {
+  const physicals = product.physicals || [];
+  const usedPhysical = _.find(physicals, physical => physical.canDrop === true);
+  return usedPhysical.slotNo;
+};

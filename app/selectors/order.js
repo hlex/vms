@@ -1,5 +1,9 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
+// ======================================================
+// Helpers
+// ======================================================
+import { getPhysicalUsedSlotNo } from '../helpers/global';
 
 const getProducts = state => state.products;
 const getPromotionSets = state => state.promotionSets;
@@ -369,6 +373,58 @@ const getOrderDiscountType = createSelector(
   }
 );
 
+const toSubmitOrder = createSelector(
+  [
+    getOrderType,
+    verifyIsEventOrder,
+    getSingleProduct,
+    getPromotionSet,
+    verifyOrderHasDiscount,
+    getDiscount,
+    getProducts,
+  ],
+  (
+    orderType,
+    isEventOrder,
+    singleProduct,
+    promotionSet,
+    hasDiscount,
+    discount,
+    products,
+  ) => {
+    let id;
+    const poId = _.join(_.map(products, product => product.id), ',');
+    let saleType;
+    const qty = 1;
+    const unitPrice = _.join(_.map(products, product => product.price), ',');
+    const slotNo = _.join(_.map(products, product => getPhysicalUsedSlotNo(product)), ',');
+    switch (orderType) {
+      case 'singleProduct':
+        id = singleProduct.id;
+        saleType = 'Normal';
+        break;
+      case 'promotionSet':
+        id = promotionSet.id;
+        saleType = 'Promotion';
+        break;
+      default:
+        break;
+    }
+    if (isEventOrder) saleType = 'Activities';
+    let discountCode = '';
+    if (hasDiscount) discountCode = discount.code;
+    return {
+      id,
+      poId,
+      saleType,
+      discountCode,
+      qty,
+      unitPrice,
+      slotNo
+    };
+  }
+);
+
 export default {
   // ======================================================
   // Event
@@ -446,5 +502,6 @@ export default {
   // ======================================================
   getOrderType,
   getOrderDiscountType,
-  getOrderPoId
+  getOrderPoId,
+  toSubmitOrder
 };
