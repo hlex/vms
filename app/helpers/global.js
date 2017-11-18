@@ -21,7 +21,7 @@ export const createLog = (type = '', bgColor = 'green', color = '#fff') => {
   return `background: ${bgColor}; color: ${color}`;
 };
 
-const getCashRemaining = (remain) => {
+export const getCashRemaining = (remain) => {
   return {
     oneBahtCount: _.get(remain, 'baht1', 0),
     fiveBahtCount: _.get(remain, 'baht5', 0),

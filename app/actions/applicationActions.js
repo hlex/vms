@@ -578,9 +578,12 @@ export const receivedCashRemaining = (data) => {
     // Check should disable bank note
     // ======================================================
     const cashRemainingAmount = getCashRemainingAmount(data.remain);
+    const { oneBahtCount } = getCashRemaining(data.remain);
     const currentLimitBanknote = MasterappSelector.getLimitBanknote(getState().masterapp);
-    console.log('get', cashRemainingAmount, currentLimitBanknote);
-    if (cashRemainingAmount > 100 && currentLimitBanknote !== 500) {
+    console.log('get', cashRemainingAmount, oneBahtCount, currentLimitBanknote);
+    if (oneBahtCount < 5) {
+      dispatch(setLimitBanknote(20));
+    } else if (cashRemainingAmount > 100 && currentLimitBanknote !== 500) {
       // disable 500
       dispatch(setLimitBanknote(500));
     } else if (cashRemainingAmount <= 100 && cashRemainingAmount > 50 && currentLimitBanknote !== 100) {
