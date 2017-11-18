@@ -347,6 +347,21 @@ const getPaymentBgImage = createSelector(
   }
 );
 
+const getOrderPoId = createSelector(
+  [getOrderType, getPromotionSet, getSingleProduct, getMobileTopup],
+  (orderType, promotionSet, singleProduct, mobileTopup) => {
+    switch (orderType) {
+      case 'promotionSet':
+        return promotionSet.id || '';
+      case 'singleProduct':
+        return singleProduct.id || '';
+      case 'mobileTopup':
+        return mobileTopup.id || '';
+      default:
+    }
+  }
+);
+
 export default {
   // ======================================================
   // Event
@@ -422,5 +437,6 @@ export default {
   // ======================================================
   // Order
   // ======================================================
-  getOrderType
+  getOrderType,
+  getOrderPoId
 };
