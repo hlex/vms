@@ -20,7 +20,7 @@ import {
 import {
   createLog,
   verifyLessThanThreshold,
-  verifyCanUseDiscount,
+  verifyDuplicatedDiscount,
   getCashRemainingAmount,
   getEventInputByChannel,
 } from '../helpers/global';
@@ -862,8 +862,24 @@ export const verifyDiscountCode = (code) => {
     // ======================================================
     // Check code is already exist
     // ======================================================
-    const canUseDiscount = verifyCanUseDiscount(OrderSelector.getDiscounts(getState().order), code);
-    if (canUseDiscount) {
+    const discounts = OrderSelector.getDiscounts(getState().order);
+    const isOrderHasOneDiscount = _.size(discounts) === 1;
+    const isDuplicatedDiscount = verifyDuplicatedDiscount(discounts, code);
+    if (isOrderHasOneDiscount) {
+      dispatch(hideLoading());
+      dispatch(openAlertMessage(convertApplicationErrorToError({
+        title: `ไม่สามารถใช้รหัสส่วนลด ${code} ได้`,
+        th: 'เนื่องจากระบบไม่อนุญาตให้ใช้ส่วนลดมากกว่า 1 อัน',
+        en: '',
+      })));
+    } else if (isDuplicatedDiscount) {
+      dispatch(hideLoading());
+      dispatch(openAlertMessage(convertApplicationErrorToError({
+        title: `ไม่สามารถใช้รหัสส่วนลด ${code} ได้`,
+        th: 'เนื่องจากรหัสส่วนลดถูกใช้ไปแล้ว',
+        en: '',
+      })));
+    } else {
       try {
         const discountType = OrderSelector.getOrderDiscountType(getState().order);
         const poId = OrderSelector.getOrderPoId(getState().order);
@@ -881,12 +897,6 @@ export const verifyDiscountCode = (code) => {
       } catch (error) {
         dispatch(handleApiError(error));
       }
-    } else {
-      dispatch(hideLoading());
-      dispatch(openAlertMessage(convertApplicationErrorToError({
-        th: `ไม่สามารถใช้รหัสส่วนลด ${code} ได้ เนื่องจากใช้ไปแล้ว`,
-        en: '',
-      })));
     }
   };
 };
@@ -1078,11 +1088,13 @@ export const eventGetReward = () => {
             let message;
             if (channel === 'SMS') {
               message = {
+                title: 'ขอบคุณที่ร่วมกิจกรรม',
                 th: `ตรวจสอบรหัสส่วนลดได้ที่ หมายเลข ${eventInput.value}`,
                 en: '',
               };
             } else if (channel === 'EMAIL') {
               message = {
+                title: 'ขอบคุณที่ร่วมกิจกรรม',
                 th: `ตรวจสอบรหัสส่วนลดได้ที่ อีเมล ${eventInput.value}`,
                 en: '',
               };
