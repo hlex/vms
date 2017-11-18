@@ -4,7 +4,7 @@ import { fetchFacade } from '../helpers/api';
 import { isVMSServiceError, convertVMSServiceResponseToError } from '../helpers/error';
 import URL from './url';
 
-export const serviceGetEventReward = ({ eventId, discountType, amount, channel, value }) => {
+export const serviceGetEventReward = ({ eventId, discountType, amount, channel, value }, poId) => {
   const data = {
     vtype: 'getdiscountcode',
     id: eventId,
@@ -12,6 +12,7 @@ export const serviceGetEventReward = ({ eventId, discountType, amount, channel, 
     amount,
     channel: channel.toLowerCase(),
     value,
+    po_id: poId
   };
   return fetchFacade(`${URL.getEventReward}${convertToURLParam(data)}`).then(response => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
