@@ -538,11 +538,18 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
     if (OrderSelector.verifyOrderHasProduct(getState().order)) {
       dispatch(productDrop());
     } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
-      const serviceTopupMobileResponse = await serviceTopupMobile(
-          OrderSelector.getMobileTopupToService(getState().order),
-        );
-      console.log('serviceTopupMobile', serviceTopupMobileResponse);
-      dispatch(endProcess());
+      try {
+        const discount = OrderSelector.getDiscount(getState().order);
+        const serviceTopupMobileResponse = await serviceTopupMobile(
+            OrderSelector.getMobileTopupToService(getState().order),
+            discount.code
+          );
+        console.log('serviceTopupMobile', serviceTopupMobileResponse);
+        dispatch(endProcess());
+      } catch (error) {
+        dispatch(handleApiError(error));
+        dispatch(backToHome());
+      }
     }
   }
 };
