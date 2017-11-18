@@ -114,7 +114,7 @@ export const getMasterProductAndEvent = () => {
             qty: sumQty,
             isSoldout: isSoldout(sumQty),
             physicals,
-          }, ['isFree'])
+          }, ['isFree', 'col', 'row', 'slotNo'])
         ];
       }, []);
       dispatch(Actions.receivedMasterdata('products', mergedPhysicalProducts));
@@ -162,12 +162,21 @@ export const initApplication = () => {
       // ======================================================
       // PRODUCTS & EVENT
       // ======================================================
-      await dispatch(getMasterProductAndEvent());
+      const mergedPhysicalProducts = await dispatch(getMasterProductAndEvent());
       // ======================================================
       // PROMOTION
       // ======================================================
       const serviceGetPromotionsResponse = await serviceGetPromotions();
-      const sanitizedPromotions = _.map(extractResponseData(serviceGetPromotionsResponse), promotion => convertToAppPromotion(promotion, baseURL));
+      const sanitizedPromotions = _.map(extractResponseData(serviceGetPromotionsResponse), promotion => {
+        const promotionWithMorphProduct = {
+          ...promotion,
+          products: _.map(promotion.products, (promotionProduct) => {
+            return _.find(mergedPhysicalProducts, product => product.id === promotionProduct.id);
+          })
+        };
+        return convertToAppPromotion(promotionWithMorphProduct, baseURL);
+      });
+      debugger;
       dispatch(Actions.receivedMasterdata('promotionSets', sanitizedPromotions));
       // ======================================================
       // MOBILE TOPUP PROVIDER
@@ -232,6 +241,8 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
           // retry
           dispatch(productFreeDrop());
         } else {
+          // filter free product from orders
+          dispatch(Actions.removeProductFromOrder(productToDrop));
           dispatch(endProcess());
         }
       } else {
@@ -645,7 +656,6 @@ const runFlowProductDropSuccess = () => async (dispatch, getState) => {
     const sumOrderAmount = extractResponseData(serviceGetSumOrderAmountResponse);
     const isOrderHasFreeProduct = OrderSelector.verifyOrderHasFreeProduct(getState().order);
     console.log(activityFreeRule, sumOrderAmount, isOrderHasFreeProduct, verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule));
-    debugger;
     if (verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule) && !isOrderHasFreeProduct) {
       const freeProduct = MasterdataSelector.getActivityFreeProduct(getState().masterdata);
       if (freeProduct) {

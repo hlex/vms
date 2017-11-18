@@ -43,7 +43,8 @@ import {
   CLEAR_INSTANTLY_DISCOUNT,
   SET_BASE_ADS,
   SET_ACTIVITY_FREE_RULE,
-  EVENT_UPDATE_REWARD_DISCOUNT
+  EVENT_UPDATE_REWARD_DISCOUNT,
+  ORDER_PRODUCT_REMOVE
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -344,5 +345,12 @@ export const updateEventReward = ({ cuid }, discount) => {
     type: EVENT_UPDATE_REWARD_DISCOUNT,
     cuid,
     discount
+  };
+};
+
+export const removeProductFromOrder = (product) => {
+  return {
+    type: ORDER_PRODUCT_REMOVE,
+    product
   };
 };

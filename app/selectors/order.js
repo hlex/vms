@@ -406,6 +406,7 @@ const toSubmitOrder = createSelector(
     verifyOrderHasDiscount,
     getDiscount,
     getProducts,
+    getSelectedEvent,
     getEventInputs
   ],
   (
@@ -416,6 +417,7 @@ const toSubmitOrder = createSelector(
     hasDiscount,
     discount,
     products,
+    selectedEvent,
     eventInputs
   ) => {
     let id;
@@ -428,7 +430,6 @@ const toSubmitOrder = createSelector(
     let lineQrcode;
     switch (orderType) {
       case 'singleProduct':
-        id = singleProduct.id;
         saleType = 'Normal';
         break;
       case 'promotionSet':
@@ -439,6 +440,7 @@ const toSubmitOrder = createSelector(
         break;
     }
     if (isEventOrder) {
+      id = selectedEvent.id;
       saleType = 'Activities';
       barcode = _.find(eventInputs, input => input.name === 'BARCODE' || input.name === 'QR_CODE').value || '';
       lineQrcode = _.find(eventInputs, input => input.name === 'LINE_QR_CODE').value || '';
