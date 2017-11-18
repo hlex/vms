@@ -172,7 +172,6 @@ class EventPlayPage extends Component {
   };
 
   render() {
-    console.log(this);
     const { baseURL, selectedEvent, nextInput } = this.props;
     return (
       <div className="input-msisdn">

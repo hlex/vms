@@ -482,8 +482,10 @@ export const submitOrder = () => {
         const hasDiscount = OrderSelector.verifyOrderHasDiscount(getState().order);
         if (hasDiscount) {
           const discounts = OrderSelector.getDiscounts(getState().order);
+          const poId = OrderSelector.getOrderPoId(getState().order);
           _.forEach(discounts, async (discount) => {
-            const serviceUseDiscountCodeResponse = await serviceUseDiscountCode(discount.code);
+            const discountType = discount.discountType || 'product';
+            const serviceUseDiscountCodeResponse = await serviceUseDiscountCode(discount.code, poId, discountType);
             console.log('serviceUseDiscountCodeResponse', serviceUseDiscountCodeResponse);
           });
           console.log('serviceUseDiscountCodeResponse:finish');
@@ -837,8 +839,7 @@ export const verifyDiscountCode = (code) => {
     const canUseDiscount = verifyCanUseDiscount(OrderSelector.getDiscounts(getState().order), code);
     if (canUseDiscount) {
       try {
-        const orderType = OrderSelector.getOrderType(getState().order);
-        const discountType = orderType === 'mobileTopup' ? 'topup' : 'product';
+        const discountType = OrderSelector.getOrderDiscountType(getState().order);
         const poId = OrderSelector.getOrderPoId(getState().order);
         dispatch(showLoading('ระบบกำลังตรวจสอบรหัสส่วนลด'));
         const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code, poId, discountType);
@@ -848,6 +849,7 @@ export const verifyDiscountCode = (code) => {
           value: verifyDiscountCodeResponse.discount,
           ...verifyDiscountCodeResponse,
           code,
+          discountType,
         };
         dispatch(Actions.addDiscount(discountItem));
       } catch (error) {
@@ -1037,12 +1039,18 @@ export const eventGetReward = () => {
             channel: reward.channel,
             value: eventInput.value
           };
-          const serviceGetEventRewardResponse = await serviceGetEventReward(rewardToServiceItem);
-          console.log('serviceGetEventRewardResponse', serviceGetEventRewardResponse);
-          dispatch({
-            type: 'EVENT_SENT_REWARD',
-            rewardToServiceItem
-          });
+          try {
+            dispatch(showLoading('กำลังส่งรหัสส่วนลด'));
+            const serviceGetEventRewardResponse = await serviceGetEventReward(rewardToServiceItem);
+            console.log('serviceGetEventRewardResponse', serviceGetEventRewardResponse);
+            dispatch({
+              type: 'EVENT_SENT_REWARD',
+              rewardToServiceItem
+            });
+          } catch (error) {
+            dispatch(handleApiError(error));
+            dispatch(backToHome());
+          }
         }
       });
     } catch (error) {

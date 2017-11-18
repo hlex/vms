@@ -56,9 +56,9 @@ class EventAds extends Component {
     // POPUP 100%
     // ======================================================
     console.log('handleAdsEnd');
-    this.setState({
-      adFinished: true,
-    });
+    // this.setState({
+    //   adFinished: true,
+    // });
     eventInitGetReward();
   };
 
@@ -111,7 +111,6 @@ class EventAds extends Component {
   renderUI = () => this.renderDiscountUI();
 
   render() {
-    console.log(this);
     const { adFinished } = this.state;
     const { nextWatch } = this.props;
     const source = _.get(nextWatch, 'data', {}); // [_.head(stripAds)];

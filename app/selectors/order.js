@@ -362,6 +362,13 @@ const getOrderPoId = createSelector(
   }
 );
 
+const getOrderDiscountType = createSelector(
+  [getOrderType],
+  (orderType) => {
+    return orderType === 'mobileTopup' ? 'topup' : 'product';
+  }
+);
+
 export default {
   // ======================================================
   // Event
@@ -438,5 +445,6 @@ export default {
   // Order
   // ======================================================
   getOrderType,
+  getOrderDiscountType,
   getOrderPoId
 };
