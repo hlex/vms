@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { setDebugMode } from 'api-jarvis';
 
-if (process.env.NODE_ENV !== 'production') setDebugMode(true);
+setDebugMode(true);
 
 // ======================================================
 // Helpers
