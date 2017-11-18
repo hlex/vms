@@ -249,7 +249,7 @@ const getProductToDrop = createSelector([getProducts], products =>
 const getDropProductTargetPhysical = createSelector(
   [getProductToDrop],
   productToDrop => {
-    const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.canDrop === true);
+    const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.isFree === false && physical.canDrop === true);
     console.log('getDropProductTargetRowColumn', targetPhysical);
     return targetPhysical;
   }
@@ -257,6 +257,23 @@ const getDropProductTargetPhysical = createSelector(
 
 const getDropProductTargetRowColumn = createSelector(
   [getDropProductTargetPhysical],
+  targetPhysical => {
+    console.log('=== PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
+    return `${targetPhysical.row}${targetPhysical.col}`;
+  }
+);
+
+const getFreeDropProductTargetPhysical = createSelector(
+  [getProductToDrop],
+  productToDrop => {
+    const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.isFree === true && physical.canDrop === true);
+    console.log('getFreeDropProductTargetPhysical', targetPhysical);
+    return targetPhysical;
+  }
+);
+
+const getFreeDropProductTargetRowColumn = createSelector(
+  [getFreeDropProductTargetPhysical],
   targetPhysical => {
     console.log('=== PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
     return `${targetPhysical.row}${targetPhysical.col}`;
@@ -435,6 +452,19 @@ const toSubmitOrder = createSelector(
   }
 );
 
+const verifyOrderHasFreeProduct = createSelector(
+  [
+    getProducts
+  ],
+  (
+    products
+  ) => {
+    const freeProduct = _.find(products, product => product.price === 0);
+    if (freeProduct) return true;
+    return false;
+  }
+);
+
 export default {
   // ======================================================
   // Event
@@ -484,6 +514,7 @@ export default {
   getDropProductTargetPhysical,
   verifyProductToDropHasAvailablePhysical,
   getDropProductTargetRowColumn,
+  getFreeDropProductTargetRowColumn,
   getDroppedProductSummaryPrice,
   getPromotionSetFirstProductBgImage,
   // ======================================================
@@ -495,6 +526,7 @@ export default {
   verifyOrderHasPromotionSet,
   verifyMobileTopupOrder,
   verifyIsEventOrder,
+  verifyOrderHasFreeProduct,
   // ======================================================
   // Payment
   // ======================================================

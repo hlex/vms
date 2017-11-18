@@ -56,7 +56,7 @@ export const getPhysicalUsedSlotNo = (product) => {
   return usedPhysical.slotNo;
 };
 
-export const verifyShouldDropFreeProduct = (sumOrderAmount, activityFreeRule) => {
+export const verifyThisOrderShouldDropFreeProduct = (sumOrderAmount, activityFreeRule) => {
   switch (activityFreeRule) {
     case 'ODD':
       return sumOrderAmount % 2 === 1;

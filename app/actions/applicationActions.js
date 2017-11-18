@@ -8,6 +8,7 @@ import * as Actions from './index';
 // ======================================================
 import RootSelector from '../selectors/root';
 import MasterappSelector from '../selectors/masterapp';
+import MasterdataSelector from '../selectors/masterdata';
 import PaymentSelector from '../selectors/payment';
 import OrderSelector from '../selectors/order';
 // ======================================================
@@ -23,7 +24,7 @@ import {
   verifyDuplicatedDiscount,
   getCashRemainingAmount,
   getEventInputByChannel,
-  verifyShouldDropFreeProduct
+  verifyThisOrderShouldDropFreeProduct
 } from '../helpers/global';
 import {
   convertApplicationErrorToError,
@@ -108,12 +109,12 @@ export const getMasterProductAndEvent = () => {
         }, []);
         return [
           ...result,
-          {
+          _.omit({
             ...baseProduct,
             qty: sumQty,
             isSoldout: isSoldout(sumQty),
             physicals,
-          }
+          }, ['isFree'])
         ];
       }, []);
       dispatch(Actions.receivedMasterdata('products', mergedPhysicalProducts));
@@ -490,6 +491,21 @@ export const productDrop = () => (dispatch, getState) => {
   }
 };
 
+export const productFreeDrop = () => (dispatch, getState) => {
+  const readyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
+  if (readyToDropProduct) {
+    const targetRowColumn = OrderSelector.getFreeDropProductTargetRowColumn(getState().order);
+    const client = MasterappSelector.getTcpClient(getState().masterapp);
+    client.send({
+      action: 1,
+      msg: targetRowColumn, // row * col
+    });
+    dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
+  } else {
+    console.error('Cannot Drop Product because readyToDropProduct = ', readyToDropProduct);
+  }
+};
+
 export const selectTopupProvider = (context, topupProvider) => dispatch => {
   dispatch(changePage(context));
   dispatch(Actions.selectTopupProvider(topupProvider));
@@ -605,12 +621,21 @@ const runFlowProductDropSuccess = () => async (dispatch, getState) => {
     // ======================================================
   if (OrderSelector.verifyAllOrderDropped(getState().order)) {
     const activityFreeRule = MasterappSelector.getActivityFreeRule(getState().masterapp);
-    const sumOrderAmount = await extractResponseData(serviceGetSumOrderAmount());
-    // if (verifyShouldDropFreeProduct(sumOrderAmount, activityFreeRule)) {
-
-    // } else {
-    dispatch(endProcess());
-    // }
+    const serviceGetSumOrderAmountResponse = await serviceGetSumOrderAmount();
+    const sumOrderAmount = extractResponseData(serviceGetSumOrderAmountResponse);
+    const isOrderHasFreeProduct = OrderSelector.verifyOrderHasFreeProduct(getState().order);
+    console.log(activityFreeRule, sumOrderAmount, isOrderHasFreeProduct, verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule));
+    debugger;
+    if (verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule) && !isOrderHasFreeProduct) {
+      const freeProduct = MasterdataSelector.getActivityFreeProduct(getState().masterdata);
+      if (freeProduct) {
+        // add freeProduct
+        dispatch(Actions.selectProduct(freeProduct));
+        dispatch(productFreeDrop());
+      }
+    } else {
+      dispatch(endProcess());
+    }
   } else {
     dispatch(productDrop());
   }
