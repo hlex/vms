@@ -9,7 +9,7 @@ export const normalizeStripAds = (ad, baseURL = '') => ({
   adSize: ad.adSize || '',
 });
 // const isSoldout = () => _.random(1, 5) === 5;
-const isSoldout = (qty) => qty === 0;
+export const isSoldout = (qty) => qty === 0;
 const randomQty = () => _.random(0, 5);
 /*
 product: {

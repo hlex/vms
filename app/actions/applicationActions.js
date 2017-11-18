@@ -28,6 +28,7 @@ import {
   convertApplicationErrorToError,
 } from '../helpers/error';
 import {
+  isSoldout,
   normalizeStripAds,
   convertToAppAd,
   convertToAppProduct,
@@ -88,6 +89,7 @@ export const getMasterProductAndEvent = () => {
       const groupedByPoId = _.groupBy(sanitizedProducts, 'id');
       const mergedPhysicalProducts = _.reduce(groupedByPoId, (result, products) => {
         const baseProduct = _.get(products, 0, {});
+        const sumQty = _.sumBy(products, 'qty');
         const physicals = _.reduce(products, (accPhysical, product) => {
           return [
             ...accPhysical,
@@ -98,6 +100,7 @@ export const getMasterProductAndEvent = () => {
               qty: product.qty,
               canDrop: product.qty !== 0,
               slotNo: product.slotNo,
+              isFree: product.isFree,
             }
           ];
         }, []);
@@ -105,6 +108,8 @@ export const getMasterProductAndEvent = () => {
           ...result,
           {
             ...baseProduct,
+            qty: sumQty,
+            isSoldout: isSoldout(sumQty),
             physicals,
           }
         ];
