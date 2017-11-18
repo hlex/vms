@@ -23,6 +23,7 @@ import {
   verifyDuplicatedDiscount,
   getCashRemainingAmount,
   getEventInputByChannel,
+  verifyShouldDropFreeProduct
 } from '../helpers/global';
 import {
   convertApplicationErrorToError,
@@ -51,6 +52,7 @@ import {
 } from '../apis/discount';
 import {
   serviceSubmitOrder,
+  serviceGetSumOrderAmount
 } from '../apis/order';
 import {
   createTcpClient
@@ -353,7 +355,7 @@ export const receivedScannedCode = (scannedCode) => {
           if (verifyDiscountIsExist(discount)) {
             dispatch(updateEventReward(nextReward, discount));
           }
-          dispatch(updateEventInput(nextInput, scannedCode));
+          dispatch(updateEventInput(nextInput, exactLineId));
         } else {
           console.error(`${scannedCode} is not lineId`);
         }
@@ -595,14 +597,20 @@ const runFlowCashChangeSuccess = () => {
   };
 };
 
-const runFlowProductDropSuccess = () => (dispatch, getState) => {
+const runFlowProductDropSuccess = () => async (dispatch, getState) => {
   const droppedProduct = MasterappSelector.getDroppedProduct(getState().masterapp);
   dispatch(productDropSuccess(droppedProduct));
     // ======================================================
     // check hasPromotionSet ?
     // ======================================================
   if (OrderSelector.verifyAllOrderDropped(getState().order)) {
+    const activityFreeRule = MasterappSelector.getActivityFreeRule(getState().masterapp);
+    const sumOrderAmount = await extractResponseData(serviceGetSumOrderAmount());
+    // if (verifyShouldDropFreeProduct(sumOrderAmount, activityFreeRule)) {
+
+    // } else {
     dispatch(endProcess());
+    // }
   } else {
     dispatch(productDrop());
   }

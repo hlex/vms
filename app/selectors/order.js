@@ -382,6 +382,7 @@ const toSubmitOrder = createSelector(
     verifyOrderHasDiscount,
     getDiscount,
     getProducts,
+    getEventInputs
   ],
   (
     orderType,
@@ -391,6 +392,7 @@ const toSubmitOrder = createSelector(
     hasDiscount,
     discount,
     products,
+    eventInputs
   ) => {
     let id;
     const poId = _.join(_.map(products, product => product.id), ',');
@@ -398,6 +400,8 @@ const toSubmitOrder = createSelector(
     const qty = 1;
     const unitPrice = _.join(_.map(products, product => product.price), ',');
     const slotNo = _.join(_.map(products, product => getPhysicalUsedSlotNo(product)), ',');
+    let barcode;
+    let lineQrcode;
     switch (orderType) {
       case 'singleProduct':
         id = singleProduct.id;
@@ -410,7 +414,11 @@ const toSubmitOrder = createSelector(
       default:
         break;
     }
-    if (isEventOrder) saleType = 'Activities';
+    if (isEventOrder) {
+      saleType = 'Activities';
+      barcode = _.find(eventInputs, input => input.name === 'BARCODE' || input.name === 'QR_CODE').value || '';
+      lineQrcode = _.find(eventInputs, input => input.name === 'LINE_QR_CODE').value || '';
+    }
     let discountCode = '';
     if (hasDiscount) discountCode = discount.code;
     return {
@@ -420,7 +428,9 @@ const toSubmitOrder = createSelector(
       discountCode,
       qty,
       unitPrice,
-      slotNo
+      slotNo,
+      barcode,
+      lineQrcode
     };
   }
 );
