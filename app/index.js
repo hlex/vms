@@ -172,19 +172,19 @@ if (process.env.NODE_ENV !== 'production') {
       if (objectData.action === 1 && objectData.msg !== 'failed') {
         console.log('%c Server: Drop product', serverLog, data);
         const successPercent = Math.floor(((Math.random() * 10))) + 1;
-        // console.log('successPercent', successPercent);
-        // if (successPercent <= 10 && !isFirstTime) {
-        //   // isFirstTime = true;
-        //   setTimeout(() => {
-        //     socket.write(
-        //       JSON.stringify({
-        //         action: 1,
-        //         result: 'success',
-        //         description: 'Item XX delivered',
-        //       }),
-        //     );
-        //   }, 5000);
-        // } else {
+        console.log('successPercent', successPercent);
+        if (successPercent <= 10 && !isFirstTime) {
+          // isFirstTime = true;
+          setTimeout(() => {
+            socket.write(
+              JSON.stringify({
+                action: 1,
+                result: 'success',
+                description: 'Item XX delivered',
+              }),
+            );
+          }, 5000);
+        } else {
           isFirstTime = false;
           setTimeout(() => {
             socket.write(
@@ -195,7 +195,7 @@ if (process.env.NODE_ENV !== 'production') {
               }),
             );
           }, 5000);
-        // }
+        }
       }
       // ======================================================
       // CASH CHANGE
