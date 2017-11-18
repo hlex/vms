@@ -216,30 +216,50 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       dispatch(runFlowProductDropSuccess());
       break;
     case 'PRODUCT_DROP_FAIL':
-      // ======================================================
-      // STAMP FAIL TO PHYSICAL
-      // ======================================================
-      const productToDrop = OrderSelector.getProductToDrop(getState().order);
-      const targetPhysical = OrderSelector.getDropProductTargetPhysical(getState().order);
-      dispatch({
-        type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
-        product: productToDrop,
-        physical: targetPhysical
-      });
-      const productToDropHasAvailablePhysical = OrderSelector.verifyProductToDropHasAvailablePhysical(getState().order);
-      console.log('productToDropHasAvailablePhysical', productToDropHasAvailablePhysical);
-      if (productToDropHasAvailablePhysical) {
-        // retry
-        dispatch(productDrop());
-      } else {
-        // return cash eql product price
-        dispatch(setNotReadyToDropProduct());
-        if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
-          dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
+      const isDroppingFreeProduct = MasterappSelector.verifyIsDroppingFreeProduct(getState().masterapp);
+      console.log('isDroppingFreeProduct', isDroppingFreeProduct);
+      if (isDroppingFreeProduct) {
+        const productToDrop = OrderSelector.getProductToDrop(getState().order);
+        const targetPhysical = OrderSelector.getFreeDropProductTargetPhysical(getState().order);
+        dispatch({
+          type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
+          product: productToDrop,
+          physical: targetPhysical
+        });
+        const productToFreeDropHasAvailablePhysical = OrderSelector.verifyProductToFreeDropHasAvailablePhysical(getState().order);
+        console.log('productToFreeDropHasAvailablePhysical', productToFreeDropHasAvailablePhysical);
+        if (productToFreeDropHasAvailablePhysical) {
+          // retry
+          dispatch(productFreeDrop());
         } else {
-          dispatch(cashChangeEqualToCurrentCashAmount());
+          dispatch(endProcess());
         }
-        dispatch(Actions.showModal('productDropError'));
+      } else {
+        // ======================================================
+        // STAMP FAIL TO PHYSICAL
+        // ======================================================
+        const productToDrop = OrderSelector.getProductToDrop(getState().order);
+        const targetPhysical = OrderSelector.getDropProductTargetPhysical(getState().order);
+        dispatch({
+          type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
+          product: productToDrop,
+          physical: targetPhysical
+        });
+        const productToDropHasAvailablePhysical = OrderSelector.verifyProductToDropHasAvailablePhysical(getState().order);
+        console.log('productToDropHasAvailablePhysical', productToDropHasAvailablePhysical);
+        if (productToDropHasAvailablePhysical) {
+          // retry
+          dispatch(productDrop());
+        } else {
+          // return cash eql product price
+          dispatch(setNotReadyToDropProduct());
+          if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
+            dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
+          } else {
+            dispatch(cashChangeEqualToCurrentCashAmount());
+          }
+          dispatch(Actions.showModal('productDropError'));
+        }
       }
       break;
     case 'RESET_TAIKO_SUCCESS':
@@ -614,7 +634,7 @@ const runFlowCashChangeSuccess = () => {
 };
 
 const runFlowProductDropSuccess = () => async (dispatch, getState) => {
-  const droppedProduct = MasterappSelector.getDroppedProduct(getState().masterapp);
+  const droppedProduct = MasterappSelector.getDroppingProduct(getState().masterapp);
   dispatch(productDropSuccess(droppedProduct));
     // ======================================================
     // check hasPromotionSet ?

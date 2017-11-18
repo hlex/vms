@@ -280,6 +280,13 @@ const getFreeDropProductTargetRowColumn = createSelector(
   }
 );
 
+const verifyProductToFreeDropHasAvailablePhysical = createSelector(
+  [getFreeDropProductTargetPhysical],
+  (targetPhysical) => {
+    return targetPhysical !== undefined;
+  }
+);
+
 const verifyProductToDropHasAvailablePhysical = createSelector(
   [getDropProductTargetPhysical],
   (targetPhysical) => {
@@ -515,6 +522,8 @@ export default {
   verifyProductToDropHasAvailablePhysical,
   getDropProductTargetRowColumn,
   getFreeDropProductTargetRowColumn,
+  getFreeDropProductTargetPhysical,
+  verifyProductToFreeDropHasAvailablePhysical,
   getDroppedProductSummaryPrice,
   getPromotionSetFirstProductBgImage,
   // ======================================================

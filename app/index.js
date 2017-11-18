@@ -174,7 +174,7 @@ if (process.env.NODE_ENV !== 'production') {
         const successPercent = Math.floor(((Math.random() * 10))) + 1;
         console.log('successPercent', successPercent);
         if (successPercent <= 10 && !isFirstTime) {
-          // isFirstTime = true;
+          isFirstTime = true;
           setTimeout(() => {
             socket.write(
               JSON.stringify({
@@ -183,7 +183,7 @@ if (process.env.NODE_ENV !== 'production') {
                 description: 'Item XX delivered',
               }),
             );
-          }, 5000);
+          }, 2000);
         } else {
           isFirstTime = false;
           setTimeout(() => {
@@ -194,7 +194,7 @@ if (process.env.NODE_ENV !== 'production') {
                 description: 'Item delivered failed',
               }),
             );
-          }, 5000);
+          }, 2000);
         }
       }
       // ======================================================
@@ -280,7 +280,7 @@ if (process.env.NODE_ENV !== 'production') {
           result: 'failed',
           description: 'failed please try again'
         };
-        const isSuccess = _.random(1, 5) <= 4;
+        const isSuccess = _.random(1, 5) <= 5;
         if (isSuccess) sv.setCanReceiveCoin(true);
         setTimeout(() => {
           socket.write(
@@ -305,7 +305,7 @@ if (process.env.NODE_ENV !== 'production') {
           result: 'failed',
           description: 'failed please try again'
         };
-        const isSuccess = _.random(1, 5) <= 4;
+        const isSuccess = _.random(1, 5) <= 5;
         if (isSuccess) sv.setCanReceiveCoin(false);
         setTimeout(() => {
           socket.write(
