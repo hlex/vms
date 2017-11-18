@@ -55,3 +55,16 @@ export const getPhysicalUsedSlotNo = (product) => {
   const usedPhysical = _.find(physicals, physical => physical.canDrop === true);
   return usedPhysical.slotNo;
 };
+
+export const verifyShouldDropFreeProduct = (sumOrderAmount, activityFreeRule) => {
+  switch (activityFreeRule) {
+    case 'ODD':
+      return sumOrderAmount % 2 === 1;
+    case 'EVEN':
+      return sumOrderAmount % 2 === 0;
+    case 'ALL':
+      return true;
+    default:
+      return false;
+  }
+};

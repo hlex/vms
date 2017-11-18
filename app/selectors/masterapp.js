@@ -11,6 +11,7 @@ const getLimitBanknote = state => state.limitBanknote;
 const verifyAppReady = state => state.hardwareReady;
 const verifyIsMoneyBoxActive = state => state.moneyBoxActive;
 const verifyIsLoading = state => state.loading.show;
+const getActivityFreeRule = state => state.activityFreeRule;
 
 export default {
   getBaseURL,
@@ -23,5 +24,6 @@ export default {
   getLimitBanknote,
   verifyAppReady,
   verifyIsMoneyBoxActive,
-  verifyIsLoading
+  verifyIsLoading,
+  getActivityFreeRule
 };
