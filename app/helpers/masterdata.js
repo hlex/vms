@@ -136,10 +136,9 @@ export const convertToAppAd = (ad) => {
 export const convertToAppEvent = (event, baseURL) => {
   const eventInputActivities = _.filter(event.eventActivities || [], activity => activity.type === 'input');
   const eventWatchActivities = _.filter(event.eventActivities || [], activity => activity.type === 'watch');
-  const ads = [];
-  // _.isArray(mobileTopupProvider.Topup_ImgAd)
-  // ? mobileTopupProvider.Topup_ImgAd
-  // : [{ Ad_Url: mobileTopupProvider.Topup_ImgAd, Ad_Second: '5' }];
+  const ads = _.isArray(event.event_Ad)
+  ? event.event_Ad
+  : [{ Ad_Url: event.event_Ad, Ad_Second: '5' }];
   return {
     eventId: event.id,
     tag: _.head(event.tags),
@@ -148,6 +147,7 @@ export const convertToAppEvent = (event, baseURL) => {
     inputs: _.map(eventInputActivities || [], (eventInputActivity) => {
       return {
         ...eventInputActivity,
+        cuid: cuid(),
         completed: false
       };
     }),
@@ -158,6 +158,7 @@ export const convertToAppEvent = (event, baseURL) => {
       };
       return {
         ...eventWatchActivity,
+        cuid: cuid(),
         completed: false,
         data: normalizeStripAds(convertToAppAd(data), baseURL),
       };
@@ -165,15 +166,17 @@ export const convertToAppEvent = (event, baseURL) => {
     rewards: _.map(event.rewards || [], (reward) => {
       return {
         ...reward,
+        cuid: cuid(),
         completed: false
       };
     }),
     remarks: _.map(event.remarks || [], (remark) => {
       return {
         ...remark,
+        cuid: cuid(),
         completed: false
       };
     }),
-    ads,
+    ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),
   };
 };
