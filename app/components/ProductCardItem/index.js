@@ -1,9 +1,27 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import cuid from 'cuid';
 
-export default class ProductCardItem extends PureComponent {
+// ======================================================
+// Selectors
+// ======================================================
+import MasterappSelector from '../../selectors/masterapp'
+
+const mapStateToProps = state => {
+  return {
+    lang: MasterappSelector.getLanguage(state.masterapp)
+  };
+};
+
+const actions = {};
+
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+
+class ProductCardItem extends PureComponent {
   static propTypes = {
+    lang: PropTypes.string.isRequired,
     imageURL: PropTypes.string,
     isSoldout: PropTypes.bool,
     price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -17,6 +35,14 @@ export default class ProductCardItem extends PureComponent {
     onClick: context => console.log('Please send any onClickItem function', context),
   };
 
+  renderSoldout = () => {
+    const { lang } = this.props;
+    if (lang === 'th') {
+      return 'หมด';
+    }
+    return 'OUT';
+  }
+
   render = () => {
     const { imageURL, isSoldout, price, onClick } = this.props;
     return (
@@ -28,7 +54,7 @@ export default class ProductCardItem extends PureComponent {
         <div className="item">
           {isSoldout && (
             <div className="product-outstock">
-              <span>หมด</span>
+              <span>{this.renderSoldout()}</span>
             </div>
           )}
           <img className="" alt="" src={`${imageURL}`} />
@@ -41,3 +67,5 @@ export default class ProductCardItem extends PureComponent {
     );
   };
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductCardItem);

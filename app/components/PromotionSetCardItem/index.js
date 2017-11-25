@@ -1,10 +1,27 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import cuid from 'cuid';
 import _ from 'lodash';
+// ======================================================
+// Selectors
+// ======================================================
+import MasterappSelector from '../../selectors/masterapp'
 
-export default class PromotionSetCardItem extends PureComponent {
+const mapStateToProps = state => {
+  return {
+    lang: MasterappSelector.getLanguage(state.masterapp)
+  };
+};
+
+const actions = {};
+
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+
+class PromotionSetCardItem extends PureComponent {
   static propTypes = {
+    lang: PropTypes.string.isRequired,
     baseURL: PropTypes.string,
     promotion: PropTypes.shape({}),
     onClick: PropTypes.func,
@@ -16,12 +33,25 @@ export default class PromotionSetCardItem extends PureComponent {
     onClick: context => console.log('Please send any onClick function', context),
   };
 
+  renderSoldout = () => {
+    const { lang } = this.props;
+    if (lang === 'th') {
+      return 'หมด';
+    }
+    return 'OUT';
+  }
+
   render = () => {
-    const { promotion, baseURL, onClick } = this.props;
+    const { lang, promotion, baseURL, onClick } = this.props;
     const someProductSoldout = _.some(
       promotion.products,
       product => product.isSoldout,
     );
+    const normalPrice = _.sumBy(
+      promotion.products,
+      product => product.price,
+    );
+    const comboPrice = promotion.price;
     return (
       <a
         className={`box ${someProductSoldout ? 'outstock' : ''}`}
@@ -32,7 +62,7 @@ export default class PromotionSetCardItem extends PureComponent {
       >
         {someProductSoldout && (
           <div className="product-outstock">
-            <span>หมด</span>
+            <span>{this.renderSoldout()}</span>
           </div>
         )}
         <div className="item">
@@ -42,13 +72,14 @@ export default class PromotionSetCardItem extends PureComponent {
             <img alt="" src={`${baseURL}/${_.get(promotion, 'products.1.image')}`} />
           </div>
           <div className="price">
-            <span>{`ปกติ ${_.sumBy(
-              promotion.products,
-              product => product.price,
-            )}฿ พิเศษ ${promotion.price}฿`}</span>
+            <span>{`${lang === 'th' ? 'พิเศษ' : 'Combo'}`}</span>
+            <span style={{ margin: '0px 5px', textDecoration: 'line-through' }}>{`${normalPrice}฿`}</span>
+            <span>{`${comboPrice}฿`}</span>
           </div>
         </div>
       </a>
     );
   };
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(PromotionSetCardItem);
