@@ -488,6 +488,7 @@ export const selectProduct = (context, item, module) => dispatch => {
       break;
     case 'mobileTopup':
       dispatch(selectTopupProvider(context, item));
+      dispatch(Actions.receivedMasterdata('mobileTopupValues', item.topupValues));
       break;
     case 'event':
       dispatch(selectEvent(context, item));
