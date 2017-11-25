@@ -134,7 +134,7 @@ if (process.env.NODE_ENV !== 'production') {
           initialized: 1,
         }),
       );
-    }, 2000);
+    }, 1000);
 
     // socket.pipe(socket);
     // setInterval(() => {
