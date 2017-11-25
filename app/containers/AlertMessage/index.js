@@ -38,6 +38,7 @@ class AlertMessage extends Component {
   render() {
     const { show, messages, closeAlertMessage } = this.props;
     const lang = 'th';
+    const hasTitle = messages.title && messages.title !== '';
     return (
       <Modal
         show={show}
@@ -50,7 +51,18 @@ class AlertMessage extends Component {
         }}
       >
         <div className="app-error">
-          <h2>{messages[lang]}</h2>
+          {
+            hasTitle &&
+            <div>
+              <h2>{messages.title}</h2>
+              <small>{messages[lang]}</small>
+              <br />
+              <br />
+            </div>
+          }
+          {
+            !hasTitle && <h2>{messages[lang]}</h2>
+          }
           <button onClick={closeAlertMessage} className="button purple">ตกลง</button>
         </div>
       </Modal>

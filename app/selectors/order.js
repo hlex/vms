@@ -1,5 +1,9 @@
 import { createSelector } from 'reselect';
 import _ from 'lodash';
+// ======================================================
+// Helpers
+// ======================================================
+import { getPhysicalUsedSlotNo } from '../helpers/global';
 
 const getProducts = state => state.products;
 const getPromotionSets = state => state.promotionSets;
@@ -164,6 +168,11 @@ const getSelectedMobileTopupPrice = createSelector(
   selectedMobileTopupValue => Number(selectedMobileTopupValue.value),
 );
 
+const getSelectedMobileTopupFee = createSelector(
+  [getSelectedMobileTopupValue],
+  selectedMobileTopupValue => Number(selectedMobileTopupValue.fee),
+);
+
 const getSelectedMobileTopupTotalPrice = createSelector(
   [getSelectedMobileTopupValue, getSelectedMobileTopupPrice],
   (selectedMobileTopupValue, selectedMobileTopupPrice) =>
@@ -186,11 +195,12 @@ const getMobileTopupServiceCode = createSelector(
 );
 
 const getMobileTopupToService = createSelector(
-  [getMobileTopupServiceCode, getTopupMSISDN, getSelectedMobileTopupPrice],
-  (serviceCode, MSISDN, mobileTopupValue) => ({
+  [getMobileTopupServiceCode, getTopupMSISDN, getSelectedMobileTopupPrice, getSelectedMobileTopupFee],
+  (serviceCode, MSISDN, mobileTopupValue, mobileTopupFee) => ({
     serviceCode,
     MSISDN,
     mobileTopupValue,
+    mobileTopupFee
   }),
 );
 
@@ -239,7 +249,7 @@ const getProductToDrop = createSelector([getProducts], products =>
 const getDropProductTargetPhysical = createSelector(
   [getProductToDrop],
   productToDrop => {
-    const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.canDrop === true);
+    const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.isFree === false && physical.canDrop === true);
     console.log('getDropProductTargetRowColumn', targetPhysical);
     return targetPhysical;
   }
@@ -250,6 +260,30 @@ const getDropProductTargetRowColumn = createSelector(
   targetPhysical => {
     console.log('=== PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
     return `${targetPhysical.row}${targetPhysical.col}`;
+  }
+);
+
+const getFreeDropProductTargetPhysical = createSelector(
+  [getProductToDrop],
+  productToDrop => {
+    const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.isFree === true && physical.canDrop === true);
+    console.log('getFreeDropProductTargetPhysical', targetPhysical);
+    return targetPhysical;
+  }
+);
+
+const getFreeDropProductTargetRowColumn = createSelector(
+  [getFreeDropProductTargetPhysical],
+  targetPhysical => {
+    console.log('=== PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
+    return `${targetPhysical.row}${targetPhysical.col}`;
+  }
+);
+
+const verifyProductToFreeDropHasAvailablePhysical = createSelector(
+  [getFreeDropProductTargetPhysical],
+  (targetPhysical) => {
+    return targetPhysical !== undefined;
   }
 );
 
@@ -341,6 +375,105 @@ const getPaymentBgImage = createSelector(
   }
 );
 
+const getOrderPoId = createSelector(
+  [getOrderType, getPromotionSet, getSingleProduct, getMobileTopup],
+  (orderType, promotionSet, singleProduct, mobileTopup) => {
+    switch (orderType) {
+      case 'promotionSet':
+        return promotionSet.id || '';
+      case 'singleProduct':
+        return singleProduct.id || '';
+      case 'mobileTopup':
+        return mobileTopup.id || '';
+      default:
+    }
+  }
+);
+
+const getOrderDiscountType = createSelector(
+  [getOrderType],
+  (orderType) => {
+    return orderType === 'mobileTopup' ? 'topup' : 'product';
+  }
+);
+
+const toSubmitOrder = createSelector(
+  [
+    getOrderType,
+    verifyIsEventOrder,
+    getSingleProduct,
+    getPromotionSet,
+    verifyOrderHasDiscount,
+    getDiscount,
+    getProducts,
+    getSelectedEvent,
+    getEventInputs
+  ],
+  (
+    orderType,
+    isEventOrder,
+    singleProduct,
+    promotionSet,
+    hasDiscount,
+    discount,
+    products,
+    selectedEvent,
+    eventInputs
+  ) => {
+    let id;
+    const poId = _.join(_.map(products, product => product.id), ',');
+    let saleType;
+    const qty = 1;
+    const unitPrice = _.join(_.map(products, product => product.price), ',');
+    const slotNo = _.join(_.map(products, product => getPhysicalUsedSlotNo(product)), ',');
+    let barcode;
+    let lineQrcode;
+    switch (orderType) {
+      case 'singleProduct':
+        saleType = 'Normal';
+        break;
+      case 'promotionSet':
+        id = promotionSet.id;
+        saleType = 'Promotion';
+        break;
+      default:
+        break;
+    }
+    if (isEventOrder) {
+      id = selectedEvent.id;
+      saleType = 'Activities';
+      barcode = _.find(eventInputs, input => input.name === 'BARCODE' || input.name === 'QR_CODE').value || '';
+      lineQrcode = _.find(eventInputs, input => input.name === 'LINE_QR_CODE').value || '';
+    }
+    let discountCode = '';
+    if (hasDiscount) discountCode = discount.code;
+    return {
+      id,
+      poId,
+      saleType,
+      discountCode,
+      qty,
+      unitPrice,
+      slotNo,
+      barcode,
+      lineQrcode
+    };
+  }
+);
+
+const verifyOrderHasFreeProduct = createSelector(
+  [
+    getProducts
+  ],
+  (
+    products
+  ) => {
+    const freeProduct = _.find(products, product => product.price === 0);
+    if (freeProduct) return true;
+    return false;
+  }
+);
+
 export default {
   // ======================================================
   // Event
@@ -390,6 +523,9 @@ export default {
   getDropProductTargetPhysical,
   verifyProductToDropHasAvailablePhysical,
   getDropProductTargetRowColumn,
+  getFreeDropProductTargetRowColumn,
+  getFreeDropProductTargetPhysical,
+  verifyProductToFreeDropHasAvailablePhysical,
   getDroppedProductSummaryPrice,
   getPromotionSetFirstProductBgImage,
   // ======================================================
@@ -401,6 +537,7 @@ export default {
   verifyOrderHasPromotionSet,
   verifyMobileTopupOrder,
   verifyIsEventOrder,
+  verifyOrderHasFreeProduct,
   // ======================================================
   // Payment
   // ======================================================
@@ -416,5 +553,8 @@ export default {
   // ======================================================
   // Order
   // ======================================================
-  getOrderType
+  getOrderType,
+  getOrderDiscountType,
+  getOrderPoId,
+  toSubmitOrder
 };

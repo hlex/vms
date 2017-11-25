@@ -8,6 +8,7 @@ import * as Actions from './index';
 // ======================================================
 import RootSelector from '../selectors/root';
 import MasterappSelector from '../selectors/masterapp';
+import MasterdataSelector from '../selectors/masterdata';
 import PaymentSelector from '../selectors/payment';
 import OrderSelector from '../selectors/order';
 // ======================================================
@@ -20,14 +21,16 @@ import {
 import {
   createLog,
   verifyLessThanThreshold,
-  verifyCanUseDiscount,
+  verifyDuplicatedDiscount,
   getCashRemainingAmount,
   getEventInputByChannel,
+  verifyThisOrderShouldDropFreeProduct
 } from '../helpers/global';
 import {
   convertApplicationErrorToError,
 } from '../helpers/error';
 import {
+  isSoldout,
   normalizeStripAds,
   convertToAppAd,
   convertToAppProduct,
@@ -50,6 +53,7 @@ import {
 } from '../apis/discount';
 import {
   serviceSubmitOrder,
+  serviceGetSumOrderAmount
 } from '../apis/order';
 import {
   createTcpClient
@@ -60,52 +64,38 @@ import {
   serviceGetProducts,
   serviceGetPromotions,
   serviceGetMobileTopupProviders,
+  serviceGetProductSteps,
+  serviceGetEventSteps,
+  serviceGetMobileTopupSteps
 } from '../apis/masterdata';
 import {
   serviceGetEventReward,
   verifyBarcodeOrQrcode,
-  verifyLineId,
+  verifyLineQrcode,
   getActivityFreeRule
 } from '../apis/event';
 
 let cmdNo = 0;
 let retryNo = 0;
 
-export const initApplication = () => {
-  return async (dispatch, getState) => {
-    const tcp = MasterappSelector.getTcp(getState().masterapp);
-    dispatch(initTcpClient(createTcpClient(tcp.ip, tcp.port)));
-    // ======================================================
-    // GET MASTER DATA
-    // ======================================================
-    try {
-      const baseURL = 'http://localhost:8888/vms/html-v2'; //MasterappSelector.getBaseURL(getState().masterapp);
-      // ======================================================
-      // ACTIVITY FREE
-      // ======================================================
-      const getActivityFreeRuleResponse = await getActivityFreeRule();
-      const activityFreeRule = extractResponseData(getActivityFreeRuleResponse);
-      dispatch(Actions.setActivityFreeRule(activityFreeRule));
-      // ======================================================
-      // ADS
-      // ======================================================
-      const serviceGetBaseAdsResponse = await serviceGetBaseAds();
-      const sanitizedBaseAds = _.map(extractResponseData(serviceGetBaseAdsResponse), (ad) => {
-        return normalizeStripAds(convertToAppAd(ad), baseURL);
-      });
-      dispatch(Actions.setBaseAds(sanitizedBaseAds));
-      dispatch(Actions.setFooterAds(sanitizedBaseAds));
+export const getMasterProductAndEventAndPromotions = () => {
+  return (dispatch, getState) => {
+    return new Promise(async (resolve, reject) => {
+      const baseURL = 'http://localhost:8888/vms/html-v2'; // MasterappSelector.getBaseURL(getState().masterapp);
       // ======================================================
       // PRODUCTS
       // ======================================================
       const serviceGetProductsResponse = await serviceGetProducts();
-      const sanitizedProducts = _.map(extractResponseData(serviceGetProductsResponse), product => convertToAppProduct(product, baseURL));
+      const sanitizedProducts = _.map(extractResponseData(serviceGetProductsResponse), (product) => {
+        return convertToAppProduct(product, baseURL);
+      });
       // ======================================================
       // Grouped PoId
       // ======================================================
       const groupedByPoId = _.groupBy(sanitizedProducts, 'id');
       const mergedPhysicalProducts = _.reduce(groupedByPoId, (result, products) => {
         const baseProduct = _.get(products, 0, {});
+        const sumQty = _.sumBy(products, 'qty');
         const physicals = _.reduce(products, (accPhysical, product) => {
           return [
             ...accPhysical,
@@ -115,15 +105,19 @@ export const initApplication = () => {
               col: product.col,
               qty: product.qty,
               canDrop: product.qty !== 0,
+              slotNo: product.slotNo,
+              isFree: product.isFree,
             }
           ];
         }, []);
         return [
           ...result,
-          {
+          _.omit({
             ...baseProduct,
+            qty: sumQty,
+            isSoldout: isSoldout(sumQty),
             physicals,
-          }
+          }, ['isFree', 'col', 'row', 'slotNo'])
         ];
       }, []);
       dispatch(Actions.receivedMasterdata('products', mergedPhysicalProducts));
@@ -143,8 +137,61 @@ export const initApplication = () => {
       // PROMOTION
       // ======================================================
       const serviceGetPromotionsResponse = await serviceGetPromotions();
-      const sanitizedPromotions = _.map(extractResponseData(serviceGetPromotionsResponse), promotion => convertToAppPromotion(promotion, baseURL));
+      const sanitizedPromotions = _.map(extractResponseData(serviceGetPromotionsResponse), promotion => {
+        const promotionWithMorphProduct = {
+          ...promotion,
+          products: _.map(promotion.Product_List, (promotionProduct) => {
+            return _.find(mergedPhysicalProducts, product => product.id === promotionProduct.Po_ID);
+          })
+        };
+        return convertToAppPromotion(promotionWithMorphProduct, baseURL);
+      });
       dispatch(Actions.receivedMasterdata('promotionSets', sanitizedPromotions));
+      resolve(mergedPhysicalProducts);
+    });
+  };
+};
+
+export const initApplication = () => {
+  return async (dispatch, getState) => {
+    const tcp = MasterappSelector.getTcp(getState().masterapp);
+    dispatch(initTcpClient(createTcpClient(tcp.ip, tcp.port)));
+    // ======================================================
+    // GET MASTER DATA
+    // ======================================================
+    try {
+      const baseURL = 'http://localhost:8888/vms/html-v2';
+      // ======================================================
+      // STEPS
+      // ======================================================
+      const serviceGetEventStepsResponse = await serviceGetEventSteps();
+      const eventSteps = extractResponseData(serviceGetEventStepsResponse);
+      dispatch(Actions.receivedMasterdata('eventSteps', eventSteps));
+      const serviceGetProductStepsResponse = await serviceGetProductSteps();
+      const productSteps = extractResponseData(serviceGetProductStepsResponse);
+      dispatch(Actions.receivedMasterdata('productSteps', productSteps));
+      const serviceGetMobileTopupStepsResponse = await serviceGetMobileTopupSteps();
+      const mobileTopupSteps = extractResponseData(serviceGetMobileTopupStepsResponse);
+      dispatch(Actions.receivedMasterdata('mobileTopupSteps', mobileTopupSteps));
+      // ======================================================
+      // ACTIVITY FREE
+      // ======================================================
+      const getActivityFreeRuleResponse = await getActivityFreeRule();
+      const activityFreeRule = extractResponseData(getActivityFreeRuleResponse);
+      dispatch(Actions.setActivityFreeRule(activityFreeRule));
+      // ======================================================
+      // ADS
+      // ======================================================
+      const serviceGetBaseAdsResponse = await serviceGetBaseAds();
+      const sanitizedBaseAds = _.map(extractResponseData(serviceGetBaseAdsResponse), (ad) => {
+        return normalizeStripAds(convertToAppAd(ad), baseURL);
+      });
+      dispatch(Actions.setBaseAds(sanitizedBaseAds));
+      dispatch(Actions.setFooterAds(sanitizedBaseAds));
+      // ======================================================
+      // PRODUCTS & EVENT & PROMOTION
+      // ======================================================
+      await dispatch(getMasterProductAndEventAndPromotions());
       // ======================================================
       // MOBILE TOPUP PROVIDER
       // ======================================================
@@ -176,7 +223,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       dispatch(Actions.receivedSensorInformation(data));
       break;
     case 'SCANNED_QR_CODE':
-      dispatch(receivedQRCode(data.msg || ''));
+      dispatch(receivedScannedCode(data.msg || ''));
       break;
     case 'INSERT_CASH':
       dispatch(Actions.receivedCash(data));
@@ -192,30 +239,52 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       dispatch(runFlowProductDropSuccess());
       break;
     case 'PRODUCT_DROP_FAIL':
-      // ======================================================
-      // STAMP FAIL TO PHYSICAL
-      // ======================================================
-      const productToDrop = OrderSelector.getProductToDrop(getState().order);
-      const targetPhysical = OrderSelector.getDropProductTargetPhysical(getState().order);
-      dispatch({
-        type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
-        product: productToDrop,
-        physical: targetPhysical
-      });
-      const productToDropHasAvailablePhysical = OrderSelector.verifyProductToDropHasAvailablePhysical(getState().order);
-      console.log('productToDropHasAvailablePhysical', productToDropHasAvailablePhysical);
-      if (productToDropHasAvailablePhysical) {
-        // retry
-        dispatch(productDrop());
-      } else {
-        // return cash eql product price
-        dispatch(setNotReadyToDropProduct());
-        if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
-          dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
+      const isDroppingFreeProduct = MasterappSelector.verifyIsDroppingFreeProduct(getState().masterapp);
+      console.log('isDroppingFreeProduct', isDroppingFreeProduct);
+      if (isDroppingFreeProduct) {
+        const productToDrop = OrderSelector.getProductToDrop(getState().order);
+        const targetPhysical = OrderSelector.getFreeDropProductTargetPhysical(getState().order);
+        dispatch({
+          type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
+          product: productToDrop,
+          physical: targetPhysical
+        });
+        const productToFreeDropHasAvailablePhysical = OrderSelector.verifyProductToFreeDropHasAvailablePhysical(getState().order);
+        console.log('productToFreeDropHasAvailablePhysical', productToFreeDropHasAvailablePhysical);
+        if (productToFreeDropHasAvailablePhysical) {
+          // retry
+          dispatch(productFreeDrop());
         } else {
-          dispatch(cashChangeEqualToCurrentCashAmount());
+          // filter free product from orders
+          dispatch(Actions.removeProductFromOrder(productToDrop));
+          dispatch(endProcess());
         }
-        dispatch(Actions.showModal('productDropError'));
+      } else {
+        // ======================================================
+        // STAMP FAIL TO PHYSICAL
+        // ======================================================
+        const productToDrop = OrderSelector.getProductToDrop(getState().order);
+        const targetPhysical = OrderSelector.getDropProductTargetPhysical(getState().order);
+        dispatch({
+          type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
+          product: productToDrop,
+          physical: targetPhysical
+        });
+        const productToDropHasAvailablePhysical = OrderSelector.verifyProductToDropHasAvailablePhysical(getState().order);
+        console.log('productToDropHasAvailablePhysical', productToDropHasAvailablePhysical);
+        if (productToDropHasAvailablePhysical) {
+          // retry
+          dispatch(productDrop());
+        } else {
+          // return cash eql product price
+          dispatch(setNotReadyToDropProduct());
+          if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
+            dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
+          } else {
+            dispatch(cashChangeEqualToCurrentCashAmount());
+          }
+          dispatch(Actions.showModal('productDropError'));
+        }
       }
       break;
     case 'RESET_TAIKO_SUCCESS':
@@ -279,11 +348,24 @@ const verifyIsBarcode = (scannedCode) => {
   return /^\d+$/.test(scannedCode);
 };
 
-export const receivedQRCode = (scannedCode) => {
+const extractDiscountFromResponseData = (responseData) => {
+  return {
+    code: responseData.discountcode || 0,
+    value: responseData.discountprice || '',
+    expireDate: responseData.expiredate,
+  };
+};
+
+const verifyDiscountIsExist = (discount) => {
+  return discount.code !== '' && discount.value !== 0;
+}
+
+export const receivedScannedCode = (scannedCode) => {
   return async (dispatch, getState) => {
     const nextInput = OrderSelector.getEventNextInput(getState().order);
+    const nextReward = OrderSelector.getEventNextReward(getState().order);
     const eventId = OrderSelector.getEventId(getState().order);
-    console.log('receivedQRCode', eventId, scannedCode, nextInput);
+    console.log('receivedScannedCode', eventId, scannedCode, nextInput);
     try {
       if (verifyIsBarcodeOrQrCodeInput(nextInput)) {
         const isBarcode = verifyIsBarcode(scannedCode);
@@ -293,8 +375,13 @@ export const receivedQRCode = (scannedCode) => {
           discountType: isBarcode ? 'barcode' : 'qrcode'
         };
         dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
-        await verifyBarcodeOrQrcode(dataToVerify);
+        const verifyBarcodeOrQrcodeResponse = await verifyBarcodeOrQrcode(dataToVerify);
+        const responseData = extractResponseData(verifyBarcodeOrQrcodeResponse);
+        const discount = extractDiscountFromResponseData(responseData);
         dispatch(hideLoading());
+        if (verifyDiscountIsExist(discount)) {
+          dispatch(updateEventReward(nextReward, discount));
+        }
         dispatch(updateEventInput(nextInput, scannedCode));
       } else if (verifyIsLineQrcodeInput) {
         const isLineQrcode = verifyIsLineQrcode(scannedCode);
@@ -307,9 +394,14 @@ export const receivedQRCode = (scannedCode) => {
             barcodeOrQrcode,
           };
           dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
-          await verifyLineId(dataToVerify);
+          const verifyLineQrcodeResponse = await verifyLineQrcode(dataToVerify);
+          const responseData = extractResponseData(verifyLineQrcodeResponse);
+          const discount = extractDiscountFromResponseData(responseData);
           dispatch(hideLoading());
-          dispatch(updateEventInput(nextInput, scannedCode));
+          if (verifyDiscountIsExist(discount)) {
+            dispatch(updateEventReward(nextReward, discount));
+          }
+          dispatch(updateEventInput(nextInput, exactLineId));
         } else {
           console.error(`${scannedCode} is not lineId`);
         }
@@ -396,6 +488,7 @@ export const selectProduct = (context, item, module) => dispatch => {
       break;
     case 'mobileTopup':
       dispatch(selectTopupProvider(context, item));
+      dispatch(Actions.receivedMasterdata('mobileTopupValues', item.topupValues));
       break;
     case 'event':
       dispatch(selectEvent(context, item));
@@ -444,6 +537,21 @@ export const productDrop = () => (dispatch, getState) => {
   }
 };
 
+export const productFreeDrop = () => (dispatch, getState) => {
+  const readyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
+  if (readyToDropProduct) {
+    const targetRowColumn = OrderSelector.getFreeDropProductTargetRowColumn(getState().order);
+    const client = MasterappSelector.getTcpClient(getState().masterapp);
+    client.send({
+      action: 1,
+      msg: targetRowColumn, // row * col
+    });
+    dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
+  } else {
+    console.error('Cannot Drop Product because readyToDropProduct = ', readyToDropProduct);
+  }
+};
+
 export const selectTopupProvider = (context, topupProvider) => dispatch => {
   dispatch(changePage(context));
   dispatch(Actions.selectTopupProvider(topupProvider));
@@ -456,17 +564,24 @@ export const submitOrder = () => {
       // Check has discount or not ?
       // ======================================================
       try {
-        const hasDiscount = OrderSelector.verifyOrderHasDiscount(getState().order);
-        if (hasDiscount) {
-          const discounts = OrderSelector.getDiscounts(getState().order);
-          _.forEach(discounts, async (discount) => {
-            const serviceUseDiscountCodeResponse = await serviceUseDiscountCode(discount.code);
-            console.log('serviceUseDiscountCodeResponse', serviceUseDiscountCodeResponse);
-          });
-          console.log('serviceUseDiscountCodeResponse:finish');
-        }
-        const serviceSubmitOrderResponse = await serviceSubmitOrder();
+        // const hasDiscount = OrderSelector.verifyOrderHasDiscount(getState().order);
+        // if (hasDiscount) {
+        //   const discounts = OrderSelector.getDiscounts(getState().order);
+        //   const poId = OrderSelector.getOrderPoId(getState().order);
+        //   _.forEach(discounts, async (discount) => {
+        //     const discountType = discount.discountType || 'product';
+        //     const serviceUseDiscountCodeResponse = await serviceUseDiscountCode(discount.code, poId, discountType);
+        //     console.log('serviceUseDiscountCodeResponse', serviceUseDiscountCodeResponse);
+        //   });
+        //   console.log('serviceUseDiscountCodeResponse:finish');
+        // }
+        const order = OrderSelector.toSubmitOrder(getState().order);
+        const serviceSubmitOrderResponse = await serviceSubmitOrder(order);
         console.log('serviceSubmitOrderResponse', serviceSubmitOrderResponse);
+        // ======================================================
+        // REGET PRODUCTS & EVENT
+        // ======================================================
+        await dispatch(getMasterProductAndEventAndPromotions());
         resolve(serviceSubmitOrderResponse);
       } catch (error) {
         reject(error);
@@ -515,11 +630,18 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
     if (OrderSelector.verifyOrderHasProduct(getState().order)) {
       dispatch(productDrop());
     } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
-      const serviceTopupMobileResponse = await serviceTopupMobile(
-          OrderSelector.getMobileTopupToService(getState().order),
-        );
-      console.log('serviceTopupMobile', serviceTopupMobileResponse);
-      dispatch(endProcess());
+      try {
+        const discount = OrderSelector.getDiscount(getState().order);
+        const serviceTopupMobileResponse = await serviceTopupMobile(
+            OrderSelector.getMobileTopupToService(getState().order),
+            discount.code
+          );
+        console.log('serviceTopupMobile', serviceTopupMobileResponse);
+        dispatch(endProcess());
+      } catch (error) {
+        dispatch(handleApiError(error));
+        dispatch(backToHome());
+      }
     }
   }
 };
@@ -537,14 +659,28 @@ const runFlowCashChangeSuccess = () => {
   };
 };
 
-const runFlowProductDropSuccess = () => (dispatch, getState) => {
-  const droppedProduct = MasterappSelector.getDroppedProduct(getState().masterapp);
+const runFlowProductDropSuccess = () => async (dispatch, getState) => {
+  const droppedProduct = MasterappSelector.getDroppingProduct(getState().masterapp);
   dispatch(productDropSuccess(droppedProduct));
     // ======================================================
     // check hasPromotionSet ?
     // ======================================================
   if (OrderSelector.verifyAllOrderDropped(getState().order)) {
-    dispatch(endProcess());
+    const activityFreeRule = MasterappSelector.getActivityFreeRule(getState().masterapp);
+    const serviceGetSumOrderAmountResponse = await serviceGetSumOrderAmount();
+    const sumOrderAmount = extractResponseData(serviceGetSumOrderAmountResponse);
+    const isOrderHasFreeProduct = OrderSelector.verifyOrderHasFreeProduct(getState().order);
+    console.log(activityFreeRule, sumOrderAmount, isOrderHasFreeProduct, verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule));
+    if (verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule) && !isOrderHasFreeProduct) {
+      const freeProduct = MasterdataSelector.getActivityFreeProduct(getState().masterdata);
+      if (freeProduct) {
+        // add freeProduct
+        dispatch(Actions.selectProduct(freeProduct));
+        dispatch(productFreeDrop());
+      }
+    } else {
+      dispatch(endProcess());
+    }
   } else {
     dispatch(productDrop());
   }
@@ -804,28 +940,41 @@ export const verifyDiscountCode = (code) => {
     // ======================================================
     // Check code is already exist
     // ======================================================
-    const canUseDiscount = verifyCanUseDiscount(OrderSelector.getDiscounts(getState().order), code);
-    if (canUseDiscount) {
+    const discounts = OrderSelector.getDiscounts(getState().order);
+    const isOrderHasOneDiscount = _.size(discounts) === 1;
+    const isDuplicatedDiscount = verifyDuplicatedDiscount(discounts, code);
+    if (isOrderHasOneDiscount) {
+      dispatch(hideLoading());
+      dispatch(openAlertMessage(convertApplicationErrorToError({
+        title: `ไม่สามารถใช้รหัสส่วนลด ${code} ได้`,
+        th: 'เนื่องจากระบบไม่อนุญาตให้ใช้ส่วนลดมากกว่า 1 อัน',
+        en: '',
+      })));
+    } else if (isDuplicatedDiscount) {
+      dispatch(hideLoading());
+      dispatch(openAlertMessage(convertApplicationErrorToError({
+        title: `ไม่สามารถใช้รหัสส่วนลด ${code} ได้`,
+        th: 'เนื่องจากรหัสส่วนลดถูกใช้ไปแล้ว',
+        en: '',
+      })));
+    } else {
       try {
+        const discountType = OrderSelector.getOrderDiscountType(getState().order);
+        const poId = OrderSelector.getOrderPoId(getState().order);
         dispatch(showLoading('ระบบกำลังตรวจสอบรหัสส่วนลด'));
-        const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code);
+        const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code, poId, discountType);
         dispatch(hideLoading());
         console.log('verifyDiscountCodeResponse', verifyDiscountCodeResponse);
         const discountItem = {
           value: verifyDiscountCodeResponse.discount,
           ...verifyDiscountCodeResponse,
           code,
+          discountType,
         };
         dispatch(Actions.addDiscount(discountItem));
       } catch (error) {
         dispatch(handleApiError(error));
       }
-    } else {
-      dispatch(hideLoading());
-      dispatch(openAlertMessage(convertApplicationErrorToError({
-        th: `ไม่สามารถใช้รหัสส่วนลด ${code} ได้ เนื่องจากใช้ไปแล้ว`,
-        en: '',
-      })));
     }
   };
 };
@@ -952,18 +1101,27 @@ export const eventInitGetReward = () => {
     if (shouldSendReward) {
       dispatch(eventGetReward());
     } else if (reward) {
-      // add discount
-      const discountItem = {
-        code: reward.code,
-        value: reward.value,
-        instantly: true,
-      };
-      dispatch(Actions.addDiscount(discountItem));
-      // dispatch(Actions.setFlagUseDiscountInstantly(true));
-      if (reward.name === 'topup') {
-        dispatch(changePage('/topup'));
-      } else if (reward.name === 'product') {
-        dispatch(selectProduct('/product/single', selectedEvent.product, 'singleProduct'));
+      if (reward.channel === 'VENDING_MACHINE_NOW') {
+        // add discount
+        const discountItem = {
+          code: reward.code,
+          value: reward.value,
+          instantly: true,
+        };
+        dispatch(Actions.addDiscount(discountItem));
+        // dispatch(Actions.setFlagUseDiscountInstantly(true));
+        if (reward.name === 'topup') {
+          dispatch(changePage('/topup'));
+        } else if (reward.name === 'product') {
+          dispatch(selectProduct('/product/single', selectedEvent.product, 'singleProduct'));
+        }
+      } else if (reward.channel === 'VENDING_MACHINE_CODE') {
+        const message = {
+          title: 'ขอบคุณที่ร่วมกิจกรรม',
+          th: `รหัสส่วนลด คือ ${reward.code} มูลค่า ${reward.value} บาท (ใช้ได้ก่อนวันที่ ${reward.expireDate})`,
+          en: '',
+        };
+        dispatch(openAlertMessage(convertApplicationErrorToError(message)));
       }
     } else {
       console.log('NO_REWARD');
@@ -972,8 +1130,14 @@ export const eventInitGetReward = () => {
 };
 
 export const updateEventInput = (inputName, inputValue) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(Actions.updateEventInput(inputName, inputValue));
+  };
+};
+
+export const updateEventReward = (reward, discount) => {
+  return (dispatch) => {
+    dispatch(Actions.updateEventReward(reward, discount));
   };
 };
 
@@ -998,12 +1162,36 @@ export const eventGetReward = () => {
             channel: reward.channel,
             value: eventInput.value
           };
-          const serviceGetEventRewardResponse = await serviceGetEventReward(rewardToServiceItem);
-          console.log('serviceGetEventRewardResponse', serviceGetEventRewardResponse);
-          dispatch({
-            type: 'EVENT_SENT_REWARD',
-            rewardToServiceItem
-          });
+          try {
+            dispatch(showLoading('กำลังส่งรหัสส่วนลด'));
+            const eventProduct = OrderSelector.getEventProduct(getState().order);
+            const serviceGetEventRewardResponse = await serviceGetEventReward(rewardToServiceItem, eventProduct.id);
+            dispatch(hideLoading());
+            console.log('serviceGetEventRewardResponse', serviceGetEventRewardResponse);
+            dispatch({
+              type: 'EVENT_SENT_REWARD',
+              rewardToServiceItem
+            });
+            let message;
+            if (channel === 'SMS') {
+              message = {
+                title: 'ขอบคุณที่ร่วมกิจกรรม',
+                th: `ตรวจสอบรหัสส่วนลดได้ที่ หมายเลข ${eventInput.value}`,
+                en: '',
+              };
+            } else if (channel === 'EMAIL') {
+              message = {
+                title: 'ขอบคุณที่ร่วมกิจกรรม',
+                th: `ตรวจสอบรหัสส่วนลดได้ที่ อีเมล ${eventInput.value}`,
+                en: '',
+              };
+            }
+            dispatch(openAlertMessage(convertApplicationErrorToError(message)));
+            dispatch(backToHome());
+          } catch (error) {
+            dispatch(handleApiError(error));
+            dispatch(backToHome());
+          }
         }
       });
     } catch (error) {

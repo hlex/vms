@@ -51,7 +51,7 @@ const convertVMSServiceResponseToError = (response) => {
   });
 };
 
-const convertApplicationErrorToError = (message, type = 'ERRRO') => {
+const convertApplicationErrorToError = (message, type = 'ERROR') => {
   /*
     type: '',
     code: '',
@@ -64,6 +64,7 @@ const convertApplicationErrorToError = (message, type = 'ERRRO') => {
     processInstance: 'Frontend',
     type,
     fault: {
+      title: message.title || '',
       'th-message': message.th || '',
       'en-message': message.en || '',
     },
@@ -77,6 +78,7 @@ class ApplicationError extends Error {
     this.trxId = trxId;
     this.processInstance = processInstance;
     this.messages = {
+      title: _.get(fault, 'title', ''),
       th: _.get(fault, 'th-message', ''),
       en: _.get(fault, 'en-message', ''),
       technical: _.get(fault, 'vtype', ''),

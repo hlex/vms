@@ -33,11 +33,11 @@ export const verifyLessThanThreshold = (remain, thresHold) => {
   return getCashRemainingAmount(remain) < thresHold;
 };
 
-export const verifyCanUseDiscount = (discounts, code) => {
-  console.log('verifyCanUseDiscount', discounts, code);
+export const verifyDuplicatedDiscount = (discounts, code) => {
+  console.log('verifyDuplicatedDiscount', discounts, code);
   const discountAlreadyExist = _.find(discounts, discount => discount.code === code);
-  if (discountAlreadyExist) return false;
-  return true;
+  if (discountAlreadyExist) return true;
+  return false;
 };
 
 export const getCashRemainingAmount = (remain) => {
@@ -48,4 +48,23 @@ export const getCashRemainingAmount = (remain) => {
 export const getEventInputByChannel = (eventInputs, channel) => {
   const channelToInput = channel === 'SMS' ? 'MSISDN' : 'EMAIL';
   return _.find(eventInputs, input => input.name === channelToInput);
+};
+
+export const getPhysicalUsedSlotNo = (product) => {
+  const physicals = product.physicals || [];
+  const usedPhysical = _.find(physicals, physical => physical.canDrop === true);
+  return usedPhysical.slotNo;
+};
+
+export const verifyThisOrderShouldDropFreeProduct = (sumOrderAmount, activityFreeRule) => {
+  switch (activityFreeRule) {
+    case 'ODD':
+      return sumOrderAmount % 2 === 1;
+    case 'EVEN':
+      return sumOrderAmount % 2 === 0;
+    case 'ALL':
+      return true;
+    default:
+      return false;
+  }
 };

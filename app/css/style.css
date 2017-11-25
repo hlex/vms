@@ -5914,7 +5914,7 @@ i.home {
 
 .fullscreen-wrapper {
   position: fixed;
-  z-index: 999999;
+  z-index: 999;
   top: 0;
   left: 0;
   bottom: 0;
@@ -6305,7 +6305,7 @@ hr {
   -o-transition: all 0.3s 0.5s ease-in-out;
   -moz-transition: all 0.3s 0.5s ease-in-out;
   -webkit-transition: all 0.3s 0.5s ease-in-out;
-  z-index: 8; }
+  z-index: 9999; }
   .box-modal.overlay {
     background: rgba(0, 0, 0, 0.75); }
   .box-modal.show {

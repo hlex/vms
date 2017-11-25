@@ -172,19 +172,19 @@ if (process.env.NODE_ENV !== 'production') {
       if (objectData.action === 1 && objectData.msg !== 'failed') {
         console.log('%c Server: Drop product', serverLog, data);
         const successPercent = Math.floor(((Math.random() * 10))) + 1;
-        // console.log('successPercent', successPercent);
-        // if (successPercent <= 10 && !isFirstTime) {
-        //   // isFirstTime = true;
-        //   setTimeout(() => {
-        //     socket.write(
-        //       JSON.stringify({
-        //         action: 1,
-        //         result: 'success',
-        //         description: 'Item XX delivered',
-        //       }),
-        //     );
-        //   }, 5000);
-        // } else {
+        console.log('successPercent', successPercent);
+        if (successPercent <= 10 && !isFirstTime) {
+          isFirstTime = true;
+          setTimeout(() => {
+            socket.write(
+              JSON.stringify({
+                action: 1,
+                result: 'success',
+                description: 'Item XX delivered',
+              }),
+            );
+          }, 2000);
+        } else {
           isFirstTime = false;
           setTimeout(() => {
             socket.write(
@@ -194,8 +194,8 @@ if (process.env.NODE_ENV !== 'production') {
                 description: 'Item delivered failed',
               }),
             );
-          }, 5000);
-        // }
+          }, 2000);
+        }
       }
       // ======================================================
       // CASH CHANGE
@@ -280,7 +280,7 @@ if (process.env.NODE_ENV !== 'production') {
           result: 'failed',
           description: 'failed please try again'
         };
-        const isSuccess = _.random(1, 5) <= 4;
+        const isSuccess = _.random(1, 5) <= 5;
         if (isSuccess) sv.setCanReceiveCoin(true);
         setTimeout(() => {
           socket.write(
@@ -305,7 +305,7 @@ if (process.env.NODE_ENV !== 'production') {
           result: 'failed',
           description: 'failed please try again'
         };
-        const isSuccess = _.random(1, 5) <= 4;
+        const isSuccess = _.random(1, 5) <= 5;
         if (isSuccess) sv.setCanReceiveCoin(false);
         setTimeout(() => {
           socket.write(

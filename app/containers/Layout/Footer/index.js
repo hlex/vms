@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -25,11 +25,26 @@ const actions = {
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
-class Footer extends Component {
+class Footer extends PureComponent {
 
   static propTypes = {
     location: PropTypes.shape({}).isRequired,
     footerAds: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  }
+
+  shouldComponentUpdate = (nextProps) => {
+    const { location } = this.props;
+    console.log('=====================================', location.pathname, nextProps.location.pathname);
+    const currentPageIsPayment = location.pathname === '/payment';
+    const nextPageIsPayment = nextProps.location.pathname === '/payment';
+    const currentPageIsMobileTopupGroup = /topup/.test(nextProps.location.pathname);
+    const nextPageIsMobileTopupGroup = /topup/.test(nextProps.location.pathname);
+    if (currentPageIsPayment && nextPageIsPayment) return false;
+    if (location.pathname === '/product/single' && nextPageIsPayment) return false;
+    if (location.pathname === '/product/promotionSet' && nextPageIsPayment) return false;
+    if (currentPageIsMobileTopupGroup && nextPageIsMobileTopupGroup) return false;
+    if (currentPageIsMobileTopupGroup && nextPageIsPayment) return false;
+    return true;
   }
 
   shouldHideSignage = () => {

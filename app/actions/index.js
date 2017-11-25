@@ -43,7 +43,12 @@ import {
   CLEAR_INSTANTLY_DISCOUNT,
   SET_BASE_ADS,
   SET_ACTIVITY_FREE_RULE,
+<<<<<<< HEAD
   SWITCH_LANGUAGE_TO
+=======
+  EVENT_UPDATE_REWARD_DISCOUNT,
+  ORDER_PRODUCT_REMOVE
+>>>>>>> develop
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
@@ -343,5 +348,20 @@ export const switchLanguageTo = (lang) => {
   return {
     type: SWITCH_LANGUAGE_TO,
     lang
+  }
+}
+
+export const updateEventReward = ({ cuid }, discount) => {
+  return {
+    type: EVENT_UPDATE_REWARD_DISCOUNT,
+    cuid,
+    discount
+  };
+};
+
+export const removeProductFromOrder = (product) => {
+  return {
+    type: ORDER_PRODUCT_REMOVE,
+    product
   };
 };

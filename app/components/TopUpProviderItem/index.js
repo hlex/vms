@@ -21,7 +21,7 @@ class TopUpProviderItem extends Component {
       >
         <div className="item">
           <div className="photo-item">
-            <img alt="" src={`${baseURL}/${item.src}`} />
+            <img alt="" src={`${baseURL}${item.src}`} />
           </div>
         </div>
       </a>

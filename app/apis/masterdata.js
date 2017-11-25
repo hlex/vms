@@ -1068,4 +1068,31 @@ export const serviceGetBaseAds = () => {
     // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });
-}
+};
+
+export const serviceGetProductSteps = () => {
+  const data = {
+    vtype: 'product_step',
+  };
+  return fetchFacade(`${URL.getProductSteps}${convertToURLParam(data)}`).then((response) => {
+    return response;
+  });
+};
+
+export const serviceGetMobileTopupSteps = () => {
+  const data = {
+    vtype: 'topup_step',
+  };
+  return fetchFacade(`${URL.getMobileTopupSteps}${convertToURLParam(data)}`).then((response) => {
+    return response;
+  });
+};
+
+export const serviceGetEventSteps = () => {
+  const data = {
+    vtype: 'activities_step',
+  };
+  return fetchFacade(`${URL.getEventSteps}${convertToURLParam(data)}`).then((response) => {
+    return response;
+  });
+};

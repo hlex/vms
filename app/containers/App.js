@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import type { Children } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { setDebugMode } from 'api-jarvis';
+
+setDebugMode(true);
 
 // ======================================================
 // Helpers
@@ -97,10 +100,10 @@ class App extends Component {
                     <a onClick={() => insertCoin(100)}>100B</a>
                   </li>
                   <li>
-                    <a onClick={() => scanCode('B12345')}>QR</a>
+                    <a onClick={() => scanCode('Q12345R')}>QR</a>
                   </li>
                   <li>
-                    <a onClick={() => scanCode('1234567')}>BC</a>
+                    <a onClick={() => scanCode('2048486920593')}>BC</a>
                   </li>
                   <li>
                     <a onClick={() => scanCode('http://line.me/th/q/_hlexpond')}>LINE</a>
