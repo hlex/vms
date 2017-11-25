@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import { withRouter } from 'react-router';
+import _ from 'lodash';
 // ======================================================
 // Components
 // ======================================================
@@ -21,9 +22,12 @@ import MasterappSelector from '../../../selectors/masterapp';
 import MasterdataSelector from '../../../selectors/masterdata';
 
 const mapStateToProps = state => ({
+  mainMenus: MasterdataSelector.getMainMenus(state.masterdata),
+  productSteps: MasterdataSelector.getProductSteps(state.masterdata),
   products: MasterdataSelector.getProducts(state.masterdata),
   promotionSets: MasterdataSelector.getPromotionSets(state.masterdata),
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
+  lang: MasterappSelector.getLanguage(state.masterapp)
 });
 
 const actions = {
@@ -35,37 +39,70 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 class ProductSelectionPage extends Component {
   static propTypes = {
+    mainMenus: PropTypes.arrayOf(PropTypes.shape({})),
+    productSteps: PropTypes.arrayOf(PropTypes.shape({})),
     products: PropTypes.arrayOf(PropTypes.shape({})),
     promotionSets: PropTypes.arrayOf(PropTypes.shape({})),
     selectProduct: PropTypes.func.isRequired,
     back: PropTypes.func.isRequired,
     baseURL: PropTypes.string.isRequired,
+    lang: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
+    mainMenus: [],
+    productSteps: [],
     products: [],
     promotionSets: [],
   };
 
+  renderStepTitle = () => {
+    const { lang } = this.props;
+    if (lang === 'th') {
+      return 'ขั้นตอน';
+    }
+    return 'Steps';
+  }
+
+  renderTitle = () => {
+    const { mainMenus, lang, location: { pathname } } = this.props;
+    const targetLocation = pathname.substring(1);
+    const currMenu = _.find(mainMenus, menu => menu.linkTo === targetLocation);
+    return currMenu.title[lang];
+  }
+
+  renderWatchingVideoText = () => {
+    const { lang } = this.props;
+    if (lang === 'th') {
+      return 'ดูวิดิโอการกดซื้อ';
+    }
+    return 'Watching Tutorial';
+  }
+
   render() {
-    const { products, promotionSets, selectProduct, back, baseURL } = this.props;
+    console.log(this);
+    const { lang, productSteps, products, promotionSets, selectProduct, back, baseURL } = this.props;
     return (
       <div>
         <Layout.Subheader>
           <div className="title-section">
             <div className="title">
-              <span>ซื้อเครื่องดื่ม/ขนม</span>
+              <span>{this.renderTitle()}</span>
             </div>
             <hr />
             <div className="how-to-box">
-              <h2>ขั้นตอน</h2>
+              <h2>{this.renderStepTitle()}</h2>
               <ul className="item how-to-list">
-                <li><span className="num-list">1</span><span>เลือกสินค้าโดยสัมผัสหน้าจอ</span></li>
-                <li><span className="num-list">2</span><span>ใส่เบอร์มือถือเพื่อสะสมแต้ม (ข้ามขั้นตอนนี้ได้)</span></li>
-                <li><span className="num-list">3</span><span>ใส่รหัสส่วนลด กรณีมีรหัสและต้องการใช้</span></li>
+                {
+                  _.map(productSteps, (step, index) => {
+                    return (
+                      <li key={`num-list-${index}`}><span className="num-list">{index + 1}</span><span>{step[lang]}</span></li>
+                    );
+                  })
+                }
               </ul>
               <ul className="item">
-                <li><span>ดูวิดิโอการกดซื้อ</span></li>
+                <li><span>{this.renderWatchingVideoText()}</span></li>
               </ul>
             </div>
           </div>
@@ -86,4 +123,4 @@ class ProductSelectionPage extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductSelectionPage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProductSelectionPage));
