@@ -115,7 +115,7 @@ class App extends Component {
           </div>
         }
         {
-          !appReady && <div>Loading...</div>
+          !appReady && <div style={{ display: 'flex', width: '1080px', height: '1920px' }}><img style={{ width: '100%' }} src={'http://localhost:8888/vms/html-v2/images/app-loading.gif'} /></div>
         }
       </div>
     );
