@@ -42,6 +42,7 @@ const mapStateToProps = state => ({
   mobileTopupProviders: MasterdataSelector.getTopupProviders(state.masterdata),
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
   temp: MasterappSelector.getTemp(state.masterapp),
+  lang: MasterappSelector.getLanguage(state.masterapp)
 });
 
 const actions = {
@@ -60,6 +61,7 @@ class HomePage extends Component {
     mobileTopupProviders: PropTypes.arrayOf(PropTypes.shape({})),
     baseURL: PropTypes.string.isRequired,
     temp: PropTypes.number,
+    lang: PropTypes.string.isRequired,
     selectProduct: PropTypes.func.isRequired,
     changePage: PropTypes.func.isRequired,
     initHomePage: PropTypes.func.isRequired
@@ -79,6 +81,25 @@ class HomePage extends Component {
     initHomePage();
   }
 
+  renderTitle = () => {
+    const { lang } = this.props;
+    if (lang === 'th') {
+      return <h1>กรุณาเลือกรายการ</h1>;
+    }
+    return (
+      <h1>Please Select</h1>
+    );
+  }
+
+  renderTemperature = () => {
+    const { temp, lang } = this.props;
+    if (lang === 'th') {
+      return `กรุงเทพฯ ${temp} C`;
+    }
+    const tempInF = ((temp * 9) / 5) + 32;
+    return `Bangkok ${tempInF} F`;
+  }
+
   render() {
     console.log('HomePage@render', this.props);
     const {
@@ -90,7 +111,6 @@ class HomePage extends Component {
       changePage,
       selectProduct,
       baseURL,
-      temp,
     } = this.props;
     return (
       <div className="homepage">
@@ -100,9 +120,9 @@ class HomePage extends Component {
               {moment().format('DD/MM/YYYY HH:mm')}
             </div>
             <div className="title">
-              <h1>กรุณาเลือกรายการ</h1>
+              {this.renderTitle()}
             </div>
-            <div className="item temperature">{`กรุงเทพฯ ${temp} C`}</div>
+            <div className="item temperature">{this.renderTemperature()}</div>
           </div>
           <div className="menu-slider">
             <Slider ref={c => (this.slider = c)} {...navMenuSettings}>
