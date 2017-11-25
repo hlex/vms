@@ -83,19 +83,6 @@ export const getMasterProductAndEventAndPromotions = () => {
     return new Promise(async (resolve, reject) => {
       const baseURL = 'http://localhost:8888/vms/html-v2'; // MasterappSelector.getBaseURL(getState().masterapp);
       // ======================================================
-      // STEPS
-      // ======================================================
-      const serviceGetEventStepsResponse = await serviceGetEventSteps();
-      const eventSteps = extractResponseData(serviceGetEventStepsResponse);
-      dispatch(Actions.receivedMasterdata('eventSteps', eventSteps));
-      const serviceGetProductStepsResponse = await serviceGetProductSteps();
-      const productSteps = extractResponseData(serviceGetProductStepsResponse);
-      dispatch(Actions.receivedMasterdata('productSteps', productSteps));
-      const serviceGetMobileTopupStepsResponse = await serviceGetMobileTopupSteps();
-      const mobileTopupSteps = extractResponseData(serviceGetMobileTopupStepsResponse);
-      dispatch(Actions.receivedMasterdata('mobileTopupSteps', mobileTopupSteps));
-
-      // ======================================================
       // PRODUCTS
       // ======================================================
       const serviceGetProductsResponse = await serviceGetProducts();
@@ -174,6 +161,18 @@ export const initApplication = () => {
     // ======================================================
     try {
       const baseURL = 'http://localhost:8888/vms/html-v2';
+      // ======================================================
+      // STEPS
+      // ======================================================
+      const serviceGetEventStepsResponse = await serviceGetEventSteps();
+      const eventSteps = extractResponseData(serviceGetEventStepsResponse);
+      dispatch(Actions.receivedMasterdata('eventSteps', eventSteps));
+      const serviceGetProductStepsResponse = await serviceGetProductSteps();
+      const productSteps = extractResponseData(serviceGetProductStepsResponse);
+      dispatch(Actions.receivedMasterdata('productSteps', productSteps));
+      const serviceGetMobileTopupStepsResponse = await serviceGetMobileTopupSteps();
+      const mobileTopupSteps = extractResponseData(serviceGetMobileTopupStepsResponse);
+      dispatch(Actions.receivedMasterdata('mobileTopupSteps', mobileTopupSteps));
       // ======================================================
       // ACTIVITY FREE
       // ======================================================
