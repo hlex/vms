@@ -174,13 +174,13 @@ export const initApplication = () => {
       // STEPS
       // ======================================================
       const serviceGetEventStepsResponse = await serviceGetEventSteps();
-      const eventSteps = extractResponseData(serviceGetEventStepsResponse);
+      const eventSteps = _.map(extractResponseData(serviceGetEventStepsResponse), (event, index) => convertToAppText(event, index));
       dispatch(Actions.receivedMasterdata('eventSteps', eventSteps));
       const serviceGetProductStepsResponse = await serviceGetProductSteps();
-      const productSteps = extractResponseData(serviceGetProductStepsResponse);
+      const productSteps = _.map(extractResponseData(serviceGetProductStepsResponse), (event, index) => convertToAppText(event, index));
       dispatch(Actions.receivedMasterdata('productSteps', productSteps));
       const serviceGetMobileTopupStepsResponse = await serviceGetMobileTopupSteps();
-      const mobileTopupSteps = extractResponseData(serviceGetMobileTopupStepsResponse);
+      const mobileTopupSteps = _.map(extractResponseData(serviceGetMobileTopupStepsResponse), (event, index) => convertToAppText(event, index));
       dispatch(Actions.receivedMasterdata('mobileTopupSteps', mobileTopupSteps));
       // ======================================================
       // ACTIVITY FREE
