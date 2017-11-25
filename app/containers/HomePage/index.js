@@ -35,7 +35,7 @@ const navMenuSettings = {
 };
 
 const mapStateToProps = state => ({
-  navMenus: state.masterapp.navMenus,
+  navMenus: MasterdataSelector.getMainMenus(state.masterdata),
   products: MasterdataSelector.getProducts(state.masterdata),
   promotionSets: MasterdataSelector.getPromotionSets(state.masterdata),
   events: MasterdataSelector.getEvents(state.masterdata),
@@ -103,6 +103,7 @@ class HomePage extends Component {
   render() {
     console.log('HomePage@render', this.props);
     const {
+      lang,
       navMenus,
       products,
       promotionSets,
@@ -132,7 +133,7 @@ class HomePage extends Component {
                     <div className="box" style={{ backgroundImage: `url(${baseURL}/${menu.src})` }}>
                       <div className="title">
                         <h3>
-                          {menu.title}
+                          {menu.title[lang]}
                         </h3>
                       </div>
                     </div>
