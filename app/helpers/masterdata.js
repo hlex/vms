@@ -88,6 +88,16 @@ export const convertToAppMobileTopupProvider = (mobileTopupProvider, baseURL) =>
     name: mobileTopupProvider.Topup_Name.en,
     names: mobileTopupProvider.Topup_Name,
     ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),
+    topupValues: _.map(mobileTopupProvider.Topup_Value || [], topupValue => convertToAppMobileTopupValue(topupValue))
+  };
+};
+
+export const convertToAppMobileTopupValue = (mobileTopupValue) => {
+  return {
+    cuid: cuid(),
+    id: cuid(),
+    value: mobileTopupValue.Amount,
+    fee: mobileTopupValue.Service_Charge
   };
 };
 
