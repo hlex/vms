@@ -6,6 +6,7 @@ const getProducts = state => state.products;
 const getPromotionSets = state => state.promotionSets;
 const getMobileTopupValues = state => state.mobileTopupValues;
 const getEvents = state => state.events;
+const getMainMenus = state => state.mainMenus;
 const getActivityFreeProduct = createSelector(
   [
     getProducts
@@ -28,6 +29,7 @@ const getActivityFreeProduct = createSelector(
 );
 
 export default {
+  getMainMenus,
   getTopupProviders,
   getProducts,
   getPromotionSets,

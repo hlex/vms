@@ -38,6 +38,7 @@ import {
   convertToAppMobileTopupProvider,
   convertToAppEvent,
   convertToAppText,
+  convertToAppMainMenu,
 } from '../helpers/masterdata';
 import {
   extractResponseData,
@@ -167,7 +168,7 @@ export const initApplication = () => {
       // MAINMENU
       // ======================================================
       const serviceGetMainMenuResponse = await serviceGetMainMenu();
-      const mainMenus = _.map(extractResponseData(serviceGetMainMenuResponse), mainMenu => convertToAppText(mainMenu));
+      const mainMenus = _.map(extractResponseData(serviceGetMainMenuResponse), (mainMenu, index) => convertToAppMainMenu(mainMenu, index));
       dispatch(Actions.receivedMasterdata('mainMenus', mainMenus));
       // ======================================================
       // STEPS

@@ -199,3 +199,35 @@ export const convertToAppText = (text) => {
     en: _.get(text, 'NameEn', ''),
   };
 };
+
+
+export const convertToAppMainMenu = (mainMenu, index) => {
+  let linkTo;
+  let src;
+  const appText = convertToAppText(mainMenu);
+  switch (index) {
+    case 0:
+      linkTo = 'product';
+      src = 'images/bg-nav-one.png';
+      break;
+    case 1:
+      linkTo = 'event';
+      src = 'images/bg-nav-two.png';
+      break;
+    case 2:
+      linkTo = 'topup';
+      src = 'images/bg-nav-three.png';
+      break;
+    case 3:
+      linkTo = '/';
+      src = 'images/bg-nav-four.png';
+      break;
+    default:
+      break;
+  }
+  return {
+    title: appText,
+    src,
+    linkTo
+  };
+};
