@@ -8,6 +8,8 @@ const getMobileTopupValues = state => state.mobileTopupValues;
 const getEvents = state => state.events;
 const getMainMenus = state => state.mainMenus;
 const getProductSteps = state => state.productSteps;
+const getEventSteps = state => state.eventSteps;
+const getMobileTopupSteps = state => state.mobileTopupSteps;
 
 const getActivityFreeProduct = createSelector(
   [
@@ -32,6 +34,8 @@ const getActivityFreeProduct = createSelector(
 
 export default {
   getProductSteps,
+  getEventSteps,
+  getMobileTopupSteps,
   getMainMenus,
   getTopupProviders,
   getProducts,

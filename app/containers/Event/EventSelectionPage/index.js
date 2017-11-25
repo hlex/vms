@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import cuid from 'cuid';
 // ======================================================
 // Components
@@ -21,6 +22,9 @@ import MasterappSelector from '../../../selectors/masterapp';
 import MasterdataSelector from '../../../selectors/masterdata';
 
 const mapStateToProps = state => ({
+  lang: MasterappSelector.getLanguage(state.masterapp),
+  mainMenus: MasterdataSelector.getMainMenus(state.masterdata),
+  eventSteps: MasterdataSelector.getEventSteps(state.masterdata),
   events: MasterdataSelector.getEvents(state.masterdata),
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
 });
@@ -34,6 +38,9 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 class EventSelectionPage extends Component {
   static propTypes = {
+    lang: PropTypes.string.isRequired,
+    mainMenus: PropTypes.arrayOf(PropTypes.shape({})),
+    eventSteps: PropTypes.arrayOf(PropTypes.shape({})),
     events: PropTypes.arrayOf(PropTypes.shape({})),
     baseURL: PropTypes.string.isRequired,
     back: PropTypes.func.isRequired,
@@ -41,6 +48,8 @@ class EventSelectionPage extends Component {
   };
 
   static defaultProps = {
+    mainMenus: [],
+    eventSteps: [],
     events: [],
   };
 
@@ -49,35 +58,41 @@ class EventSelectionPage extends Component {
     return <EventItem key={cuid()} baseURL={baseURL} item={renderItem} handleClick={handleClick} />;
   };
 
+  renderTitle = () => {
+    const { mainMenus, lang, location: { pathname } } = this.props;
+    const targetLocation = pathname.substring(1);
+    const currMenu = _.find(mainMenus, menu => menu.linkTo === targetLocation);
+    return currMenu.title[lang];
+  }
+
+  renderStepTitle = () => {
+    const { lang } = this.props;
+    if (lang === 'th') {
+      return 'ขั้นตอน';
+    }
+    return 'Steps';
+  }
+
   render() {
-    const { events, baseURL, selectProduct } = this.props;
+    const { events, baseURL, eventSteps, lang, selectProduct } = this.props;
     return (
       <div>
         <Layout.Subheader>
           <div className="title-section">
             <div className="title">
-              <span>เล่นกิจกรรมรับส่วนลด</span>
+              <span>{this.renderTitle()}</span>
             </div>
             <hr />
             <div className="how-to-box">
-              <h2>ขั้นตอน</h2>
+              <h2>{this.renderStepTitle()}</h2>
               <ul className="item how-to-list">
-                <li>
-                  <span className="num-list">1</span>
-                  <span>เลือกกิจกรรมโดยสัมผัสหน้าจอ</span>
-                </li>
-                <li>
-                  <span className="num-list">2</span>
-                  <span>เล่นกิจกรรมตามที่กำหนด</span>
-                </li>
-                <li>
-                  <span className="num-list">3</span>
-                  <span>รับรหัสส่วนลดในช่องทางที่แจ้ง</span>
-                </li>
-                <li>
-                  <span className="num-list">4</span>
-                  <span>ใช้ซื้อทันทีหรือครั้งต่อไป</span>
-                </li>
+                {
+                  _.map(eventSteps, (step, index) => {
+                    return (
+                      <li key={`num-list-${index}`}><span className="num-list">{index + 1}</span><span>{step[lang]}</span></li>
+                    );
+                  })
+                }
               </ul>
               <ul className="item" />
             </div>
@@ -97,4 +112,4 @@ class EventSelectionPage extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EventSelectionPage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EventSelectionPage));
