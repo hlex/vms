@@ -1096,3 +1096,12 @@ export const serviceGetEventSteps = () => {
     return response;
   });
 };
+
+export const serviceGetMainMenu = () => {
+  const data = {
+    vtype: 'mainmenu',
+  };
+  return fetchFacade(`${URL.getMainMenu}${convertToURLParam(data)}`).then((response) => {
+    return response;
+  });
+};

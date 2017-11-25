@@ -14,5 +14,6 @@ export default {
   sumOrderAmount: 'api/main.php',
   getProductSteps: 'api/main.php',
   getEventSteps: 'api/main.php',
-  getMobileTopupSteps: 'api/main.php'
+  getMobileTopupSteps: 'api/main.php',
+  getMainMenu: 'api/main.php'
 };

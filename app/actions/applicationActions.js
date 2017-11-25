@@ -37,6 +37,7 @@ import {
   convertToAppPromotion,
   convertToAppMobileTopupProvider,
   convertToAppEvent,
+  convertToAppText,
 } from '../helpers/masterdata';
 import {
   extractResponseData,
@@ -66,7 +67,8 @@ import {
   serviceGetMobileTopupProviders,
   serviceGetProductSteps,
   serviceGetEventSteps,
-  serviceGetMobileTopupSteps
+  serviceGetMobileTopupSteps,
+  serviceGetMainMenu,
 } from '../apis/masterdata';
 import {
   serviceGetEventReward,
@@ -161,6 +163,12 @@ export const initApplication = () => {
     // ======================================================
     try {
       const baseURL = 'http://localhost:8888/vms/html-v2';
+      // ======================================================
+      // MAINMENU
+      // ======================================================
+      const serviceGetMainMenuResponse = await serviceGetMainMenu();
+      const mainMenus = _.map(extractResponseData(serviceGetMainMenuResponse), mainMenu => convertToAppText(mainMenu));
+      dispatch(Actions.receivedMasterdata('mainMenus', mainMenus));
       // ======================================================
       // STEPS
       // ======================================================

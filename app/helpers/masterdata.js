@@ -192,3 +192,10 @@ export const convertToAppEvent = (event, baseURL) => {
     ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),
   };
 };
+
+export const convertToAppText = (text) => {
+  return {
+    th: _.get(text, 'NameTh', ''),
+    en: _.get(text, 'NameEn', ''),
+  };
+};
