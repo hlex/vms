@@ -176,7 +176,6 @@ export const initApplication = () => {
         };
         return convertToAppPromotion(promotionWithMorphProduct, baseURL);
       });
-      debugger;
       dispatch(Actions.receivedMasterdata('promotionSets', sanitizedPromotions));
       // ======================================================
       // MOBILE TOPUP PROVIDER
@@ -1086,18 +1085,27 @@ export const eventInitGetReward = () => {
     if (shouldSendReward) {
       dispatch(eventGetReward());
     } else if (reward) {
-      // add discount
-      const discountItem = {
-        code: reward.code,
-        value: reward.value,
-        instantly: true,
-      };
-      dispatch(Actions.addDiscount(discountItem));
-      // dispatch(Actions.setFlagUseDiscountInstantly(true));
-      if (reward.name === 'topup') {
-        dispatch(changePage('/topup'));
-      } else if (reward.name === 'product') {
-        dispatch(selectProduct('/product/single', selectedEvent.product, 'singleProduct'));
+      if (reward.channel === 'VENDING_MACHINE_NOW') {
+        // add discount
+        const discountItem = {
+          code: reward.code,
+          value: reward.value,
+          instantly: true,
+        };
+        dispatch(Actions.addDiscount(discountItem));
+        // dispatch(Actions.setFlagUseDiscountInstantly(true));
+        if (reward.name === 'topup') {
+          dispatch(changePage('/topup'));
+        } else if (reward.name === 'product') {
+          dispatch(selectProduct('/product/single', selectedEvent.product, 'singleProduct'));
+        }
+      } else if (reward.channel === 'VENDING_MACHINE_CODE') {
+        const message = {
+          title: 'ขอบคุณที่ร่วมกิจกรรม',
+          th: `รหัสส่วนลด คือ ${reward.code} มูลค่า ${reward.value} บาท (ใช้ได้ก่อนวันที่ ${reward.expireDate})`,
+          en: '',
+        };
+        dispatch(openAlertMessage(convertApplicationErrorToError(message)));
       }
     } else {
       console.log('NO_REWARD');
