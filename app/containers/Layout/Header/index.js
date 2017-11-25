@@ -30,7 +30,7 @@ class Header extends Component {
         break;
     }
     return (
-      <a className="button" onClick={switchLanguageTo(oppositeLang)}>{buttonLang}</a>
+      <a className="button" onClick={() => switchLanguageTo(oppositeLang)}>{buttonLang}</a>
     );
   }
 

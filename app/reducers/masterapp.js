@@ -12,7 +12,8 @@ import {
   DEACTIVE_MONEY_BOX,
   SHOW_LOADING,
   HIDE_LOADING,
-  SET_ACTIVITY_FREE_RULE
+  SET_ACTIVITY_FREE_RULE,
+  SWITCH_LANGUAGE_TO
 } from '../actions/actionTypes';
 
 const cloudURL = 'http://27.254.160.247:81';
@@ -67,7 +68,8 @@ const initialState = {
       en: ''
     }
   },
-  activityFreeRule: 'ALL'
+  activityFreeRule: 'ALL',
+  lang: 'th'
 };
 
 export default (state = initialState, action) => {
@@ -154,6 +156,11 @@ export default (state = initialState, action) => {
         ...state,
         activityFreeRule: action.rule
       };
+    case SWITCH_LANGUAGE_TO:
+      return {
+        ...state,
+        lang: action.lang
+      }
     default:
       return state;
   }

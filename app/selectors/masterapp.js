@@ -12,6 +12,7 @@ const verifyAppReady = state => state.hardwareReady;
 const verifyIsMoneyBoxActive = state => state.moneyBoxActive;
 const verifyIsLoading = state => state.loading.show;
 const getActivityFreeRule = state => state.activityFreeRule;
+const getLanguage = state => state.lang;
 const verifyIsDroppingFreeProduct = createSelector(
   [
     getDroppingProduct,
@@ -34,5 +35,6 @@ export default {
   verifyIsMoneyBoxActive,
   verifyIsLoading,
   getActivityFreeRule,
-  verifyIsDroppingFreeProduct
+  verifyIsDroppingFreeProduct,
+  getLanguage
 };
