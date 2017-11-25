@@ -13,9 +13,15 @@ import * as ApplicationActions from '../../actions/applicationActions';
 // ======================================================
 import Modal from '../../components/Modal';
 
+// ======================================================
+// Selectors
+// ======================================================
+import MasterappSelector from '../../selectors/masterapp';
+
 const mapStateToProps = (state) => {
   return {
-    ...state.alertMessage
+    ...state.alertMessage,
+    lang: MasterappSelector.getLanguage(state.masterapp),
   };
 };
 
@@ -32,12 +38,12 @@ class AlertMessage extends Component {
   static propTypes = {
     show: PropTypes.bool.isRequired,
     messages: PropTypes.shape({}).isRequired,
+    lang: PropTypes.string.isRequired,
     closeAlertMessage: PropTypes.func.isRequired,
   }
 
   render() {
-    const { show, messages, closeAlertMessage } = this.props;
-    const lang = 'th';
+    const { show, messages, lang, closeAlertMessage } = this.props;
     const hasTitle = messages.title && messages.title !== '';
     return (
       <Modal
