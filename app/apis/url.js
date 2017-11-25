@@ -11,5 +11,8 @@ export default {
   getMobileTopupProviders: 'api/main.php',
   getActivityFreeRule: 'api/main.php',
   submitOrder: 'api/main.php',
-  sumOrderAmount: 'api/main.php'
+  sumOrderAmount: 'api/main.php',
+  getProductSteps: 'api/main.php',
+  getEventSteps: 'api/main.php',
+  getMobileTopupSteps: 'api/main.php'
 };
