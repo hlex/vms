@@ -103,7 +103,7 @@ class App extends Component {
                     <a onClick={() => scanCode('Q12345R')}>QR</a>
                   </li>
                   <li>
-                    <a onClick={() => scanCode('1111111111111')}>BC</a>
+                    <a onClick={() => scanCode('2048486920593')}>BC</a>
                   </li>
                   <li>
                     <a onClick={() => scanCode('http://line.me/th/q/_hlexpond')}>LINE</a>

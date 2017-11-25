@@ -75,7 +75,7 @@ import {
 let cmdNo = 0;
 let retryNo = 0;
 
-export const getMasterProductAndEvent = () => {
+export const getMasterProductAndEventAndPromotions = () => {
   return (dispatch, getState) => {
     return new Promise(async (resolve, reject) => {
       const baseURL = 'http://localhost:8888/vms/html-v2'; // MasterappSelector.getBaseURL(getState().masterapp);
@@ -130,6 +130,20 @@ export const getMasterProductAndEvent = () => {
         };
       });
       dispatch(Actions.receivedMasterdata('events', eventsWhichMorphEventProductToMasterProduct));
+      // ======================================================
+      // PROMOTION
+      // ======================================================
+      const serviceGetPromotionsResponse = await serviceGetPromotions();
+      const sanitizedPromotions = _.map(extractResponseData(serviceGetPromotionsResponse), promotion => {
+        const promotionWithMorphProduct = {
+          ...promotion,
+          products: _.map(promotion.Product_List, (promotionProduct) => {
+            return _.find(mergedPhysicalProducts, product => product.id === promotionProduct.Po_ID);
+          })
+        };
+        return convertToAppPromotion(promotionWithMorphProduct, baseURL);
+      });
+      dispatch(Actions.receivedMasterdata('promotionSets', sanitizedPromotions));
       resolve(mergedPhysicalProducts);
     });
   };
@@ -160,23 +174,9 @@ export const initApplication = () => {
       dispatch(Actions.setBaseAds(sanitizedBaseAds));
       dispatch(Actions.setFooterAds(sanitizedBaseAds));
       // ======================================================
-      // PRODUCTS & EVENT
+      // PRODUCTS & EVENT & PROMOTION
       // ======================================================
-      const mergedPhysicalProducts = await dispatch(getMasterProductAndEvent());
-      // ======================================================
-      // PROMOTION
-      // ======================================================
-      const serviceGetPromotionsResponse = await serviceGetPromotions();
-      const sanitizedPromotions = _.map(extractResponseData(serviceGetPromotionsResponse), promotion => {
-        const promotionWithMorphProduct = {
-          ...promotion,
-          products: _.map(promotion.products, (promotionProduct) => {
-            return _.find(mergedPhysicalProducts, product => product.id === promotionProduct.id);
-          })
-        };
-        return convertToAppPromotion(promotionWithMorphProduct, baseURL);
-      });
-      dispatch(Actions.receivedMasterdata('promotionSets', sanitizedPromotions));
+      await dispatch(getMasterProductAndEventAndPromotions());
       // ======================================================
       // MOBILE TOPUP PROVIDER
       // ======================================================
@@ -565,7 +565,7 @@ export const submitOrder = () => {
         // ======================================================
         // REGET PRODUCTS & EVENT
         // ======================================================
-        await dispatch(getMasterProductAndEvent());
+        await dispatch(getMasterProductAndEventAndPromotions());
         resolve(serviceSubmitOrderResponse);
       } catch (error) {
         reject(error);
