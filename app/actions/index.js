@@ -43,12 +43,9 @@ import {
   CLEAR_INSTANTLY_DISCOUNT,
   SET_BASE_ADS,
   SET_ACTIVITY_FREE_RULE,
-<<<<<<< HEAD
-  SWITCH_LANGUAGE_TO
-=======
+  SWITCH_LANGUAGE_TO,
   EVENT_UPDATE_REWARD_DISCOUNT,
   ORDER_PRODUCT_REMOVE
->>>>>>> develop
 } from './actionTypes';
 
 export const receivedSensorInformation = (data) => {
