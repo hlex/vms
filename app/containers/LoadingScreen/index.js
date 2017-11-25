@@ -21,6 +21,7 @@ import { Loading, Modal } from '../../components';
 const mapStateToProps = (state) => {
   return {
     ...state.masterapp.loading,
+    lang: MasterappSelector.getLanguage(state.masterapp),
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
   };
 };
@@ -38,12 +39,12 @@ class LoadingScreen extends Component {
   static propTypes = {
     show: PropTypes.bool.isRequired,
     messages: PropTypes.shape({}).isRequired,
+    lang: PropTypes.string.isRequired,
     baseURL: PropTypes.string.isRequired,
   }
 
   render() {
-    const { show, messages, baseURL } = this.props;
-    const lang = 'th';
+    const { show, messages, lang, baseURL } = this.props;
     return (
       <Modal
         show={show}
