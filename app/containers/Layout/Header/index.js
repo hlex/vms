@@ -34,22 +34,46 @@ class Header extends Component {
     );
   }
 
+  renderHeader = () => {
+    const { lang } = this.props;
+    if (lang === 'th') {
+      return (
+        <h2>
+        <span>ยินดีต้อนรับ</span> ใช้นิ้วเดียวสัมผัสในการเลือก
+      </h2>
+      );
+    }
+    return (
+      <h2>
+        <span>Welome</span> Use a single touch to select
+      </h2>
+    );
+  }
+
+  renderHomeButton = () => {
+    const { lang } = this.props;
+    if (lang === 'th') {
+      return 'หน้าหลัก';
+    }
+    return 'Home';
+  }
+
   render() {
     const { backToHome, baseURL } = this.props;
     return (
       <div className="vms-header">
         <div className="header">
           <div className="tooltip">
-            <h2>
-              <span>ยินดีต้อนรับ</span> ใช้นิ้วเดียวสัมผัสในการเลือก
-            </h2>
+            {
+              this.renderHeader()
+            }
             <i>
               <img src={`${baseURL}/images/icon-tuch.png`} />
             </i>
           </div>
           <div className="nav-button-group">
             <a className="button yellow" onClick={backToHome}>
-              <i className="home">&nbsp;</i>หน้าหลัก
+              <i className="home">&nbsp;</i>{this.renderHomeButton()}
             </a>
             {this.renderLanguageButton()}
           </div>
