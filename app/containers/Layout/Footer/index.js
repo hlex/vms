@@ -37,12 +37,13 @@ class Footer extends PureComponent {
     console.log('=====================================', location.pathname, nextProps.location.pathname);
     const currentPageIsPayment = location.pathname === '/payment';
     const nextPageIsPayment = nextProps.location.pathname === '/payment';
+    const currentPageIsMobileTopupProviderSelection = '/topup';
     const currentPageIsMobileTopupGroup = /topup/.test(nextProps.location.pathname);
     const nextPageIsMobileTopupGroup = /topup/.test(nextProps.location.pathname);
     if (currentPageIsPayment && nextPageIsPayment) return false;
     if (location.pathname === '/product/single' && nextPageIsPayment) return false;
     if (location.pathname === '/product/promotionSet' && nextPageIsPayment) return false;
-    if (currentPageIsMobileTopupGroup && nextPageIsMobileTopupGroup) return false;
+    if (!currentPageIsMobileTopupProviderSelection && currentPageIsMobileTopupGroup && nextPageIsMobileTopupGroup) return false;
     if (currentPageIsMobileTopupGroup && nextPageIsPayment) return false;
     return true;
   }
