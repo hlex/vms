@@ -44,7 +44,7 @@ class AlertMessage extends Component {
 
   render() {
     const { show, messages, lang, closeAlertMessage } = this.props;
-    const hasTitle = messages.title && messages.title !== '';
+    const hasTitle = messages && messages.title && messages.title !== '';
     return (
       <Modal
         show={show}
