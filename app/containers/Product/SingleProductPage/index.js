@@ -11,7 +11,7 @@ import { FooterAction } from '../../Utils';
 // ======================================================
 // Components
 // ======================================================
-import { ProductSummary, ProductTitle } from '../../../components';
+import { Loading, ProductSummary, ProductTitle } from '../../../components';
 import Layout from '../../Layout';
 
 // ======================================================
@@ -71,6 +71,7 @@ class SingleProductPage extends Component {
 
   render() {
     const {
+      moneyBoxActive,
       productPrice,
       discountAmount,
       baseURL,
@@ -87,14 +88,22 @@ class SingleProductPage extends Component {
           />
         </Layout.Title>
         <Layout.Content>
-          <ProductSummary
-            title={'ยืนยันชำระเงินค่าสินค้า'}
-            productPrice={productPrice}
-            discountAmount={discountAmount}
-            onSubmit={submitProduct}
-            onSubmitDiscount={verifyDiscountCode}
-          />
-          <FooterAction />
+          {
+            !moneyBoxActive && <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />
+          }
+          {
+            moneyBoxActive &&
+            <div>
+              <ProductSummary
+                title={'ยืนยันชำระเงินค่าสินค้า'}
+                productPrice={productPrice}
+                discountAmount={discountAmount}
+                onSubmit={submitProduct}
+                onSubmitDiscount={verifyDiscountCode}
+              />
+              <FooterAction />
+            </div>
+          }
         </Layout.Content>
       </div>
     );
