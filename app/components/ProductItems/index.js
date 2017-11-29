@@ -203,16 +203,35 @@ class ProductItems extends PureComponent {
     let fullfilledProduct = products;
 
     const differentPage = Math.abs(productTotalPage - promotionTotalPage);
+    console.log('>>>>>>>', productTotalPage, promotionTotalPage);
     if (promotionTotalPage < productTotalPage) {
-      // console.log('promotionTotalPage < productTotalPage', differentPage, 'boost', differentPage * promotionSetPerPage);
+      console.log('promotionTotalPage < productTotalPage', differentPage, 'boost', differentPage * promotionSetPerPage);
       const totalFullfillAmount = promotionSetAmount + (differentPage * promotionSetPerPage);
       fullfilledPromotionSet = _.map(_.range(totalFullfillAmount), (index) => {
         const promotionSetIndex = index % promotionSetAmount;
         return promotionSets[promotionSetIndex];
       });
     } else if (promotionTotalPage > productTotalPage) {
-      // console.log('promotionTotalPage > productTotalPage', differentPage, 'boost', differentPage * productPerPage);
+      console.log('promotionTotalPage > productTotalPage', differentPage, 'boost', differentPage * productPerPage);
       const totalFullfillAmount = productAmount + (differentPage * productPerPage);
+      fullfilledProduct = _.map(_.range(totalFullfillAmount), (index) => {
+        const productIndex = index % productAmount;
+        return products[productIndex];
+      });
+    }
+
+    const fullfilledPromotionSetAmount = _.size(fullfilledPromotionSet);
+    if (fullfilledPromotionSetAmount < promotionSetPerPage) {
+      const totalFullfillAmount = fullfilledPromotionSetAmount + (promotionSetPerPage - fullfilledPromotionSetAmount);
+      fullfilledPromotionSet = _.map(_.range(totalFullfillAmount), (index) => {
+        const promotionSetIndex = index % promotionSetAmount;
+        return promotionSets[promotionSetIndex];
+      });
+    }
+
+    const fullfilledProductAmount = _.size(fullfilledProduct);
+    if (fullfilledProductAmount < productPerPage) {
+      const totalFullfillAmount = fullfilledProductAmount + (productPerPage - fullfilledProductAmount);
       fullfilledProduct = _.map(_.range(totalFullfillAmount), (index) => {
         const productIndex = index % productAmount;
         return products[productIndex];
