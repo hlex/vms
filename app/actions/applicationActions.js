@@ -686,6 +686,8 @@ const runFlowProductDropSuccess = () => async (dispatch, getState) => {
         // add freeProduct
         dispatch(Actions.selectProduct(freeProduct));
         dispatch(productFreeDrop());
+      } else {
+        dispatch(endProcess());
       }
     } else {
       dispatch(endProcess());
