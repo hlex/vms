@@ -122,7 +122,7 @@ export const convertToAppAd = (ad) => {
   const second = ad.Ad_Second === 0 ? 10000 : (ad.Ad_Second || 1000);
   return {
     id: ad.Ad_ID || cuid(),
-    type: ad.Ad_Type || '' === 'V' || isVideo ? 'video' : 'image',
+    type: (ad.Ad_Type || '') === 'V' && isVideo ? 'video' : 'image',
     name: ad.Ad_ID || '',
     path: ad.Ad_Url || '',
     filename: ad.Ad_ID || '',
