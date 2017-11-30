@@ -56,7 +56,7 @@ class LoadingScreen extends Component {
           },
         }}
       >
-        <Loading baseURL={baseURL} text={messages[lang]} />
+        <Loading text={messages[lang]} baseURL={baseURL} />
       </Modal>
     );
   }

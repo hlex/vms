@@ -10,7 +10,7 @@ import { FooterAction } from '../../Utils';
 // ======================================================
 // Components
 // ======================================================
-import { ProductSummary, PromotionSetTitle } from '../../../components';
+import { Loading, ProductSummary, PromotionSetTitle } from '../../../components';
 import Layout from '../../Layout';
 // ======================================================
 // Actions
@@ -41,6 +41,7 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 class PromotionSetPage extends Component {
 
   static propTypes = {
+    moneyBoxActive: PropTypes.bool.isRequired,
     productPrice: PropTypes.number,
     discountAmount: PropTypes.number,
     baseURL: PropTypes.string.isRequired,
@@ -67,7 +68,7 @@ class PromotionSetPage extends Component {
 
   render() {
     console.log('PromotionSetPage', this.props);
-    const { baseURL, discountAmount, productPrice, submitPromotionSet, verifyDiscountCode } = this.props;
+    const { moneyBoxActive, baseURL, discountAmount, productPrice, submitPromotionSet, verifyDiscountCode } = this.props;
     return (
       <div>
         <Layout.Title>
@@ -76,13 +77,21 @@ class PromotionSetPage extends Component {
           />
         </Layout.Title>
         <Layout.Content>
-          <ProductSummary
-            productPrice={productPrice}
-            discountAmount={discountAmount}
-            onSubmit={submitPromotionSet}
-            onSubmitDiscount={verifyDiscountCode}
-          />
-          <FooterAction />
+          {
+            !moneyBoxActive && <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />
+          }
+          {
+            moneyBoxActive &&
+            <div>
+              <ProductSummary
+                productPrice={productPrice}
+                discountAmount={discountAmount}
+                onSubmit={submitPromotionSet}
+                onSubmitDiscount={verifyDiscountCode}
+              />
+              <FooterAction />
+            </div>
+          }
         </Layout.Content>
       </div>
     );

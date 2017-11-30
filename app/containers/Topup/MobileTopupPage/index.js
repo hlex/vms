@@ -11,7 +11,7 @@ import { FooterAction } from '../../Utils';
 // ======================================================
 // Components
 // ======================================================
-import { ProductSummary, MobileTopupTitle } from '../../../components';
+import { Loading, ProductSummary, MobileTopupTitle } from '../../../components';
 import Layout from '../../Layout';
 
 // ======================================================
@@ -44,6 +44,7 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 class MobileTopupPage extends Component {
 
   static propTypes = {
+    moneyBoxActive: PropTypes.bool.isRequired,
     mobileTopupTotalPrice: PropTypes.number,
     discountAmount: PropTypes.number,
     baseURL: PropTypes.string.isRequired,
@@ -71,6 +72,7 @@ class MobileTopupPage extends Component {
 
   render() {
     const {
+      moneyBoxActive,
       mobileTopupBanner,
       mobileTopupTotalPrice,
       discountAmount,
@@ -87,14 +89,22 @@ class MobileTopupPage extends Component {
           />
         </Layout.Title>
         <Layout.Content>
-          <ProductSummary
-            title={'ยืนยันชำระเงินค่าเติมเงิน'}
-            productPrice={mobileTopupTotalPrice}
-            discountAmount={discountAmount}
-            onSubmit={submitProduct}
-            onSubmitDiscount={verifyDiscountCode}
-          />
-          <FooterAction />
+          {
+            !moneyBoxActive && <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />
+          }
+          {
+            moneyBoxActive &&
+            <div>
+              <ProductSummary
+                title={'ยืนยันชำระเงินค่าเติมเงิน'}
+                productPrice={mobileTopupTotalPrice}
+                discountAmount={discountAmount}
+                onSubmit={submitProduct}
+                onSubmitDiscount={verifyDiscountCode}
+              />
+              <FooterAction />
+            </div>
+          }
         </Layout.Content>
       </div>
     );
