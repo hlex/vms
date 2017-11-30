@@ -18,7 +18,7 @@ class Loading extends Component {
     const { text, baseURL } = this.props;
     return (
       <div className="loading">
-        <img src={`${loading}`} alt="" />
+        <img src={loading} alt="" />
         <h3>{text}</h3>
       </div>
     );
