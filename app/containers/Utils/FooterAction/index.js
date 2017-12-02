@@ -35,15 +35,12 @@ class App extends Component {
     const { isEventOrder, back } = this.props;
     return (
       <div className="action-back">
-        {
-          !isEventOrder &&
-          <a
-            className="button purple M"
-            onClick={back}
-          >
-            <i className="fa fa-chevron-left" />ย้อนกลับ
-          </a>
-        }
+        <a
+          className="button purple M"
+          onClick={back}
+        >
+          <i className="fa fa-chevron-left" />ย้อนกลับ
+        </a>
       </div>
     );
   }
