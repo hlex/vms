@@ -297,7 +297,9 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       }
       break;
     case 'RESET_TAIKO_SUCCESS':
-      dispatch(getCashRemaining());
+      setTimeout(() => {
+        dispatch(getCashRemaining());
+      }, 1000);
       break;
     case 'RESET_TAIKO_FAIL':
       break;
