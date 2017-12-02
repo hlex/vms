@@ -1018,12 +1018,26 @@ export const initHomePage = () => {
     // dispatch(clearInstantlyDiscount()); // right now order is cleared.
     dispatch(resetFooterAds());
     dispatch(clearOrder());
-    const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
-    if (moneyBoxActive) {
-      dispatch(disableMoneyBox());
-    }
+    // const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
+    // if (moneyBoxActive) {
+    //   dispatch(disableMoneyBox());
+    // }
   };
 };
+
+export const processingReturningCash = () => {
+  return (dispatch, getState) => {
+    const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
+    if (moneyBoxActive) {
+      dispatch(showLoading('ระบบกำลังทอนเงิน รอสักครู่'));
+      setTimeout(() => {
+        if (MasterappSelector.verifyIsLoading(getState().masterapp)) {
+          dispatch(hideLoading());
+        }
+      }, 5000);
+    }
+  }
+}
 
 export const enableMoneyBoxWhenInitPage = () => {
   return (dispatch, getState) => {
@@ -1063,21 +1077,24 @@ export const warningSystemWillNotChangeCash = () => {
 
 export const initSingleProductPage = () => {
   return (dispatch, getState) => {
-    dispatch(enableMoneyBoxWhenInitPage());
+    dispatch(processingReturningCash());
+    // dispatch(enableMoneyBoxWhenInitPage());
     dispatch(warningSystemWillNotChangeCash());
   };
 };
 
 export const initPromotionSetPage = () => {
   return (dispatch, getState) => {
-    dispatch(enableMoneyBoxWhenInitPage());
+    dispatch(processingReturningCash());
+    // dispatch(enableMoneyBoxWhenInitPage());
     dispatch(warningSystemWillNotChangeCash());
   };
 };
 
 export const initMobileTopupPage = () => {
   return (dispatch, getState) => {
-    dispatch(enableMoneyBoxWhenInitPage());
+    dispatch(processingReturningCash());
+    // dispatch(enableMoneyBoxWhenInitPage());
     dispatch(warningSystemWillNotChangeCash());
   };
 };

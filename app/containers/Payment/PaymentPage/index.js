@@ -30,6 +30,7 @@ import OrderSelector from '../../../selectors/order';
 const mapStateToProps = state => {
   return {
     ...state.payment,
+    moneyBoxActive: MasterappSelector.verifyIsMoneyBoxActive(state.masterapp),
     canChangeCash: state.masterapp.canChangeCash,
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     summaryList: RootSelector.getPaymentSummaryList(state),
@@ -96,7 +97,7 @@ class PaymentPage extends PureComponent {
   }
 
   render() {
-    const { baseURL, isLoading, isFinish } = this.props;
+    const { moneyBoxActive, baseURL, isLoading, isFinish } = this.props;
     const canBack = !isLoading && !isFinish;
     return (
       <div>
@@ -107,10 +108,13 @@ class PaymentPage extends PureComponent {
         </Layout.Title>
         <Layout.Content>
           {
-            this.renderContent()
+            !moneyBoxActive && <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />
           }
           {
-            canBack &&
+            moneyBoxActive && this.renderContent()
+          }
+          {
+            moneyBoxActive && canBack &&
             <FooterAction />
           }
         </Layout.Content>

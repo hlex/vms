@@ -66,7 +66,7 @@ class SingleProductPage extends Component {
 
   componentWillReceiveProps = (nextProps) => {
     const { willReceivePropsEnableMoneyBoxWhenInitPage } = this.props;
-    willReceivePropsEnableMoneyBoxWhenInitPage(this.props, nextProps);
+    // willReceivePropsEnableMoneyBoxWhenInitPage(this.props, nextProps);
   }
 
   render() {
@@ -88,22 +88,14 @@ class SingleProductPage extends Component {
           />
         </Layout.Title>
         <Layout.Content>
-          {
-            !moneyBoxActive && <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />
-          }
-          {
-            moneyBoxActive &&
-            <div>
-              <ProductSummary
-                title={'ยืนยันชำระเงินค่าสินค้า'}
-                productPrice={productPrice}
-                discountAmount={discountAmount}
-                onSubmit={submitProduct}
-                onSubmitDiscount={verifyDiscountCode}
-              />
-              <FooterAction />
-            </div>
-          }
+          <ProductSummary
+            title={'ยืนยันชำระเงินค่าสินค้า'}
+            productPrice={productPrice}
+            discountAmount={discountAmount}
+            onSubmit={submitProduct}
+            onSubmitDiscount={verifyDiscountCode}
+          />
+          <FooterAction />
         </Layout.Content>
       </div>
     );
