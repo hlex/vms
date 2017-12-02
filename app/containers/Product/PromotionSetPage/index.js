@@ -63,7 +63,7 @@ class PromotionSetPage extends Component {
 
   componentWillReceiveProps = (nextProps) => {
     const { willReceivePropsEnableMoneyBoxWhenInitPage } = this.props;
-    willReceivePropsEnableMoneyBoxWhenInitPage(this.props, nextProps);
+    // willReceivePropsEnableMoneyBoxWhenInitPage(this.props, nextProps);
   }
 
   render() {
@@ -77,21 +77,13 @@ class PromotionSetPage extends Component {
           />
         </Layout.Title>
         <Layout.Content>
-          {
-            !moneyBoxActive && <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />
-          }
-          {
-            moneyBoxActive &&
-            <div>
-              <ProductSummary
-                productPrice={productPrice}
-                discountAmount={discountAmount}
-                onSubmit={submitPromotionSet}
-                onSubmitDiscount={verifyDiscountCode}
-              />
-              <FooterAction />
-            </div>
-          }
+          <ProductSummary
+            productPrice={productPrice}
+            discountAmount={discountAmount}
+            onSubmit={submitPromotionSet}
+            onSubmitDiscount={verifyDiscountCode}
+          />
+          <FooterAction />
         </Layout.Content>
       </div>
     );
