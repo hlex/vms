@@ -977,9 +977,7 @@ export const verifyDiscountCode = (code) => {
         dispatch(hideLoading());
         console.log('verifyDiscountCodeResponse', verifyDiscountCodeResponse);
         const discountItem = {
-          value: verifyDiscountCodeResponse.discount,
-          ...verifyDiscountCodeResponse,
-          code,
+          ...extractDiscountFromResponseData(verifyDiscountCodeResponse),
           discountType,
         };
         dispatch(Actions.addDiscount(discountItem));
