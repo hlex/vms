@@ -13,6 +13,13 @@ console.log('process.env', process.env);
 
 let isFirstTime = false;
 
+// ======================================================
+// Variables
+// ======================================================
+const DROP_PRODUCT_DELAY_MS = 2000;
+const MONEY_BOX_DELAY_MS = 500;
+const SERVER_MODE = 4;
+
 /*
   case1: disable 20
   case2: disable 50
@@ -117,7 +124,7 @@ const serverLog = 'background: blue; color: #fff';
 if (process.env.NODE_ENV !== 'production') {
   console.log('development:createServer at 127.0.0.1:1337');
   const server = net.createServer(socket => {
-    const sv = new Server(4);
+    const sv = new Server(SERVER_MODE);
     console.log('%c Init Server:', serverLog, sv);
     setTimeout(() => {
       socket.write(
@@ -183,7 +190,7 @@ if (process.env.NODE_ENV !== 'production') {
                 description: 'Item XX delivered',
               }),
             );
-          }, 2000);
+          }, DROP_PRODUCT_DELAY_MS);
         } else {
           isFirstTime = false;
           setTimeout(() => {
@@ -194,7 +201,7 @@ if (process.env.NODE_ENV !== 'production') {
                 description: 'Item delivered failed',
               }),
             );
-          }, 2000);
+          }, DROP_PRODUCT_DELAY_MS);
         }
       }
       // ======================================================
@@ -286,7 +293,7 @@ if (process.env.NODE_ENV !== 'production') {
           socket.write(
             JSON.stringify(isSuccess ? success : failed),
           );
-        }, 1500);
+        }, MONEY_BOX_DELAY_MS);
       }
       // ======================================================
       // DISABLE MONEY BOX
@@ -311,7 +318,7 @@ if (process.env.NODE_ENV !== 'production') {
           socket.write(
             JSON.stringify(isSuccess ? success : failed),
           );
-        }, 1500);
+        }, MONEY_BOX_DELAY_MS);
       }
       if (objectData.action === 2 && objectData.mode === 'limit') {
         const success = {
