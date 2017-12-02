@@ -11,12 +11,26 @@ export const serviceVerifyDiscountCode = (code, poId, discountType = 'product') 
     po_id: poId,
     code,
   };
-  return fetchFacade(`${URL.verifyDiscount}${convertToURLParam(data)}`)
-  .then((response) => {
-    console.log('serviceVerifyDiscountCode', response);
-    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
-    return extractResponseData(response);
-  });
+  return (
+    fetchFacade(`${URL.verifyDiscount}${convertToURLParam(data)}`)
+      .then((response) => {
+      // .then(() => {
+      //   const response = {
+      //     status: 'SUCCESSFUL',
+      //     'trx-id': '20171108164644',
+      //     'response-data': {
+      //       expiredate: '31-12-2017',
+      //       discountcode: 837354,
+      //       discountprice: 13,
+      //       'th-message': 'สามารถใช้รหัสส่วนลดได้',
+      //       'en-message': 'successful',
+      //     },
+      //   };
+        console.log('serviceVerifyDiscountCode', response);
+        handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+        return extractResponseData(response);
+      })
+  );
 };
 
 export const serviceUseDiscountCode = (code, poId, discountType = 'product') => {
