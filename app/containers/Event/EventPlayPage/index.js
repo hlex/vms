@@ -114,7 +114,7 @@ class EventPlayPage extends Component {
   renderInputLineId = () => {
     const { submitPlayEvent } = this.props;
     return (
-      <div className="event-lineid-box">
+      <div className="event-box">
         <img alt="line" src={lineId} />
         <div className="desc">
           <h2>กรุณาแสกน LINE QR CODE</h2>
@@ -130,7 +130,7 @@ class EventPlayPage extends Component {
   renderInputBarcode = () => {
     const { baseURL } = this.props;
     return (
-      <div className="event-lineid-box">
+      <div className="event-box">
         <img alt="line" src={`${baseURL}/images/icon-barcode.png`} />
         <div className="desc">
           <h2>กรุณาแสกน BARCODE ที่ได้รับมา</h2>
@@ -146,7 +146,7 @@ class EventPlayPage extends Component {
     ? 'กรุณาแสกน LINE QR CODE ของท่าน'
     : 'กรุณาแสกน QR CODE ที่ได้รับมา';
     return (
-      <div className="event-lineid-box">
+      <div className="event-box">
         <img alt="line" src={`${baseURL}/images/icon-qrcode.png`} />
         <div className="desc">
           <h2>{message}</h2>

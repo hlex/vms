@@ -5830,7 +5830,10 @@ i.home {
 
 .content-wrapper {
   padding: 40px 80px 20px 80px;
-  background-color: #ffd800; }
+  background-color: #ffd800;
+  display: flex; }
+  .content-wrapper > div:first-of-type {
+    flex: 1; }
 
 .title-wrapper {
   height: 590px;
@@ -6561,14 +6564,15 @@ hr {
     color: #fff;
     font-size: 25px; }
 
-.event-lineid-box {
+.event-box {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column; }
-  .event-lineid-box img {
+  .event-box img {
     padding: 40px; }
-  .event-lineid-box .desc {
+  .event-box .desc {
     text-align: center;
     margin-bottom: 30px; }
 
