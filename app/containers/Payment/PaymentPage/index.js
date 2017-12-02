@@ -72,17 +72,23 @@ class PaymentPage extends PureComponent {
   }
 
   renderContent = () => {
-    const { baseURL, isLoading, isFinish, summaryList, canChangeCash } = this.props;
+    const { moneyBoxActive, baseURL, isLoading, isFinish, summaryList, canChangeCash } = this.props;
     // const isFinish = true;
-    if (isFinish) return <Thankyou baseURL={baseURL} />;
-    if (isLoading) return <Loading baseURL={baseURL} />;
-    return (
-      <PaymentConfirmation
-        baseURL={baseURL}
-        summaryList={summaryList}
-        canChangeCash={canChangeCash}
-      />
-    );
+    if (moneyBoxActive) {
+      if (isFinish) return <Thankyou baseURL={baseURL} />;
+      if (isLoading) return <Loading baseURL={baseURL} />;
+      return (
+        <PaymentConfirmation
+          baseURL={baseURL}
+          summaryList={summaryList}
+          canChangeCash={canChangeCash}
+        />
+      );
+    }
+    if (isFinish) {
+      return <Thankyou baseURL={baseURL} />;
+    }
+    return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />
   }
 
   renderTitle = () => {
@@ -108,10 +114,7 @@ class PaymentPage extends PureComponent {
         </Layout.Title>
         <Layout.Content>
           {
-            !moneyBoxActive && <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />
-          }
-          {
-            moneyBoxActive && this.renderContent()
+            this.renderContent()
           }
           {
             moneyBoxActive && canBack &&
