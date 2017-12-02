@@ -77,6 +77,7 @@ import {
   verifyLineQrcode,
   getActivityFreeRule
 } from '../apis/event';
+import { setTimeout } from 'timers';
 
 let cmdNo = 0;
 let retryNo = 0;
@@ -226,7 +227,9 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
     case 'CONNECTION_ESTABLISH':
       break;
     case 'CONNECTED':
-      dispatch(resetTAIKO());
+      setTimeout(() => {
+        dispatch(resetTAIKO());
+      }, 1000);
       break;
     case 'UPDATE_TEMP':
       dispatch(Actions.receivedSensorInformation(data));
@@ -919,6 +922,7 @@ export const resetTAIKO = () => (dispatch, getState) => {
 };
 
 export const enableMoneyBox = () => (dispatch, getState) => {
+  dispatch(Actions.hardwareStartProcess('enableMoneyBox'));
   const client = MasterappSelector.getTcpClient(getState().masterapp);
   client.send({
     action: 2,

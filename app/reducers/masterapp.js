@@ -13,7 +13,9 @@ import {
   SHOW_LOADING,
   HIDE_LOADING,
   SET_ACTIVITY_FREE_RULE,
-  SWITCH_LANGUAGE_TO
+  SWITCH_LANGUAGE_TO,
+  HARDWARE_START_PROCESS,
+  HARDWARE_FINISH_PROCESS
 } from '../actions/actionTypes';
 
 const cloudURL = 'http://27.254.160.247:81';
@@ -69,7 +71,8 @@ const initialState = {
     }
   },
   activityFreeRule: 'ALL',
-  lang: 'th'
+  lang: 'th',
+  hardwareProcessing: ''
 };
 
 export default (state = initialState, action) => {
@@ -160,7 +163,17 @@ export default (state = initialState, action) => {
       return {
         ...state,
         lang: action.lang
-      }
+      };
+    case HARDWARE_START_PROCESS:
+      return {
+        ...state,
+        hardwareProcessing: action.key
+      };
+    case HARDWARE_FINISH_PROCESS:
+      return {
+        ...state,
+        hardwareProcessing: ''
+      };
     default:
       return state;
   }

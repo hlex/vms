@@ -45,320 +45,237 @@ import {
   SET_ACTIVITY_FREE_RULE,
   SWITCH_LANGUAGE_TO,
   EVENT_UPDATE_REWARD_DISCOUNT,
-  ORDER_PRODUCT_REMOVE
+  ORDER_PRODUCT_REMOVE,
+  HARDWARE_START_PROCESS,
+  HARDWARE_FINISH_PROCESS
 } from './actionTypes';
 
-export const receivedSensorInformation = (data) => {
-  return {
-    type: RECEIVED_SENSOR_INFORMATION,
-    data,
-  };
-};
+export const receivedSensorInformation = data => ({
+  type: RECEIVED_SENSOR_INFORMATION,
+  data,
+});
 
-export const receivedCash = (data) => {
-  return {
-    type: RECEIVED_CASH,
-    data,
-  };
-};
+export const receivedCash = data => ({
+  type: RECEIVED_CASH,
+  data,
+});
 
-export const receivedCashCompletely = () => {
-  return {
-    type: RECEIVED_CASH_COMPLETELY,
-  };
-};
+export const receivedCashCompletely = () => ({
+  type: RECEIVED_CASH_COMPLETELY,
+});
 
-export const productDropSuccess = (droppedProduct) => {
-  return {
-    type: PRODUCT_DROP_SUCCESS,
-    product: droppedProduct
-  };
-};
+export const productDropSuccess = droppedProduct => ({
+  type: PRODUCT_DROP_SUCCESS,
+  product: droppedProduct,
+});
 
-export const productDropProcessCompletely = () => {
-  return {
-    type: PRODUCT_DROP_PROCESS_COMPLETELY,
-  };
-};
+export const productDropProcessCompletely = () => ({
+  type: PRODUCT_DROP_PROCESS_COMPLETELY,
+});
 
-export const selectProduct = (item) => {
-  return {
-    type: SELECT_PRODUCT,
-    item
-  };
-};
+export const selectProduct = item => ({
+  type: SELECT_PRODUCT,
+  item,
+});
 
-export const selectPromotionSet = (item) => {
-  return {
-    type: SELECT_PROMOTION_SET,
-    item
-  };
-};
+export const selectPromotionSet = item => ({
+  type: SELECT_PROMOTION_SET,
+  item,
+});
 
-export const initTcpClient = (tcpClient) => {
-  return {
-    type: INIT_TCP_CLIENT,
-    tcpClient
-  };
-};
+export const initTcpClient = tcpClient => ({
+  type: INIT_TCP_CLIENT,
+  tcpClient,
+});
 
-export const resetPaymentReducer = () => {
-  return {
-    type: RESET_PAYMENT_REDUCER,
-  };
-};
+export const resetPaymentReducer = () => ({
+  type: RESET_PAYMENT_REDUCER,
+});
 
-export const clearPaymentAmount = () => {
-  return {
-    type: CLEAR_PAYMENT_AMOUNT,
-  };
-};
+export const clearPaymentAmount = () => ({
+  type: CLEAR_PAYMENT_AMOUNT,
+});
 
-export const selectTopupProvider = (topupProvider) => {
-  return {
-    type: SELECT_MOBILE_TOPUP_PROVIDER,
-    topupProvider
-  };
-};
+export const selectTopupProvider = topupProvider => ({
+  type: SELECT_MOBILE_TOPUP_PROVIDER,
+  topupProvider,
+});
 
-export const confirmMobileTopupMSISDN = (MSISDN) => {
-  return {
-    type: CONFIRM_MOBILE_TOPUP_MSISDN,
-    MSISDN,
-  };
-};
+export const confirmMobileTopupMSISDN = MSISDN => ({
+  type: CONFIRM_MOBILE_TOPUP_MSISDN,
+  MSISDN,
+});
 
-export const receivedCashRemaining = (data) => {
-  return {
-    type: RECEIVED_CASH_REMAINING,
-    data,
-  };
-};
+export const receivedCashRemaining = data => ({
+  type: RECEIVED_CASH_REMAINING,
+  data,
+});
 
-export const showModal = (modalName, data) => {
-  return {
-    type: SHOW_MODAL,
-    name: modalName,
-    data,
-  };
-};
+export const showModal = (modalName, data) => ({
+  type: SHOW_MODAL,
+  name: modalName,
+  data,
+});
 
-export const hideModal = (modalName) => {
-  return {
-    type: HIDE_MODAL,
-    name: modalName
-  };
-};
+export const hideModal = modalName => ({
+  type: HIDE_MODAL,
+  name: modalName,
+});
 
-export const hideAllModal = () => {
-  return {
-    type: HIDE_ALL_MODAL
-  };
-};
+export const hideAllModal = () => ({
+  type: HIDE_ALL_MODAL,
+});
 
-export const readyToDropProduct = () => {
-  return {
-    type: READY_TO_DROP_PRODUCT
-  };
-};
+export const readyToDropProduct = () => ({
+  type: READY_TO_DROP_PRODUCT,
+});
 
-export const notReadyToDropProduct = () => {
-  return {
-    type: NOT_READY_TO_DROP_PRODUCT
-  };
-};
+export const notReadyToDropProduct = () => ({
+  type: NOT_READY_TO_DROP_PRODUCT,
+});
 
-export const clearOrder = () => {
-  return {
-    type: CLEAR_ORDER
-  };
-};
+export const clearOrder = () => ({
+  type: CLEAR_ORDER,
+});
 
-export const droppingProduct = (product) => {
-  return {
-    type: DROPPING_PRODUCT,
-    product
-  };
-};
+export const droppingProduct = product => ({
+  type: DROPPING_PRODUCT,
+  product,
+});
 
-export const selectMobileTopupValue = (item) => {
-  return {
-    type: SELECT_MOBILE_TOPUP_VALUE,
-    item,
-  };
-};
+export const selectMobileTopupValue = item => ({
+  type: SELECT_MOBILE_TOPUP_VALUE,
+  item,
+});
 
-export const submitMobileTopupValue = (item) => {
-  return {
-    type: SUBMIT_MOBILE_TOPUP_VALUE,
-    item,
-  };
-};
+export const submitMobileTopupValue = item => ({
+  type: SUBMIT_MOBILE_TOPUP_VALUE,
+  item,
+});
 
-export const clearMobileTopupValue = () => {
-  return {
-    type: CLEAR_MOBILE_TOPUP_VALUE,
-  };
-};
+export const clearMobileTopupValue = () => ({
+  type: CLEAR_MOBILE_TOPUP_VALUE,
+});
 
-export const setCashChangeAmount = (cashChangeAmount) => {
-  return {
-    type: SET_CASH_CHANGE_AMOUNT,
-    cashChangeAmount
-  };
-};
+export const setCashChangeAmount = cashChangeAmount => ({
+  type: SET_CASH_CHANGE_AMOUNT,
+  cashChangeAmount,
+});
 
-export const clearMobileTopupMSISDN = () => {
-  return {
-    type: CLEAR_MOBILE_TOPUP_MSISDN,
-  };
-};
+export const clearMobileTopupMSISDN = () => ({
+  type: CLEAR_MOBILE_TOPUP_MSISDN,
+});
 
-export const selectEvent = (item) => {
-  return {
-    type: SELECT_EVENT,
-    event: item
-  };
-};
+export const selectEvent = item => ({
+  type: SELECT_EVENT,
+  event: item,
+});
 
-export const addDiscount = (discount) => {
-  return {
-    type: ADD_DISCOUNT,
-    discount,
-  };
-};
+export const addDiscount = discount => ({
+  type: ADD_DISCOUNT,
+  discount,
+});
 
-export const setCanChangeCash = (canChangeCash) => {
-  return {
-    type: SET_CAN_CHANGE_CASH,
-    canChangeCash
-  };
-};
+export const setCanChangeCash = canChangeCash => ({
+  type: SET_CAN_CHANGE_CASH,
+  canChangeCash,
+});
 
-export const receivedMasterdata = (key, items) => {
-  return {
-    type: RECEIVED_MASTERDATA,
-    key,
-    value: items
-  };
-};
+export const receivedMasterdata = (key, items) => ({
+  type: RECEIVED_MASTERDATA,
+  key,
+  value: items,
+});
 
-export const updateEventInput = (key, items) => {
-  return {
-    type: EVENT_UPDATE_INPUT_VALUE,
-    key,
-    value: items
-  };
-};
+export const updateEventInput = (key, items) => ({
+  type: EVENT_UPDATE_INPUT_VALUE,
+  key,
+  value: items,
+});
 
-export const setLimitBanknote = (banknoteValue) => {
-  return {
-    type: SET_LIMIT_BANKNOTE,
-    banknoteValue
-  };
-};
+export const setLimitBanknote = banknoteValue => ({
+  type: SET_LIMIT_BANKNOTE,
+  banknoteValue,
+});
 
-export const hardwareReady = () => {
-  return {
-    type: HARDWARE_READY,
-  };
-};
+export const hardwareReady = () => ({
+  type: HARDWARE_READY,
+});
 
-export const openAlertMessage = (data) => {
-  return {
-    type: OPEN_ALERT_MESSAGE,
-    data
-  };
-};
+export const openAlertMessage = data => ({
+  type: OPEN_ALERT_MESSAGE,
+  data,
+});
 
-export const closeAlertMessage = () => {
-  return {
-    type: CLOSE_ALERT_MESSAGE,
-  };
-};
+export const closeAlertMessage = () => ({
+  type: CLOSE_ALERT_MESSAGE,
+});
 
-export const activateMoneyBox = () => {
-  return {
-    type: ACTIVE_MONEY_BOX,
-  };
-};
+export const activateMoneyBox = () => ({
+  type: ACTIVE_MONEY_BOX,
+});
 
-export const deactivateMoneyBox = () => {
-  return {
-    type: DEACTIVE_MONEY_BOX,
-  };
-};
+export const deactivateMoneyBox = () => ({
+  type: DEACTIVE_MONEY_BOX,
+});
 
-export const showLoading = (message) => {
-  return {
-    type: SHOW_LOADING,
-    message
-  };
-};
+export const showLoading = message => ({
+  type: SHOW_LOADING,
+  message,
+});
 
-export const hideLoading = () => {
-  return {
-    type: HIDE_LOADING,
-  };
-};
+export const hideLoading = () => ({
+  type: HIDE_LOADING,
+});
 
-export const setFooterAds = (ads) => {
-  return {
-    type: SET_FOOTER_ADS,
-    ads,
-  };
-};
+export const setFooterAds = ads => ({
+  type: SET_FOOTER_ADS,
+  ads,
+});
 
-export const resetFooterAds = () => {
-  return {
-    type: RESET_FOOTER_ADS
-  };
-};
+export const resetFooterAds = () => ({
+  type: RESET_FOOTER_ADS,
+});
 
-export const setFlagUseDiscountInstantly = () => {
-  return {
-    type: USE_DISCOUNT_INSTANTLY
-  };
-};
+export const setFlagUseDiscountInstantly = () => ({
+  type: USE_DISCOUNT_INSTANTLY,
+});
 
-export const clearInstantlyDiscount = () => {
-  return {
-    type: CLEAR_INSTANTLY_DISCOUNT
-  };
-};
+export const clearInstantlyDiscount = () => ({
+  type: CLEAR_INSTANTLY_DISCOUNT,
+});
 
-export const setBaseAds = (ads) => {
-  return {
-    type: SET_BASE_ADS,
-    ads
-  };
-};
+export const setBaseAds = ads => ({
+  type: SET_BASE_ADS,
+  ads,
+});
 
-export const setActivityFreeRule = ({ rule }) => {
-  return {
-    type: SET_ACTIVITY_FREE_RULE,
-    rule
-  };
-};
+export const setActivityFreeRule = ({ rule }) => ({
+  type: SET_ACTIVITY_FREE_RULE,
+  rule,
+});
 
-export const switchLanguageTo = (lang) => {
-  return {
-    type: SWITCH_LANGUAGE_TO,
-    lang
-  }
-}
+export const switchLanguageTo = lang => ({
+  type: SWITCH_LANGUAGE_TO,
+  lang,
+});
 
-export const updateEventReward = ({ cuid }, discount) => {
-  return {
-    type: EVENT_UPDATE_REWARD_DISCOUNT,
-    cuid,
-    discount
-  };
-};
+export const updateEventReward = ({ cuid }, discount) => ({
+  type: EVENT_UPDATE_REWARD_DISCOUNT,
+  cuid,
+  discount,
+});
 
-export const removeProductFromOrder = (product) => {
-  return {
-    type: ORDER_PRODUCT_REMOVE,
-    product
-  };
-};
+export const removeProductFromOrder = product => ({
+  type: ORDER_PRODUCT_REMOVE,
+  product,
+});
+
+export const hardwareStartProcess = key => ({
+  type: HARDWARE_START_PROCESS,
+  key,
+});
+
+export const hardwareFinishProcess = () => ({
+  type: HARDWARE_FINISH_PROCESS,
+});
