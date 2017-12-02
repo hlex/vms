@@ -30,6 +30,7 @@ import OrderSelector from '../../../selectors/order';
 const mapStateToProps = state => {
   return {
     ...state.payment,
+    moneyBoxActive: MasterappSelector.verifyIsMoneyBoxActive(state.masterapp),
     canChangeCash: state.masterapp.canChangeCash,
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     summaryList: RootSelector.getPaymentSummaryList(state),
@@ -71,17 +72,23 @@ class PaymentPage extends PureComponent {
   }
 
   renderContent = () => {
-    const { baseURL, isLoading, isFinish, summaryList, canChangeCash } = this.props;
+    const { moneyBoxActive, baseURL, isLoading, isFinish, summaryList, canChangeCash } = this.props;
     // const isFinish = true;
-    if (isFinish) return <Thankyou baseURL={baseURL} />;
-    if (isLoading) return <Loading baseURL={baseURL} />;
-    return (
-      <PaymentConfirmation
-        baseURL={baseURL}
-        summaryList={summaryList}
-        canChangeCash={canChangeCash}
-      />
-    );
+    if (moneyBoxActive) {
+      if (isFinish) return <Thankyou baseURL={baseURL} />;
+      if (isLoading) return <Loading baseURL={baseURL} />;
+      return (
+        <PaymentConfirmation
+          baseURL={baseURL}
+          summaryList={summaryList}
+          canChangeCash={canChangeCash}
+        />
+      );
+    }
+    if (isFinish) {
+      return <Thankyou baseURL={baseURL} />;
+    }
+    return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />
   }
 
   renderTitle = () => {
@@ -96,7 +103,7 @@ class PaymentPage extends PureComponent {
   }
 
   render() {
-    const { baseURL, isLoading, isFinish } = this.props;
+    const { moneyBoxActivel baseURL, isLoading, isFinish } = this.props;
     const canBack = !isLoading && !isFinish;
     return (
       <div>
@@ -110,7 +117,7 @@ class PaymentPage extends PureComponent {
             this.renderContent()
           }
           {
-            canBack &&
+            moneyBoxActive && canBack &&
             <FooterAction />
           }
         </Layout.Content>
