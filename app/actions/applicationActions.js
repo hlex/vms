@@ -1084,6 +1084,7 @@ export const initMobileTopupPage = () => {
 
 export const initPaymentPage = () => {
   return (dispatch, getState) => {
+    dispatch(runFlowCashInserted());
     const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
     // if mount with moneyBoxActive not active enable money box
     if (!moneyBoxActive) {
