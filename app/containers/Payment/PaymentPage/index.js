@@ -103,7 +103,7 @@ class PaymentPage extends PureComponent {
   }
 
   render() {
-    const { moneyBoxActivel baseURL, isLoading, isFinish } = this.props;
+    const { moneyBoxActive, baseURL, isLoading, isFinish } = this.props;
     const canBack = !isLoading && !isFinish;
     return (
       <div>
