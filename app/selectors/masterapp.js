@@ -13,6 +13,17 @@ const verifyIsMoneyBoxActive = state => state.moneyBoxActive;
 const verifyIsLoading = state => state.loading.show;
 const getActivityFreeRule = state => state.activityFreeRule;
 const getLanguage = state => state.lang;
+const getHardwareProcessing = state => state.hardwareProcessing;
+const verifyIsHardwareProcessing = createSelector(
+  [
+    getHardwareProcessing
+  ],
+  (
+    hardwareProcessing
+  ) => {
+    return hardwareProcessing !== '';
+  }
+);
 const verifyIsDroppingFreeProduct = createSelector(
   [
     getDroppingProduct,
@@ -36,5 +47,7 @@ export default {
   verifyIsLoading,
   getActivityFreeRule,
   verifyIsDroppingFreeProduct,
-  getLanguage
+  getLanguage,
+  getHardwareProcessing,
+  verifyIsHardwareProcessing
 };

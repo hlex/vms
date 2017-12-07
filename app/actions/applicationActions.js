@@ -308,19 +308,21 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       break;
     case 'ENABLE_MONEY_BOX_SUCCESS':
       // Do nothing
-      setTimeout(() => {
-        dispatch(activateMoneyBox());
-      }, 2000);
+      dispatch(activateMoneyBox());
+      dispatch(Actions.hardwareStartProcess(''));
       retryNo = 0;
       break;
     case 'ENABLE_MONEY_BOX_FAIL':
-      dispatch(enableMoneyBox());
+      setTimeout(() => {
+        dispatch(enableMoneyBox());
+      }, 1000);
       break;
     case 'DISABLE_MONEY_BOX_SUCCESS':
       setTimeout(() => {
         dispatch(sendCashChangeToServer());
-        dispatch(deactivateMoneyBox());
-      }, 2000);
+      }, 1000);
+      dispatch(deactivateMoneyBox());
+      dispatch(Actions.hardwareStartProcess(''));
       retryNo = 0;
       break;
     case 'DISABLE_MONEY_BOX_FAIL':
@@ -332,12 +334,12 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
         if (MasterappSelector.verifyAppReady(getState().masterapp) === false) {
           dispatch(Actions.hardwareReady());
         }
-      }, 2000);
+      }, 1000);
       break;
     case 'CASH_REMAINING_FAIL':
       setTimeout(() => {
         dispatch(getCashRemaining());
-      }, 2000);
+      }, 1000);
       break;
     case 'LIMIT_BANKNOTE_SUCCESS':
       break;
@@ -467,7 +469,11 @@ export const clearOrder = () => dispatch => {
   dispatch(Actions.clearOrder());
 };
 
-export const backToHome = () => dispatch => {
+export const backToHome = () => (dispatch, getState) => {
+  const isHardwareProcessing = MasterappSelector.verifyIsHardwareProcessing(getState().masterapp);
+  if (isHardwareProcessing) {
+    return '';
+  }
   dispatch(changePage(''));
   // ======================================================
   // Clear many stuffs
