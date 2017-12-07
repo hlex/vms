@@ -81,6 +81,8 @@ import {
 let cmdNo = 0;
 let retryNo = 0;
 
+var resetTimer;
+
 export const getMasterProductAndEventAndPromotions = () => {
   return (dispatch, getState) => {
     return new Promise(async (resolve, reject) => {
@@ -212,9 +214,37 @@ export const initApplication = () => {
       const serviceGetMobileTopupProvidersResponse = await serviceGetMobileTopupProviders();
       const sanitizedMobileTopupProviders = _.map(extractResponseData(serviceGetMobileTopupProvidersResponse), mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider, baseURL));
       dispatch(Actions.receivedMasterdata('topupProviders', sanitizedMobileTopupProviders));
+
+      const resetTimeMS = resetTime * 1000;
+      setTimeout(() => {
+        dispatch(addResetTimer(resetTimeMS));
+      }, 10000);
     } catch (error) {
       console.error(error);
     }
+  };
+};
+
+const addResetTimer = (resetTimeMS) => {
+  const addResetTime = (callback) => {
+    // console.log('--- START RESET TIME ---', resetTimer);
+    return window.setInterval(() => {
+      // console.log('--- DO RESET --- ', resetTimer);
+      callback();
+    }, resetTimeMS);
+  };
+  return (dispatch) => {
+    resetTimer = addResetTime(() => {
+      dispatch(backToHome());
+    });
+    // console.log('resetTimer', resetTimer);
+    document.addEventListener('click', () => {
+      window.clearInterval(resetTimer);
+      // console.log('--- CLS RESET TIME --- ', resetTimer);
+      resetTimer = addResetTime(() => {
+        dispatch(backToHome());
+      });
+    });
   };
 };
 
