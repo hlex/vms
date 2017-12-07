@@ -114,7 +114,10 @@ class PaymentPage extends PureComponent {
         </Layout.Title>
         <Layout.Content>
           {
-            this.renderContent()
+            !moneyBoxActive && <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />
+          }
+          {
+            moneyBoxActive && this.renderContent()
           }
           {
             moneyBoxActive && canBack &&
