@@ -9,21 +9,6 @@ import PromotionSetCardItem from '../PromotionSetCardItem';
 import EventItem from '../EventItem';
 import TopUpProviderItem from '../TopUpProviderItem';
 
-// ======================================================
-// Slick
-// ======================================================
-const productSettings = {
-  dots: false,
-  speed: 500,
-  autoplay: false,
-  infinite: true,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-  autoplaySpeed: 10000,
-  nextArrow: false,
-  prevArrow: false,
-};
-
 const path = 'http://localhost:8888/vms/html-v2';
 
 const getPaginatedItems = (items, page = 1, perPage) => {
@@ -287,6 +272,20 @@ class ProductItems extends PureComponent {
         }
       });
     }
+    // ======================================================
+    // Slick
+    // ======================================================
+    const productSettings = {
+      dots: false,
+      speed: 500,
+      autoplay: true,
+      infinite: true,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      autoplaySpeed: 10000,
+      nextArrow: false,
+      prevArrow: false,
+    };
     return (
       <div style={{ position: 'relative' }}>
         <Slider ref={c => (this.slider = c)} {...productSettings}>
