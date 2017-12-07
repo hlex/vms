@@ -118,7 +118,7 @@ class EventPlayPage extends Component {
         <img alt="line" src={lineId} />
         <div className="desc">
           <h2>กรุณาแสกน LINE QR CODE</h2>
-          <p>เมื่อได้รับรหัสส่วนลดแล้ว กดปุ่มทำรายการต่อ</p>
+          <p>เพื่อเพิ่มเพื่อนใน LINE ID และ ทำรายการต่อใน LINE</p>
         </div>
         <a className="button blue submit-button _hidden" onClick={submitPlayEvent}>
           <p className="fade-flash">ทำรายการต่อ </p>
