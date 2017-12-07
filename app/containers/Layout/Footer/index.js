@@ -50,7 +50,7 @@ class Footer extends PureComponent {
 
   shouldHideSignage = () => {
     const { location } = this.props;
-    const blacklist = ['/event', '/product'];
+    const blacklist = ['/event', '/product', '/event/ads'];
     return _.includes(blacklist, location.pathname);
   }
 
