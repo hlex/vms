@@ -15,7 +15,9 @@ import {
   SET_ACTIVITY_FREE_RULE,
   SWITCH_LANGUAGE_TO,
   HARDWARE_START_PROCESS,
-  HARDWARE_FINISH_PROCESS
+  HARDWARE_FINISH_PROCESS,
+  SETTING_SET_AUTOPLAY_TIME,
+  SETTING_SET_RESET_TIME,
 } from '../actions/actionTypes';
 
 const cloudURL = 'http://27.254.160.247:81';
@@ -72,7 +74,9 @@ const initialState = {
   },
   activityFreeRule: 'ALL',
   lang: 'th',
-  hardwareProcessing: ''
+  hardwareProcessing: '',
+  resetTime: 0,
+  autoplayTime: 10,
 };
 
 export default (state = initialState, action) => {
@@ -173,6 +177,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         hardwareProcessing: ''
+      };
+    case SETTING_SET_AUTOPLAY_TIME:
+      return {
+        ...state,
+        autoplayTime: action.autoplayTime
+      };
+    case SETTING_SET_RESET_TIME:
+      return {
+        ...state,
+        resetTime: action.resetTime
       };
     default:
       return state;

@@ -1105,3 +1105,26 @@ export const serviceGetMainMenu = () => {
     return response;
   });
 };
+
+
+export const serviceGetSetting = () => {
+  const data = {
+    vtype: 'setting',
+  };
+  // return new Promise((resolve, reject) => {
+  //   const response = {
+  //     status: 'SUCCESSFUL',
+  //     'trx-id': '20171116204950',
+  //     'response-data': {
+  //       rule: 'ALL',
+  //     },
+  //   };
+  //   setTimeout(() => {
+  //     resolve(response);
+  //   }, 100);
+  // });
+  return fetchFacade(`${URL.getActivityFreeRule}${convertToURLParam(data)}`).then((response) => {
+    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return response;
+  });
+};

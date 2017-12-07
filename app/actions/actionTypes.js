@@ -42,6 +42,8 @@ export const SET_ACTIVITY_FREE_RULE = 'SET_ACTIVITY_FREE_RULE';
 export const SWITCH_LANGUAGE_TO = 'SWITCH_LANGUAGE_TO';
 export const EVENT_UPDATE_REWARD_DISCOUNT = 'EVENT_UPDATE_REWARD_DISCOUNT';
 export const ORDER_PRODUCT_REMOVE = 'ORDER_PRODUCT_REMOVE';
+export const SETTING_SET_AUTOPLAY_TIME = 'SETTING_SET_AUTOPLAY_TIME';
+export const SETTING_SET_RESET_TIME = 'SETTING_SET_RESET_TIME';
 // ======================================================
 // TCP
 // ======================================================

@@ -70,14 +70,13 @@ import {
   serviceGetEventSteps,
   serviceGetMobileTopupSteps,
   serviceGetMainMenu,
+  serviceGetSetting
 } from '../apis/masterdata';
 import {
   serviceGetEventReward,
   verifyBarcodeOrQrcode,
-  verifyLineQrcode,
-  getActivityFreeRule
+  verifyLineQrcode
 } from '../apis/event';
-import { setTimeout } from 'timers';
 
 let cmdNo = 0;
 let retryNo = 0;
@@ -186,9 +185,14 @@ export const initApplication = () => {
       // ======================================================
       // ACTIVITY FREE
       // ======================================================
-      const getActivityFreeRuleResponse = await getActivityFreeRule();
-      const activityFreeRule = extractResponseData(getActivityFreeRuleResponse);
+      const getSettingResponse = await serviceGetSetting();
+      const settingResponse = extractResponseData(getSettingResponse);
+      const activityFreeRule = _.get(settingResponse, 'rule', '');
+      const resetTime = _.get(settingResponse, 'resetTime', 60);
+      const autoplayTime = _.get(settingResponse, 'autoplayTime', 10);
       dispatch(Actions.setActivityFreeRule(activityFreeRule));
+      dispatch(Actions.setResetTime(resetTime));
+      dispatch(Actions.autoplayTime(autoplayTime));
       // ======================================================
       // ADS
       // ======================================================

@@ -47,7 +47,9 @@ import {
   EVENT_UPDATE_REWARD_DISCOUNT,
   ORDER_PRODUCT_REMOVE,
   HARDWARE_START_PROCESS,
-  HARDWARE_FINISH_PROCESS
+  HARDWARE_FINISH_PROCESS,
+  SETTING_SET_RESET_TIME,
+  SETTING_SET_AUTOPLAY_TIME
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
@@ -250,7 +252,7 @@ export const setBaseAds = ads => ({
   ads,
 });
 
-export const setActivityFreeRule = ({ rule }) => ({
+export const setActivityFreeRule = (rule) => ({
   type: SET_ACTIVITY_FREE_RULE,
   rule,
 });
@@ -278,4 +280,14 @@ export const hardwareStartProcess = key => ({
 
 export const hardwareFinishProcess = () => ({
   type: HARDWARE_FINISH_PROCESS,
+});
+
+export const setResetTime = (second) => ({
+  type: SETTING_SET_RESET_TIME,
+  resetTime: second
+});
+
+export const autoplayTime = (second) => ({
+  type: SETTING_SET_AUTOPLAY_TIME,
+  autoplayTime: second
 });
