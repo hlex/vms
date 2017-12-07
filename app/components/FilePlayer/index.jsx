@@ -7,6 +7,7 @@ class FilePlayer extends Component {
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
     type: PropTypes.string,
+    muted: PropTypes.bool,
     onTicked: PropTypes.func,
     onEnded: PropTypes.func,
     duration: PropTypes.number.isRequired,
@@ -14,6 +15,7 @@ class FilePlayer extends Component {
   static defaultProps = {
     key: Date.now(),
     type: 'video',
+    muted: false,
     onEnded: () => null,
   }
 
@@ -56,11 +58,12 @@ class FilePlayer extends Component {
       type,
       width,
       height,
+      muted,
     } = this.props;
     if (type === 'video') {
       return (
         <div className="react-fileplayer" key={key}>
-          <video id={this.state.id} width={width} height={height} className="cg-video" autoPlay>
+          <video id={this.state.id} width={width} height={height} className="cg-video" autoPlay muted={muted}>
             <source src={`${src}`} type="video/mp4" />
           </video>
         </div>
