@@ -38,7 +38,7 @@ export default class InputWithPad extends PureComponent {
 
   componentDidMount = () => {
     this.setState({
-      validationMessage: this.handleValidateInput(this.state.inputValue)
+      validationMessage: ''
     });
   }
 
@@ -81,7 +81,7 @@ export default class InputWithPad extends PureComponent {
     const nextValue = `${this.state.inputValue}${char}`;
     this.setState({
       inputValue: nextValue,
-      validationMessage: this.handleValidateInput(nextValue),
+      validationMessage: '',
     });
   };
 
@@ -90,18 +90,23 @@ export default class InputWithPad extends PureComponent {
     const nextValue = inputValue.substring(0, inputValue.length - 1);
     this.setState({
       inputValue: nextValue,
-      validationMessage: this.handleValidateInput(),
+      validationMessage: '',
     });
   };
 
   handleSelectConfirm = () => {
     const { onConfirm } = this.props;
-    const { validationMessage } = this.state;
+    const { inputValue } = this.state;
+    const validationMessage = this.handleValidateInput(inputValue);
     if (validationMessage === '') {
       onConfirm(this.state.inputValue);
       this.setState({
         inputValue: '',
         show: false
+      });
+    } else {
+      this.setState({
+        validationMessage
       });
     }
   };
