@@ -159,6 +159,7 @@ class ProductItems extends PureComponent {
 
   render() {
     const {
+      autoplayTime,
       promotionSets,
       products,
       events,
@@ -282,7 +283,7 @@ class ProductItems extends PureComponent {
       infinite: true,
       slidesToShow: 1,
       slidesToScroll: 1,
-      autoplaySpeed: 10000,
+      autoplaySpeed: autoplayTime * 1000,
       nextArrow: false,
       prevArrow: false,
     };

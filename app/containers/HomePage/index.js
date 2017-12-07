@@ -42,7 +42,8 @@ const mapStateToProps = state => ({
   mobileTopupProviders: MasterdataSelector.getTopupProviders(state.masterdata),
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
   temp: MasterappSelector.getTemp(state.masterapp),
-  lang: MasterappSelector.getLanguage(state.masterapp)
+  lang: MasterappSelector.getLanguage(state.masterapp),
+  autoplayTime: MasterappSelector.getAutoplayTime(state.masterapp)
 });
 
 const actions = {
@@ -101,7 +102,7 @@ class HomePage extends Component {
   }
 
   render() {
-    console.log('HomePage@render', this.props);
+    console.log('HomePage@render', this.props, this.props.autoplayTime);
     const {
       lang,
       navMenus,
@@ -112,6 +113,7 @@ class HomePage extends Component {
       changePage,
       selectProduct,
       baseURL,
+      autoplayTime,
     } = this.props;
     return (
       <div className="homepage">
@@ -145,6 +147,7 @@ class HomePage extends Component {
         </div>
         <div className="content-panel">
           <ProductItems
+            autoplayTime={autoplayTime}
             height={815}
             promotionSets={promotionSets}
             products={products}

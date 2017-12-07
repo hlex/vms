@@ -14,6 +14,7 @@ const verifyIsLoading = state => state.loading.show;
 const getActivityFreeRule = state => state.activityFreeRule;
 const getLanguage = state => state.lang;
 const getHardwareProcessing = state => state.hardwareProcessing;
+const getAutoplayTime = state => state.autoplayTime;
 const verifyIsHardwareProcessing = createSelector(
   [
     getHardwareProcessing
@@ -49,5 +50,6 @@ export default {
   verifyIsDroppingFreeProduct,
   getLanguage,
   getHardwareProcessing,
-  verifyIsHardwareProcessing
+  verifyIsHardwareProcessing,
+  getAutoplayTime
 };

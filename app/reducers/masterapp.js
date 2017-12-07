@@ -76,7 +76,7 @@ const initialState = {
   lang: 'th',
   hardwareProcessing: '',
   resetTime: 0,
-  autoplayTime: 10,
+  autoplayTime: 3,
 };
 
 export default (state = initialState, action) => {
