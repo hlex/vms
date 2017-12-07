@@ -440,7 +440,7 @@ const toSubmitOrder = createSelector(
         break;
     }
     if (isEventOrder) {
-      id = selectedEvent.id;
+      id = selectedEvent.eventId;
       saleType = 'Activities';
       barcode = _.find(eventInputs, input => input.name === 'BARCODE' || input.name === 'QR_CODE').value || '';
       lineQrcode = _.find(eventInputs, input => input.name === 'LINE_QR_CODE').value || '';
