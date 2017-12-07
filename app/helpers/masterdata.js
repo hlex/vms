@@ -129,7 +129,7 @@ export const convertToAppAd = (ad) => {
     expire: '', // '2026-11-21',
     timeout: Number(second) * 1000,
     checksum: '', // '47e93aec13f7c9115ebbcfaacb309ccd',
-    adSize: 'STRIP', // ad.Ad_Display === 'F' ? 'FULLSCREEN' : 'STRIP',
+    adSize: ad.Ad_Display === 'F' ? 'FULLSCREEN' : 'STRIP',
   };
   // return {
   //   cuid: cuid(),
