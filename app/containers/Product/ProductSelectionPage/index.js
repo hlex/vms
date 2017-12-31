@@ -5,6 +5,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import _ from 'lodash';
 // ======================================================
+// Hoc
+// ======================================================
+import { withAudio } from '../../../hoc/withAudio';
+// ======================================================
 // Components
 // ======================================================
 import { AudioPlayer, Layout, ProductItems } from '../../../components';
@@ -84,12 +88,6 @@ class ProductSelectionPage extends Component {
     const { lang, productSteps, products, promotionSets, selectProduct, back, baseURL } = this.props;
     return (
       <div>
-        <AudioPlayer
-          src={'http://localhost:8888/vms/html-v2/voice/2.m4a'}
-          autoPlay
-          muted={false}
-          interval={5000}
-        />
         <Layout.Subheader>
           <div className="title-section">
             <div className="title">
@@ -129,4 +127,4 @@ class ProductSelectionPage extends Component {
   }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProductSelectionPage));
+export default withRouter(withAudio({ src: 'http://localhost:8888/vms/html-v2/voice/2.m4a' })(connect(mapStateToProps, mapDispatchToProps)(ProductSelectionPage)));
