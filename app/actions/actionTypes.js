@@ -44,6 +44,8 @@ export const EVENT_UPDATE_REWARD_DISCOUNT = 'EVENT_UPDATE_REWARD_DISCOUNT';
 export const ORDER_PRODUCT_REMOVE = 'ORDER_PRODUCT_REMOVE';
 export const SETTING_SET_AUTOPLAY_TIME = 'SETTING_SET_AUTOPLAY_TIME';
 export const SETTING_SET_RESET_TIME = 'SETTING_SET_RESET_TIME';
+export const AUDIO_STARTED = 'AUDIO_STARTED';
+export const AUDIO_ENDED = 'AUDIO_END';
 // ======================================================
 // TCP
 // ======================================================

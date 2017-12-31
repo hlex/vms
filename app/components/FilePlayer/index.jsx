@@ -25,20 +25,13 @@ class FilePlayer extends Component {
   }
 
   componentDidMount = () => {
-    const { onEnded, src, duration } = this.props;
+    const { duration } = this.props;
     this.timer1 = setInterval(this.tick, 1000);
     this.timer2 = setInterval(this.alarm, Number(duration * 1000));
-    // document.getElementById(`${this.state.id}`).addEventListener('ended', () => {
-    //   onEnded(src);
-    // });
   }
   componentWillUnmount = () => {
-    const { onEnded, src } = this.props;
     clearInterval(this.timer1);
     clearInterval(this.timer2);
-    // document.getElementById(`${this.state.id}`).removeEventListener('ended', () => {
-    //   onEnded(src);
-    // });
   }
   tick = () => {
     const { onTicked } = this.props;

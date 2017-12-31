@@ -14,10 +14,12 @@ class MediaPlayer extends Component {
     height: PropTypes.number.isRequired,
     onTicked: PropTypes.func,
     onEnded: PropTypes.func,
+    muted: PropTypes.bool,
   };
   static defaultProps = {
     onTicked: () => null,
-    onEnded: () => null
+    onEnded: () => null,
+    muted: false
   }
   state = {
     index: 0,
@@ -29,8 +31,9 @@ class MediaPlayer extends Component {
       });
     }
   }
-  shouldComponentUpdate = () => {
-    const { playerKey } = this.props;
+  shouldComponentUpdate = (nextProps) => {
+    const { playerKey, muted } = this.props;
+    console.log('MUTED', nextProps.muted, muted);
     return playerKey === undefined;
   }
   handlePlayerEnded = () => {
@@ -59,9 +62,9 @@ class MediaPlayer extends Component {
   }
   render = () => {
     // console.debug('MediaPlayer:state', this.state);
-    // console.debug('MediaPlayer:props', this.props);
+    console.debug('MediaPlayer:props', this.props);
     const { index } = this.state;
-    const { width, height, sources, playerKey } = this.props;
+    const { width, height, sources, playerKey, muted } = this.props;
     // -----------------------------
     const currentMedia = _.get(sources, `${index}`, {});
     const { type, src, duration } = currentMedia;
@@ -85,6 +88,7 @@ class MediaPlayer extends Component {
           type={type}
           onTicked={() => this.props.onTicked()}
           onEnded={() => this.handlePlayerEnded()}
+          muted={muted}
         />
       </div>
     );

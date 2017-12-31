@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-
+import _ from 'lodash';
 // ======================================================
 // Components
 // ======================================================
@@ -17,6 +17,7 @@ const mapStateToProps = (state) => {
   return {
     footerAds: state.ads.footerAds,
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
+    mutedAds: MasterappSelector.getMuteAds(state.masterapp),
   };
 };
 
@@ -30,6 +31,7 @@ class Footer extends PureComponent {
   static propTypes = {
     location: PropTypes.shape({}).isRequired,
     footerAds: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    mutedAds: PropTypes.bool.isRequired,
   }
 
   shouldComponentUpdate = (nextProps) => {
@@ -57,7 +59,8 @@ class Footer extends PureComponent {
   render() {
     console.log(this);
     const {
-      footerAds
+      footerAds,
+      mutedAds
     } = this.props;
     return (
       <div className="footer-section">
@@ -71,6 +74,7 @@ class Footer extends PureComponent {
               width={1080}
               height={610}
               sources={footerAds}
+              muted={mutedAds}
             />
           </div>
         }

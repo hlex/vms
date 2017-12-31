@@ -1367,3 +1367,15 @@ export const switchLanguageTo = (lang) => {
     dispatch(Actions.switchLanguageTo(lang));
   };
 };
+
+export const endedAudio = () => {
+  return (dispatch) => {
+    dispatch(Actions.endedAudio());
+  };
+};
+
+export const startedAudio = () => {
+  return (dispatch) => {
+    dispatch(Actions.startedAudio());
+  };
+};

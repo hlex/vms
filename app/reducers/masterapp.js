@@ -18,6 +18,9 @@ import {
   HARDWARE_FINISH_PROCESS,
   SETTING_SET_AUTOPLAY_TIME,
   SETTING_SET_RESET_TIME,
+  AUDIO_STARTED,
+  AUDIO_ENDED,
+  SET_VOICE_INTERVAL
 } from '../actions/actionTypes';
 
 const cloudURL = 'http://27.254.160.247:81';
@@ -77,6 +80,8 @@ const initialState = {
   hardwareProcessing: '',
   resetTime: 0,
   autoplayTime: 3,
+  mutedAds: false,
+  voiceInterval: 5
 };
 
 export default (state = initialState, action) => {
@@ -187,6 +192,21 @@ export default (state = initialState, action) => {
       return {
         ...state,
         resetTime: action.resetTime
+      };
+    case AUDIO_STARTED:
+      return {
+        ...state,
+        mutedAds: true
+      };
+    case AUDIO_ENDED:
+      return {
+        ...state,
+        mutedAds: false
+      };
+    case SET_VOICE_INTERVAL:
+      return {
+        ...state,
+        voiceInterval: action.voiceInterval
       };
     default:
       return state;

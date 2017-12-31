@@ -49,7 +49,9 @@ import {
   HARDWARE_START_PROCESS,
   HARDWARE_FINISH_PROCESS,
   SETTING_SET_RESET_TIME,
-  SETTING_SET_AUTOPLAY_TIME
+  SETTING_SET_AUTOPLAY_TIME,
+  AUDIO_STARTED,
+  AUDIO_ENDED
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
@@ -290,4 +292,12 @@ export const setResetTime = (second) => ({
 export const autoplayTime = (second) => ({
   type: SETTING_SET_AUTOPLAY_TIME,
   autoplayTime: second
+});
+
+export const startedAudio = () => ({
+  type: AUDIO_STARTED,
+});
+
+export const endedAudio = () => ({
+  type: AUDIO_ENDED,
 });

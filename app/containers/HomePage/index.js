@@ -8,7 +8,7 @@ import cuid from 'cuid';
 // ======================================================
 // Components
 // ======================================================
-import { ProductItems } from '../../components';
+import { AudioPlayer, ProductItems } from '../../components';
 // ======================================================
 // Actions
 // ======================================================
@@ -43,7 +43,8 @@ const mapStateToProps = state => ({
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
   temp: MasterappSelector.getTemp(state.masterapp),
   lang: MasterappSelector.getLanguage(state.masterapp),
-  autoplayTime: MasterappSelector.getAutoplayTime(state.masterapp)
+  autoplayTime: MasterappSelector.getAutoplayTime(state.masterapp),
+  mutedAds: MasterappSelector.getMuteAds(state.masterapp),
 });
 
 const actions = {
@@ -114,6 +115,8 @@ class HomePage extends Component {
       selectProduct,
       baseURL,
       autoplayTime,
+      endedAudio,
+      startedAudio,
     } = this.props;
     return (
       <div className="homepage">

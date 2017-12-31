@@ -16,6 +16,7 @@ import EventItem from './EventItem';
 import EventTitle from './EventTitle';
 import MediaPlayer from './MediaPlayer';
 import MobileTopupTitle from './MobileTopupTitle';
+import AudioPlayer from './AudioPlayer';
 
 export {
   PaymentConfirmation,
@@ -36,4 +37,5 @@ export {
   EventTitle,
   MediaPlayer,
   MobileTopupTitle,
+  AudioPlayer
 };
