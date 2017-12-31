@@ -5,7 +5,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import _ from 'lodash';
 import cuid from 'cuid';
-
+// ======================================================
+// Hoc
+// ======================================================
+import { withAudio } from '../../../hoc/withAudio';
 // ======================================================
 // Components
 // ======================================================
@@ -144,4 +147,4 @@ class TopupProviderSelectionPage extends Component {
   }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TopupProviderSelectionPage));
+export default withRouter(withAudio({ src: 'http://localhost:8888/vms/html-v2/voice/6.m4a' })(connect(mapStateToProps, mapDispatchToProps)(TopupProviderSelectionPage)))
