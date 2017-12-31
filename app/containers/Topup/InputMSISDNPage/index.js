@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+// ======================================================
+// Hoc
+// ======================================================
+import { withAudio } from '../../../hoc/withAudio';
 // ======================================================
 // Containers
 // ======================================================
@@ -97,4 +100,4 @@ class InputMSISDNPage extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(InputMSISDNPage);
+export default withAudio({ src: 'http://localhost:8888/vms/html-v2/voice/7.m4a' })(connect(mapStateToProps, mapDispatchToProps)(InputMSISDNPage));
