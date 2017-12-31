@@ -7,7 +7,7 @@ import _ from 'lodash';
 // ======================================================
 // Components
 // ======================================================
-import { Layout, ProductItems } from '../../../components';
+import { AudioPlayer, Layout, ProductItems } from '../../../components';
 
 // ======================================================
 // Actions
@@ -84,6 +84,12 @@ class ProductSelectionPage extends Component {
     const { lang, productSteps, products, promotionSets, selectProduct, back, baseURL } = this.props;
     return (
       <div>
+        <AudioPlayer
+          src={'http://localhost:8888/vms/html-v2/voice/2.m4a'}
+          autoPlay
+          muted={false}
+          interval={5000}
+        />
         <Layout.Subheader>
           <div className="title-section">
             <div className="title">

@@ -15,6 +15,7 @@ const getActivityFreeRule = state => state.activityFreeRule;
 const getLanguage = state => state.lang;
 const getHardwareProcessing = state => state.hardwareProcessing;
 const getAutoplayTime = state => state.autoplayTime;
+const getMuteAds = state => state.mutedAds;
 const verifyIsHardwareProcessing = createSelector(
   [
     getHardwareProcessing
@@ -51,5 +52,6 @@ export default {
   getLanguage,
   getHardwareProcessing,
   verifyIsHardwareProcessing,
-  getAutoplayTime
+  getAutoplayTime,
+  getMuteAds
 };
