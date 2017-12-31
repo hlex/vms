@@ -17,7 +17,6 @@ const mapStateToProps = (state) => {
   return {
     footerAds: state.ads.footerAds,
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
-    mutedAds: MasterappSelector.getMuteAds(state.masterapp),
   };
 };
 
@@ -31,12 +30,11 @@ class Footer extends PureComponent {
   static propTypes = {
     location: PropTypes.shape({}).isRequired,
     footerAds: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    mutedAds: PropTypes.bool.isRequired,
   }
 
   shouldComponentUpdate = (nextProps) => {
     const { location } = this.props;
-    console.log('=====================================', location.pathname, nextProps.location.pathname);
+    console.log('shouldComponentUpdate => ', location.pathname, nextProps.location.pathname);
     const currentPageIsPayment = location.pathname === '/payment';
     const nextPageIsPayment = nextProps.location.pathname === '/payment';
     const currentPageIsMobileTopupProviderSelection = '/topup';
@@ -50,6 +48,15 @@ class Footer extends PureComponent {
     return true;
   }
 
+  shouldMuted = () => {
+    const { location } = this.props;
+    const url = location.pathname;
+    const currentPageIsHome = url === '/';
+    const muted = !currentPageIsHome;
+    console.log('shouldMuted => ', url, muted);
+    return muted;
+  }
+
   shouldHideSignage = () => {
     const { location } = this.props;
     const blacklist = ['/event', '/product', '/event/ads'];
@@ -60,7 +67,6 @@ class Footer extends PureComponent {
     console.log(this);
     const {
       footerAds,
-      mutedAds
     } = this.props;
     return (
       <div className="footer-section">
@@ -74,7 +80,7 @@ class Footer extends PureComponent {
               width={1080}
               height={610}
               sources={footerAds}
-              muted={mutedAds}
+              muted={this.shouldMuted()}
             />
           </div>
         }
