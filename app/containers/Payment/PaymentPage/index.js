@@ -2,17 +2,27 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+// ======================================================
+// Hoc
+// ======================================================
+import { withAudio } from '../../../hoc/withAudio';
 // ======================================================
 // Containers
 // ======================================================
 import Layout from '../../Layout';
+import ThankyouPage from '../../ThankyouPage';
 import { FooterAction } from '../../Utils';
 
 // ======================================================
 // Components
 // ======================================================
-import { MobileTopupTitle, ProductTitle, PromotionSetTitle, PaymentConfirmation, Loading, Thankyou } from '../../../components';
+import {
+  MobileTopupTitle,
+  ProductTitle,
+  PromotionSetTitle,
+  PaymentConfirmation,
+  Loading
+} from '../../../components';
 
 // ======================================================
 // Actions
@@ -27,21 +37,19 @@ import RootSelector from '../../../selectors/root';
 import MasterappSelector from '../../../selectors/masterapp';
 import OrderSelector from '../../../selectors/order';
 
-const mapStateToProps = state => {
-  return {
-    ...state.payment,
-    moneyBoxActive: MasterappSelector.verifyIsMoneyBoxActive(state.masterapp),
-    canChangeCash: state.masterapp.canChangeCash,
-    baseURL: MasterappSelector.getBaseURL(state.masterapp),
-    summaryList: RootSelector.getPaymentSummaryList(state),
-    paymentBgImage: OrderSelector.getPaymentBgImage(state.order),
-    orderType: OrderSelector.getOrderType(state.order)
-  };
-};
+const mapStateToProps = state => ({
+  ...state.payment,
+  moneyBoxActive: MasterappSelector.verifyIsMoneyBoxActive(state.masterapp),
+  canChangeCash: state.masterapp.canChangeCash,
+  baseURL: MasterappSelector.getBaseURL(state.masterapp),
+  summaryList: RootSelector.getPaymentSummaryList(state),
+  paymentBgImage: OrderSelector.getPaymentBgImage(state.order),
+  orderType: OrderSelector.getOrderType(state.order)
+});
 
 const actions = {
   ...ApplicationActions,
-  ...Actions,
+  ...Actions
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
@@ -56,26 +64,26 @@ class PaymentPage extends PureComponent {
     initPaymentPage: PropTypes.func.isRequired,
     canChangeCash: PropTypes.bool.isRequired,
     orderType: PropTypes.string,
-    paymentBgImage: PropTypes.string,
+    paymentBgImage: PropTypes.string
   };
 
   componentDidMount = () => {
     const { initPaymentPage } = this.props;
     initPaymentPage();
-  }
+  };
 
   componentWillUnmount = () => {
     const { returnAllInsertCash } = this.props;
     console.log('outPaymentPage !!!!');
     // if unmount return
     returnAllInsertCash();
-  }
+  };
 
   renderContent = () => {
     const { moneyBoxActive, baseURL, isLoading, isFinish, summaryList, canChangeCash } = this.props;
     // const isFinish = true;
     if (moneyBoxActive) {
-      if (isFinish) return <Thankyou baseURL={baseURL} />;
+      if (isFinish) return <ThankyouPage baseURL={baseURL} />;
       if (isLoading) return <Loading baseURL={baseURL} />;
       return (
         <PaymentConfirmation
@@ -86,10 +94,10 @@ class PaymentPage extends PureComponent {
       );
     }
     if (isFinish) {
-      return <Thankyou baseURL={baseURL} />;
+      return <ThankyouPage baseURL={baseURL} />;
     }
-    return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />
-  }
+    return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />;
+  };
 
   renderTitle = () => {
     const { baseURL, orderType, paymentBgImage } = this.props;
@@ -100,33 +108,24 @@ class PaymentPage extends PureComponent {
       return <MobileTopupTitle baseURL={baseURL} bgImage={paymentBgImage} />;
     }
     return <ProductTitle baseURL={baseURL} bgImage={paymentBgImage} />;
-  }
+  };
 
   render() {
     const { moneyBoxActive, baseURL, isLoading, isFinish } = this.props;
     const canBack = !isLoading && !isFinish;
     return (
       <div>
-        <Layout.Title>
-          {
-            this.renderTitle()
-          }
-        </Layout.Title>
+        <Layout.Title>{this.renderTitle()}</Layout.Title>
         <Layout.Content>
-          {
-            !moneyBoxActive && <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />
-          }
-          {
-            moneyBoxActive && this.renderContent()
-          }
-          {
-            moneyBoxActive && canBack &&
-            <FooterAction />
-          }
+          {!moneyBoxActive && <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />}
+          {moneyBoxActive && this.renderContent()}
+          {moneyBoxActive && canBack && <FooterAction />}
         </Layout.Content>
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PaymentPage);
+export default withAudio({ src: 'http://localhost:8888/vms/html-v2/voice/4.m4a' })(
+  connect(mapStateToProps, mapDispatchToProps)(PaymentPage)
+);
