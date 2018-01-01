@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import cuid from 'cuid';
-
+// ======================================================
+// Hoc
+// ======================================================
+import { withAudio } from '../../../hoc/withAudio';
 // ======================================================
 // Containers
 // ======================================================
@@ -148,4 +151,4 @@ class SelectTopupValuePage extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SelectTopupValuePage);
+export default withAudio({ src: 'http://localhost:8888/vms/html-v2/voice/8.1.m4a' })(connect(mapStateToProps, mapDispatchToProps)(SelectTopupValuePage))
