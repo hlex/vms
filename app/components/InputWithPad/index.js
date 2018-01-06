@@ -18,6 +18,7 @@ export default class InputWithPad extends PureComponent {
     value: PropTypes.string,
     rules: PropTypes.shape({}),
     onConfirm: PropTypes.func,
+    onValidationError: PropTypes.func,
     isFixed: PropTypes.bool,
   };
 
@@ -26,6 +27,7 @@ export default class InputWithPad extends PureComponent {
     type: 'num', // 'keyboard'
     value: '',
     onConfirm: () => console.log('Please send any onConfirm(inputValue)'),
+    onValidationError: () => console.log('Please send any onValidationError()'),
     rules: {},
     isFixed: false
   };
@@ -95,7 +97,7 @@ export default class InputWithPad extends PureComponent {
   };
 
   handleSelectConfirm = () => {
-    const { onConfirm } = this.props;
+    const { onConfirm, onValidationError } = this.props;
     const { inputValue } = this.state;
     const validationMessage = this.handleValidateInput(inputValue);
     if (validationMessage === '') {
@@ -105,6 +107,7 @@ export default class InputWithPad extends PureComponent {
         show: false
       });
     } else {
+      onValidationError();
       this.setState({
         validationMessage
       });
