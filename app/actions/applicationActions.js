@@ -86,13 +86,13 @@ var resetTimer;
 export const getMasterProductAndEventAndPromotions = () => {
   return (dispatch, getState) => {
     return new Promise(async (resolve, reject) => {
-      const baseURL = 'http://localhost:8888/vms/html-v2'; // MasterappSelector.getBaseURL(getState().masterapp);
+      const fileURL = MasterappSelector.getLocalURL(getState().masterapp);
       // ======================================================
       // PRODUCTS
       // ======================================================
       const serviceGetProductsResponse = await serviceGetProducts();
       const sanitizedProducts = _.map(extractResponseData(serviceGetProductsResponse), (product) => {
-        return convertToAppProduct(product, baseURL);
+        return convertToAppProduct(product, fileURL);
       });
       // ======================================================
       // Grouped PoId
@@ -130,7 +130,7 @@ export const getMasterProductAndEventAndPromotions = () => {
       // EVENTS
       // ======================================================
       const serviceGetEventsResponse = await serviceGetEvents();
-      const sanitizedEvents = _.map(extractResponseData(serviceGetEventsResponse), event => convertToAppEvent(event, baseURL));
+      const sanitizedEvents = _.map(extractResponseData(serviceGetEventsResponse), event => convertToAppEvent(event, fileURL));
       const eventsWhichMorphEventProductToMasterProduct = _.map(sanitizedEvents, (event) => {
         return {
           ...event,
@@ -149,7 +149,7 @@ export const getMasterProductAndEventAndPromotions = () => {
             return _.find(mergedPhysicalProducts, product => product.id === promotionProduct.Po_ID);
           })
         };
-        return convertToAppPromotion(promotionWithMorphProduct, baseURL);
+        return convertToAppPromotion(promotionWithMorphProduct, fileURL);
       });
       dispatch(Actions.receivedMasterdata('promotionSets', sanitizedPromotions));
       resolve(mergedPhysicalProducts);
@@ -165,7 +165,7 @@ export const initApplication = () => {
     // GET MASTER DATA
     // ======================================================
     try {
-      const baseURL = 'http://localhost:8888/vms/html-v2';
+      const fileURL = MasterappSelector.getLocalURL(getState().masterapp);
       // ======================================================
       // MAINMENU
       // ======================================================
@@ -200,7 +200,7 @@ export const initApplication = () => {
       // ======================================================
       const serviceGetBaseAdsResponse = await serviceGetBaseAds();
       const sanitizedBaseAds = _.map(extractResponseData(serviceGetBaseAdsResponse), (ad) => {
-        return normalizeStripAds(convertToAppAd(ad), baseURL);
+        return normalizeStripAds(convertToAppAd(ad), fileURL);
       });
       dispatch(Actions.setBaseAds(sanitizedBaseAds));
       dispatch(Actions.setFooterAds(sanitizedBaseAds));
@@ -212,7 +212,7 @@ export const initApplication = () => {
       // MOBILE TOPUP PROVIDER
       // ======================================================
       const serviceGetMobileTopupProvidersResponse = await serviceGetMobileTopupProviders();
-      const sanitizedMobileTopupProviders = _.map(extractResponseData(serviceGetMobileTopupProvidersResponse), mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider, baseURL));
+      const sanitizedMobileTopupProviders = _.map(extractResponseData(serviceGetMobileTopupProvidersResponse), mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider, fileURL));
       dispatch(Actions.receivedMasterdata('topupProviders', sanitizedMobileTopupProviders));
 
       const resetTimeMS = resetTime * 1000;
@@ -1392,3 +1392,10 @@ export const stopPlayAudio = () => {
     dispatch(Actions.stopPlayAudio());
   };
 };
+
+export const playInputMSISDNErrorAudio = () => {
+  return (dispatch) => {
+    const baseURL = MasterappSelector.getBaseURL()
+    dispatch(Actions.playAudio());
+  };
+}
