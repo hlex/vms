@@ -84,7 +84,7 @@ class MediaPlayer extends Component {
           duration={duration}
           src={src}
           width={width}
-          height={height}
+          height={isFullScreen ? 1840 : height}
           type={type}
           onTicked={() => this.props.onTicked()}
           onEnded={() => this.handlePlayerEnded()}
