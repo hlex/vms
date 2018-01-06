@@ -10,7 +10,8 @@ const withAudio = ({ src }, actions) => WrappedComponent => class ComponentWithA
     store: PropTypes.object
   }
   state = {
-    play: true
+    play: true,
+    defaultSrc: src
   }
   componentWillMount = () => {
     const { getState, dispatch, subscribe } = this.context.store;
@@ -38,13 +39,13 @@ const withAudio = ({ src }, actions) => WrappedComponent => class ComponentWithA
   }
   render = () => {
     console.log('withAudio', this);
-    const { play } = this.state;
+    const { play, defaultSrc } = this.state;
     return (
       <div>
         {
           play &&
           <AudioPlayer
-            src={src}
+            src={defaultSrc}
             autoPlay
             muted={false}
             interval={5000}
