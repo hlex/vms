@@ -23,6 +23,7 @@ import {
   SET_VOICE_INTERVAL
 } from '../actions/actionTypes';
 
+const localURL = 'http://localhost:8888/vms/html-v2';
 const cloudURL = 'http://27.254.160.247:81';
 const initialTcp = process.env.NODE_ENV !== 'production'
 ? {
@@ -57,7 +58,7 @@ const initialState = {
       linkTo: 'play',
     },
   ],
-  // baseURL: 'http://localhost:8888/vms/html-v2',
+  localURL,
   baseURL: cloudURL,
   tcp: initialTcp,
   tcpClient: {},
