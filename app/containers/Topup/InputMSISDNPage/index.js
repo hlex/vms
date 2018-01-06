@@ -88,6 +88,7 @@ class InputMSISDNPage extends Component {
                     mobileNumber: 'รูปแบบหมายเลขโทรศัพท์ไม่ถูกต้อง'
                   }}
                   value={MSISDN}
+                  onValidationError={() => console.log('onValidationError')}
                   onConfirm={confirmMobileTopupMSISDN}
                 />
               </div>
