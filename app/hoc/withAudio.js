@@ -1,28 +1,48 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 // ======================================================
 // Components
 // ======================================================
 import { AudioPlayer } from '../components';
 
-const withAudio = ({ src }) => WrappedComponent => class ComponentWithAudio extends Component {
+const withAudio = ({ src }, actions) => WrappedComponent => class ComponentWithAudio extends PureComponent {
+  static contextTypes = {
+    store: PropTypes.object
+  }
   state = {
-    isPlaying: true
+    play: true
   }
-
   componentWillMount = () => {
-    const { getState, subscribe } = this.context.store;
-    subscribe(() => this.switchLanguage(getState().language.currentActive));
-    this.switchLanguage(getState().language.currentActive);
+    const { getState, dispatch, subscribe } = this.context.store;
+    this.unsubscribe = subscribe(() => this.audioShouldPlay(getState().audio));
+    this.audioShouldPlay(getState().audio);
+    if (actions) {
+      console.log('componentWillMount:startPlayAudio');
+      dispatch(actions.startPlayAudio());
+    }
   }
-
+  componentWillUnmount = () => {
+    this.unsubscribe();
+  }
+  audioShouldPlay = (audio) => {
+    console.log('audioShouldPlay', audio);
+    if (!audio.play) {
+      this.setState({
+        play: false
+      });
+    } else if (audio.play) {
+      this.setState({
+        play: true
+      });
+    }
+  }
   render = () => {
-    console.log('withAudio', this)
-    const { isPlaying } = this.state;
+    console.log('withAudio', this);
+    const { play } = this.state;
     return (
       <div>
         {
-          isPlaying &&
+          play &&
           <AudioPlayer
             src={src}
             autoPlay

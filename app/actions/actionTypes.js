@@ -46,6 +46,8 @@ export const SETTING_SET_AUTOPLAY_TIME = 'SETTING_SET_AUTOPLAY_TIME';
 export const SETTING_SET_RESET_TIME = 'SETTING_SET_RESET_TIME';
 export const AUDIO_STARTED = 'AUDIO_STARTED';
 export const AUDIO_ENDED = 'AUDIO_END';
+export const AUDIO_STOP_PLAY = 'AUDIO_STOP_PLAY';
+export const AUDIO_START_PLAY = 'AUDIO_START_PLAY';
 // ======================================================
 // TCP
 // ======================================================

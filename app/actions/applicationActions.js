@@ -678,6 +678,7 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
     );
   if (currentCash >= grandTotalAmount) {
     dispatch(setReadyToDropProduct());
+    dispatch(Actions.stopPlayAudio());
     setTimeout(() => {
       dispatch(receivedCashCompletely());
     }, 1000);
@@ -1377,5 +1378,17 @@ export const endedAudio = () => {
 export const startedAudio = () => {
   return (dispatch) => {
     dispatch(Actions.startedAudio());
+  };
+};
+
+export const startPlayAudio = () => {
+  return (dispatch) => {
+    dispatch(Actions.startPlayAudio());
+  };
+};
+
+export const stopPlayAudio = () => {
+  return (dispatch) => {
+    dispatch(Actions.stopPlayAudio());
   };
 };
