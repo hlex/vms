@@ -51,7 +51,9 @@ import {
   SETTING_SET_RESET_TIME,
   SETTING_SET_AUTOPLAY_TIME,
   AUDIO_STARTED,
-  AUDIO_ENDED
+  AUDIO_ENDED,
+  AUDIO_STOP_PLAY,
+  AUDIO_START_PLAY
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
@@ -300,4 +302,12 @@ export const startedAudio = () => ({
 
 export const endedAudio = () => ({
   type: AUDIO_ENDED,
+});
+
+export const startPlayAudio = () => ({
+  type: AUDIO_START_PLAY,
+});
+
+export const stopPlayAudio = () => ({
+  type: AUDIO_STOP_PLAY,
 });
