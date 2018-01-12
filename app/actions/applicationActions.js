@@ -77,6 +77,9 @@ import {
   verifyBarcodeOrQrcode,
   verifyLineQrcode
 } from '../apis/event';
+import {
+  serviceVerifySalesman
+} from '../apis/salesman';
 
 let cmdNo = 0;
 let retryNo = 0;
@@ -461,6 +464,27 @@ export const receivedScannedCode = (scannedCode) => {
         }
       } catch (error) {
         dispatch(handleApiError(error));
+      }
+    }
+    if (getState().router.location.pathname === '/salesman') {
+      // validate salesman
+      const serviceVerifySalesmanResponse = await serviceVerifySalesman(scannedCode);
+      const result = extractResponseData(serviceVerifySalesmanResponse).pass || false;
+      if (result === true) {
+        // pass call api disable alarm
+        const client = MasterappSelector.getTcpClient(getState().masterapp);
+        client.send({
+          action: 0,
+          sensor: 'alarm',
+          msg: '0',
+        });
+      } else {
+        // show error
+        dispatch(openAlertMessage(convertApplicationErrorToError({
+          title: `รหัสพนักงาน ${scannedCode} ไม่ถูกต้อง`,
+          th: 'กรุณาตรวจสอบใหม่อีกครั้ง',
+          en: '',
+        })));
       }
     }
   };
