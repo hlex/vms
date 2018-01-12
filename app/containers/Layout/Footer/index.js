@@ -13,28 +13,23 @@ import { MediaPlayer } from '../../../components';
 // ======================================================
 import MasterappSelector from '../../../selectors/masterapp';
 
-const mapStateToProps = (state) => {
-  return {
-    footerAds: state.ads.footerAds,
-    baseURL: MasterappSelector.getBaseURL(state.masterapp),
-  };
-};
+const mapStateToProps = state => ({
+  footerAds: state.ads.footerAds,
+  baseURL: MasterappSelector.getBaseURL(state.masterapp)
+});
 
-const actions = {
-};
+const actions = {};
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 class Footer extends PureComponent {
-
   static propTypes = {
     location: PropTypes.shape({}).isRequired,
-    footerAds: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  }
+    footerAds: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  };
 
-  shouldComponentUpdate = (nextProps) => {
+  shouldComponentUpdate = nextProps => {
     const { location } = this.props;
-    console.log('shouldComponentUpdate => ', location.pathname, nextProps.location.pathname);
     const currentPageIsPayment = location.pathname === '/payment';
     const nextPageIsPayment = nextProps.location.pathname === '/payment';
     const currentPageIsMobileTopupProviderSelection = '/topup';
@@ -43,47 +38,48 @@ class Footer extends PureComponent {
     if (currentPageIsPayment && nextPageIsPayment) return false;
     if (location.pathname === '/product/single' && nextPageIsPayment) return false;
     if (location.pathname === '/product/promotionSet' && nextPageIsPayment) return false;
-    if (!currentPageIsMobileTopupProviderSelection && currentPageIsMobileTopupGroup && nextPageIsMobileTopupGroup) return false;
+    if (
+      !currentPageIsMobileTopupProviderSelection &&
+      currentPageIsMobileTopupGroup &&
+      nextPageIsMobileTopupGroup
+    ) { return false; }
     if (currentPageIsMobileTopupGroup && nextPageIsPayment) return false;
     return true;
-  }
+  };
 
   shouldMuted = () => {
     const { location } = this.props;
     const url = location.pathname;
     const currentPageIsHome = url === '/';
     const muted = !currentPageIsHome;
-    console.log('shouldMuted => ', url, muted);
     return muted;
-  }
+  };
 
   shouldHideSignage = () => {
     const { location } = this.props;
     const blacklist = ['/event', '/product', '/event/ads'];
     return _.includes(blacklist, location.pathname);
-  }
+  };
 
   render() {
     console.log(this);
-    const {
-      footerAds,
-    } = this.props;
+    const { ref, footerAds } = this.props;
     return (
       <div className="footer-section">
         <div className="copy">
           <p>© 2017 ใจดี มินิมาร์ท</p>
         </div>
-        {
-          !this.shouldHideSignage() &&
+        {!this.shouldHideSignage() && (
           <div className="signage">
             <MediaPlayer
+              ref={this.props.inputRef}
               width={1080}
               height={610}
               sources={footerAds}
               muted={this.shouldMuted()}
             />
           </div>
-        }
+        )}
       </div>
     );
   }

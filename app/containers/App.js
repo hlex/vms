@@ -10,9 +10,7 @@ setDebugMode(true);
 // ======================================================
 // Helpers
 // ======================================================
-import {
-  getCashRemainingAmount,
-} from '../helpers/global';
+import { getCashRemainingAmount } from '../helpers/global';
 // ======================================================
 // Actions
 // ======================================================
@@ -32,8 +30,17 @@ import AlertMessage from './AlertMessage';
 import LoadingScreen from './LoadingScreen';
 
 const mapStateToProps = state => {
-  console.log('%c App@state:', 'color: #4CAF50; font-weight: 700;', state, state.masterapp.tcpClient.histories);
-  console.log('%c เงินทอนคงเหลือ:', 'color: #307DFC; font-weight: 700;', getCashRemainingAmount(state.payment.remain));
+  console.log(
+    '%c App@state:',
+    'color: #4CAF50; font-weight: 700;',
+    state,
+    state.masterapp.tcpClient.histories
+  );
+  console.log(
+    '%c เงินทอนคงเหลือ:',
+    'color: #307DFC; font-weight: 700;',
+    getCashRemainingAmount(state.payment.remain)
+  );
   return {
     location: state.router.location,
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
@@ -44,7 +51,7 @@ const mapStateToProps = state => {
 };
 
 const actions = {
-  ...ApplicationActions,
+  ...ApplicationActions
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
@@ -64,18 +71,44 @@ class App extends Component {
     initApplication();
   };
 
+  handleClickHome = () => {
+    const { backToHome } = this.props;
+    backToHome();
+    this.mediaPlayer.handleTouchMedia();
+  };
+
+  handleSwitchLanguage = oppositeLang => {
+    const { switchLanguageTo } = this.props;
+    switchLanguageTo(oppositeLang);
+    this.mediaPlayer.handleTouchMedia();
+  };
+
   render() {
-    const { backToHome, baseURL, location, appReady, insertCoin, scanCode, modal, switchLanguageTo, lang } = this.props;
+    const {
+      backToHome,
+      baseURL,
+      location,
+      appReady,
+      insertCoin,
+      scanCode,
+      modal,
+      switchLanguageTo,
+      lang
+    } = this.props;
     return (
       <div className="smart-vending-machine-app">
-        {
-          appReady &&
+        {appReady && (
           <div className="smart-vending-machine-app-connected">
             <AlertMessage />
             <LoadingScreen />
-            <Layout.Header lang={lang} switchLanguageTo={switchLanguageTo} backToHome={backToHome} baseURL={baseURL} />
+            <Layout.Header
+              lang={lang}
+              switchLanguageTo={this.handleSwitchLanguage}
+              backToHome={this.handleClickHome}
+              baseURL={baseURL}
+            />
             {this.props.children}
-            <Layout.Footer />
+            <Layout.Footer inputRef={el => this.mediaPlayer = el} />
             {process.env.NODE_ENV !== 'production' && (
               <div className="development-toolbar">
                 <ul>
@@ -113,10 +146,15 @@ class App extends Component {
               </div>
             )}
           </div>
-        }
-        {
-          !appReady && <div style={{ display: 'flex', width: '1080px', height: '1920px' }}><img style={{ width: '100%' }} src={'http://localhost:8888/vms/html-v2/images/app-loading.gif'} /></div>
-        }
+        )}
+        {!appReady && (
+          <div style={{ display: 'flex', width: '1080px', height: '1920px' }}>
+            <img
+              style={{ width: '100%' }}
+              src={'http://localhost:8888/vms/html-v2/images/app-loading.gif'}
+            />
+          </div>
+        )}
       </div>
     );
   }

@@ -33,7 +33,6 @@ class MediaPlayer extends Component {
   }
   shouldComponentUpdate = (nextProps) => {
     const { playerKey, muted } = this.props;
-    console.log('MUTED', nextProps.muted, muted);
     return playerKey === undefined;
   }
   handlePlayerEnded = () => {
@@ -47,29 +46,39 @@ class MediaPlayer extends Component {
     onEnded(index, nextIndex);
   }
   handleTouchMedia = () => {
-    // console.log('handleTouchMedia');
+    console.log('handleTouchMedia');
     const { index } = this.state;
     const { sources } = this.props;
-    const nextNearestNotFullScreenAdIndex = _.findIndex(sources, (source, sourceIndex) => {
-      return sourceIndex > index && (source.adSize || '') !== 'FULLSCREEN';
-    });
-    // console.log(nextNearestNotFullScreenAdIndex);
-    if (nextNearestNotFullScreenAdIndex) {
-      this.setState({
-        index: nextNearestNotFullScreenAdIndex
+    if (this.isFullScreen()) {
+      const nextNearestNotFullScreenAdIndex = _.findIndex(sources, (source, sourceIndex) => {
+        return sourceIndex > index && (source.adSize || '') !== 'FULLSCREEN';
       });
+      if (nextNearestNotFullScreenAdIndex) {
+        this.setState({
+          index: nextNearestNotFullScreenAdIndex
+        });
+      }
     }
+  }
+  getCurrentMedia = () => {
+    const { index } = this.state;
+    const { sources } = this.props;
+    return _.get(sources, `${index}`, {});
+  }
+  isFullScreen = () => {
+    const currentMedia = this.getCurrentMedia();
+    const isFullScreen = (currentMedia.adSize || '') === 'FULLSCREEN';
+    return isFullScreen;
   }
   render = () => {
     // console.debug('MediaPlayer:state', this.state);
-    console.debug('MediaPlayer:props', this.props);
-    const { index } = this.state;
+    // console.debug('MediaPlayer:props', this.props);
     const { width, height, sources, playerKey, muted } = this.props;
     // -----------------------------
-    const currentMedia = _.get(sources, `${index}`, {});
+    const currentMedia = this.getCurrentMedia();
     const { type, src, duration } = currentMedia;
-    // console.debug('MediaPlayer:currentMedia', index, currentMedia);
     const isFullScreen = (currentMedia.adSize || '') === 'FULLSCREEN';
+    // console.debug('MediaPlayer:currentMedia', index, currentMedia);
     // -----------------------------
     if (_.size(sources) <= 0 || !currentMedia) return <div />;
     const itemKey = playerKey !== undefined ? playerKey : `${Date.now()}-${src}`;
@@ -77,7 +86,7 @@ class MediaPlayer extends Component {
       <div
         className="react-mediaplayer"
         style={{ position: isFullScreen ? 'fixed' : 'absolute', top: isFullScreen ? '80px' : '0', zIndex: isFullScreen ? '500' : '98' }}
-        onClick={() => { if (isFullScreen) this.handleTouchMedia(); }}
+        onClick={() => this.handleTouchMedia()}
       >
         <FilePlayer
           key={itemKey}
