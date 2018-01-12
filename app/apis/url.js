@@ -15,5 +15,6 @@ export default {
   getProductSteps: 'api/main.php',
   getEventSteps: 'api/main.php',
   getMobileTopupSteps: 'api/main.php',
-  getMainMenu: 'api/main.php'
+  getMainMenu: 'api/main.php',
+  verifySalesman: 'api/main.php',
 };
