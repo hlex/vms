@@ -11,6 +11,7 @@ import Event from './containers/Event';
 import Payment from './containers/Payment';
 import Product from './containers/Product';
 import Topup from './containers/Topup';
+import Salesman from './containers/Salesman';
 
 export default () =>
   (<App>
@@ -28,6 +29,7 @@ export default () =>
       <Route path="/confirm" component={Payment.ConfirmToPayPage} />
       <Route path="/payment" component={Payment.PaymentPage} />
       <Route path="/thankyou" component={End.ThankyouPage} />
+      <Route path="/salesman" component={Salesman} />
       <Route path="/" component={HomePage} />
     </Switch>
   </App>);

@@ -416,50 +416,52 @@ export const receivedScannedCode = (scannedCode) => {
     const nextReward = OrderSelector.getEventNextReward(getState().order);
     const eventId = OrderSelector.getEventId(getState().order);
     console.log('receivedScannedCode', eventId, scannedCode, nextInput);
-    try {
-      if (verifyIsBarcodeOrQrCodeInput(nextInput)) {
-        const isBarcode = verifyIsBarcode(scannedCode);
-        const dataToVerify = {
-          eventId,
-          code: scannedCode,
-          discountType: isBarcode ? 'barcode' : 'qrcode'
-        };
-        dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
-        const verifyBarcodeOrQrcodeResponse = await verifyBarcodeOrQrcode(dataToVerify);
-        const responseData = extractResponseData(verifyBarcodeOrQrcodeResponse);
-        const discount = extractDiscountFromResponseData(responseData);
-        dispatch(hideLoading());
-        if (verifyDiscountIsExist(discount)) {
-          dispatch(updateEventReward(nextReward, discount));
-        }
-        dispatch(updateEventInput(nextInput, scannedCode));
-      } else if (verifyIsLineQrcodeInput) {
-        const isLineQrcode = verifyIsLineQrcode(scannedCode);
-        const exactLineId = _.last(_.split(scannedCode, '/'));
-        if (isLineQrcode) {
-          const barcodeOrQrcode = OrderSelector.getEventBarcodeOrQrcodeInput(getState().order);
+    if (eventId) {
+      try {
+        if (verifyIsBarcodeOrQrCodeInput(nextInput)) {
+          const isBarcode = verifyIsBarcode(scannedCode);
           const dataToVerify = {
             eventId,
-            code: exactLineId,
-            barcodeOrQrcode,
+            code: scannedCode,
+            discountType: isBarcode ? 'barcode' : 'qrcode'
           };
           dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
-          const verifyLineQrcodeResponse = await verifyLineQrcode(dataToVerify);
-          const responseData = extractResponseData(verifyLineQrcodeResponse);
+          const verifyBarcodeOrQrcodeResponse = await verifyBarcodeOrQrcode(dataToVerify);
+          const responseData = extractResponseData(verifyBarcodeOrQrcodeResponse);
           const discount = extractDiscountFromResponseData(responseData);
           dispatch(hideLoading());
           if (verifyDiscountIsExist(discount)) {
             dispatch(updateEventReward(nextReward, discount));
           }
-          dispatch(updateEventInput(nextInput, exactLineId));
+          dispatch(updateEventInput(nextInput, scannedCode));
+        } else if (verifyIsLineQrcodeInput) {
+          const isLineQrcode = verifyIsLineQrcode(scannedCode);
+          const exactLineId = _.last(_.split(scannedCode, '/'));
+          if (isLineQrcode) {
+            const barcodeOrQrcode = OrderSelector.getEventBarcodeOrQrcodeInput(getState().order);
+            const dataToVerify = {
+              eventId,
+              code: exactLineId,
+              barcodeOrQrcode,
+            };
+            dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
+            const verifyLineQrcodeResponse = await verifyLineQrcode(dataToVerify);
+            const responseData = extractResponseData(verifyLineQrcodeResponse);
+            const discount = extractDiscountFromResponseData(responseData);
+            dispatch(hideLoading());
+            if (verifyDiscountIsExist(discount)) {
+              dispatch(updateEventReward(nextReward, discount));
+            }
+            dispatch(updateEventInput(nextInput, exactLineId));
+          } else {
+            console.error(`${scannedCode} is not lineId`);
+          }
         } else {
-          console.error(`${scannedCode} is not lineId`);
+          console.error(`${scannedCode} is not barcode or qrcode or lineId`);
         }
-      } else {
-        console.error(`${scannedCode} is not barcode or qrcode or lineId`);
+      } catch (error) {
+        dispatch(handleApiError(error));
       }
-    } catch (error) {
-      dispatch(handleApiError(error));
     }
   };
 };
@@ -1394,8 +1396,9 @@ export const stopPlayAudio = () => {
 };
 
 export const playInputMSISDNErrorAudio = () => {
-  return (dispatch) => {
-    const baseURL = MasterappSelector.getBaseURL()
-    dispatch(Actions.playAudio());
+  return (dispatch, getState) => {
+    const fileURL = MasterappSelector.getLocalURL(getState().masterapp);
+    dispatch(Actions.setAudioSource(`${fileURL}/voice/8.2.m4a`));
+    dispatch(Actions.startPlayAudio());
   };
 }
