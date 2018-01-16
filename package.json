@@ -218,5 +218,8 @@
     "node": ">=7.x",
     "npm": ">=4.x",
     "yarn": ">=0.21.3"
+  },
+  "resolutions": {
+    "webpack-sources": "1.0.1"
   }
 }
