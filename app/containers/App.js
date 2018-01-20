@@ -65,7 +65,7 @@ class App extends Component {
   };
 
   render() {
-    const { backToHome, baseURL, location, appReady, insertCoin, scanCode, modal, switchLanguageTo, lang } = this.props;
+    const { backToHome, baseURL, location, appReady, insertCoin, scanCode, modal, switchLanguageTo, openDoor, closeDoor, lang } = this.props;
     return (
       <div className="smart-vending-machine-app">
         {
@@ -108,6 +108,15 @@ class App extends Component {
                   </li>
                   <li>
                     <a onClick={() => scanCode('http://line.me/th/q/_hlexpond')}>LINE</a>
+                  </li>
+                </ul>
+                <br />
+                <ul>
+                  <li>
+                    <a onClick={() => openDoor()}>OPEN DOOR</a>
+                  </li>
+                  <li>
+                    <a onClick={() => closeDoor()}>CLOSE DOOR</a>
                   </li>
                 </ul>
               </div>
