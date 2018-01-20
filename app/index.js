@@ -382,6 +382,24 @@ if (process.env.NODE_ENV !== 'production') {
           }),
         );
       }
+      if (objectData.action === 'door-open') {
+        socket.write(
+          JSON.stringify({
+            action: 0,
+            sensor: 'door',
+            msg: 'open',
+          }),
+        );
+      }
+      if (objectData.action === 'door-close') {
+        socket.write(
+          JSON.stringify({
+            action: 0,
+            sensor: 'door',
+            msg: 'close',
+          }),
+        );
+      }
     });
     socket.on('error', err => {
       console.error(err);
