@@ -160,6 +160,16 @@ export const isLimitBanknoteSuccess = ({ action, result, description }) => {
   return true;
 };
 
+export const isDoorOpened = ({ action, msg }) => {
+  if (action !== actionCode.sensor || msg !== 'open') return false;
+  return true;
+};
+
+export const isDoorClosed = ({ action, msg }) => {
+  if (action !== actionCode.sensor || msg !== 'close') return false;
+  return true;
+}
+
 export const getServerCommand = (data) => {
   const normalizeData = {
     action: _.get(data, 'action', ''),
@@ -173,6 +183,8 @@ export const getServerCommand = (data) => {
   console.log('%c App getServerCommand:normalizeData', createLog('app'), normalizeData);
   if (isConnectionEstablish(normalizeData)) return 'CONNECTION_ESTABLISH';
   if (isConnected(normalizeData)) return 'CONNECTED';
+  if (isDoorOpened(normalizeData)) return 'DOOR_OPENED';
+  if (isDoorClosed(normalizeData)) return 'DOOR_CLOSED';
   if (isScannedQrcode(normalizeData)) return 'SCANNED_QR_CODE';
   if (isUpdateTemp(normalizeData)) return 'UPDATE_TEMP';
   if (isResetTAIKOSuccess(normalizeData)) return 'RESET_TAIKO_SUCCESS';
