@@ -53,12 +53,8 @@ import {
   AUDIO_STARTED,
   AUDIO_ENDED,
   AUDIO_STOP_PLAY,
-<<<<<<< HEAD
   AUDIO_START_PLAY,
   SET_APPLICATION_MODE
-=======
-  AUDIO_START_PLAY
->>>>>>> feature/improve_audio
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
