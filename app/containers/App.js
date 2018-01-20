@@ -72,14 +72,19 @@ class App extends Component {
     initApplication();
   };
 
-  renderMaintenanceMode = () => (
-    <div className='maintenance-box'>
-      <h1><i className="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
-      <h1>{'Happy is "Under-Construction"'}</h1>
-      <h2>กรุณาเติมสินค้าและ Update ข้อมูลบน Cloud</h2>
-      <h2>เมื่อทำรายการเสร็จแล้ว กรุณาปิดตู้ให้เรียบร้อย</h2>
-    </div>
-  );
+  renderMaintenanceMode = () => {
+    setTimeout(() => {
+      this.props.closeDoor()
+    }, 3000);
+    return (
+      <div className='maintenance-box'>
+        <h1><i className="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
+        <h1>{'Happy is "Under-Construction"'}</h1>
+        <h2>กรุณาเติมสินค้าและ Update ข้อมูลบน Cloud</h2>
+        <h2>เมื่อทำรายการเสร็จแล้ว กรุณาปิดตู้ให้เรียบร้อย</h2>
+      </div>
+    );
+  };
 
   renderApplicationStarting = () => (
     <div style={{ display: 'flex', width: '1080px', height: '1920px' }}>

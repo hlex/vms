@@ -84,7 +84,7 @@ const initialState = {
   autoplayTime: 3,
   mutedAds: false,
   voiceInterval: 5,
-  mode: 'maintenance',
+  mode: 'running',
 };
 
 export default (state = initialState, action) => {

@@ -17,4 +17,6 @@ export default {
   getMobileTopupSteps: 'api/main.php',
   getMainMenu: 'api/main.php',
   verifySalesman: 'api/main.php',
+  syncSettlement: 'api/main.php',
+  updateStock: 'api/main.php',
 };

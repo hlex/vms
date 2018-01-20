@@ -51,11 +51,12 @@ import {
 } from '../apis/mobileTopup';
 import {
   serviceVerifyDiscountCode,
-  serviceUseDiscountCode
 } from '../apis/discount';
 import {
   serviceSubmitOrder,
-  serviceGetSumOrderAmount
+  serviceGetSumOrderAmount,
+  syncSettlement,
+  updateStock,
 } from '../apis/order';
 import {
   createTcpClient
@@ -252,9 +253,36 @@ const addResetTimer = (resetTimeMS) => {
 };
 
 export const doorClosed = () => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     console.log('doorClosed');
-    dispatch(Actions.setApplicationMode('running'));
+    try {
+      await syncSettlement();
+    } catch (error) {
+      dispatch(openAlertMessage(convertApplicationErrorToError({
+        title: 'ไม่สามารถ Sync Settlement ได้',
+        th: 'กรุณาตรวจสอบข้อมูลและทำรายการใหม่อีกครั้ง',
+        en: '',
+      })));
+    }
+    // even if syncSettlement error, continue update stock.
+    try {
+      await updateStock();
+      // openAlarm
+      const client = MasterappSelector.getTcpClient(getState().masterapp);
+      client.send({
+        action: 0,
+        sensor: 'alarm',
+        msg: '1',
+      });
+      dispatch(getMasterProductAndEventAndPromotions());
+      setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
+    } catch (error) {
+      dispatch(openAlertMessage(convertApplicationErrorToError({
+        title: 'ไม่สามารถ Update Stock ได้',
+        th: 'ระบบไม่สามารถทำงานต่อได้ กรุณาตรวจสอบข้อมูลและทำรายการอีกครั้ง',
+        en: '',
+      })));
+    }
   };
 };
 
