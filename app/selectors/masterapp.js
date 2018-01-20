@@ -9,7 +9,8 @@ const verifyReadyToDropProduct = state => state.readyToDropProduct;
 const getDroppingProduct = state => state.droppingProduct;
 const verifyCanChangeCash = state => state.canChangeCash;
 const getLimitBanknote = state => state.limitBanknote;
-const verifyAppReady = state => state.hardwareReady;
+const verifyAppReady = state => state.hardwareReady && state.mode === 'running';
+const verifyIsMaintenanceMode = state => state.mode === 'maintenance';
 const verifyIsMoneyBoxActive = state => state.moneyBoxActive;
 const verifyIsLoading = state => state.loading.show;
 const getActivityFreeRule = state => state.activityFreeRule;
@@ -55,5 +56,6 @@ export default {
   getHardwareProcessing,
   verifyIsHardwareProcessing,
   getAutoplayTime,
-  getMuteAds
+  getMuteAds,
+  verifyIsMaintenanceMode
 };

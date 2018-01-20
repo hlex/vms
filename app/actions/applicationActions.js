@@ -254,14 +254,16 @@ const addResetTimer = (resetTimeMS) => {
 export const doorClosed = () => {
   return (dispatch, getState) => {
     console.log('doorClosed');
-  }
-}
+    dispatch(Actions.setApplicationMode('running'));
+  };
+};
 
 export const doorOpened = () => {
   return (dispatch, getState) => {
     console.log('doorOpened');
-  }
-}
+    dispatch(Actions.setApplicationMode('maintenance'));
+  };
+};
 
 export const receivedDataFromServer = data => (dispatch, getState) => {
   if (data.sensor && data.sensor === 'temp') return;
@@ -496,6 +498,12 @@ export const receivedScannedCode = (scannedCode) => {
           sensor: 'alarm',
           msg: '0',
         });
+        // render under construction
+        dispatch(openAlertMessage(convertApplicationErrorToError({
+          title: `รหัสพนักงาน ${scannedCode} ถูกต้อง`,
+          th: 'กรุณาเปิดตู้เพื่อทำรายการต่อ',
+          en: '',
+        })));
       } else {
         // show error
         dispatch(openAlertMessage(convertApplicationErrorToError({
