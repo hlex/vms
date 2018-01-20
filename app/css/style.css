@@ -8892,6 +8892,19 @@ span.highlight-red {
   color: #ffd800;
   font-size: 22px; }
 
+.maintenance-box {
+  display: flex;
+  flex-direction: column;
+  height: 1920px;
+  width: 1080px;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffd800; }
+  .maintenance-box h1 > i {
+    color: #8e30f8; }
+  .maintenance-box h2 {
+    color: #815800; }
+
 ._unmargin {
   margin: 0 !important; }
 

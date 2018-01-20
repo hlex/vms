@@ -219,7 +219,7 @@ export const convertToAppMainMenu = (mainMenu, index) => {
       src = 'images/bg-nav-three.png';
       break;
     case 3:
-      linkTo = '/';
+      linkTo = '/salesman ';
       src = 'images/bg-nav-four.png';
       break;
     default:

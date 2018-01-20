@@ -5,11 +5,14 @@ import { connect } from 'react-redux';
 // ======================================================
 // Hoc
 // ======================================================
-import withAudio from '../../hoc/withAudio';
+// import withAudio from '../../hoc/withAudio';
 // ======================================================
+// Containers
+// ======================================================
+import { FooterAction } from '../Utils';
 // Components
 // ======================================================
-import { Thankyou } from '../../components';
+import { ProductTitle, Layout } from '../../components';
 // ======================================================
 // Selectors
 // ======================================================
@@ -32,17 +35,32 @@ const mapDispatchToProps = (dispatch) => {
 
 
 class TopupProviderSelectionPage extends Component {
-
   static propTypes = {
     baseURL: PropTypes.string.isRequired,
   }
-
   render() {
     const { baseURL } = this.props;
     return (
-      <Thankyou baseURL={baseURL} />
+      <div className="">
+        <Layout.Title>
+          <ProductTitle
+            title={'Salesman'}
+            baseURL={baseURL}
+          />
+        </Layout.Title>
+        <Layout.Content>
+          <div className="event-box">
+            <img alt="line" src={`${baseURL}/images/icon-qrcode.png`} />
+            <div className="desc">
+              <h2>{'กรุณา Scan QR CODE (รหัสพนักงาน)'}</h2>
+              <h3>{'เพื่อตรวจสอบรหัส และปลดล็อคตู้'}</h3>
+            </div>
+          </div>
+          <FooterAction />
+        </Layout.Content>
+      </div>
     );
   }
 }
 
-export default withAudio({ src: 'http://localhost:8888/vms/html-v2/voice/5.m4a' }, actions)(connect(mapStateToProps, mapDispatchToProps)(TopupProviderSelectionPage));
+export default connect(mapStateToProps, mapDispatchToProps)(TopupProviderSelectionPage);

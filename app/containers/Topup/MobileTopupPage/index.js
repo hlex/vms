@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+// ======================================================
+// Hoc
+// ======================================================
+import withAudio from '../../../hoc/withAudio';
 // ======================================================
 // Containers
 // ======================================================
@@ -103,4 +106,4 @@ class MobileTopupPage extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MobileTopupPage);
+export default withAudio({ src: 'http://localhost:8888/vms/html-v2/voice/3.m4a' }, actions)(connect(mapStateToProps, mapDispatchToProps)(MobileTopupPage));

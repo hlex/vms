@@ -20,9 +20,11 @@ import {
   SETTING_SET_RESET_TIME,
   AUDIO_STARTED,
   AUDIO_ENDED,
-  SET_VOICE_INTERVAL
+  SET_VOICE_INTERVAL,
+  SET_APPLICATION_MODE
 } from '../actions/actionTypes';
 
+const localURL = 'http://localhost:8888/vms/html-v2';
 const cloudURL = 'http://27.254.160.247:81';
 const initialTcp = process.env.NODE_ENV !== 'production'
 ? {
@@ -57,7 +59,7 @@ const initialState = {
       linkTo: 'play',
     },
   ],
-  // baseURL: 'http://localhost:8888/vms/html-v2',
+  localURL,
   baseURL: cloudURL,
   tcp: initialTcp,
   tcpClient: {},
@@ -81,7 +83,8 @@ const initialState = {
   resetTime: 0,
   autoplayTime: 3,
   mutedAds: false,
-  voiceInterval: 5
+  voiceInterval: 5,
+  mode: 'running',
 };
 
 export default (state = initialState, action) => {
@@ -207,6 +210,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         voiceInterval: action.voiceInterval
+      };
+    case SET_APPLICATION_MODE:
+      return {
+        ...state,
+        mode: action.mode
       };
     default:
       return state;

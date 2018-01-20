@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 // ======================================================
 // Hoc
 // ======================================================
-import { withAudio } from '../../../hoc/withAudio';
+import withAudio from '../../../hoc/withAudio';
 // ======================================================
 // Containers
 // ======================================================
@@ -88,6 +88,7 @@ class InputMSISDNPage extends Component {
                     mobileNumber: 'รูปแบบหมายเลขโทรศัพท์ไม่ถูกต้อง'
                   }}
                   value={MSISDN}
+                  onValidationError={() => console.log('onValidationError')}
                   onConfirm={confirmMobileTopupMSISDN}
                 />
               </div>
@@ -100,4 +101,4 @@ class InputMSISDNPage extends Component {
   }
 }
 
-export default withAudio({ src: 'http://localhost:8888/vms/html-v2/voice/7.m4a' })(connect(mapStateToProps, mapDispatchToProps)(InputMSISDNPage));
+export default withAudio({ src: 'http://localhost:8888/vms/html-v2/voice/7.m4a' }, actions)(connect(mapStateToProps, mapDispatchToProps)(InputMSISDNPage));

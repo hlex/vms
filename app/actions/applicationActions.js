@@ -51,11 +51,12 @@ import {
 } from '../apis/mobileTopup';
 import {
   serviceVerifyDiscountCode,
-  serviceUseDiscountCode
 } from '../apis/discount';
 import {
   serviceSubmitOrder,
-  serviceGetSumOrderAmount
+  serviceGetSumOrderAmount,
+  syncSettlement,
+  updateStock,
 } from '../apis/order';
 import {
   createTcpClient
@@ -77,6 +78,9 @@ import {
   verifyBarcodeOrQrcode,
   verifyLineQrcode
 } from '../apis/event';
+import {
+  serviceVerifySalesman
+} from '../apis/salesman';
 
 let cmdNo = 0;
 let retryNo = 0;
@@ -86,13 +90,13 @@ var resetTimer;
 export const getMasterProductAndEventAndPromotions = () => {
   return (dispatch, getState) => {
     return new Promise(async (resolve, reject) => {
-      const baseURL = 'http://localhost:8888/vms/html-v2'; // MasterappSelector.getBaseURL(getState().masterapp);
+      const fileURL = MasterappSelector.getLocalURL(getState().masterapp);
       // ======================================================
       // PRODUCTS
       // ======================================================
       const serviceGetProductsResponse = await serviceGetProducts();
       const sanitizedProducts = _.map(extractResponseData(serviceGetProductsResponse), (product) => {
-        return convertToAppProduct(product, baseURL);
+        return convertToAppProduct(product, fileURL);
       });
       // ======================================================
       // Grouped PoId
@@ -130,7 +134,7 @@ export const getMasterProductAndEventAndPromotions = () => {
       // EVENTS
       // ======================================================
       const serviceGetEventsResponse = await serviceGetEvents();
-      const sanitizedEvents = _.map(extractResponseData(serviceGetEventsResponse), event => convertToAppEvent(event, baseURL));
+      const sanitizedEvents = _.map(extractResponseData(serviceGetEventsResponse), event => convertToAppEvent(event, fileURL));
       const eventsWhichMorphEventProductToMasterProduct = _.map(sanitizedEvents, (event) => {
         return {
           ...event,
@@ -149,7 +153,7 @@ export const getMasterProductAndEventAndPromotions = () => {
             return _.find(mergedPhysicalProducts, product => product.id === promotionProduct.Po_ID);
           })
         };
-        return convertToAppPromotion(promotionWithMorphProduct, baseURL);
+        return convertToAppPromotion(promotionWithMorphProduct, fileURL);
       });
       dispatch(Actions.receivedMasterdata('promotionSets', sanitizedPromotions));
       resolve(mergedPhysicalProducts);
@@ -165,7 +169,7 @@ export const initApplication = () => {
     // GET MASTER DATA
     // ======================================================
     try {
-      const baseURL = 'http://localhost:8888/vms/html-v2';
+      const fileURL = MasterappSelector.getLocalURL(getState().masterapp);
       // ======================================================
       // MAINMENU
       // ======================================================
@@ -200,7 +204,7 @@ export const initApplication = () => {
       // ======================================================
       const serviceGetBaseAdsResponse = await serviceGetBaseAds();
       const sanitizedBaseAds = _.map(extractResponseData(serviceGetBaseAdsResponse), (ad) => {
-        return normalizeStripAds(convertToAppAd(ad), baseURL);
+        return normalizeStripAds(convertToAppAd(ad), fileURL);
       });
       dispatch(Actions.setBaseAds(sanitizedBaseAds));
       dispatch(Actions.setFooterAds(sanitizedBaseAds));
@@ -212,7 +216,7 @@ export const initApplication = () => {
       // MOBILE TOPUP PROVIDER
       // ======================================================
       const serviceGetMobileTopupProvidersResponse = await serviceGetMobileTopupProviders();
-      const sanitizedMobileTopupProviders = _.map(extractResponseData(serviceGetMobileTopupProvidersResponse), mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider, baseURL));
+      const sanitizedMobileTopupProviders = _.map(extractResponseData(serviceGetMobileTopupProvidersResponse), mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider, fileURL));
       dispatch(Actions.receivedMasterdata('topupProviders', sanitizedMobileTopupProviders));
 
       const resetTimeMS = resetTime * 1000;
@@ -245,6 +249,47 @@ const addResetTimer = (resetTimeMS) => {
         dispatch(backToHome());
       });
     });
+  };
+};
+
+export const doorClosed = () => {
+  return async (dispatch, getState) => {
+    console.log('doorClosed');
+    try {
+      await syncSettlement();
+    } catch (error) {
+      dispatch(openAlertMessage(convertApplicationErrorToError({
+        title: 'ไม่สามารถ Sync Settlement ได้',
+        th: 'กรุณาตรวจสอบข้อมูลและทำรายการใหม่อีกครั้ง',
+        en: '',
+      })));
+    }
+    // even if syncSettlement error, continue update stock.
+    try {
+      await updateStock();
+      // openAlarm
+      const client = MasterappSelector.getTcpClient(getState().masterapp);
+      client.send({
+        action: 0,
+        sensor: 'alarm',
+        msg: '1',
+      });
+      dispatch(getMasterProductAndEventAndPromotions());
+      setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
+    } catch (error) {
+      dispatch(openAlertMessage(convertApplicationErrorToError({
+        title: 'ไม่สามารถ Update Stock ได้',
+        th: 'ระบบไม่สามารถทำงานต่อได้ กรุณาตรวจสอบข้อมูลและทำรายการอีกครั้ง',
+        en: '',
+      })));
+    }
+  };
+};
+
+export const doorOpened = () => {
+  return (dispatch, getState) => {
+    console.log('doorOpened');
+    dispatch(Actions.setApplicationMode('maintenance'));
   };
 };
 
@@ -377,6 +422,12 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       break;
     case 'LIMIT_BANKNOTE_SUCCESS':
       break;
+    case 'DOOR_CLOSED':
+      dispatch(doorClosed());
+      break;
+    case 'DOOR_OPENED':
+      dispatch(doorOpened());
+      break;
     default:
       break;
   }
@@ -416,50 +467,79 @@ export const receivedScannedCode = (scannedCode) => {
     const nextReward = OrderSelector.getEventNextReward(getState().order);
     const eventId = OrderSelector.getEventId(getState().order);
     console.log('receivedScannedCode', eventId, scannedCode, nextInput);
-    try {
-      if (verifyIsBarcodeOrQrCodeInput(nextInput)) {
-        const isBarcode = verifyIsBarcode(scannedCode);
-        const dataToVerify = {
-          eventId,
-          code: scannedCode,
-          discountType: isBarcode ? 'barcode' : 'qrcode'
-        };
-        dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
-        const verifyBarcodeOrQrcodeResponse = await verifyBarcodeOrQrcode(dataToVerify);
-        const responseData = extractResponseData(verifyBarcodeOrQrcodeResponse);
-        const discount = extractDiscountFromResponseData(responseData);
-        dispatch(hideLoading());
-        if (verifyDiscountIsExist(discount)) {
-          dispatch(updateEventReward(nextReward, discount));
-        }
-        dispatch(updateEventInput(nextInput, scannedCode));
-      } else if (verifyIsLineQrcodeInput) {
-        const isLineQrcode = verifyIsLineQrcode(scannedCode);
-        const exactLineId = _.last(_.split(scannedCode, '/'));
-        if (isLineQrcode) {
-          const barcodeOrQrcode = OrderSelector.getEventBarcodeOrQrcodeInput(getState().order);
+    if (eventId) {
+      try {
+        if (verifyIsBarcodeOrQrCodeInput(nextInput)) {
+          const isBarcode = verifyIsBarcode(scannedCode);
           const dataToVerify = {
             eventId,
-            code: exactLineId,
-            barcodeOrQrcode,
+            code: scannedCode,
+            discountType: isBarcode ? 'barcode' : 'qrcode'
           };
           dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
-          const verifyLineQrcodeResponse = await verifyLineQrcode(dataToVerify);
-          const responseData = extractResponseData(verifyLineQrcodeResponse);
+          const verifyBarcodeOrQrcodeResponse = await verifyBarcodeOrQrcode(dataToVerify);
+          const responseData = extractResponseData(verifyBarcodeOrQrcodeResponse);
           const discount = extractDiscountFromResponseData(responseData);
           dispatch(hideLoading());
           if (verifyDiscountIsExist(discount)) {
             dispatch(updateEventReward(nextReward, discount));
           }
-          dispatch(updateEventInput(nextInput, exactLineId));
+          dispatch(updateEventInput(nextInput, scannedCode));
+        } else if (verifyIsLineQrcodeInput) {
+          const isLineQrcode = verifyIsLineQrcode(scannedCode);
+          const exactLineId = _.last(_.split(scannedCode, '/'));
+          if (isLineQrcode) {
+            const barcodeOrQrcode = OrderSelector.getEventBarcodeOrQrcodeInput(getState().order);
+            const dataToVerify = {
+              eventId,
+              code: exactLineId,
+              barcodeOrQrcode,
+            };
+            dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
+            const verifyLineQrcodeResponse = await verifyLineQrcode(dataToVerify);
+            const responseData = extractResponseData(verifyLineQrcodeResponse);
+            const discount = extractDiscountFromResponseData(responseData);
+            dispatch(hideLoading());
+            if (verifyDiscountIsExist(discount)) {
+              dispatch(updateEventReward(nextReward, discount));
+            }
+            dispatch(updateEventInput(nextInput, exactLineId));
+          } else {
+            console.error(`${scannedCode} is not lineId`);
+          }
         } else {
-          console.error(`${scannedCode} is not lineId`);
+          console.error(`${scannedCode} is not barcode or qrcode or lineId`);
         }
-      } else {
-        console.error(`${scannedCode} is not barcode or qrcode or lineId`);
+      } catch (error) {
+        dispatch(handleApiError(error));
       }
-    } catch (error) {
-      dispatch(handleApiError(error));
+    }
+    if (getState().router.location.pathname === '/salesman') {
+      // validate salesman
+      const serviceVerifySalesmanResponse = await serviceVerifySalesman(scannedCode);
+      const result = extractResponseData(serviceVerifySalesmanResponse).pass || false;
+      if (result === true) {
+        // pass call api disable alarm
+        const client = MasterappSelector.getTcpClient(getState().masterapp);
+        client.send({
+          action: 0,
+          sensor: 'alarm',
+          msg: '0',
+        });
+        // render under construction
+        dispatch(openAlertMessage(convertApplicationErrorToError({
+          title: `รหัสพนักงาน ${scannedCode} ถูกต้อง`,
+          th: 'กรุณาเปิดตู้เพื่อทำรายการต่อ',
+          en: '',
+        })));
+      } else {
+        // show error
+        dispatch(openAlertMessage(convertApplicationErrorToError({
+          title: `รหัสพนักงาน ${scannedCode} ไม่ถูกต้อง`,
+          th: 'กรุณาตรวจสอบใหม่อีกครั้ง',
+          en: '',
+        })));
+      }
     }
   };
 };
@@ -678,6 +758,7 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
     );
   if (currentCash >= grandTotalAmount) {
     dispatch(setReadyToDropProduct());
+    dispatch(Actions.stopPlayAudio());
     setTimeout(() => {
       dispatch(receivedCashCompletely());
     }, 1000);
@@ -1378,4 +1459,40 @@ export const startedAudio = () => {
   return (dispatch) => {
     dispatch(Actions.startedAudio());
   };
+};
+
+export const startPlayAudio = () => {
+  return (dispatch) => {
+    dispatch(Actions.startPlayAudio());
+  };
+};
+
+export const stopPlayAudio = () => {
+  return (dispatch) => {
+    dispatch(Actions.stopPlayAudio());
+  };
+};
+
+export const playInputMSISDNErrorAudio = () => {
+  return (dispatch, getState) => {
+    const fileURL = MasterappSelector.getLocalURL(getState().masterapp);
+    dispatch(Actions.setAudioSource(`${fileURL}/voice/8.2.m4a`));
+    dispatch(Actions.startPlayAudio());
+  };
+};
+
+export const openDoor = () => (dispatch, getState) => {
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.setFree();
+  client.send({
+    action: 'door-open',
+  });
+};
+
+export const closeDoor = () => (dispatch, getState) => {
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.setFree();
+  client.send({
+    action: 'door-close',
+  });
 };

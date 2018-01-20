@@ -37,3 +37,23 @@ export const serviceGetSumOrderAmount = () => {
     return response;
   });
 };
+
+export const syncSettlement = () => {
+  const data = {
+    vtype: 'SettleMent'
+  };
+  return fetchFacade(`${URL.syncSettlement}${convertToURLParam(data)}`).then((response) => {
+    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return response;
+  });
+};
+
+export const updateStock = () => {
+  const data = {
+    vtype: 'UpdateStock'
+  };
+  return fetchFacade(`${URL.updateStock}${convertToURLParam(data)}`).then((response) => {
+    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return response;
+  });
+};
