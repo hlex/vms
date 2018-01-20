@@ -132,12 +132,13 @@ class HomePage extends Component {
           </div>
           <div className="menu-slider">
             <Slider ref={c => (this.slider = c)} {...navMenuSettings}>
-              {navMenus.map(menu =>
+              {navMenus.map((menu, index) =>
                 (<div className="item" key={cuid()} onClick={() => changePage(menu.linkTo)}>
                   <div className="fix-rows">
                     <div className="box" style={{ backgroundImage: `url(${baseURL}/${menu.src})` }}>
                       <div className="title">
                         <h3>
+                          <span className="step">{index + 1}</span>
                           {menu.title[lang]}
                         </h3>
                       </div>

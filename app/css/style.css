@@ -6565,7 +6565,6 @@ hr {
     font-size: 25px; }
 
 .event-box {
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -6894,6 +6893,19 @@ body {
   background: #fff;
   width: 1080px;
   height: 1920px; }
+
+span.step {
+  background: #fff;
+  border-radius: 0.8em;
+  -moz-border-radius: 0.8em;
+  -webkit-border-radius: 0.8em;
+  color: #0077DB;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 0.9em;
+  margin-right: 10px;
+  text-align: center;
+  width: 0.9em; }
 
 span.pt {
   font-family: 'robotobold'; }
@@ -8850,9 +8862,11 @@ span.highlight-red {
     right: 0;
     margin-left: auto;
     margin-right: auto;
-    bottom: 0;
+    bottom: 4px;
     font-weight: bold;
     z-index: 1; }
+  .homepage .menu-slider .item .title h3 {
+    font-size: 36px; }
 
 .footer-section {
   position: relative; }

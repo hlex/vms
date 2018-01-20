@@ -45,8 +45,11 @@
         right: 0;
         margin-left: auto;
         margin-right: auto;
-        bottom: 0;
+        bottom: 4px;
         font-weight: bold;
         z-index: 1;
+    }
+    .item .title h3 {
+        font-size: 36px;
     }
 }
