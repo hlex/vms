@@ -251,6 +251,18 @@ const addResetTimer = (resetTimeMS) => {
   };
 };
 
+export const doorClosed = () => {
+  return (dispatch, getState) => {
+    console.log('doorClosed');
+  }
+}
+
+export const doorOpened = () => {
+  return (dispatch, getState) => {
+    console.log('doorOpened');
+  }
+}
+
 export const receivedDataFromServer = data => (dispatch, getState) => {
   if (data.sensor && data.sensor === 'temp') return;
   const client = MasterappSelector.getTcpClient(getState().masterapp);
@@ -379,6 +391,12 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       }, 1000);
       break;
     case 'LIMIT_BANKNOTE_SUCCESS':
+      break;
+    case 'DOOR_CLOSED':
+      dispatch(doorClosed());
+      break;
+    case 'DOOR_OPENED':
+      dispatch(doorOpened());
       break;
     default:
       break;
@@ -1425,4 +1443,20 @@ export const playInputMSISDNErrorAudio = () => {
     dispatch(Actions.setAudioSource(`${fileURL}/voice/8.2.m4a`));
     dispatch(Actions.startPlayAudio());
   };
-}
+};
+
+export const openDoor = () => (dispatch, getState) => {
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.setFree();
+  client.send({
+    action: 'door-open',
+  });
+};
+
+export const closeDoor = () => (dispatch, getState) => {
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.setFree();
+  client.send({
+    action: 'door-close',
+  });
+};
