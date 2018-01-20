@@ -93,7 +93,19 @@ class App extends Component {
         src={'http://localhost:8888/vms/html-v2/images/app-loading.gif'}
       />
     </div>
-    );
+  );
+
+  handleClickHome = () => {
+    const { backToHome } = this.props;
+    backToHome();
+    this.mediaPlayer.handleTouchMedia();
+  };
+
+  handleSwitchLanguage = oppositeLang => {
+    const { switchLanguageTo } = this.props;
+    switchLanguageTo(oppositeLang);
+    this.mediaPlayer.handleTouchMedia();
+  };
 
   render() {
     const {
@@ -119,8 +131,8 @@ class App extends Component {
             <LoadingScreen />
             <Layout.Header
               lang={lang}
-              switchLanguageTo={switchLanguageTo}
-              backToHome={backToHome}
+              switchLanguageTo={this.handleSwitchLanguage}
+              ackToHome={this.handleClickHome}
               baseURL={baseURL}
             />
             {this.props.children}
