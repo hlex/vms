@@ -40,7 +40,7 @@ class DevToolbar extends Component {
             <a onClick={() => insertCoin(100)}>100B</a>
           </li>
           <li>
-            <a onClick={() => scanCode('Q12345R')}>QR</a>
+            <a onClick={() => scanCode('10RV59E')}>QR</a>
           </li>
           <li>
             <a onClick={() => scanCode('2048486920593')}>BC</a>
