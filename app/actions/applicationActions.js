@@ -768,9 +768,10 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
     } else if (OrderSelector.verifyMobileTopupOrder(getState().order)) {
       try {
         const discount = OrderSelector.getDiscount(getState().order);
+        const discountCode = _.get(discount, 'code', '');
         const serviceTopupMobileResponse = await serviceTopupMobile(
             OrderSelector.getMobileTopupToService(getState().order),
-            discount.code
+            discountCode
           );
         console.log('serviceTopupMobile', serviceTopupMobileResponse);
         dispatch(endProcess());
