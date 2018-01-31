@@ -17,6 +17,8 @@ import MasterappSelector from '../../selectors/masterapp';
 // ======================================================
 // Actions
 // ======================================================
+import * as ApplicationActions from '../../actions/applicationActions';
+
 const mapStateToProps = (state) => {
   return {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
@@ -24,6 +26,7 @@ const mapStateToProps = (state) => {
 };
 
 const actions = {
+  ...ApplicationActions
 };
 
 const mapDispatchToProps = (dispatch) => {
