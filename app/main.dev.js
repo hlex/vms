@@ -81,8 +81,7 @@ app.on('ready', async () => {
     mainWindow = null;
   });
 
-  // const menuBuilder = new MenuBuilder(mainWindow);
-  // menuBuilder.buildMenu();
-
-  mainWindow.setFullScreen(true);
+  const menuBuilder = new MenuBuilder(mainWindow);
+  menuBuilder.buildMenu();
+  // if (process.env.NODE_ENV !== 'development') mainWindow.setFullScreen(true);
 });
