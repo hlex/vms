@@ -879,12 +879,15 @@ export const receivedCashRemaining = (data) => {
 };
 
 export const productDropProcessCompletely = () => async (dispatch, getState) => {
+  const isOrderHasProduct = OrderSelector.verifyOrderHasProduct(getState());
   dispatch(Actions.productDropProcessCompletely());
   const cashChangeAmount = PaymentSelector.getCashChangeAmount(getState().payment);
   // submitOrder
   try {
-    const submitOrderResponse = await dispatch(submitOrder());
-    console.log('productDropProcessCompletely.submitOrderResponse', submitOrderResponse);
+    if (isOrderHasProduct) {
+      const submitOrderResponse = await dispatch(submitOrder());
+      console.log('productDropProcessCompletely.submitOrderResponse', submitOrderResponse);
+    }
     if (cashChangeAmount === 0) {
       setTimeout(() => {
         dispatch(backToHome());
