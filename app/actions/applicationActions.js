@@ -276,6 +276,7 @@ export const doorClosed = () => {
       });
       dispatch(getMasterProductAndEventAndPromotions());
       setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
+      dispatch(backToHome());
     } catch (error) {
       dispatch(openAlertMessage(convertApplicationErrorToError({
         title: 'ไม่สามารถ Update Stock ได้',
@@ -516,9 +517,8 @@ export const receivedScannedCode = (scannedCode) => {
     }
     if (getState().router.location.pathname === '/salesman') {
       // validate salesman
-      const serviceVerifySalesmanResponse = await serviceVerifySalesman(scannedCode);
-      const result = extractResponseData(serviceVerifySalesmanResponse).pass || false;
-      if (result === true) {
+      try {
+        await serviceVerifySalesman(scannedCode);
         // pass call api disable alarm
         const client = MasterappSelector.getTcpClient(getState().masterapp);
         client.send({
@@ -532,8 +532,9 @@ export const receivedScannedCode = (scannedCode) => {
           th: 'กรุณาเปิดตู้เพื่อทำรายการต่อ',
           en: '',
         })));
-      } else {
+      } catch (error) {
         // show error
+        dispatch(handleApiError(error));
         dispatch(openAlertMessage(convertApplicationErrorToError({
           title: `รหัสพนักงาน ${scannedCode} ไม่ถูกต้อง`,
           th: 'กรุณาตรวจสอบใหม่อีกครั้ง',
