@@ -26,7 +26,7 @@ const withAudio = ({ src }, actions) => WrappedComponent => class ComponentWithA
     this.unsubscribe();
   }
   audioShouldPlay = (audio) => {
-    console.log('audioShouldPlay', audio);
+    // console.log('audioShouldPlay', audio);
     if (!audio.play) {
       this.setState({
         play: false
@@ -38,7 +38,7 @@ const withAudio = ({ src }, actions) => WrappedComponent => class ComponentWithA
     }
   }
   render = () => {
-    console.log('withAudio', this);
+    // console.log('withAudio', this);
     const { play, defaultSrc } = this.state;
     return (
       <div>
