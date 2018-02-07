@@ -57,11 +57,12 @@ export const getPhysicalUsedSlotNo = (product) => {
 };
 
 export const verifyThisOrderShouldDropFreeProduct = (sumOrderAmount, activityFreeRule) => {
+  const currentOrderNumber = Number(sumOrderAmount) + 1;
   switch (activityFreeRule) {
     case 'ODD':
-      return sumOrderAmount % 2 === 1;
+      return currentOrderNumber % 2 === 1;
     case 'EVEN':
-      return sumOrderAmount % 2 === 0;
+      return currentOrderNumber % 2 === 0;
     case 'ALL':
       return true;
     default:
