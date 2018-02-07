@@ -22,7 +22,7 @@ export const serviceSubmitOrder = ({ id, poId, saleType, discountCode, qty, unit
     barcode,
     lineqrcode: lineQrcode
   };
-  return fetchFacade(`${URL.submitOrder}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.submitOrder}${convertToURLParam(data)}`, { local: true }).then((response) => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });
@@ -32,7 +32,7 @@ export const serviceGetSumOrderAmount = () => {
   const data = {
     vtype: 'sumOrderAmount'
   };
-  return fetchFacade(`${URL.sumOrderAmount}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.sumOrderAmount}${convertToURLParam(data)}`, { local: true }).then((response) => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });
@@ -42,7 +42,7 @@ export const syncSettlement = () => {
   const data = {
     vtype: 'SettleMent'
   };
-  return fetchFacade(`${URL.syncSettlement}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.syncSettlement}${convertToURLParam(data)}`, { local: true }).then((response) => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });
@@ -52,7 +52,7 @@ export const updateStock = () => {
   const data = {
     vtype: 'UpdateStock'
   };
-  return fetchFacade(`${URL.updateStock}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.updateStock}${convertToURLParam(data)}`, { local: true }).then((response) => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });

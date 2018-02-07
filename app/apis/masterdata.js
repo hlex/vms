@@ -1024,7 +1024,7 @@ export const serviceGetEvents = () => {
   const data = {
     vtype: 'activities',
   };
-  return fetchFacade(`${URL.getEvents}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.getEvents}${convertToURLParam(data)}`, { local: true }).then((response) => {
     console.log('serviceGetEvents', response);
     return response;
   });
@@ -1034,7 +1034,7 @@ export const serviceGetProducts = () => {
   const data = {
     vtype: 'product',
   };
-  return fetchFacade(`${URL.getProducts}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.getProducts}${convertToURLParam(data)}`, { local: true }).then((response) => {
     // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });
@@ -1044,7 +1044,7 @@ export const serviceGetPromotions = () => {
   const data = {
     vtype: 'promotion',
   };
-  return fetchFacade(`${URL.getPromotions}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.getPromotions}${convertToURLParam(data)}`, { local: true }).then((response) => {
     // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });
@@ -1054,7 +1054,7 @@ export const serviceGetMobileTopupProviders = () => {
   const data = {
     vtype: 'topup',
   };
-  return fetchFacade(`${URL.getMobileTopupProviders}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.getMobileTopupProviders}${convertToURLParam(data)}`, { local: true }).then((response) => {
     // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });
@@ -1064,7 +1064,7 @@ export const serviceGetBaseAds = () => {
   const data = {
     vtype: 'advertise',
   };
-  return fetchFacade(`${URL.getMobileTopupProviders}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.getMobileTopupProviders}${convertToURLParam(data)}`, { local: true }).then((response) => {
     // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });

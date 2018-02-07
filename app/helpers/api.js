@@ -2,6 +2,9 @@ import { fetchWithJarvis, convertToURLParam } from 'api-jarvis';
 import _ from 'lodash';
 
 const baseURL = 'http://27.254.160.247:81';
+const localURL = process.env.NODE_ENV === 'production' ? 'http://localhost:8888/vms' : 'http://27.254.160.247:81';
+
+console.log('localURL', localURL, process.env.NODE_ENV)
 
 export const addUrlParameter = (url, params) => {
   const indexOfQuestionMark = url.indexOf('?'); // found ?
@@ -17,9 +20,12 @@ export const addUrlParameter = (url, params) => {
   return `${url}${convertToURLParam(params)}`;
 };
 
-export const fetchFacade = (url, options) => fetchWithJarvis(`${baseURL}/${addUrlParameter(url, { t: Date.now() })}`, {
-  ...options,
-}).then(response => response);
+export const fetchFacade = (url, options = {}) => {
+  const origin = options.local ? localURL : baseURL;
+  return fetchWithJarvis(`${origin}/${addUrlParameter(url, { t: Date.now() })}`, {
+    ...options,
+  }).then(response => response);
+};
 
 export const extractResponseData = (response) => {
   return _.get(response, 'response-data', {});
