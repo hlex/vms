@@ -524,7 +524,9 @@ export const receivedScannedCode = (scannedCode) => {
     if (getState().router.location.pathname === '/salesman') {
       // validate salesman
       try {
+        dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
         await serviceVerifySalesman(scannedCode);
+        dispatch(hideLoading());
         // pass call api disable alarm
         const client = MasterappSelector.getTcpClient(getState().masterapp);
         client.send({
@@ -891,6 +893,8 @@ export const productDropProcessCompletely = () => async (dispatch, getState) => 
   dispatch(Actions.productDropProcessCompletely());
   const cashChangeAmount = PaymentSelector.getCashChangeAmount(getState().payment);
   // submitOrder
+  console.log('productDropProcessCompletely: isOrderHasProduct', isOrderHasProduct);
+  console.log('productDropProcessCompletely: cashChangeAmount', cashChangeAmount);
   try {
     if (isOrderHasProduct) {
       const submitOrderResponse = await dispatch(submitOrder());
