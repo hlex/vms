@@ -43,6 +43,7 @@ const mapStateToProps = state => {
   );
   return {
     location: state.router.location,
+    localStaticURL: MasterappSelector.getLocalStaticURL(state.masterapp),
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     appReady: MasterappSelector.verifyAppReady(state.masterapp),
     isMaintenace: MasterappSelector.verifyIsMaintenanceMode(state.masterapp),
@@ -86,14 +87,17 @@ class App extends Component {
     );
   };
 
-  renderApplicationStarting = () => (
-    <div style={{ display: 'flex', width: '1080px', height: '1920px' }}>
-      <img
-        style={{ width: '100%' }}
-        src={'http://localhost:8888/vms/html-v2/images/app-loading.gif'}
-      />
-    </div>
-  );
+  renderApplicationStarting = () => {
+    const { localStaticURL } = this.props;
+    return (
+      <div style={{ display: 'flex', width: '1080px', height: '1920px' }}>
+        <img
+          style={{ width: '100%' }}
+          src={`${localStaticURL}/images/app-loading.gif`}
+        />
+      </div>
+    );
+  }
 
   handleClickHome = () => {
     const { backToHome } = this.props;

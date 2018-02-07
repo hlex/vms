@@ -24,7 +24,8 @@ import {
   SET_APPLICATION_MODE
 } from '../actions/actionTypes';
 
-const localURL = 'http://localhost:8888/vms/static';
+const localURL = 'http://localhost:8888/vms';
+const localStaticURL = 'http://localhost:8888/vms/static';
 const cloudURL = 'http://27.254.160.247:81';
 const initialTcp = process.env.NODE_ENV !== 'production'
 ? {
@@ -61,6 +62,7 @@ const initialState = {
   ],
   localURL,
   baseURL: cloudURL,
+  localStaticURL,
   tcp: initialTcp,
   tcpClient: {},
   temp: 25, // celcius

@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 
 const getLocalURL = state => state.localURL;
 const getBaseURL = state => state.baseURL;
+const getLocalStaticURL = state => state.localStaticURL;
 const getTcp = state => state.tcp;
 const getTemp = state => state.temp;
 const getTcpClient = state => state.tcpClient;
@@ -40,6 +41,7 @@ const verifyIsDroppingFreeProduct = createSelector(
 export default {
   getLocalURL,
   getBaseURL,
+  getLocalStaticURL,
   getTcp,
   getTemp,
   getTcpClient,
