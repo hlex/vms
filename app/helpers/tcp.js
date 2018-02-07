@@ -75,13 +75,13 @@ export const isProductDropFail = ({ action, msg, result, description }) => {
   return true;
 };
 
-export const isUpdateTemp = ({ action, sensor, msg, result, description }) => {
-  if (action !== actionCode.sensor && sensor !== 'temp') return false;
+export const isUpdateTemp = ({ action, sensor }) => {
+  if (action !== actionCode.sensor || sensor !== 'temp') return false;
   return true;
 };
 
-export const isScannedQrcode = ({ action, sensor, msg, result, description }) => {
-  if (action !== actionCode.sensor && sensor !== 'qrcode') return false;
+export const isScannedQrcode = ({ action, sensor }) => {
+  if (action !== actionCode.sensor || sensor !== 'qrcode') return false;
   return true;
 };
 
