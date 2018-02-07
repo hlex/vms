@@ -63,7 +63,7 @@ class Footer extends PureComponent {
 
   render() {
     console.log(this);
-    const { ref, footerAds } = this.props;
+    const { mediaRef, footerAds } = this.props;
     return (
       <div className="footer-section">
         <div className="copy">
@@ -72,7 +72,7 @@ class Footer extends PureComponent {
         {!this.shouldHideSignage() && (
           <div className="signage">
             <MediaPlayer
-              ref={this.props.inputRef}
+              ref={this.props.mediaRef}
               width={1080}
               height={610}
               sources={footerAds}

@@ -136,11 +136,11 @@ class App extends Component {
             <Layout.Header
               lang={lang}
               switchLanguageTo={this.handleSwitchLanguage}
-              ackToHome={this.handleClickHome}
+              backToHome={this.handleClickHome}
               baseURL={baseURL}
             />
             {this.props.children}
-            <Layout.Footer />
+            <Layout.Footer mediaRef={el => this.mediaPlayer = el} />
             {process.env.NODE_ENV !== 'production' && <DevToolbar />}
           </div>
         )}
