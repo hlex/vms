@@ -71,7 +71,8 @@ import {
   serviceGetEventSteps,
   serviceGetMobileTopupSteps,
   serviceGetMainMenu,
-  serviceGetSetting
+  serviceGetSetting,
+  serviceGetMachineId,
 } from '../apis/masterdata';
 import {
   serviceGetEventReward,
@@ -189,8 +190,13 @@ export const initApplication = () => {
       const mobileTopupSteps = _.map(extractResponseData(serviceGetMobileTopupStepsResponse), (event, index) => convertToAppText(event, index));
       dispatch(Actions.receivedMasterdata('mobileTopupSteps', mobileTopupSteps));
       // ======================================================
-      // ACTIVITY FREE
+      // SETTING
       // ======================================================
+      const getMachineIdResponse = await serviceGetMachineId();
+      console.log('getMachineIdResponse', getMachineIdResponse);
+      const machineId = _.get(extractResponseData(getMachineIdResponse), 'MachineID', '');
+      dispatch(Actions.setMachineId(machineId));
+
       const getSettingResponse = await serviceGetSetting();
       const settingResponse = extractResponseData(getSettingResponse);
       const activityFreeRule = _.get(settingResponse, 'rule', '');
@@ -769,9 +775,11 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
       try {
         const discount = OrderSelector.getDiscount(getState().order);
         const discountCode = _.get(discount, 'code', '');
+        const machineId = MasterappSelector.getMachineId(getState().masterapp);
         const serviceTopupMobileResponse = await serviceTopupMobile(
             OrderSelector.getMobileTopupToService(getState().order),
-            discountCode
+            discountCode,
+            machineId
           );
         console.log('serviceTopupMobile', serviceTopupMobileResponse);
         dispatch(endProcess());

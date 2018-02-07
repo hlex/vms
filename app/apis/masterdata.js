@@ -1128,3 +1128,12 @@ export const serviceGetSetting = () => {
     return response;
   });
 };
+export const serviceGetMachineId = () => {
+  const data = {
+    vtype: 'MachineID',
+  };
+  return fetchFacade(`${URL.getActivityFreeRule}${convertToURLParam(data)}`, { local: true }).then((response) => {
+    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return response;
+  });
+};

@@ -21,7 +21,8 @@ import {
   AUDIO_STARTED,
   AUDIO_ENDED,
   SET_VOICE_INTERVAL,
-  SET_APPLICATION_MODE
+  SET_APPLICATION_MODE,
+  SET_MACHINE_ID
 } from '../actions/actionTypes';
 
 const localURL = 'http://localhost:8888/vms';
@@ -218,6 +219,11 @@ export default (state = initialState, action) => {
         ...state,
         mode: action.mode
       };
+    case SET_MACHINE_ID:
+      return {
+        ...state,
+        machineId: action.machineId
+      }
     default:
       return state;
   }

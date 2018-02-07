@@ -49,6 +49,7 @@ export const AUDIO_ENDED = 'AUDIO_END';
 export const AUDIO_STOP_PLAY = 'AUDIO_STOP_PLAY';
 export const AUDIO_START_PLAY = 'AUDIO_START_PLAY';
 export const SET_APPLICATION_MODE = 'SET_APPLICATION_MODE';
+export const SET_MACHINE_ID = 'SET_MACHINE_ID';
 
 // ======================================================
 // TCP

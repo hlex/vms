@@ -54,7 +54,8 @@ import {
   AUDIO_ENDED,
   AUDIO_STOP_PLAY,
   AUDIO_START_PLAY,
-  SET_APPLICATION_MODE
+  SET_APPLICATION_MODE,
+  SET_MACHINE_ID
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
@@ -316,4 +317,9 @@ export const stopPlayAudio = () => ({
 export const setApplicationMode = (mode) => ({
   type: SET_APPLICATION_MODE,
   mode
+});
+
+export const setMachineId = (machineId) => ({
+  type: SET_MACHINE_ID,
+  machineId
 });
