@@ -2,7 +2,7 @@ import { fetchWithJarvis, convertToURLParam } from 'api-jarvis';
 import _ from 'lodash';
 
 const baseURL = 'http://27.254.160.247:81';
-const localURL = process.env.NODE_ENV === 'production' ? 'http://localhost:8888/vms' : 'http://27.254.160.247:81';
+const localURL = process.env.NODE_ENV === 'production' ? 'http://localhost:81/vms' : 'http://27.254.160.247:81';
 
 console.log('localURL', localURL, process.env.NODE_ENV)
 
