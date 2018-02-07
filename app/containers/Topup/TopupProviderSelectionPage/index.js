@@ -147,4 +147,4 @@ class TopupProviderSelectionPage extends Component {
   }
 }
 
-export default withRouter(withAudio({ src: 'http://localhost:8888/vms/static/voice/6.m4a' }, actions)(connect(mapStateToProps, mapDispatchToProps)(TopupProviderSelectionPage)))
+export default withRouter(withAudio({ src: `http://localhost:${process.env.NODE_ENV !== 'production' ? '8888' : '81'}/vms/static/voice/6.m4a` }, actions)(connect(mapStateToProps, mapDispatchToProps)(TopupProviderSelectionPage)))

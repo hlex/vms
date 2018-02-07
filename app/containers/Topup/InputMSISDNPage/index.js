@@ -101,4 +101,4 @@ class InputMSISDNPage extends Component {
   }
 }
 
-export default withAudio({ src: 'http://localhost:8888/vms/static/voice/7.m4a' }, actions)(connect(mapStateToProps, mapDispatchToProps)(InputMSISDNPage));
+export default withAudio({ src: `http://localhost:${process.env.NODE_ENV !== 'production' ? '8888' : '81'}/vms/static/voice/7.m4a` }, actions)(connect(mapStateToProps, mapDispatchToProps)(InputMSISDNPage));
