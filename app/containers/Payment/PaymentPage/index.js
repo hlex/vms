@@ -126,6 +126,6 @@ class PaymentPage extends PureComponent {
   }
 }
 
-export default withAudio({ src: 'http://localhost:8888/vms/html-v2/voice/4.m4a' }, actions)(
+export default withAudio({ src: 'http://localhost:8888/vms/static/voice/4.m4a' }, actions)(
   connect(mapStateToProps, mapDispatchToProps)(PaymentPage)
 );

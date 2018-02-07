@@ -106,4 +106,4 @@ class MobileTopupPage extends Component {
   }
 }
 
-export default withAudio({ src: 'http://localhost:8888/vms/html-v2/voice/3.m4a' }, actions)(connect(mapStateToProps, mapDispatchToProps)(MobileTopupPage));
+export default withAudio({ src: 'http://localhost:8888/vms/static/voice/3.m4a' }, actions)(connect(mapStateToProps, mapDispatchToProps)(MobileTopupPage));

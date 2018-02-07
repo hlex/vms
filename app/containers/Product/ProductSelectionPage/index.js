@@ -127,4 +127,4 @@ class ProductSelectionPage extends Component {
   }
 }
 
-export default withRouter(withAudio({ src: 'http://localhost:8888/vms/html-v2/voice/2.m4a' }, actions)(connect(mapStateToProps, mapDispatchToProps)(ProductSelectionPage)));
+export default withRouter(withAudio({ src: 'http://localhost:8888/vms/static/voice/2.m4a' }, actions)(connect(mapStateToProps, mapDispatchToProps)(ProductSelectionPage)));
