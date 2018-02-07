@@ -24,7 +24,7 @@ import {
   SET_APPLICATION_MODE
 } from '../actions/actionTypes';
 
-const localURL = 'http://localhost:8888/vms/html-v2';
+const localURL = 'http://localhost:8888/vms/static';
 const cloudURL = 'http://27.254.160.247:81';
 const initialTcp = process.env.NODE_ENV !== 'production'
 ? {
