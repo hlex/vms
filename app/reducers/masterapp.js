@@ -25,8 +25,8 @@ import {
   SET_MACHINE_ID
 } from '../actions/actionTypes';
 
-const localURL = 'http://localhost:8888/vms';
-const localStaticURL = 'http://localhost:8888/vms/static';
+const localURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:8888/vms' : 'http://localhost:81/vms';
+const localStaticURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:8888/vms/static' : 'http://localhost:81/vms/static';
 const cloudURL = 'http://27.254.160.247:81';
 const initialTcp = process.env.NODE_ENV !== 'production'
 ? {
