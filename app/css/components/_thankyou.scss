@@ -51,3 +51,18 @@
         font-size: 34px;
     }
 }
+
+.thankyou .free-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    span {
+        font-weight: 700;
+        font-size: 50px;
+        margin: 0 5px;
+    }
+    img {
+        width: 120px;
+        max-width: 100%;
+    }
+}

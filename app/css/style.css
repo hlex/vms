@@ -6105,6 +6105,18 @@ hr {
     font-weight: 700;
     font-size: 34px; }
 
+.thankyou .free-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+  .thankyou .free-wrapper span {
+    font-weight: 700;
+    font-size: 50px;
+    margin: 5px; }
+  .thankyou .free-wrapper img {
+    width: 120px;
+    max-width: 100%; }
+
 .input-msisdn .input-msisdn-box-wrapper {
   padding: 30px 80px;
   margin-bottom: 15px; }
