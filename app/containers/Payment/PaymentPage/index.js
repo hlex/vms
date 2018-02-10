@@ -78,8 +78,6 @@ class PaymentPage extends PureComponent {
   componentWillUnmount = () => {
     const { returnAllInsertCash } = this.props;
     console.log('outPaymentPage !!!!');
-    debugger;
-    // if unmount return
     returnAllInsertCash();
   };
 
@@ -89,12 +87,8 @@ class PaymentPage extends PureComponent {
       return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />;
     }
     if (moneyBoxActive) {
-      if (isFinish) {
-        return <ThankyouPage baseURL={baseURL} />;
-      }
-      if (isLoading) {
-        return <Loading baseURL={baseURL} />;
-      }
+      if (isFinish) return <ThankyouPage baseURL={baseURL} />;
+      if (isLoading) return <Loading baseURL={baseURL} />;
       return (
         <PaymentConfirmation
           baseURL={baseURL}
@@ -103,7 +97,8 @@ class PaymentPage extends PureComponent {
         />
       );
     }
-    return <ThankyouPage baseURL={baseURL} />;
+    if (isFinish) return <ThankyouPage baseURL={baseURL} />;
+    return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />;
   };
 
   renderTitle = () => {

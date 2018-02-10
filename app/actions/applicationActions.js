@@ -225,10 +225,10 @@ export const initApplication = () => {
       const sanitizedMobileTopupProviders = _.map(extractResponseData(serviceGetMobileTopupProvidersResponse), mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider, fileURL));
       dispatch(Actions.receivedMasterdata('topupProviders', sanitizedMobileTopupProviders));
 
-      // const resetTimeMS = resetTime * 1000;
-      // setTimeout(() => {
-      //   dispatch(addResetTimer(resetTimeMS));
-      // }, 10000);
+      const resetTimeMS = resetTime * 1000;
+      setTimeout(() => {
+        dispatch(addResetTimer(resetTimeMS));
+      }, 10000);
     } catch (error) {
       console.error(error);
     }
@@ -893,7 +893,6 @@ export const productDropProcessCompletely = () => async (dispatch, getState) => 
   const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
   const cashChangeAmount = currentCash - grandTotalAmount;
   const isOrderHasProduct = OrderSelector.verifyOrderHasProduct(getState().order);
-  // submitOrder
   console.log('productDropProcessCompletely: currentCash', currentCash, 'grandTotalAmount', grandTotalAmount, 'cashChangeAmount', cashChangeAmount, 'isOrderHasProduct', isOrderHasProduct);
   try {
     if (isOrderHasProduct) {
