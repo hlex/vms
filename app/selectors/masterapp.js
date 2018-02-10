@@ -20,6 +20,16 @@ const getHardwareProcessing = state => state.hardwareProcessing;
 const getAutoplayTime = state => state.autoplayTime;
 const getMuteAds = state => state.mutedAds;
 const getMachineId = state => state.machineId;
+
+const verifyIsEnablingMoneyBox = createSelector(
+  [
+    getHardwareProcessing
+  ],
+  (
+    hardwareProcessing
+  ) => hardwareProcessing === 'enableMoneyBox'
+);
+
 const verifyIsHardwareProcessing = createSelector(
   [
     getHardwareProcessing
@@ -61,5 +71,6 @@ export default {
   getAutoplayTime,
   getMuteAds,
   verifyIsMaintenanceMode,
-  getMachineId
+  getMachineId,
+  verifyIsEnablingMoneyBox
 };

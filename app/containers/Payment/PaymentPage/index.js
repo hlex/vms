@@ -39,6 +39,7 @@ import OrderSelector from '../../../selectors/order';
 
 const mapStateToProps = state => ({
   ...state.payment,
+  isEnablingMoneyBox: MasterappSelector.verifyIsEnablingMoneyBox(state.masterapp),
   moneyBoxActive: MasterappSelector.verifyIsMoneyBoxActive(state.masterapp),
   canChangeCash: state.masterapp.canChangeCash,
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
@@ -63,8 +64,10 @@ class PaymentPage extends PureComponent {
     returnAllInsertCash: PropTypes.func.isRequired,
     initPaymentPage: PropTypes.func.isRequired,
     canChangeCash: PropTypes.bool.isRequired,
-    orderType: PropTypes.string,
-    paymentBgImage: PropTypes.string
+    orderType: PropTypes.string.isRequired,
+    paymentBgImage: PropTypes.string.isRequired,
+    moneyBoxActive: PropTypes.bool.isRequired,
+    isEnablingMoneyBox: PropTypes.bool.isRequired,
   };
 
   componentDidMount = () => {
@@ -75,16 +78,23 @@ class PaymentPage extends PureComponent {
   componentWillUnmount = () => {
     const { returnAllInsertCash } = this.props;
     console.log('outPaymentPage !!!!');
+    debugger;
     // if unmount return
     returnAllInsertCash();
   };
 
   renderContent = () => {
-    const { moneyBoxActive, baseURL, isLoading, isFinish, summaryList, canChangeCash } = this.props;
-    // const isFinish = true;
+    const { isEnablingMoneyBox, moneyBoxActive, baseURL, isLoading, isFinish, summaryList, canChangeCash } = this.props;
+    if (isEnablingMoneyBox) {
+      return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />;
+    }
     if (moneyBoxActive) {
-      if (isFinish) return <ThankyouPage baseURL={baseURL} />;
-      if (isLoading) return <Loading baseURL={baseURL} />;
+      if (isFinish) {
+        return <ThankyouPage baseURL={baseURL} />;
+      }
+      if (isLoading) {
+        return <Loading baseURL={baseURL} />;
+      }
       return (
         <PaymentConfirmation
           baseURL={baseURL}
@@ -93,10 +103,7 @@ class PaymentPage extends PureComponent {
         />
       );
     }
-    if (isFinish) {
-      return <ThankyouPage baseURL={baseURL} />;
-    }
-    return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />;
+    return <ThankyouPage baseURL={baseURL} />;
   };
 
   renderTitle = () => {
@@ -117,8 +124,7 @@ class PaymentPage extends PureComponent {
       <div>
         <Layout.Title>{this.renderTitle()}</Layout.Title>
         <Layout.Content>
-          {!moneyBoxActive && <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />}
-          {moneyBoxActive && this.renderContent()}
+          {this.renderContent()}
           {moneyBoxActive && canBack && <FooterAction />}
         </Layout.Content>
       </div>

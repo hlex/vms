@@ -189,16 +189,16 @@ class ProductItems extends PureComponent {
     let fullfilledProduct = products;
 
     const differentPage = Math.abs(productTotalPage - promotionTotalPage);
-    console.log('>>>>>>>', productTotalPage, promotionTotalPage);
+    // console.log('>>>>>>>', productTotalPage, promotionTotalPage);
     if (promotionTotalPage < productTotalPage) {
-      console.log('promotionTotalPage < productTotalPage', differentPage, 'boost', differentPage * promotionSetPerPage);
+      // console.log('promotionTotalPage < productTotalPage', differentPage, 'boost', differentPage * promotionSetPerPage);
       const totalFullfillAmount = promotionSetAmount + (differentPage * promotionSetPerPage);
       fullfilledPromotionSet = _.map(_.range(totalFullfillAmount), (index) => {
         const promotionSetIndex = index % promotionSetAmount;
         return promotionSets[promotionSetIndex];
       });
     } else if (promotionTotalPage > productTotalPage) {
-      console.log('promotionTotalPage > productTotalPage', differentPage, 'boost', differentPage * productPerPage);
+      // console.log('promotionTotalPage > productTotalPage', differentPage, 'boost', differentPage * productPerPage);
       const totalFullfillAmount = productAmount + (differentPage * productPerPage);
       fullfilledProduct = _.map(_.range(totalFullfillAmount), (index) => {
         const productIndex = index % productAmount;
