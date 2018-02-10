@@ -672,7 +672,7 @@ export const productDrop = () => (dispatch, getState) => {
     const client = MasterappSelector.getTcpClient(getState().masterapp);
     client.send({
       action: 1,
-      msg: targetRowColumn, // row * col
+      msg: targetRowColumn || '00', // row * col
     });
     dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
   } else {
@@ -816,7 +816,10 @@ const runFlowProductDropSuccess = () => async (dispatch, getState) => {
     const serviceGetSumOrderAmountResponse = await serviceGetSumOrderAmount();
     const sumOrderAmount = extractResponseData(serviceGetSumOrderAmountResponse);
     const isOrderHasFreeProduct = OrderSelector.verifyOrderHasFreeProduct(getState().order);
-    console.log(activityFreeRule, sumOrderAmount, isOrderHasFreeProduct, verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule));
+    console.log('CheckDropFreeProduct: activityFreeRule', activityFreeRule);
+    console.log('CheckDropFreeProduct: sumOrderAmount', sumOrderAmount);
+    console.log('CheckDropFreeProduct: isOrderHasFreeProduct', isOrderHasFreeProduct);
+    console.log('CheckDropFreeProduct: verifyThisOrderShouldDropFreeProduct', verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule));
     if (verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule) && !isOrderHasFreeProduct) {
       const freeProduct = MasterdataSelector.getActivityFreeProduct(getState().masterdata);
       if (freeProduct) {

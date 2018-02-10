@@ -250,7 +250,7 @@ const getDropProductTargetPhysical = createSelector(
   [getProductToDrop],
   productToDrop => {
     const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.isFree === false && physical.canDrop === true);
-    console.log('getDropProductTargetRowColumn', targetPhysical);
+    console.log('getDropProductTargetPhysical', targetPhysical);
     return targetPhysical;
   }
 );
@@ -259,6 +259,7 @@ const getDropProductTargetRowColumn = createSelector(
   [getDropProductTargetPhysical],
   targetPhysical => {
     console.log('=== PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
+    if (!targetPhysical) return undefined;
     return `${targetPhysical.row}${targetPhysical.col}`;
   }
 );
@@ -276,15 +277,14 @@ const getFreeDropProductTargetRowColumn = createSelector(
   [getFreeDropProductTargetPhysical],
   targetPhysical => {
     console.log('=== PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
+    if (!targetPhysical) return undefined;
     return `${targetPhysical.row}${targetPhysical.col}`;
   }
 );
 
 const verifyProductToFreeDropHasAvailablePhysical = createSelector(
   [getFreeDropProductTargetPhysical],
-  (targetPhysical) => {
-    return targetPhysical !== undefined;
-  }
+  (targetPhysical) => targetPhysical !== undefined
 );
 
 const verifyProductToDropHasAvailablePhysical = createSelector(
