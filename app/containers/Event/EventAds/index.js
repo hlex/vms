@@ -27,7 +27,6 @@ import OrderSelector from '../../../selectors/order';
 const mapStateToProps = state => ({
   selectedEvent: OrderSelector.getSelectedEvent(state.order),
   nextWatch: OrderSelector.getEventNextWatch(state.order),
-  baseURL: MasterappSelector.getBaseURL(state.masterapp),
 });
 
 const actions = {

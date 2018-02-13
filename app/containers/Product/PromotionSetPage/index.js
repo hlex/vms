@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import _ from 'lodash';
 // ======================================================
 // Containers
 // ======================================================
@@ -26,9 +26,10 @@ import OrderSelector from '../../../selectors/order';
 const mapStateToProps = (state) => {
   return {
     moneyBoxActive: MasterappSelector.verifyIsMoneyBoxActive(state.masterapp),
-    baseURL: MasterappSelector.getBaseURL(state.masterapp),
+    baseURL: MasterappSelector.getLocalURL(state.masterapp),
     productPrice: OrderSelector.getPromotionSetPrice(state.order),
     discountAmount: OrderSelector.getDiscountAmount(state.order),
+    promotionSet: OrderSelector.getPromotionSet(state.order),
   };
 };
 
@@ -67,13 +68,15 @@ class PromotionSetPage extends Component {
   }
 
   render() {
-    console.log('PromotionSetPage', this.props);
-    const { moneyBoxActive, baseURL, discountAmount, productPrice, submitPromotionSet, verifyDiscountCode } = this.props;
+    console.log('PromotionSetPage', this.props, this.props.promotionSet);
+    const { promotionSet, moneyBoxActive, baseURL, discountAmount, productPrice, submitPromotionSet, verifyDiscountCode } = this.props;
     return (
       <div>
         <Layout.Title>
           <PromotionSetTitle
             baseURL={baseURL}
+            comboItem1={_.get(promotionSet, 'products.0.image')}
+            comboItem2={_.get(promotionSet, 'products.1.image')}
           />
         </Layout.Title>
         <Layout.Content>

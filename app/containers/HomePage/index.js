@@ -8,7 +8,7 @@ import cuid from 'cuid';
 // ======================================================
 // Components
 // ======================================================
-import { AudioPlayer, ProductItems } from '../../components';
+import { ProductItems } from '../../components';
 // ======================================================
 // Actions
 // ======================================================
@@ -40,7 +40,8 @@ const mapStateToProps = state => ({
   promotionSets: MasterdataSelector.getPromotionsThatSomeProductNotFree(state.masterdata),
   events: MasterdataSelector.getEvents(state.masterdata),
   mobileTopupProviders: MasterdataSelector.getTopupProviders(state.masterdata),
-  baseURL: MasterappSelector.getBaseURL(state.masterapp),
+  baseURL: MasterappSelector.getLocalURL(state.masterapp),
+  localStaticURL: MasterappSelector.getLocalStaticURL(state.masterapp),
   temp: MasterappSelector.getTemp(state.masterapp),
   lang: MasterappSelector.getLanguage(state.masterapp),
   autoplayTime: MasterappSelector.getAutoplayTime(state.masterapp),
@@ -62,6 +63,7 @@ class HomePage extends Component {
     events: PropTypes.arrayOf(PropTypes.shape({})),
     mobileTopupProviders: PropTypes.arrayOf(PropTypes.shape({})),
     baseURL: PropTypes.string.isRequired,
+    localStaticURL: PropTypes.string.isRequired,
     temp: PropTypes.number,
     lang: PropTypes.string.isRequired,
     selectProduct: PropTypes.func.isRequired,
@@ -103,7 +105,6 @@ class HomePage extends Component {
   }
 
   render() {
-    console.log('HomePage@render', this.props, this.props.autoplayTime);
     const {
       lang,
       navMenus,
@@ -114,6 +115,7 @@ class HomePage extends Component {
       changePage,
       selectProduct,
       baseURL,
+      localStaticURL,
       autoplayTime,
       endedAudio,
       startedAudio,
@@ -135,7 +137,7 @@ class HomePage extends Component {
               {navMenus.map((menu, index) =>
                 (<div className="item" key={cuid()} onClick={() => changePage(menu.linkTo)}>
                   <div className="fix-rows">
-                    <div className="box" style={{ backgroundImage: `url(${baseURL}/${menu.src})` }}>
+                    <div className="box" style={{ backgroundImage: `url(${localStaticURL}/${menu.src})` }}>
                       <div className="title">
                         <h3>
                           <span className="step">{index + 1}</span>

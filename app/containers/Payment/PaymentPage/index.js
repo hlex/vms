@@ -41,7 +41,8 @@ const mapStateToProps = state => ({
   isEnablingMoneyBox: MasterappSelector.verifyIsEnablingMoneyBox(state.masterapp),
   moneyBoxActive: MasterappSelector.verifyIsMoneyBoxActive(state.masterapp),
   canChangeCash: state.masterapp.canChangeCash,
-  baseURL: MasterappSelector.getBaseURL(state.masterapp),
+  baseURL: MasterappSelector.getLocalURL(state.masterapp),
+  localStaticURL: MasterappSelector.getLocalStaticURL(state.masterapp),
   summaryList: RootSelector.getPaymentSummaryList(state),
   paymentBgImage: OrderSelector.getPaymentBgImage(state.order),
   orderType: OrderSelector.getOrderType(state.order),
@@ -85,21 +86,21 @@ class PaymentPage extends PureComponent {
   };
 
   renderContent = () => {
-    const { isEnablingMoneyBox, moneyBoxActive, baseURL, isLoading, isFinish, summaryList, canChangeCash } = this.props;
+    const { isEnablingMoneyBox, moneyBoxActive, localStaticURL, isLoading, isFinish, summaryList, canChangeCash } = this.props;
     if (isEnablingMoneyBox) {
-      return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />;
+      return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={localStaticURL} />;
     }
     if (moneyBoxActive) {
-      if (isLoading) return <Loading baseURL={baseURL} />;
+      if (isLoading) return <Loading baseURL={localStaticURL} />;
       return (
         <PaymentConfirmation
-          baseURL={baseURL}
+          baseURL={localStaticURL}
           summaryList={summaryList}
           canChangeCash={canChangeCash}
         />
       );
     }
-    return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />;
+    return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={localStaticURL} />;
   };
 
   renderTitle = () => {

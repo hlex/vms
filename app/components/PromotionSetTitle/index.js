@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import bgImage from '../../images/bg-product-17.png';
+
 class PromotionSetTitle extends Component {
 
   static propTypes = {
@@ -25,7 +27,7 @@ class PromotionSetTitle extends Component {
         </div>
         <div
           className="bg-img"
-          style={{ height: '500px', width: '100%', backgroundImage: `url(${baseURL}/${bgImage})` }}
+          style={{ height: '500px', width: '100%', backgroundImage: `url(${bgImage})` }}
         >
           <div className="product-combo-item">
             <img alt="" src={`${baseURL}/${comboItem1}`} />

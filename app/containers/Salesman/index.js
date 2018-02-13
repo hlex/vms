@@ -20,6 +20,9 @@ import MasterappSelector from '../../selectors/masterapp';
 // ======================================================
 // Actions
 // ======================================================
+
+import iconQrcode from '../../images/icon-qrcode.png';
+
 const mapStateToProps = (state) => {
   return {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
@@ -50,7 +53,7 @@ class TopupProviderSelectionPage extends Component {
         </Layout.Title>
         <Layout.Content>
           <div className="event-box">
-            <img alt="line" src={`${baseURL}/images/icon-qrcode.png`} />
+            <img alt="line" src={iconQrcode} />
             <div className="desc">
               <h2>{'กรุณา Scan QR CODE (รหัสพนักงาน)'}</h2>
               <h3>{'เพื่อตรวจสอบรหัส และปลดล็อคตู้'}</h3>

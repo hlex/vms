@@ -3,6 +3,12 @@ import PropTypes from 'prop-types';
 import cuid from 'cuid';
 import _ from 'lodash';
 
+import iconPhone from '../../images/icon-phone.png';
+import iconEmail from '../../images/icon-email.png';
+import iconLineLogo from '../../images/icon-linelogo.png';
+import iconBarcode from '../../images/icon-barcode.png';
+import iconQrcode from '../../images/icon-qrcode.png';
+
 class EventItem extends Component {
   static propTypes = {
     baseURL: PropTypes.string.isRequired,
@@ -50,7 +56,7 @@ class EventItem extends Component {
           </span>
           <img
             className="icon middle-line"
-            src={`${baseURL}/images/icon-phone.png`}
+            src={iconPhone}
             height="30"
           />
         </p>
@@ -64,7 +70,7 @@ class EventItem extends Component {
           </span>
           <img
             className="icon middle-line"
-            src={`${baseURL}/images/icon-email.png`}
+            src={iconEmail}
             height="30"
           />
         </p>
@@ -78,7 +84,7 @@ class EventItem extends Component {
           </span>
           <img
             className="icon middle-line"
-            src={`${baseURL}/images/icon-linelogo.png`}
+            src={iconLineLogo}
             height="30"
           />
         </p>
@@ -92,7 +98,7 @@ class EventItem extends Component {
           </span>
           <img
             className="icon middle-line"
-            src={`${baseURL}/images/icon-barcode.png`}
+            src={iconBarcode}
             height="30"
           />
         </p>
@@ -106,7 +112,7 @@ class EventItem extends Component {
           </span>
           <img
             className="icon middle-line"
-            src={`${baseURL}/images/icon-qrcode.png`}
+            src={iconQrcode}
             height="30"
           />
         </p>

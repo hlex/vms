@@ -81,7 +81,9 @@ class PaymentConfirmation extends Component {
           <div className="D-4">
             <div className="insert-cash-box">
               <div className="insert-cash-sign">
-                <img src={`${baseURL}/images/icon-point-left.png`} alt="" />
+                <div className="animation-x bounce">
+                  <img src={`${baseURL}/images/icon-point-left.png`} alt="" />
+                </div>
               </div>
               {
                 canChangeCash

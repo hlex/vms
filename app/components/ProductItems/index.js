@@ -9,8 +9,6 @@ import PromotionSetCardItem from '../PromotionSetCardItem';
 import EventItem from '../EventItem';
 import TopUpProviderItem from '../TopUpProviderItem';
 
-const path = 'http://localhost:8888/vms/html-v2';
-
 const getPaginatedItems = (items, page = 1, perPage) => {
   const offset = (page - 1) * perPage;
   const paginatedItems = items.slice(offset, offset + perPage);

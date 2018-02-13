@@ -36,7 +36,7 @@ const mapStateToProps = (state) => {
     MSISDN: OrderSelectors.getTopupMSISDN(state.order),
     topupProviderName: OrderSelectors.getMobileTopupName(state.order),
     banner: OrderSelectors.getMobileTopupBanner(state.order),
-    baseURL: MasterappSelector.getBaseURL(state.masterapp),
+    baseURL: MasterappSelector.getLocalURL(state.masterapp),
   };
 };
 

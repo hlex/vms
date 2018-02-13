@@ -27,6 +27,8 @@ import OrderSelectors from '../../../selectors/order';
 import { isEmpty } from '../../../helpers/global';
 
 import lineId from '../../../images/line-id.png';
+import iconBarcode from '../../../images/icon-barcode.png';
+import iconQrcode from '../../../images/icon-qrcode.png';
 
 const mapStateToProps = state => ({
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
@@ -131,7 +133,7 @@ class EventPlayPage extends Component {
     const { baseURL } = this.props;
     return (
       <div className="event-box">
-        <img alt="line" src={`${baseURL}/images/icon-barcode.png`} />
+        <img alt="line" src={iconBarcode} />
         <div className="desc">
           <h2>กรุณาแสกน BARCODE ที่ได้รับมา</h2>
         </div>
@@ -147,7 +149,7 @@ class EventPlayPage extends Component {
     : 'กรุณาแสกน QR CODE ที่ได้รับมา';
     return (
       <div className="event-box">
-        <img alt="line" src={`${baseURL}/images/icon-qrcode.png`} />
+        <img alt="line" src={iconQrcode} />
         <div className="desc">
           <h2>{message}</h2>
         </div>
