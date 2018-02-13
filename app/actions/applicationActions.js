@@ -232,10 +232,10 @@ export const initApplication = () => {
       const sanitizedMobileTopupProviders = _.map(extractResponseData(serviceGetMobileTopupProvidersResponse), mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider, fileURL));
       dispatch(Actions.receivedMasterdata('topupProviders', sanitizedMobileTopupProviders));
 
-      // const resetTimeMS = resetTime * 1000;
-      // setTimeout(() => {
-      //   dispatch(addResetTimer(resetTimeMS));
-      // }, 10000);
+      const resetTimeMS = resetTime * 1000;
+      setTimeout(() => {
+        dispatch(addResetTimer(resetTimeMS));
+      }, 10000);
     } catch (error) {
       console.error(error);
     }
@@ -896,7 +896,14 @@ export const receivedCashRemaining = (data) => {
 };
 
 export const productDropProcessCompletely = () => async (dispatch, getState) => {
-  const isOrderHasProduct = OrderSelector.verifyOrderHasProduct(getState());
+  const isOrderHasProduct = OrderSelector.verifyOrderHasProduct(getState().order);
+  const isOrderHasFreeProduct = OrderSelector.verifyOrderHasFreeProduct(getState().order);
+  debugger;
+  if (isOrderHasFreeProduct) {
+    dispatch(changePage('/thankyou-with-free-product'));
+  } else {
+    dispatch(changePage('/thankyou'));
+  }
   dispatch(Actions.productDropProcessCompletely());
   const cashChangeAmount = PaymentSelector.getCashChangeAmount(getState().payment);
   // submitOrder

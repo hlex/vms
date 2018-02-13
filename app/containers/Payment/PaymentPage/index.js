@@ -10,7 +10,6 @@ import withAudio from '../../../hoc/withAudio';
 // Containers
 // ======================================================
 import Layout from '../../Layout';
-import ThankyouPage from '../../ThankyouPage';
 import { FooterAction } from '../../Utils';
 
 // ======================================================
@@ -44,7 +43,8 @@ const mapStateToProps = state => ({
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
   summaryList: RootSelector.getPaymentSummaryList(state),
   paymentBgImage: OrderSelector.getPaymentBgImage(state.order),
-  orderType: OrderSelector.getOrderType(state.order)
+  orderType: OrderSelector.getOrderType(state.order),
+  isOrderHasFreeProduct: OrderSelector.verifyOrderHasFreeProduct(state.order)
 });
 
 const actions = {
@@ -63,8 +63,9 @@ class PaymentPage extends PureComponent {
     returnAllInsertCash: PropTypes.func.isRequired,
     initPaymentPage: PropTypes.func.isRequired,
     canChangeCash: PropTypes.bool.isRequired,
-    orderType: PropTypes.string,
-    paymentBgImage: PropTypes.string
+    moneyBoxActive: PropTypes.bool.isRequired,
+    orderType: PropTypes.string.isRequired,
+    paymentBgImage: PropTypes.string.isRequired
   };
 
   componentDidMount = () => {
@@ -80,10 +81,9 @@ class PaymentPage extends PureComponent {
   };
 
   renderContent = () => {
-    const { moneyBoxActive, baseURL, isLoading, isFinish, summaryList, canChangeCash } = this.props;
+    const { moneyBoxActive, baseURL, isLoading, summaryList, canChangeCash } = this.props;
     // const isFinish = true;
     if (moneyBoxActive) {
-      if (isFinish) return <ThankyouPage baseURL={baseURL} />;
       if (isLoading) return <Loading baseURL={baseURL} />;
       return (
         <PaymentConfirmation
@@ -92,9 +92,6 @@ class PaymentPage extends PureComponent {
           canChangeCash={canChangeCash}
         />
       );
-    }
-    if (isFinish) {
-      return <ThankyouPage baseURL={baseURL} />;
     }
     return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={baseURL} />;
   };

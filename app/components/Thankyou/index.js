@@ -8,11 +8,12 @@ class Thankyou extends Component {
   }
 
   static defaultProps = {
-    product: {}
+    product: undefined
   }
 
   render() {
     const { baseURL, product } = this.props;
+    console.log(this, product, product !== undefined);
     return (
       <div className="thankyou">
         <div className="title">
@@ -25,7 +26,7 @@ class Thankyou extends Component {
           <p>คุณมีคะแนนสะสมจำนวน 20 คะแนน</p>
         </div>
         {
-          product !== {} &&
+          product !== undefined &&
           <div className="free-wrapper">
             <span>คุณคือผู้โชคดี ได้รับ</span>
             <img src={'http://localhost:8888/vms/html-v2/images/product-1.png'} />

@@ -67,11 +67,11 @@ class ThankyouPage extends Component {
       <div>
         <Layout.Title>{this.renderTitle()}</Layout.Title>
         <Layout.Content>
-          <Thankyou baseURL={baseURL} />
+          <Thankyou product={{}} baseURL={baseURL} />
         </Layout.Content>
       </div>
     );
   }
 }
 
-export default withAudio({ src: `http://localhost:${process.env.NODE_ENV !== 'production' ? '8888' : '81'}/vms/static/voice/5.m4a` }, actions)(connect(mapStateToProps, mapDispatchToProps)(ThankyouPage));
+export default withAudio({ src: `http://localhost:${process.env.NODE_ENV !== 'production' ? '8888' : '81'}/vms/static/voice/6.m4a` }, actions)(connect(mapStateToProps, mapDispatchToProps)(ThankyouPage));
