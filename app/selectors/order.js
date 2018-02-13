@@ -264,6 +264,15 @@ const getDropProductTargetRowColumn = createSelector(
   }
 );
 
+const getFreeProduct = createSelector(
+  [getProducts],
+  products => {
+    const freeProduct = _.find(products, product => product.price === 0);
+    if (!freeProduct) return undefined;
+    return freeProduct;
+  }
+);
+
 const getFreeDropProductTargetPhysical = createSelector(
   [getProductToDrop],
   productToDrop => {
@@ -523,6 +532,7 @@ export default {
   getDropProductTargetPhysical,
   verifyProductToDropHasAvailablePhysical,
   getDropProductTargetRowColumn,
+  getFreeProduct,
   getFreeDropProductTargetRowColumn,
   getFreeDropProductTargetPhysical,
   verifyProductToFreeDropHasAvailablePhysical,

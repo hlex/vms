@@ -1,14 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import iconThankyou from '../../images/icon-thank.png'
+import iconPointDown from '../../images/icon-point-down.png'
+
 class Thankyou extends Component {
   static propTypes = {
-    product: PropTypes.shape({}),
+    lang: PropTypes.string.isRequired,
     baseURL: PropTypes.string.isRequired,
   }
 
   static defaultProps = {
     product: undefined
+  }
+
+  renderProductName = (name) => {
+    const { lang } = this.props;
+    return name[lang];
   }
 
   render() {
@@ -19,7 +27,7 @@ class Thankyou extends Component {
         <div className="title">
           <span>
             ขอบคุณค่ะ
-            <span className="icon"><img src={`${baseURL}/images/icon-thank.png`} alt="" /></span>
+            <span className="icon"><img src={iconThankyou} alt="" /></span>
           </span>
         </div>
         <div className="box-with-bg yellow _hidden">
@@ -29,17 +37,17 @@ class Thankyou extends Component {
           product !== undefined &&
           <div className="free-wrapper">
             <span>คุณคือผู้โชคดี ได้รับ</span>
-            <img src={'http://localhost:8888/vms/html-v2/images/product-1.png'} />
-            <span className="highlight-red">Pepsi</span>
+            <img src={`${baseURL}${product.image}`} />
+            <span className="highlight-red">{this.renderProductName(product.name)}</span>
             <span>มูลค่า</span>
-            <span className="highlight-red">10</span>
+            <span className="highlight-red">{product.price}</span>
             <span>บาท ฟรี !</span>
           </div>
         }
         <div className="cash-return-box">
           <p>เชิญรับเงินทอนและสินค้าที่ช่องด้านล่าง</p>
           <div className="cash-return-sign">
-            <img src={`${baseURL}/images/icon-point-down.png`} alt="" />
+            <img src={iconPointDown} alt="" />
           </div>
         </div>
       </div>

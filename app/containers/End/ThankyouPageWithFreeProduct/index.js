@@ -31,11 +31,12 @@ const mapStateToProps = state => ({
   ...state.payment,
   moneyBoxActive: MasterappSelector.verifyIsMoneyBoxActive(state.masterapp),
   canChangeCash: state.masterapp.canChangeCash,
-  baseURL: MasterappSelector.getBaseURL(state.masterapp),
+  baseURL: MasterappSelector.getLocalURL(state.masterapp),
   summaryList: RootSelector.getPaymentSummaryList(state),
   paymentBgImage: OrderSelector.getPaymentBgImage(state.order),
   orderType: OrderSelector.getOrderType(state.order),
-  isOrderHasFreeProduct: OrderSelector.verifyOrderHasFreeProduct(state.order)
+  freeProduct: OrderSelector.getFreeProduct(state.order),
+  lang: MasterappSelector.getLanguage(state.masterapp),
 });
 const actions = {
   ...ApplicationActions
@@ -49,6 +50,7 @@ const mapDispatchToProps = (dispatch) => {
 class ThankyouPage extends Component {
   static propTypes = {
     baseURL: PropTypes.string.isRequired,
+    lang: PropTypes.string.isRequired,
   }
   renderTitle = () => {
     const { baseURL, orderType, paymentBgImage } = this.props;
@@ -62,12 +64,12 @@ class ThankyouPage extends Component {
   };
 
   render() {
-    const { baseURL } = this.props;
+    const { baseURL, lang, freeProduct } = this.props;
     return (
       <div>
         <Layout.Title>{this.renderTitle()}</Layout.Title>
         <Layout.Content>
-          <Thankyou product={{}} baseURL={baseURL} />
+          <Thankyou lang={lang} product={freeProduct} baseURL={baseURL} />
         </Layout.Content>
       </div>
     );

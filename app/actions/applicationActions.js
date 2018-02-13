@@ -807,7 +807,7 @@ const runFlowCashChangeSuccess = () => {
     if (getState().payment.isFinish) {
       setTimeout(() => {
         dispatch(backToHome());
-      }, 500);
+      }, 3000);
     }
   };
 };
