@@ -679,7 +679,7 @@ export const productDrop = () => (dispatch, getState) => {
     const client = MasterappSelector.getTcpClient(getState().masterapp);
     client.send({
       action: 1,
-      msg: targetRowColumn, // row * col
+      msg: targetRowColumn || '00', // row * col
     });
     dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
   } else {
@@ -742,17 +742,17 @@ export const submitOrder = () => {
 
 const endProcess = () => {
   return (dispatch, getState) => {
-    const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
-    const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
-    if (needToChangeCash(grandTotalAmount, currentCash)) {
-      console.log(
-          '%c App cashChange:',
-          createLog('app'),
-          'cashChange =',
-          currentCash - grandTotalAmount,
-        );
-      dispatch(cashChange());
-    }
+    // const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
+    // const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
+    // if (needToChangeCash(grandTotalAmount, currentCash)) {
+    //   console.log(
+    //       '%c App cashChange:',
+    //       createLog('app'),
+    //       'cashChange =',
+    //       currentCash - grandTotalAmount,
+    //     );
+    //   dispatch(cashChange());
+    // }
     dispatch(productDropProcessCompletely());
   };
 };
@@ -804,7 +804,6 @@ const runFlowCashChangeSuccess = () => {
   return (dispatch, getState) => {
     dispatch(Actions.setCashChangeAmount(0));
     dispatch(getCashRemaining());
-    console.log('isFinish', getState().payment.isFinish);
     if (getState().payment.isFinish) {
       setTimeout(() => {
         dispatch(backToHome());
@@ -824,7 +823,10 @@ const runFlowProductDropSuccess = () => async (dispatch, getState) => {
     const serviceGetSumOrderAmountResponse = await serviceGetSumOrderAmount();
     const sumOrderAmount = extractResponseData(serviceGetSumOrderAmountResponse);
     const isOrderHasFreeProduct = OrderSelector.verifyOrderHasFreeProduct(getState().order);
-    console.log(activityFreeRule, sumOrderAmount, isOrderHasFreeProduct, verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule));
+    console.log('CheckDropFreeProduct: activityFreeRule', activityFreeRule);
+    console.log('CheckDropFreeProduct: sumOrderAmount', sumOrderAmount);
+    console.log('CheckDropFreeProduct: isOrderHasFreeProduct', isOrderHasFreeProduct);
+    console.log('CheckDropFreeProduct: verifyThisOrderShouldDropFreeProduct', verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule));
     if (verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule) && !isOrderHasFreeProduct) {
       const freeProduct = MasterdataSelector.getActivityFreeProduct(getState().masterdata);
       if (freeProduct) {
@@ -896,7 +898,6 @@ export const receivedCashRemaining = (data) => {
 };
 
 export const productDropProcessCompletely = () => async (dispatch, getState) => {
-  const isOrderHasProduct = OrderSelector.verifyOrderHasProduct(getState().order);
   const isOrderHasFreeProduct = OrderSelector.verifyOrderHasFreeProduct(getState().order);
   debugger;
   if (isOrderHasFreeProduct) {
@@ -905,16 +906,19 @@ export const productDropProcessCompletely = () => async (dispatch, getState) => 
     dispatch(changePage('/thankyou'));
   }
   dispatch(Actions.productDropProcessCompletely());
-  const cashChangeAmount = PaymentSelector.getCashChangeAmount(getState().payment);
-  // submitOrder
-  console.log('productDropProcessCompletely: isOrderHasProduct', isOrderHasProduct);
-  console.log('productDropProcessCompletely: cashChangeAmount', cashChangeAmount);
+  const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
+  const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
+  const cashChangeAmount = currentCash - grandTotalAmount;
+  const isOrderHasProduct = OrderSelector.verifyOrderHasProduct(getState().order);
+  console.log('productDropProcessCompletely: currentCash', currentCash, 'grandTotalAmount', grandTotalAmount, 'cashChangeAmount', cashChangeAmount, 'isOrderHasProduct', isOrderHasProduct);
   try {
     if (isOrderHasProduct) {
       const submitOrderResponse = await dispatch(submitOrder());
       console.log('productDropProcessCompletely.submitOrderResponse', submitOrderResponse);
     }
-    if (cashChangeAmount === 0) {
+    if (cashChangeAmount > 0) {
+      dispatch(cashChange());
+    } else {
       setTimeout(() => {
         dispatch(backToHome());
       }, 1000);

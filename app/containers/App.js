@@ -74,9 +74,11 @@ class App extends Component {
   };
 
   renderMaintenanceMode = () => {
-    setTimeout(() => {
-      this.props.closeDoor()
-    }, 3000);
+    if (process.env.NODE_ENV !== 'production') {
+      setTimeout(() => {
+        this.props.closeDoor()
+      }, 3000);
+    }
     return (
       <div className='maintenance-box'>
         <h1><i className="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
