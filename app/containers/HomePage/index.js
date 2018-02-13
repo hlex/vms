@@ -36,8 +36,8 @@ const navMenuSettings = {
 
 const mapStateToProps = state => ({
   navMenus: MasterdataSelector.getMainMenus(state.masterdata),
-  products: MasterdataSelector.getProducts(state.masterdata),
-  promotionSets: MasterdataSelector.getPromotionSets(state.masterdata),
+  products: MasterdataSelector.getProductsNotFree(state.masterdata),
+  promotionSets: MasterdataSelector.getPromotionsThatSomeProductNotFree(state.masterdata),
   events: MasterdataSelector.getEvents(state.masterdata),
   mobileTopupProviders: MasterdataSelector.getTopupProviders(state.masterdata),
   baseURL: MasterappSelector.getBaseURL(state.masterapp),

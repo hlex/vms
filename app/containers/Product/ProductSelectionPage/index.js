@@ -28,7 +28,7 @@ import MasterdataSelector from '../../../selectors/masterdata';
 const mapStateToProps = state => ({
   mainMenus: MasterdataSelector.getMainMenus(state.masterdata),
   productSteps: MasterdataSelector.getProductSteps(state.masterdata),
-  products: MasterdataSelector.getProducts(state.masterdata),
+  products: MasterdataSelector.getProductsNotFree(state.masterdata),
   promotionSets: MasterdataSelector.getPromotionSets(state.masterdata),
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
   lang: MasterappSelector.getLanguage(state.masterapp)

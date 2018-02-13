@@ -60,6 +60,7 @@ export const convertToAppPromotion = (promotion, baseURL) => {
     price: _.sumBy(products, product => Number(product.price)) - Number(promotion.Discount_Price),
     image: '',
     ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),
+    hasSomeProductThatEveryPhysicalIsFree: promotion.hasSomeProductThatEveryPhysicalIsFree || false
   };
 };
 

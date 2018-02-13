@@ -103,7 +103,7 @@ export const getMasterProductAndEventAndPromotions = () => {
       // Grouped PoId
       // ======================================================
       const groupedByPoId = _.groupBy(sanitizedProducts, 'id');
-      const mergedPhysicalProducts = _.reduce(groupedByPoId, (result, products) => {
+      const mergedPhysicalProducts = _.reduce(groupedByPoId, (result, products, poId) => {
         const baseProduct = _.get(products, 0, {});
         const sumQty = _.sumBy(products, 'qty');
         const physicals = _.reduce(products, (accPhysical, product) => {
@@ -120,12 +120,15 @@ export const getMasterProductAndEventAndPromotions = () => {
             }
           ];
         }, []);
+        const everyPhysicalIsFree = _.every(physicals, physical => physical.isFree);
+        console.log('everyPhysicalIsFree', poId, everyPhysicalIsFree, physicals);
         return [
           ...result,
           _.omit({
             ...baseProduct,
             qty: sumQty,
             isSoldout: isSoldout(sumQty),
+            everyPhysicalIsFree,
             physicals,
           }, ['isFree', 'col', 'row', 'slotNo'])
         ];
@@ -148,11 +151,15 @@ export const getMasterProductAndEventAndPromotions = () => {
       // ======================================================
       const serviceGetPromotionsResponse = await serviceGetPromotions();
       const sanitizedPromotions = _.map(extractResponseData(serviceGetPromotionsResponse), promotion => {
+        const products = _.map(promotion.Product_List, (promotionProduct) => {
+          return _.find(mergedPhysicalProducts, product => product.id === promotionProduct.Po_ID);
+        })
+        const hasSomeProductThatEveryPhysicalIsFree = _.some(products, 'everyPhysicalIsFree');
+        console.log('promotion => ', products, hasSomeProductThatEveryPhysicalIsFree);
         const promotionWithMorphProduct = {
           ...promotion,
-          products: _.map(promotion.Product_List, (promotionProduct) => {
-            return _.find(mergedPhysicalProducts, product => product.id === promotionProduct.Po_ID);
-          })
+          products,
+          hasSomeProductThatEveryPhysicalIsFree,
         };
         return convertToAppPromotion(promotionWithMorphProduct, fileURL);
       });

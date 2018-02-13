@@ -291,6 +291,7 @@ class ProductItems extends PureComponent {
       <div style={{ position: 'relative' }}>
         <Slider ref={c => (this.slider = c)} {...productSettings}>
           {pages.map((page) => {
+            console.log('page', page)
             if (page.type === 'product') {
               return this.renderProductPage(page.item);
             } else if (page.type === 'event') {

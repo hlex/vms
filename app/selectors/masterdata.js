@@ -11,25 +11,26 @@ const getProductSteps = state => state.productSteps;
 const getEventSteps = state => state.eventSteps;
 const getMobileTopupSteps = state => state.mobileTopupSteps;
 
-const getActivityFreeProduct = createSelector(
-  [
-    getProducts
-  ],
-  (
-    products => {
-      const targetProduct = _.find(products, (product) => {
-        const hasFreePhysical = _.find(product.physicals, physical => physical.isFree === true);
-        return hasFreePhysical;
-      });
-      if (targetProduct) {
-        return {
-          ...targetProduct,
-          price: 0,
-        };
-      }
-      return undefined;
-    }
-  )
+const getActivityFreeProduct = createSelector([getProducts], products => {
+  const targetProduct = _.find(products, product => {
+    const hasFreePhysical = _.find(product.physicals, physical => physical.isFree === true);
+    return hasFreePhysical;
+  });
+  if (targetProduct) {
+    return {
+      ...targetProduct,
+      price: 0
+    };
+  }
+  return undefined;
+});
+
+const getProductsNotFree = createSelector([getProducts], products =>
+  _.filter(products, product => !product.everyPhysicalIsFree)
+);
+
+const getPromotionsThatSomeProductNotFree = createSelector([getPromotionSets], promotions =>
+  _.filter(promotions, promotion => !promotion.hasSomeProductThatEveryPhysicalIsFree)
 );
 
 export default {
@@ -42,5 +43,7 @@ export default {
   getPromotionSets,
   getMobileTopupValues,
   getEvents,
-  getActivityFreeProduct
+  getActivityFreeProduct,
+  getProductsNotFree,
+  getPromotionsThatSomeProductNotFree
 };
