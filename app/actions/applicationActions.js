@@ -236,6 +236,9 @@ export const initApplication = () => {
       setTimeout(() => {
         dispatch(addResetTimer(resetTimeMS));
       }, 10000);
+
+      dispatch(Actions.dataFetchedCompletely());
+
     } catch (error) {
       console.error(error);
     }

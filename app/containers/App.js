@@ -104,13 +104,13 @@ class App extends Component {
   handleClickHome = () => {
     const { backToHome } = this.props;
     backToHome();
-    this.mediaPlayer.handleTouchMedia();
+    if (this.mediaPlayer && this.mediaPlayer !== null) this.mediaPlayer.handleTouchMedia();
   };
 
   handleSwitchLanguage = oppositeLang => {
     const { switchLanguageTo } = this.props;
     switchLanguageTo(oppositeLang);
-    this.mediaPlayer.handleTouchMedia();
+    if (this.mediaPlayer && this.mediaPlayer !== null) this.mediaPlayer.handleTouchMedia();
   };
 
   render() {

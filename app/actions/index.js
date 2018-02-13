@@ -55,7 +55,8 @@ import {
   AUDIO_STOP_PLAY,
   AUDIO_START_PLAY,
   SET_APPLICATION_MODE,
-  SET_MACHINE_ID
+  SET_MACHINE_ID,
+  FETCH_DATA_COMPLETED
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
@@ -322,4 +323,8 @@ export const setApplicationMode = (mode) => ({
 export const setMachineId = (machineId) => ({
   type: SET_MACHINE_ID,
   machineId
+});
+
+export const dataFetchedCompletely = () => ({
+  type: FETCH_DATA_COMPLETED
 });

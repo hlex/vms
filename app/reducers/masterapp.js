@@ -22,7 +22,8 @@ import {
   AUDIO_ENDED,
   SET_VOICE_INTERVAL,
   SET_APPLICATION_MODE,
-  SET_MACHINE_ID
+  SET_MACHINE_ID,
+  FETCH_DATA_COMPLETED
 } from '../actions/actionTypes';
 
 const localURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:8888/vms' : 'http://localhost:81/vms';
@@ -88,6 +89,7 @@ const initialState = {
   mutedAds: false,
   voiceInterval: 5,
   mode: 'running',
+  dataIsFetched: false
 };
 
 export default (state = initialState, action) => {
@@ -223,7 +225,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         machineId: action.machineId
-      }
+      };
+    case FETCH_DATA_COMPLETED:
+      return {
+        ...state,
+        dataIsFetched: true
+      };
     default:
       return state;
   }
