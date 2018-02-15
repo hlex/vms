@@ -902,7 +902,6 @@ export const receivedCashRemaining = (data) => {
 
 export const productDropProcessCompletely = () => async (dispatch, getState) => {
   const isOrderHasFreeProduct = OrderSelector.verifyOrderHasFreeProduct(getState().order);
-  debugger;
   if (isOrderHasFreeProduct) {
     dispatch(changePage('/thankyou-with-free-product'));
   } else {
