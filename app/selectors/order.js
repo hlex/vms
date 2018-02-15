@@ -97,6 +97,16 @@ const getEventNextInput = createSelector(
   }
 );
 
+const getEventNextInputOrder = createSelector(
+  [getEventInputs],
+  (eventInputs) => {
+    if (_.size(eventInputs) <= 0) return '';
+    const nextItemIndex = _.findIndex(eventInputs, item => item.completed === false);
+    console.log('getEventNextInputOrder', eventInputs, nextItemIndex);
+    return nextItemIndex !== undefined ? `${nextItemIndex + 1}.` : '0.';
+  }
+);
+
 const getEventWatches = createSelector(
   [getSelectedEvent],
   (selectedEvent) => {
@@ -497,6 +507,7 @@ export default {
   getEventNextRewardRoute,
   getEventInputs,
   getEventNextInput,
+  getEventNextInputOrder,
   getEventBarcodeOrQrcodeInput,
   getEventWatches,
   getEventNextWatch,

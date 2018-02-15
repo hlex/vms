@@ -28,12 +28,14 @@ import { isEmpty } from '../../../helpers/global';
 
 import lineId from '../../../images/line-id.png';
 import iconBarcode from '../../../images/icon-barcode.png';
+import iconLineQrcode from '../../../images/line-qrcode.jpg';
 import iconQrcode from '../../../images/icon-qrcode.png';
 
 const mapStateToProps = state => ({
   baseURL: MasterappSelector.getBaseURL(state.masterapp),
   selectedEvent: OrderSelectors.getSelectedEvent(state.order),
   nextInput: OrderSelectors.getEventNextInput(state.order),
+  nextInputOrder: OrderSelectors.getEventNextInputOrder(state.order),
 });
 
 const actions = {
@@ -70,56 +72,62 @@ class EventPlayPage extends Component {
     updateEventInput(nextInput, inputValue);
   };
 
-  renderInputMSISDN = () => (
-    <div className="input-msisdn-box-wrapper">
-      <div className="input-msisdn-box">
-        <div className="content _center">
-          <h2>ใส่ เบอร์มือถือ ของคุณ</h2>
-          <p className="sm">
-            <small>กรุณาตรวจสอบ หมายเลขโทรศัพท์ ให้ถูกต้อง</small>
-          </p>
-          <InputWithPad
-            type={'num'}
-            rules={{
-              required: 'กรุณาระบุหมายเลขโทรศัพท์',
-              mobileNumber: 'รูปแบบหมายเลขโทรศัพท์ไม่ถูกต้อง',
-            }}
-            onConfirm={this.handleSubmitPage}
-          />
+  renderInputMSISDN = () => {
+    const { nextInputOrder } = this.props;
+    return (
+      <div className="input-msisdn-box-wrapper">
+        <div className="input-msisdn-box">
+          <div className="content _center">
+            <h2>{`${nextInputOrder} ใส่ เบอร์มือถือ ของคุณ`}</h2>
+            <p className="sm">
+              <small>กรุณาตรวจสอบ หมายเลขโทรศัพท์ ให้ถูกต้อง</small>
+            </p>
+            <InputWithPad
+              type={'num'}
+              rules={{
+                required: 'กรุณาระบุหมายเลขโทรศัพท์',
+                mobileNumber: 'รูปแบบหมายเลขโทรศัพท์ไม่ถูกต้อง',
+              }}
+              onConfirm={this.handleSubmitPage}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 
-  renderInputEmail = () => (
-    <div className="input-msisdn-box-wrapper">
-      <div className="input-msisdn-box">
-        <div className="content _center">
-          <h2>ใส่ อีเมล ของคุณ</h2>
-          <p className="sm">
-            <small>กรุณาตรวจสอบ อีเมล ให้ถูกต้อง</small>
-          </p>
-          <InputWithPad
-            type={'keyboard'}
-            rules={{
-              required: 'กรุณาระบุอีเมล',
-              email: 'รูปแบบอีเมลไม่ถูกต้อง',
-            }}
-            isFixed
-            onConfirm={this.handleSubmitPage}
-          />
+  renderInputEmail = () => {
+    const { nextInputOrder } = this.props;
+    return (
+      <div className="input-msisdn-box-wrapper">
+        <div className="input-msisdn-box">
+          <div className="content _center">
+            <h2>{`${nextInputOrder} ใส่ อีเมล ของคุณ`}</h2>
+            <p className="sm">
+              <small>กรุณาตรวจสอบ อีเมล ให้ถูกต้อง</small>
+            </p>
+            <InputWithPad
+              type={'keyboard'}
+              rules={{
+                required: 'กรุณาระบุอีเมล',
+                email: 'รูปแบบอีเมลไม่ถูกต้อง',
+              }}
+              isFixed
+              onConfirm={this.handleSubmitPage}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 
   renderInputLineId = () => {
-    const { submitPlayEvent } = this.props;
+    const { nextInputOrder, submitPlayEvent } = this.props;
     return (
       <div className="event-box">
         <img alt="line" src={lineId} />
         <div className="desc">
-          <h2>กรุณาแสกน LINE QR CODE</h2>
+          <h2>{`${nextInputOrder} กรุณาแสกน LINE QR CODE`}</h2>
           <p>เพื่อเพิ่มเพื่อนใน LINE ID และ ทำรายการต่อใน LINE</p>
         </div>
         <a className="button blue submit-button _hidden" onClick={submitPlayEvent}>
@@ -130,28 +138,38 @@ class EventPlayPage extends Component {
   };
 
   renderInputBarcode = () => {
-    const { baseURL } = this.props;
+    const { nextInputOrder } = this.props;
     return (
       <div className="event-box">
         <img alt="line" src={iconBarcode} />
         <div className="desc">
-          <h2>กรุณาแสกน BARCODE ที่ได้รับมา</h2>
+          <h2>{`${nextInputOrder} กรุณาแสกน BARCODE ที่ได้รับมา`}</h2>
         </div>
       </div>
     );
   };
 
   renderInputQrcode = () => {
-    const { nextInput } = this.props;
-    const { baseURL } = this.props;
-    const message = nextInput === 'LINE_QR_CODE'
-    ? 'กรุณาแสกน LINE QR CODE ของท่าน'
-    : 'กรุณาแสกน QR CODE ที่ได้รับมา';
+    const { nextInput, nextInputOrder } = this.props;
+    const message = 'กรุณาแสกน QR CODE ที่ได้รับมา';
     return (
       <div className="event-box">
         <img alt="line" src={iconQrcode} />
         <div className="desc">
-          <h2>{message}</h2>
+          <h2>{`${nextInputOrder} ${message}`}</h2>
+        </div>
+      </div>
+    );
+  };
+
+  renderInputLineQrcode = () => {
+    const { nextInput, nextInputOrder } = this.props;
+    const message = 'กรุณาแสกน LINE QR CODE ของท่าน';
+    return (
+      <div className="event-box">
+        <img width="250" height="250" alt="line" src={iconLineQrcode} />
+        <div className="desc">
+          <h2>{`${nextInputOrder} ${message}`}</h2>
         </div>
       </div>
     );
@@ -167,8 +185,10 @@ class EventPlayPage extends Component {
       return this.renderInputLineId();
     } else if (nextInput === 'BARCODE') {
       return this.renderInputBarcode();
-    } else if (nextInput === 'LINE_QR_CODE' || 'QR_CODE') {
+    } else if (nextInput === 'QR_CODE') {
       return this.renderInputQrcode();
+    } else if (nextInput === 'LINE_QR_CODE') {
+      return this.renderInputLineQrcode();
     }
     return '';
   };

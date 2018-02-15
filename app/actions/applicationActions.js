@@ -586,7 +586,12 @@ export const openAlertMessage = (data) => {
 };
 
 export const closeAlertMessage = () => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const messageTitle = getState().alertMessage.messages.title;
+    debugger;
+    if (messageTitle === 'ขอบคุณที่ร่วมกิจกรรม') {
+      dispatch(changePage('/'));
+    }
     dispatch(Actions.closeAlertMessage());
   };
 };
@@ -1307,9 +1312,11 @@ export const eventInitGetReward = () => {
           dispatch(selectProduct('/product/single', selectedEvent.product, 'singleProduct'));
         }
       } else if (reward.channel === 'VENDING_MACHINE_CODE') {
+        const hasExpireDate = reward.expireDate;
+        const extraMessage = hasExpireDate ? `(ใช้ได้ก่อนวันที่ ${reward.expireDate})` : '';
         const message = {
           title: 'ขอบคุณที่ร่วมกิจกรรม',
-          th: `รหัสส่วนลด คือ ${reward.code} มูลค่า ${reward.value} บาท (ใช้ได้ก่อนวันที่ ${reward.expireDate})`,
+          th: `รหัสส่วนลด คือ ${reward.code} มูลค่า ${reward.value} บาท ${extraMessage}`,
           en: '',
         };
         dispatch(openAlertMessage(convertApplicationErrorToError(message)));
