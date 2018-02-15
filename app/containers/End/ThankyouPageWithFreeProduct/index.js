@@ -37,6 +37,7 @@ const mapStateToProps = state => ({
   orderType: OrderSelector.getOrderType(state.order),
   freeProduct: OrderSelector.getFreeProduct(state.order),
   lang: MasterappSelector.getLanguage(state.masterapp),
+  promotionSet: OrderSelector.getPromotionSet(state.order),
 });
 const actions = {
   ...ApplicationActions
@@ -53,9 +54,15 @@ class ThankyouPage extends Component {
     lang: PropTypes.string.isRequired,
   }
   renderTitle = () => {
-    const { baseURL, orderType, paymentBgImage } = this.props;
+    const { promotionSet, baseURL, orderType, paymentBgImage } = this.props;
     if (orderType === 'promotionSet') {
-      return <PromotionSetTitle baseURL={baseURL} bgImage={paymentBgImage} />;
+      return (
+        <PromotionSetTitle
+          baseURL={baseURL}
+          comboItem1={_.get(promotionSet, 'products.0.image')}
+          comboItem2={_.get(promotionSet, 'products.1.image')}
+        />
+      );
     }
     if (orderType === 'mobileTopup') {
       return <MobileTopupTitle baseURL={baseURL} bgImage={paymentBgImage} />;

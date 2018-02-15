@@ -46,7 +46,8 @@ const mapStateToProps = state => ({
   summaryList: RootSelector.getPaymentSummaryList(state),
   paymentBgImage: OrderSelector.getPaymentBgImage(state.order),
   orderType: OrderSelector.getOrderType(state.order),
-  isOrderHasFreeProduct: OrderSelector.verifyOrderHasFreeProduct(state.order)
+  isOrderHasFreeProduct: OrderSelector.verifyOrderHasFreeProduct(state.order),
+  promotionSet: OrderSelector.getPromotionSet(state.order),
 });
 
 const actions = {
@@ -81,8 +82,12 @@ class PaymentPage extends PureComponent {
 
   componentWillUnmount = () => {
     const { returnAllInsertCash } = this.props;
-    console.log('outPaymentPage !!!!');
-    returnAllInsertCash();
+    const currentPage = this.props.history.location.pathname;
+    const isThankyouPage = /thankyou/.test(currentPage);
+    console.log('outPaymentPage !!!!', this.props, isThankyouPage);
+    if (!isThankyouPage) {
+      returnAllInsertCash();
+    }
   };
 
   renderContent = () => {
@@ -104,9 +109,15 @@ class PaymentPage extends PureComponent {
   };
 
   renderTitle = () => {
-    const { baseURL, orderType, paymentBgImage } = this.props;
+    const { promotionSet, baseURL, orderType, paymentBgImage } = this.props;
     if (orderType === 'promotionSet') {
-      return <PromotionSetTitle baseURL={baseURL} bgImage={paymentBgImage} />;
+      return (
+        <PromotionSetTitle
+          baseURL={baseURL}
+          comboItem1={_.get(promotionSet, 'products.0.image')}
+          comboItem2={_.get(promotionSet, 'products.1.image')}
+        />
+      );
     }
     if (orderType === 'mobileTopup') {
       return <MobileTopupTitle baseURL={baseURL} bgImage={paymentBgImage} />;
