@@ -855,7 +855,15 @@ const runFlowProductDropSuccess = () => async (dispatch, getState) => {
         // add freeProduct
         console.log('selectProduct freeProduct', freeProduct);
         dispatch(Actions.selectProduct(freeProduct));
-        dispatch(productFreeDrop());
+        const freeProductDropTargetRowColumn = OrderSelector.getFreeDropProductTargetRowColumn(getState().order);
+        if (freeProductDropTargetRowColumn) {
+          dispatch(productFreeDrop());
+        } else {
+          console.error('freeProductDropTargetRowColumn', freeProductDropTargetRowColumn);
+          const productToDrop = OrderSelector.getProductToDrop(getState().order);
+          dispatch(Actions.removeProductFromOrder(productToDrop));
+          dispatch(endProcess());
+        }
       } else {
         dispatch(endProcess());
       }
@@ -941,9 +949,10 @@ export const productDropProcessCompletely = () => async (dispatch, getState) => 
     if (cashChangeAmount > 0) {
       dispatch(cashChange());
     } else {
+      dispatch(clearPaymentAmount());
       setTimeout(() => {
         dispatch(backToHome());
-      }, 1000);
+      }, 7000);
     }
   } catch (error) {
     console.error(error);
