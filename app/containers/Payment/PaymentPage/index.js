@@ -35,6 +35,7 @@ import * as Actions from './actions';
 import RootSelector from '../../../selectors/root';
 import MasterappSelector from '../../../selectors/masterapp';
 import OrderSelector from '../../../selectors/order';
+import PaymentSelector from '../../../selectors/payment';
 
 const mapStateToProps = state => ({
   ...state.payment,
@@ -48,6 +49,7 @@ const mapStateToProps = state => ({
   orderType: OrderSelector.getOrderType(state.order),
   isOrderHasFreeProduct: OrderSelector.verifyOrderHasFreeProduct(state.order),
   promotionSet: OrderSelector.getPromotionSet(state.order),
+  currentAmountMoreThanZero: PaymentSelector.verifyCurrentAmountMoreThanZero(state.payment)
 });
 
 const actions = {
@@ -69,10 +71,8 @@ class PaymentPage extends PureComponent {
     moneyBoxActive: PropTypes.bool.isRequired,
     orderType: PropTypes.string.isRequired,
     paymentBgImage: PropTypes.string.isRequired,
-    orderType: PropTypes.string.isRequired,
-    paymentBgImage: PropTypes.string.isRequired,
-    moneyBoxActive: PropTypes.bool.isRequired,
     isEnablingMoneyBox: PropTypes.bool.isRequired,
+    currentAmountMoreThanZero: PropTypes.bool.isRequired,
   };
 
   componentDidMount = () => {
@@ -81,11 +81,11 @@ class PaymentPage extends PureComponent {
   };
 
   componentWillUnmount = () => {
-    const { returnAllInsertCash } = this.props;
+    const { currentAmountMoreThanZero, returnAllInsertCash } = this.props;
     const currentPage = this.props.history.location.pathname;
     const isThankyouPage = /thankyou/.test(currentPage);
     // console.log('outPaymentPage !!!!', this.props, isThankyouPage);
-    if (!isThankyouPage) {
+    if (!isThankyouPage && currentAmountMoreThanZero) {
       returnAllInsertCash();
     }
   };

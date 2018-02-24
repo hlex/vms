@@ -15,8 +15,7 @@ import OrderSelector from '../selectors/order';
 // Helpers
 // ======================================================
 import {
-  getServerCommand,
-  needToChangeCash
+  getServerCommand
 } from '../helpers/tcp';
 import {
   createLog,
@@ -763,18 +762,7 @@ export const submitOrder = () => {
 };
 
 const endProcess = () => {
-  return (dispatch, getState) => {
-    // const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
-    // const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
-    // if (needToChangeCash(grandTotalAmount, currentCash)) {
-    //   console.log(
-    //       '%c App cashChange:',
-    //       createLog('app'),
-    //       'cashChange =',
-    //       currentCash - grandTotalAmount,
-    //     );
-    //   dispatch(cashChange());
-    // }
+  return (dispatch) => {
     dispatch(productDropProcessCompletely());
   };
 };
@@ -1215,7 +1203,8 @@ export const initHomePage = () => {
 export const processingReturningCash = () => {
   return (dispatch, getState) => {
     const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
-    if (moneyBoxActive) {
+    const cashChangeAmountMoreThanZero = PaymentSelector.verifyCashChangeAmountMoreThanZero(getState().payment);
+    if (moneyBoxActive && cashChangeAmountMoreThanZero) {
       dispatch(showLoading('ระบบกำลังทอนเงิน รอสักครู่'));
       setTimeout(() => {
         if (MasterappSelector.verifyIsLoading(getState().masterapp)) {
@@ -1262,27 +1251,28 @@ export const warningSystemWillNotChangeCash = () => {
   };
 };
 
-export const initSingleProductPage = () => {
-  return (dispatch, getState) => {
+export const initPageThatHaveDiscountInput = () => {
+  return (dispatch) => {
     dispatch(processingReturningCash());
-    // dispatch(enableMoneyBoxWhenInitPage());
     dispatch(warningSystemWillNotChangeCash());
+  };
+};
+
+export const initSingleProductPage = () => {
+  return (dispatch) => {
+    dispatch(initPageThatHaveDiscountInput());
   };
 };
 
 export const initPromotionSetPage = () => {
-  return (dispatch, getState) => {
-    dispatch(processingReturningCash());
-    // dispatch(enableMoneyBoxWhenInitPage());
-    dispatch(warningSystemWillNotChangeCash());
+  return (dispatch) => {
+    dispatch(initPageThatHaveDiscountInput());
   };
 };
 
 export const initMobileTopupPage = () => {
-  return (dispatch, getState) => {
-    dispatch(processingReturningCash());
-    // dispatch(enableMoneyBoxWhenInitPage());
-    dispatch(warningSystemWillNotChangeCash());
+  return (dispatch) => {
+    dispatch(initPageThatHaveDiscountInput());
   };
 };
 
