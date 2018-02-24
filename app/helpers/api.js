@@ -1,5 +1,6 @@
 import { fetchWithJarvis, setDebugMode, convertToURLParam } from 'api-jarvis';
 import _ from 'lodash';
+import { appLog } from './global';
 
 setDebugMode(false);
 
@@ -27,7 +28,7 @@ export const fetchFacade = (url, options = {}) => {
   return fetchWithJarvis(`${origin}/${addUrlParameter(url, { t: Date.now() })}`, {
     ...options,
   }).then(response => {
-    console.log('[API]', url, response);
+    appLog('API', url, response, '#90CAF9');
     return response;
   });
 };

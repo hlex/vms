@@ -21,6 +21,10 @@ export const createLog = (type = '', bgColor = 'green', color = '#fff') => {
   return `background: ${bgColor}; color: ${color}`;
 };
 
+export const appLog = (title, message, data, bgColor = '#fff', color = '#000') => {
+  console.log(`%c [${title}]`, `background: ${bgColor}; color: ${color}`, message, data);
+};
+
 export const getCashRemaining = (remain) => {
   return {
     oneBahtCount: _.get(remain, 'baht1', 0),
