@@ -19,7 +19,8 @@ const getActivityFreeProduct = createSelector([getProducts], products => {
   if (targetProduct) {
     return {
       ...targetProduct,
-      price: 0
+      originalPrice: targetProduct.price,
+      price: 0,
     };
   }
   return undefined;

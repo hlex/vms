@@ -40,7 +40,7 @@ class Thankyou extends Component {
             <img src={`${baseURL}${product.image}`} />
             <span className="highlight-red">{this.renderProductName(product.name)}</span>
             <span>มูลค่า</span>
-            <span className="highlight-red">{product.price}</span>
+            <span className="highlight-red">{product.originalPrice || 0}</span>
             <span>บาท ฟรี !</span>
           </div>
         }
