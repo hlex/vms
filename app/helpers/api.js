@@ -1,5 +1,7 @@
-import { fetchWithJarvis, convertToURLParam } from 'api-jarvis';
+import { fetchWithJarvis, setDebugMode, convertToURLParam } from 'api-jarvis';
 import _ from 'lodash';
+
+setDebugMode(false);
 
 const baseURL = 'http://27.254.160.247:81';
 const localURL = process.env.NODE_ENV === 'production' ? 'http://localhost:81/vms' : 'http://27.254.160.247:81';

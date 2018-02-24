@@ -212,9 +212,9 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-api-jarvis@^3.2.1:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/api-jarvis/-/api-jarvis-3.7.0.tgz#dcc33ce68f82fe1053392868ed33f686fe29cb8f"
+api-jarvis@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/api-jarvis/-/api-jarvis-4.0.1.tgz#56a876959f8cadd54e14b877a167795e8029f50c"
 
 append-transform@^0.4.0:
   version "0.4.0"

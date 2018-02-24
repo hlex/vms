@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import type { Children } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { setDebugMode } from 'api-jarvis';
 // ======================================================
 // Helpers
 // ======================================================
@@ -26,8 +25,6 @@ import Layout from './Layout';
 import AlertMessage from './AlertMessage';
 import LoadingScreen from './LoadingScreen';
 import DevToolbar from './DevToolbar';
-
-setDebugMode(true);
 
 const mapStateToProps = state => {
   console.log(
