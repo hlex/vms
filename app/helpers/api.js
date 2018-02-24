@@ -1,5 +1,7 @@
-import { fetchWithJarvis, convertToURLParam } from 'api-jarvis';
+import { fetchWithJarvis, setDebugMode, convertToURLParam } from 'api-jarvis';
 import _ from 'lodash';
+
+setDebugMode(false);
 
 const baseURL = 'http://27.254.160.247:81';
 const localURL = process.env.NODE_ENV === 'production' ? 'http://localhost:81/vms' : 'http://27.254.160.247:81';
@@ -24,7 +26,10 @@ export const fetchFacade = (url, options = {}) => {
   const origin = options.local ? localURL : baseURL;
   return fetchWithJarvis(`${origin}/${addUrlParameter(url, { t: Date.now() })}`, {
     ...options,
-  }).then(response => response);
+  }).then(response => {
+    console.log('[API]', url, response);
+    return response;
+  });
 };
 
 export const extractResponseData = (response) => {
