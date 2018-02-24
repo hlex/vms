@@ -310,6 +310,58 @@ export const doorOpened = () => {
   };
 };
 
+export const runFlowProductDropFailed = () => {
+  return (dispatch, getState) => {
+    const isDroppingFreeProduct = MasterappSelector.verifyIsDroppingFreeProduct(getState().masterapp);
+    console.log('isDroppingFreeProduct', isDroppingFreeProduct);
+    if (isDroppingFreeProduct) {
+      const productToDrop = OrderSelector.getProductToDrop(getState().order);
+      const targetPhysical = OrderSelector.getFreeDropProductTargetPhysical(getState().order);
+      dispatch({
+        type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
+        product: productToDrop,
+        physical: targetPhysical
+      });
+      const productToFreeDropHasAvailablePhysical = OrderSelector.verifyProductToFreeDropHasAvailablePhysical(getState().order);
+      // console.log('productToFreeDropHasAvailablePhysical', productToFreeDropHasAvailablePhysical);
+      if (productToFreeDropHasAvailablePhysical) {
+        // retry
+        dispatch(productFreeDrop());
+      } else {
+        // filter free product from orders
+        dispatch(Actions.removeProductFromOrder(productToDrop));
+        dispatch(endProcess());
+      }
+    } else {
+      // ======================================================
+      // STAMP FAIL TO PHYSICAL
+      // ======================================================
+      const productToDrop = OrderSelector.getProductToDrop(getState().order);
+      const targetPhysical = OrderSelector.getDropProductTargetPhysical(getState().order);
+      dispatch({
+        type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
+        product: productToDrop,
+        physical: targetPhysical
+      });
+      const productToDropHasAvailablePhysical = OrderSelector.verifyProductToDropHasAvailablePhysical(getState().order);
+      // console.log('productToDropHasAvailablePhysical', productToDropHasAvailablePhysical);
+      if (productToDropHasAvailablePhysical) {
+        // retry
+        dispatch(productDrop());
+      } else {
+        // return cash eql product price
+        dispatch(setNotReadyToDropProduct());
+        if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
+          dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
+        } else {
+          dispatch(cashChangeEqualToCurrentCashAmount());
+        }
+        dispatch(Actions.showModal('productDropError'));
+      }
+    }
+  }
+}
+
 export const receivedDataFromServer = data => (dispatch, getState) => {
   if (data.sensor && data.sensor === 'temp') return;
   const client = MasterappSelector.getTcpClient(getState().masterapp);
@@ -347,53 +399,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       dispatch(runFlowProductDropSuccess());
       break;
     case 'PRODUCT_DROP_FAIL':
-      const isDroppingFreeProduct = MasterappSelector.verifyIsDroppingFreeProduct(getState().masterapp);
-      console.log('isDroppingFreeProduct', isDroppingFreeProduct);
-      if (isDroppingFreeProduct) {
-        const productToDrop = OrderSelector.getProductToDrop(getState().order);
-        const targetPhysical = OrderSelector.getFreeDropProductTargetPhysical(getState().order);
-        dispatch({
-          type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
-          product: productToDrop,
-          physical: targetPhysical
-        });
-        const productToFreeDropHasAvailablePhysical = OrderSelector.verifyProductToFreeDropHasAvailablePhysical(getState().order);
-        // console.log('productToFreeDropHasAvailablePhysical', productToFreeDropHasAvailablePhysical);
-        if (productToFreeDropHasAvailablePhysical) {
-          // retry
-          dispatch(productFreeDrop());
-        } else {
-          // filter free product from orders
-          dispatch(Actions.removeProductFromOrder(productToDrop));
-          dispatch(endProcess());
-        }
-      } else {
-        // ======================================================
-        // STAMP FAIL TO PHYSICAL
-        // ======================================================
-        const productToDrop = OrderSelector.getProductToDrop(getState().order);
-        const targetPhysical = OrderSelector.getDropProductTargetPhysical(getState().order);
-        dispatch({
-          type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
-          product: productToDrop,
-          physical: targetPhysical
-        });
-        const productToDropHasAvailablePhysical = OrderSelector.verifyProductToDropHasAvailablePhysical(getState().order);
-        // console.log('productToDropHasAvailablePhysical', productToDropHasAvailablePhysical);
-        if (productToDropHasAvailablePhysical) {
-          // retry
-          dispatch(productDrop());
-        } else {
-          // return cash eql product price
-          dispatch(setNotReadyToDropProduct());
-          if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
-            dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
-          } else {
-            dispatch(cashChangeEqualToCurrentCashAmount());
-          }
-          dispatch(Actions.showModal('productDropError'));
-        }
-      }
+      dispatch(runFlowProductDropFailed());
       break;
     case 'RESET_TAIKO_SUCCESS':
       setTimeout(() => {
@@ -684,12 +690,16 @@ export const productDrop = () => (dispatch, getState) => {
   const readyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
   if (readyToDropProduct) {
     const targetRowColumn = OrderSelector.getDropProductTargetRowColumn(getState().order);
-    const client = MasterappSelector.getTcpClient(getState().masterapp);
-    client.send({
-      action: 1,
-      msg: targetRowColumn || '00', // row * col
-    });
-    dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
+    if (targetRowColumn) {
+      const client = MasterappSelector.getTcpClient(getState().masterapp);
+      client.send({
+        action: 1,
+        msg: targetRowColumn || '00', // row * col
+      });
+      dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
+    } else {
+      console.error('Cannot Drop Product because targetRowColumn = ', targetRowColumn);
+    }
   } else {
     console.error('Cannot Drop Product because readyToDropProduct = ', readyToDropProduct);
   }
@@ -699,14 +709,18 @@ export const productFreeDrop = () => (dispatch, getState) => {
   const readyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
   if (readyToDropProduct) {
     const targetRowColumn = OrderSelector.getFreeDropProductTargetRowColumn(getState().order);
-    const client = MasterappSelector.getTcpClient(getState().masterapp);
-    client.send({
-      action: 1,
-      msg: targetRowColumn, // row * col
-    });
-    dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
+    if (targetRowColumn) {
+      const client = MasterappSelector.getTcpClient(getState().masterapp);
+      client.send({
+        action: 1,
+        msg: targetRowColumn, // row * col
+      });
+      dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
+    } else {
+      console.error('Cannot Drop Free Product because targetRowColumn = ', targetRowColumn);
+    }
   } else {
-    console.error('Cannot Drop Product because readyToDropProduct = ', readyToDropProduct);
+    console.error('Cannot Drop Free Product because readyToDropProduct = ', readyToDropProduct);
   }
 };
 
@@ -839,6 +853,7 @@ const runFlowProductDropSuccess = () => async (dispatch, getState) => {
       const freeProduct = MasterdataSelector.getActivityFreeProduct(getState().masterdata);
       if (freeProduct) {
         // add freeProduct
+        console.log('selectProduct freeProduct', freeProduct);
         dispatch(Actions.selectProduct(freeProduct));
         dispatch(productFreeDrop());
       } else {
