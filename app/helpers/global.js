@@ -34,7 +34,7 @@ export const verifyLessThanThreshold = (remain, thresHold) => {
 };
 
 export const verifyDuplicatedDiscount = (discounts, code) => {
-  console.log('verifyDuplicatedDiscount', discounts, code);
+  // console.log('verifyDuplicatedDiscount', discounts, code);
   const discountAlreadyExist = _.find(discounts, discount => discount.code === code);
   if (discountAlreadyExist) return true;
   return false;
@@ -58,7 +58,6 @@ export const getPhysicalUsedSlotNo = (product) => {
 
 export const verifyThisOrderShouldDropFreeProduct = (sumOrderAmount, activityFreeRule) => {
   const currentOrderNumber = Number(sumOrderAmount) + 1;
-  return true;
   switch (activityFreeRule) {
     case 'ODD':
       return currentOrderNumber % 2 === 1;
