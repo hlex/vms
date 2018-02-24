@@ -121,7 +121,7 @@ export const getMasterProductAndEventAndPromotions = () => {
           ];
         }, []);
         const everyPhysicalIsFree = _.every(physicals, physical => physical.isFree);
-        console.log('everyPhysicalIsFree', poId, everyPhysicalIsFree, physicals);
+        // console.log('everyPhysicalIsFree', poId, everyPhysicalIsFree, physicals);
         return [
           ...result,
           _.omit({
@@ -155,7 +155,7 @@ export const getMasterProductAndEventAndPromotions = () => {
           return _.find(mergedPhysicalProducts, product => product.id === promotionProduct.Po_ID);
         })
         const hasSomeProductThatEveryPhysicalIsFree = _.some(products, 'everyPhysicalIsFree');
-        console.log('promotion => ', products, hasSomeProductThatEveryPhysicalIsFree);
+        // console.log('promotion => ', products, hasSomeProductThatEveryPhysicalIsFree);
         const promotionWithMorphProduct = {
           ...promotion,
           products,
@@ -200,7 +200,7 @@ export const initApplication = () => {
       // SETTING
       // ======================================================
       const getMachineIdResponse = await serviceGetMachineId();
-      console.log('getMachineIdResponse', getMachineIdResponse);
+      // console.log('getMachineIdResponse', getMachineIdResponse);
       const machineId = _.get(extractResponseData(getMachineIdResponse), 'MachineID', '');
       dispatch(Actions.setMachineId(machineId));
 
@@ -358,7 +358,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
           physical: targetPhysical
         });
         const productToFreeDropHasAvailablePhysical = OrderSelector.verifyProductToFreeDropHasAvailablePhysical(getState().order);
-        console.log('productToFreeDropHasAvailablePhysical', productToFreeDropHasAvailablePhysical);
+        // console.log('productToFreeDropHasAvailablePhysical', productToFreeDropHasAvailablePhysical);
         if (productToFreeDropHasAvailablePhysical) {
           // retry
           dispatch(productFreeDrop());
@@ -379,7 +379,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
           physical: targetPhysical
         });
         const productToDropHasAvailablePhysical = OrderSelector.verifyProductToDropHasAvailablePhysical(getState().order);
-        console.log('productToDropHasAvailablePhysical', productToDropHasAvailablePhysical);
+        // console.log('productToDropHasAvailablePhysical', productToDropHasAvailablePhysical);
         if (productToDropHasAvailablePhysical) {
           // retry
           dispatch(productDrop());
@@ -629,7 +629,7 @@ export const changePage = context => dispatch => {
 };
 
 export const selectProduct = (context, item, module) => dispatch => {
-  console.log('selectProduct', context, item, module);
+  // console.log('selectProduct', context, item, module);
   dispatch(changePage(context));
   // ======================================================
   // Select Product
@@ -1365,7 +1365,7 @@ export const eventGetReward = () => {
             const eventProduct = OrderSelector.getEventProduct(getState().order);
             const serviceGetEventRewardResponse = await serviceGetEventReward(rewardToServiceItem, eventProduct.id);
             dispatch(hideLoading());
-            console.log('serviceGetEventRewardResponse', serviceGetEventRewardResponse);
+            // console.log('serviceGetEventRewardResponse', serviceGetEventRewardResponse);
             dispatch({
               type: 'EVENT_SENT_REWARD',
               rewardToServiceItem

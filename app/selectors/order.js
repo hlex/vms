@@ -44,7 +44,7 @@ const getEventNextReward = createSelector(
   (eventRewards) => {
     if (_.size(eventRewards) <= 0) return '';
     const nextItem = _.find(eventRewards, item => item.completed === false);
-    console.log('getEventNextReward', nextItem);
+    // console.log('getEventNextReward', nextItem);
     return nextItem;
   }
 );
@@ -102,7 +102,7 @@ const getEventNextInputOrder = createSelector(
   (eventInputs) => {
     if (_.size(eventInputs) <= 0) return '';
     const nextItemIndex = _.findIndex(eventInputs, item => item.completed === false);
-    console.log('getEventNextInputOrder', eventInputs, nextItemIndex);
+    // console.log('getEventNextInputOrder', eventInputs, nextItemIndex);
     return nextItemIndex !== undefined ? `${nextItemIndex + 1}.` : '0.';
   }
 );
@@ -260,7 +260,7 @@ const getDropProductTargetPhysical = createSelector(
   [getProductToDrop],
   productToDrop => {
     const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.isFree === false && physical.canDrop === true);
-    console.log('getDropProductTargetPhysical', targetPhysical);
+    console.log('getDropProductTargetPhysical', productToDrop, targetPhysical);
     return targetPhysical;
   }
 );
@@ -268,7 +268,7 @@ const getDropProductTargetPhysical = createSelector(
 const getDropProductTargetRowColumn = createSelector(
   [getDropProductTargetPhysical],
   targetPhysical => {
-    console.log('=== PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
+    // console.log('=== PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
     if (!targetPhysical) return undefined;
     return `${targetPhysical.row}${targetPhysical.col}`;
   }
@@ -287,7 +287,7 @@ const getFreeDropProductTargetPhysical = createSelector(
   [getProductToDrop],
   productToDrop => {
     const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.isFree === true && physical.canDrop === true);
-    console.log('getFreeDropProductTargetPhysical', targetPhysical);
+    // console.log('getFreeDropProductTargetPhysical', targetPhysical);
     return targetPhysical;
   }
 );
@@ -295,7 +295,7 @@ const getFreeDropProductTargetPhysical = createSelector(
 const getFreeDropProductTargetRowColumn = createSelector(
   [getFreeDropProductTargetPhysical],
   targetPhysical => {
-    console.log('=== PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
+    // console.log('=== PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
     if (!targetPhysical) return undefined;
     return `${targetPhysical.row}${targetPhysical.col}`;
   }

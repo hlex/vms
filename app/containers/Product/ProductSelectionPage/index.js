@@ -84,7 +84,7 @@ class ProductSelectionPage extends Component {
   }
 
   render() {
-    console.log(this);
+    // console.log(this);
     const { lang, productSteps, products, promotionSets, selectProduct, back, baseURL } = this.props;
     return (
       <div>

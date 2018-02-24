@@ -26,7 +26,7 @@ export const serviceVerifyDiscountCode = (code, poId, discountType = 'product') 
       //       'en-message': 'successful',
       //     },
       //   };
-        console.log('serviceVerifyDiscountCode', response);
+        // console.log('serviceVerifyDiscountCode', response);
         handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
         return extractResponseData(response);
       })
@@ -41,7 +41,7 @@ export const serviceUseDiscountCode = (code, poId, discountType = 'product') => 
     code,
   };
   return fetchFacade(`${URL.verifyDiscount}${convertToURLParam(data)}`).then(response => {
-    console.log('serviceUseDiscountCode', response);
+    // console.log('serviceUseDiscountCode', response);
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return extractResponseData(response);
   });

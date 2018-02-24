@@ -1025,7 +1025,7 @@ export const serviceGetEvents = () => {
     vtype: 'activities',
   };
   return fetchFacade(`${URL.getEvents}${convertToURLParam(data)}`, { local: true }).then((response) => {
-    console.log('serviceGetEvents', response);
+    // console.log('serviceGetEvents', response);
     return response;
   });
 };

@@ -84,7 +84,7 @@ class PaymentPage extends PureComponent {
     const { returnAllInsertCash } = this.props;
     const currentPage = this.props.history.location.pathname;
     const isThankyouPage = /thankyou/.test(currentPage);
-    console.log('outPaymentPage !!!!', this.props, isThankyouPage);
+    // console.log('outPaymentPage !!!!', this.props, isThankyouPage);
     if (!isThankyouPage) {
       returnAllInsertCash();
     }

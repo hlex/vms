@@ -21,7 +21,7 @@ class Thankyou extends Component {
 
   render() {
     const { baseURL, product } = this.props;
-    console.log(this, product, product !== undefined);
+    // console.log(this, product, product !== undefined);
     return (
       <div className="thankyou">
         <div className="title">

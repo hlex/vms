@@ -48,7 +48,7 @@ export const convertToAppProduct = (product, baseURL = '') => {
 };
 
 export const convertToAppPromotion = (promotion, baseURL) => {
-  console.log('convertToAppPromotion', promotion, baseURL);
+  // console.log('convertToAppPromotion', promotion, baseURL);
   const ads = _.isArray(promotion.Pro_ImgAd)
   ? promotion.Pro_ImgAd
   : [{ Ad_Url: promotion.Pro_ImgAd, Ad_Second: '5' }];

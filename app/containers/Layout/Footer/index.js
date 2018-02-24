@@ -62,7 +62,7 @@ class Footer extends PureComponent {
   };
 
   render() {
-    console.log(this);
+    // console.log(this);
     const { mediaRef, footerAds } = this.props;
     return (
       <div className="footer-section">

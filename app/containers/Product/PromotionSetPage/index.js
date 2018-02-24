@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import _ from 'lodash';
+// ======================================================
+// Hoc
+// ======================================================
+import withAudio from '../../../hoc/withAudio';
 // ======================================================
 // Containers
 // ======================================================
@@ -68,7 +73,7 @@ class PromotionSetPage extends Component {
   }
 
   render() {
-    console.log('PromotionSetPage', this.props, this.props.promotionSet);
+    // console.log('PromotionSetPage', this.props, this.props.promotionSet);
     const { promotionSet, moneyBoxActive, baseURL, discountAmount, productPrice, submitPromotionSet, verifyDiscountCode } = this.props;
     return (
       <div>
@@ -93,4 +98,4 @@ class PromotionSetPage extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PromotionSetPage);
+export default withRouter(withAudio({ src: `http://localhost:${process.env.NODE_ENV !== 'production' ? '8888' : '81'}/vms/static/voice/3.m4a` }, actions)(connect(mapStateToProps, mapDispatchToProps)(PromotionSetPage)));

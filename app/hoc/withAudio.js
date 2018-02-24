@@ -18,7 +18,7 @@ const withAudio = ({ src }, actions) => WrappedComponent => class ComponentWithA
     this.unsubscribe = subscribe(() => this.audioShouldPlay(getState().audio));
     this.audioShouldPlay(getState().audio);
     if (actions) {
-      console.log('componentWillMount:startPlayAudio');
+      // console.log('componentWillMount:startPlayAudio');
       dispatch(actions.startPlayAudio());
     }
   }

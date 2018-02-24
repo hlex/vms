@@ -54,7 +54,7 @@ class EventAds extends Component {
     // ======================================================
     // POPUP 100%
     // ======================================================
-    console.log('handleAdsEnd');
+    // console.log('handleAdsEnd');
     // this.setState({
     //   adFinished: true,
     // });

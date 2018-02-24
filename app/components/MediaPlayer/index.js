@@ -46,7 +46,7 @@ class MediaPlayer extends Component {
     onEnded(index, nextIndex);
   }
   handleTouchMedia = () => {
-    console.log('handleTouchMedia');
+    // console.log('handleTouchMedia');
     const { index } = this.state;
     const { sources } = this.props;
     if (this.isFullScreen()) {
