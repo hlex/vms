@@ -3,7 +3,7 @@ import _ from 'lodash';
 // ======================================================
 // Helpers
 // ======================================================
-import { getPhysicalUsedSlotNo } from '../helpers/global';
+import { appLog, getPhysicalUsedSlotNo } from '../helpers/global';
 
 const getProducts = state => state.products;
 const getPromotionSets = state => state.promotionSets;
@@ -260,7 +260,8 @@ const getDropProductTargetPhysical = createSelector(
   [getProductToDrop],
   productToDrop => {
     const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.isFree === false && physical.canDrop === true);
-    console.log('[DropProduct] getDropProductTargetPhysical', productToDrop, targetPhysical);
+    appLog('DropProduct', '@getDropProductTargetPhysical productToDrop', productToDrop, '#FFEB3B');
+    appLog('DropProduct', '@getDropProductTargetPhysical targetPhysical', targetPhysical, '#FFEB3B');
     return targetPhysical;
   }
 );
@@ -268,9 +269,9 @@ const getDropProductTargetPhysical = createSelector(
 const getDropProductTargetRowColumn = createSelector(
   [getDropProductTargetPhysical],
   targetPhysical => {
-    console.log('[DropProduct] getDropProductTargetRowColumn', targetPhysical);
+    appLog('DropProduct', '@getDropProductTargetRowColumn targetPhysical', targetPhysical, '#FFEB3B');
     if (!targetPhysical) return undefined;
-    console.log('[DropProduct] getDropProductTargetRowColumn === PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
+    appLog('DropProduct', '@getDropProductTargetRowColumn PHYSICAL SLOT', `${targetPhysical.row}${targetPhysical.col}`, '#FFEB3B');
     return `${targetPhysical.row}${targetPhysical.col}`;
   }
 );
@@ -288,8 +289,8 @@ const getFreeDropProductTargetPhysical = createSelector(
   [getProductToDrop],
   productToDrop => {
     const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.isFree === true && physical.canDrop === true);
-    console.log('[DropFreeProduct] @getFreeDropProductTargetPhysical productToDrop', productToDrop);
-    console.log('[DropFreeProduct] @getFreeDropProductTargetPhysical targetPhysical', targetPhysical);
+    appLog('DropFreeProduct', '@getFreeDropProductTargetPhysical productToDrop', productToDrop, '#FFEB3B');
+    appLog('DropFreeProduct', '@getFreeDropProductTargetPhysical targetPhysical', targetPhysical, '#FFEB3B');
     return targetPhysical;
   }
 );
@@ -297,9 +298,9 @@ const getFreeDropProductTargetPhysical = createSelector(
 const getFreeDropProductTargetRowColumn = createSelector(
   [getFreeDropProductTargetPhysical],
   targetPhysical => {
-    console.log('[DropFreeProduct] @getFreeDropProductTargetRowColumn targetPhysical', targetPhysical);
+    appLog('DropFreeProduct', '@getFreeDropProductTargetRowColumn targetPhysical', targetPhysical, '#FFEB3B');
     if (!targetPhysical) return undefined;
-    console.log('[DropFreeProduct] getFreeDropProductTargetRowColumn PHYSICAL SLOT', `${targetPhysical.row}${targetPhysical.col}`);
+    appLog('DropFreeProduct', '@getFreeDropProductTargetRowColumn PHYSICAL SLOT', `${targetPhysical.row}${targetPhysical.col}`, '#FFEB3B');
     return `${targetPhysical.row}${targetPhysical.col}`;
   }
 );
