@@ -260,7 +260,7 @@ const getDropProductTargetPhysical = createSelector(
   [getProductToDrop],
   productToDrop => {
     const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.isFree === false && physical.canDrop === true);
-    console.log('getDropProductTargetPhysical', productToDrop, targetPhysical);
+    console.log('[DropProduct] getDropProductTargetPhysical', productToDrop, targetPhysical);
     return targetPhysical;
   }
 );
@@ -268,8 +268,9 @@ const getDropProductTargetPhysical = createSelector(
 const getDropProductTargetRowColumn = createSelector(
   [getDropProductTargetPhysical],
   targetPhysical => {
-    // console.log('=== PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
+    console.log('[DropProduct] getDropProductTargetRowColumn', targetPhysical);
     if (!targetPhysical) return undefined;
+    console.log('[DropProduct] getDropProductTargetRowColumn === PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
     return `${targetPhysical.row}${targetPhysical.col}`;
   }
 );
@@ -287,7 +288,8 @@ const getFreeDropProductTargetPhysical = createSelector(
   [getProductToDrop],
   productToDrop => {
     const targetPhysical = _.find(productToDrop.physicals || [], physical => physical.isFree === true && physical.canDrop === true);
-    // console.log('getFreeDropProductTargetPhysical', targetPhysical);
+    console.log('[DropFreeProduct] @getFreeDropProductTargetPhysical productToDrop', productToDrop);
+    console.log('[DropFreeProduct] @getFreeDropProductTargetPhysical targetPhysical', targetPhysical);
     return targetPhysical;
   }
 );
@@ -295,8 +297,9 @@ const getFreeDropProductTargetPhysical = createSelector(
 const getFreeDropProductTargetRowColumn = createSelector(
   [getFreeDropProductTargetPhysical],
   targetPhysical => {
-    // console.log('=== PHYSICAL SLOT ====', `${targetPhysical.row}${targetPhysical.col}`);
+    console.log('[DropFreeProduct] @getFreeDropProductTargetRowColumn targetPhysical', targetPhysical);
     if (!targetPhysical) return undefined;
+    console.log('[DropFreeProduct] getFreeDropProductTargetRowColumn PHYSICAL SLOT', `${targetPhysical.row}${targetPhysical.col}`);
     return `${targetPhysical.row}${targetPhysical.col}`;
   }
 );
