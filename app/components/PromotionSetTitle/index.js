@@ -11,8 +11,13 @@ class PromotionSetTitle extends Component {
     bgImage: PropTypes.string.isRequired,
     baseURL: PropTypes.string.isRequired,
   };
+  getBackgroundImageUrl = () => {
+    const { baseURL, bgImage } = this.props;
+    if (!bgImage) return defaultBgImage;
+    return `${baseURL}${bgImage}`;
+  }
   render() {
-    const { baseURL, comboItem1, comboItem2, bgImage } = this.props;
+    const { baseURL, comboItem1, comboItem2 } = this.props;
     return (
       <div className="promotion-title">
         <div className="_center">
@@ -20,7 +25,7 @@ class PromotionSetTitle extends Component {
         </div>
         <div
           className="bg-img"
-          style={{ height: '500px', width: '100%', backgroundImage: `url(${bgImage || defaultBgImage})` }}
+          style={{ height: '500px', width: '100%', backgroundImage: `url(${this.getBackgroundImageUrl()})` }}
         >
           <div className="product-combo-item">
             <img alt="" src={`${baseURL}/${comboItem1}`} />
