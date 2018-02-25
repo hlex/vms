@@ -1,23 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import bgImage from '../../images/bg-product-17.png';
+import defaultBgImage from '../../images/bg-product-17.png';
 
 class PromotionSetTitle extends Component {
 
   static propTypes = {
-    comboItem1: PropTypes.string,
-    comboItem2: PropTypes.string,
-    bgImage: PropTypes.string,
+    comboItem1: PropTypes.string.isRequired,
+    comboItem2: PropTypes.string.isRequired,
+    bgImage: PropTypes.string.isRequired,
     baseURL: PropTypes.string.isRequired,
   };
-
-  static defaultProps = {
-    comboItem1: 'images/product-1.png',
-    comboItem2: 'images/product-2.png',
-    bgImage: 'images/bg-product-17.png',
-  };
-
   render() {
     const { baseURL, comboItem1, comboItem2, bgImage } = this.props;
     return (
@@ -27,7 +20,7 @@ class PromotionSetTitle extends Component {
         </div>
         <div
           className="bg-img"
-          style={{ height: '500px', width: '100%', backgroundImage: `url(${bgImage})` }}
+          style={{ height: '500px', width: '100%', backgroundImage: `url(${bgImage || defaultBgImage})` }}
         >
           <div className="product-combo-item">
             <img alt="" src={`${baseURL}/${comboItem1}`} />

@@ -80,6 +80,7 @@ class PromotionSetPage extends Component {
         <Layout.Title>
           <PromotionSetTitle
             baseURL={baseURL}
+            bgImage={_.get(promotionSet, 'image')}
             comboItem1={_.get(promotionSet, 'products.0.image')}
             comboItem2={_.get(promotionSet, 'products.1.image')}
           />
