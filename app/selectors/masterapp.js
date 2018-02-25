@@ -20,6 +20,7 @@ const getHardwareProcessing = state => state.hardwareProcessing;
 const getAutoplayTime = state => state.autoplayTime;
 const getMuteAds = state => state.mutedAds;
 const getMachineId = state => state.machineId;
+const getVerifiedSalesman = state => state.verifiedSalesman;
 
 const verifyIsEnablingMoneyBox = createSelector(
   [
@@ -58,6 +59,7 @@ export default {
   getTcpClient,
   verifyReadyToDropProduct,
   getDroppingProduct,
+  getVerifiedSalesman,
   verifyCanChangeCash,
   getLimitBanknote,
   verifyAppReady,
@@ -72,5 +74,6 @@ export default {
   getMuteAds,
   verifyIsMaintenanceMode,
   getMachineId,
-  verifyIsEnablingMoneyBox
+  verifyIsEnablingMoneyBox,
+  getVerifiedSalesman
 };

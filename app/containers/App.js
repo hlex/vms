@@ -45,7 +45,8 @@ const mapStateToProps = state => {
     appReady: MasterappSelector.verifyAppReady(state.masterapp),
     isMaintenace: MasterappSelector.verifyIsMaintenanceMode(state.masterapp),
     modal: state.modal,
-    lang: MasterappSelector.getLanguage(state.masterapp)
+    lang: MasterappSelector.getLanguage(state.masterapp),
+    verifiedSalesman: MasterappSelector.getVerifiedSalesman(state.masterapp)
   };
 };
 
@@ -71,6 +72,7 @@ class App extends Component {
   };
 
   renderMaintenanceMode = () => {
+    const { verifiedSalesman, closeDoor } = this.props
     if (process.env.NODE_ENV !== 'production') {
       setTimeout(() => {
         this.props.closeDoor()
@@ -80,8 +82,19 @@ class App extends Component {
       <div className='maintenance-box'>
         <h1><i className="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
         <h1>{'Happy is "Under-Construction"'}</h1>
-        <h2>กรุณาเติมสินค้าและ Update ข้อมูลบน Cloud</h2>
-        <h2>เมื่อทำรายการเสร็จแล้ว กรุณาปิดตู้ให้เรียบร้อย</h2>
+        {
+          verifiedSalesman
+          ?
+          <div style={{ textAlign: 'center' }}>
+            <h2>กรุณาเติมสินค้าและ Update ข้อมูลบน Cloud</h2>
+            <h2>เมื่อทำรายการเสร็จแล้ว กรุณาปิดตู้ให้เรียบร้อย</h2>
+          </div>
+          :
+          <div style={{ textAlign: 'center' }}>
+            <h2>ท่านกำลังเปิดตู้โดยไม่ได้รับอนุญาติ</h2>
+            <h2>กรุณาปิดตู้ให้เรียบร้อย และทำรายการใหม่ให้ถูกค้อง</h2>
+          </div>
+        }
       </div>
     );
   };

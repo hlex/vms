@@ -51,6 +51,8 @@ export const AUDIO_START_PLAY = 'AUDIO_START_PLAY';
 export const SET_APPLICATION_MODE = 'SET_APPLICATION_MODE';
 export const SET_MACHINE_ID = 'SET_MACHINE_ID';
 export const FETCH_DATA_COMPLETED = 'FETCH_DATA_COMPLETED';
+export const VERIFIED_SALES_MAN = 'VERIFIED_SALES_MAN';
+export const CLEAR_VERIFY_SALES_MAN = 'CLEAR_VERIFY_SALES_MAN';
 // ======================================================
 // TCP
 // ======================================================

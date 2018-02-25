@@ -56,7 +56,9 @@ import {
   AUDIO_START_PLAY,
   SET_APPLICATION_MODE,
   SET_MACHINE_ID,
-  FETCH_DATA_COMPLETED
+  FETCH_DATA_COMPLETED,
+  VERIFIED_SALES_MAN,
+  CLEAR_VERIFY_SALES_MAN
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
@@ -327,4 +329,12 @@ export const setMachineId = (machineId) => ({
 
 export const dataFetchedCompletely = () => ({
   type: FETCH_DATA_COMPLETED
+});
+
+export const verifySalesmanPass = () => ({
+  type: VERIFIED_SALES_MAN
+});
+
+export const clearVerifySalesman = () => ({
+  type: CLEAR_VERIFY_SALES_MAN
 });

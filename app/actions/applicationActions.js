@@ -272,35 +272,41 @@ const addResetTimer = (resetTimeMS) => {
 export const doorClosed = () => {
   return async (dispatch, getState) => {
     console.log('doorClosed');
-    try {
-      await syncSettlement();
-    } catch (error) {
-      dispatch(openAlertMessage(convertApplicationErrorToError({
-        title: 'ไม่สามารถ Sync Settlement ได้',
-        th: 'กรุณาตรวจสอบข้อมูลและทำรายการใหม่อีกครั้ง',
-        en: '',
-      })));
+    const verifiedSalesman = MasterappSelector.getVerifiedSalesman(getState().masterapp);
+    if (verifiedSalesman) {
+      try {
+        await syncSettlement();
+      } catch (error) {
+        dispatch(openAlertMessage(convertApplicationErrorToError({
+          title: 'ไม่สามารถ Sync Settlement ได้',
+          th: 'กรุณาตรวจสอบข้อมูลและทำรายการใหม่อีกครั้ง',
+          en: '',
+        })));
+      }
+      // even if syncSettlement error, continue update stock.
+      try {
+        await updateStock();
+        // openAlarm
+        const client = MasterappSelector.getTcpClient(getState().masterapp);
+        client.send({
+          action: 0,
+          sensor: 'alarm',
+          msg: '1',
+        });
+        dispatch(getMasterProductAndEventAndPromotions());
+      } catch (error) {
+        dispatch(openAlertMessage(convertApplicationErrorToError({
+          title: 'ไม่สามารถ Update Stock ได้',
+          th: 'ระบบไม่สามารถทำงานต่อได้ กรุณาตรวจสอบข้อมูลและทำรายการอีกครั้ง',
+          en: '',
+        })));
+      }
+    } else {
+      console.error('[Error] @doorClosed salesman did not be veried.');
     }
-    // even if syncSettlement error, continue update stock.
-    try {
-      await updateStock();
-      // openAlarm
-      const client = MasterappSelector.getTcpClient(getState().masterapp);
-      client.send({
-        action: 0,
-        sensor: 'alarm',
-        msg: '1',
-      });
-      dispatch(getMasterProductAndEventAndPromotions());
-      setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
-      dispatch(backToHome());
-    } catch (error) {
-      dispatch(openAlertMessage(convertApplicationErrorToError({
-        title: 'ไม่สามารถ Update Stock ได้',
-        th: 'ระบบไม่สามารถทำงานต่อได้ กรุณาตรวจสอบข้อมูลและทำรายการอีกครั้ง',
-        en: '',
-      })));
-    }
+    dispatch(Actions.clearVerifySalesman());
+    setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
+    dispatch(backToHome());
   };
 };
 
@@ -544,6 +550,7 @@ export const receivedScannedCode = (scannedCode) => {
         dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
         await serviceVerifySalesman(scannedCode);
         dispatch(hideLoading());
+        dispatch(Actions.verifySalesmanPass());
         // pass call api disable alarm
         const client = MasterappSelector.getTcpClient(getState().masterapp);
         client.send({

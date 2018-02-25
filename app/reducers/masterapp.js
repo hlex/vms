@@ -23,7 +23,9 @@ import {
   SET_VOICE_INTERVAL,
   SET_APPLICATION_MODE,
   SET_MACHINE_ID,
-  FETCH_DATA_COMPLETED
+  FETCH_DATA_COMPLETED,
+  VERIFIED_SALES_MAN,
+  CLEAR_VERIFY_SALES_MAN
 } from '../actions/actionTypes';
 
 const localURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:8888/vms' : 'http://localhost:81/vms';
@@ -89,7 +91,8 @@ const initialState = {
   mutedAds: false,
   voiceInterval: 5,
   mode: 'running',
-  dataIsFetched: false
+  dataIsFetched: false,
+  verifiedSalesman: false
 };
 
 export default (state = initialState, action) => {
@@ -230,6 +233,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         dataIsFetched: true
+      };
+    case VERIFIED_SALES_MAN:
+      return {
+        ...state,
+        verifiedSalesman: true
+      };
+    case CLEAR_VERIFY_SALES_MAN:
+      return {
+        ...state,
+        verifiedSalesman: false
       };
     default:
       return state;
