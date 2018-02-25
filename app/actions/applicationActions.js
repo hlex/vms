@@ -254,6 +254,7 @@ const addResetTimer = (resetTimeMS) => {
   };
   return (dispatch) => {
     resetTimer = addResetTime(() => {
+      dispatch(closeAlertMessage());
       dispatch(backToHome());
     });
     // console.log('resetTimer', resetTimer);
@@ -261,6 +262,7 @@ const addResetTimer = (resetTimeMS) => {
       window.clearInterval(resetTimer);
       // console.log('--- CLS RESET TIME --- ', resetTimer);
       resetTimer = addResetTime(() => {
+        dispatch(closeAlertMessage());
         dispatch(backToHome());
       });
     });
@@ -593,7 +595,6 @@ export const openAlertMessage = (data) => {
 export const closeAlertMessage = () => {
   return (dispatch, getState) => {
     const messageTitle = getState().alertMessage.messages.title;
-    debugger;
     if (messageTitle === 'ขอบคุณที่ร่วมกิจกรรม') {
       dispatch(changePage('/'));
     }
