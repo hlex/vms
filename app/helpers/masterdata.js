@@ -58,7 +58,7 @@ export const convertToAppPromotion = (promotion, baseURL) => {
     id: promotion.Pro_ID,
     products,
     price: _.sumBy(products, product => Number(product.price)) - Number(promotion.Discount_Price),
-    image: '',
+    image: _.get(promotion, 'Pro_Imgbig', ''),
     ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),
     hasSomeProductThatEveryPhysicalIsFree: promotion.hasSomeProductThatEveryPhysicalIsFree || false
   };
