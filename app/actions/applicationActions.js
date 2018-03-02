@@ -782,6 +782,7 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
   dispatch(changePage('/payment'));
   const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
   const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
+  const isReadyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
   console.log(
       '%c App isInsertCash:',
       createLog('app'),
@@ -790,7 +791,7 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
       'totalAmount =',
       grandTotalAmount,
     );
-  if (currentCash >= grandTotalAmount) {
+  if (currentCash >= grandTotalAmount && !isReadyToDropProduct) {
     dispatch(setReadyToDropProduct());
     dispatch(Actions.stopPlayAudio());
     setTimeout(() => {
