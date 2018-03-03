@@ -9,6 +9,8 @@ import {
   CLEAR_PAYMENT_AMOUNT,
   RECEIVED_CASH_REMAINING,
   SET_CASH_CHANGE_AMOUNT,
+  RECEIVED_PAID_IN_FULL,
+  CLEAR_RECEIVED_PAID_IN_FULL
 } from '../actions/actionTypes';
 
 const initialState = {
@@ -17,6 +19,7 @@ const initialState = {
   amount: 0,
   remain: {},
   cashChangeAmount: 0,
+  isReceivedPaidInFull: false
 };
 const getInitialState = () => {
   return {
@@ -32,6 +35,7 @@ export default function products(state = getInitialState(), action: actionType) 
         ...getInitialState(),
         amount: state.amount,
         remain: state.remain,
+        cashChangeAmount: state.cashChangeAmount,
       };
     case RECEIVED_CASH:
       return {
@@ -62,6 +66,16 @@ export default function products(state = getInitialState(), action: actionType) 
       return {
         ...state,
         cashChangeAmount: action.cashChangeAmount
+      };
+    case RECEIVED_PAID_IN_FULL:
+      return {
+        ...state,
+        isReceivedPaidInFull: true
+      };
+    case CLEAR_RECEIVED_PAID_IN_FULL:
+      return {
+        ...state,
+        isReceivedPaidInFull: false
       };
     default:
       return state;

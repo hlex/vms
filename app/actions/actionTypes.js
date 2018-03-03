@@ -53,6 +53,8 @@ export const SET_MACHINE_ID = 'SET_MACHINE_ID';
 export const FETCH_DATA_COMPLETED = 'FETCH_DATA_COMPLETED';
 export const VERIFIED_SALES_MAN = 'VERIFIED_SALES_MAN';
 export const CLEAR_VERIFY_SALES_MAN = 'CLEAR_VERIFY_SALES_MAN';
+export const RECEIVED_PAID_IN_FULL = 'RECEIVED_PAID_IN_FULL';
+export const CLEAR_RECEIVED_PAID_IN_FULL = 'CLEAR_RECEIVED_PAID_IN_FULL';
 // ======================================================
 // TCP
 // ======================================================

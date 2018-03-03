@@ -782,16 +782,19 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
   dispatch(changePage('/payment'));
   const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
   const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
-  const isReadyToDropProduct = MasterappSelector.verifyReadyToDropProduct(getState().masterapp);
+  const isReceivedPaidInFull = PaymentSelector.verifyIsReceivedPaidInFull(getState().payment);
   console.log(
-      '%c App isInsertCash:',
-      createLog('app'),
-      'currentCash =',
-      currentCash,
-      'totalAmount =',
-      grandTotalAmount,
-    );
-  if (currentCash >= grandTotalAmount && !isReadyToDropProduct) {
+    '%c App isInsertCash:',
+    createLog('app'),
+    'currentCash =',
+    currentCash,
+    'totalAmount =',
+    grandTotalAmount,
+    'isReceivedPaidInFull',
+    isReceivedPaidInFull
+  );
+  if (currentCash >= grandTotalAmount && !isReceivedPaidInFull) {
+    dispatch(Actions.receivedPaidInFull());
     dispatch(setReadyToDropProduct());
     dispatch(Actions.stopPlayAudio());
     setTimeout(() => {

@@ -58,7 +58,9 @@ import {
   SET_MACHINE_ID,
   FETCH_DATA_COMPLETED,
   VERIFIED_SALES_MAN,
-  CLEAR_VERIFY_SALES_MAN
+  CLEAR_VERIFY_SALES_MAN,
+  RECEIVED_PAID_IN_FULL,
+  CLEAR_RECEIVED_PAID_IN_FULL,
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
@@ -337,4 +339,12 @@ export const verifySalesmanPass = () => ({
 
 export const clearVerifySalesman = () => ({
   type: CLEAR_VERIFY_SALES_MAN
+});
+
+export const receivedPaidInFull = () => ({
+  type: RECEIVED_PAID_IN_FULL
+});
+
+export const clearReceivedPaidInFull = () => ({
+  type: CLEAR_RECEIVED_PAID_IN_FULL
 });

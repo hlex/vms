@@ -4,6 +4,7 @@ import _ from 'lodash';
 const getCurrentAmount = state => Number(state.amount);
 const getCashRemaining = state => state.remain;
 const getCashChangeAmount = state => Number(state.cashChangeAmount);
+const verifyIsReceivedPaidInFull = state => state.isReceivedPaidInFull;
 
 const verifyCashChangeAmountMoreThanZero = createSelector(
   [getCashChangeAmount],
@@ -20,5 +21,6 @@ export default {
   getCashRemaining,
   getCashChangeAmount,
   verifyCashChangeAmountMoreThanZero,
-  verifyCurrentAmountMoreThanZero
+  verifyCurrentAmountMoreThanZero,
+  verifyIsReceivedPaidInFull
 };
