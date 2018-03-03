@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 // ======================================================
 // Actions
@@ -60,14 +61,14 @@ class AlertMessage extends Component {
           {
             hasTitle &&
             <div>
-              <h2>{messages.title}</h2>
-              <small>{messages[lang]}</small>
+              <h2>{_.get(messages, 'title', '')}</h2>
+              <small>{_.get(messages, lang, '')}</small>
               <br />
               <br />
             </div>
           }
           {
-            !hasTitle && <h2>{messages[lang]}</h2>
+            !hasTitle && <h2>{_.get(messages, lang, '')}</h2>
           }
           <button onClick={closeAlertMessage} className="button purple">ตกลง</button>
         </div>
