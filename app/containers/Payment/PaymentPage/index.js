@@ -81,11 +81,11 @@ class PaymentPage extends PureComponent {
   };
 
   componentWillUnmount = () => {
-    const { currentAmountMoreThanZero, returnAllInsertCash } = this.props;
+    const { returnAllInsertCash } = this.props;
     const currentPage = this.props.history.location.pathname;
     const isThankyouPage = /thankyou/.test(currentPage);
     // console.log('outPaymentPage !!!!', this.props, isThankyouPage);
-    if (!isThankyouPage && currentAmountMoreThanZero) {
+    if (!isThankyouPage) {
       returnAllInsertCash();
     }
   };

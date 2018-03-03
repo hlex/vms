@@ -1212,9 +1212,9 @@ export const initHomePage = () => {
 export const processingReturningCash = () => {
   return (dispatch, getState) => {
     const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
-    const cashChangeAmountMoreThanZero = PaymentSelector.verifyCashChangeAmountMoreThanZero(getState().payment);
-    if (moneyBoxActive && cashChangeAmountMoreThanZero) {
-      dispatch(showLoading('ระบบกำลังทอนเงิน รอสักครู่'));
+    // const cashChangeAmountMoreThanZero = PaymentSelector.verifyCashChangeAmountMoreThanZero(getState().payment);
+    if (moneyBoxActive) {
+      dispatch(showLoading('ระบบกำลังดำเนินการ โปรดรอสักครู่'));
       setTimeout(() => {
         if (MasterappSelector.verifyIsLoading(getState().masterapp)) {
           dispatch(hideLoading());
