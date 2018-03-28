@@ -333,8 +333,9 @@ export const dataFetchedCompletely = () => ({
   type: FETCH_DATA_COMPLETED
 });
 
-export const verifySalesmanPass = () => ({
-  type: VERIFIED_SALES_MAN
+export const verifySalesmanPass = ({ salesman }) => ({
+  type: VERIFIED_SALES_MAN,
+  salesman
 });
 
 export const clearVerifySalesman = () => ({

@@ -38,9 +38,11 @@ export const serviceGetSumOrderAmount = () => {
   });
 };
 
-export const syncSettlement = () => {
+export const syncSettlement = ({ salesman, remainingCoinsString }) => {
   const data = {
-    vtype: 'SettleMent'
+    vtype: 'SettleMent',
+    SaleMan: salesman,
+    remainingCoins: remainingCoinsString, // '1|20,5|30,10|50'
   };
   return fetchFacade(`${URL.syncSettlement}${convertToURLParam(data)}`, { local: true }).then((response) => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);

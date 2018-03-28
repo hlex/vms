@@ -92,7 +92,7 @@ const initialState = {
   voiceInterval: 5,
   mode: 'running',
   dataIsFetched: false,
-  verifiedSalesman: false
+  verifiedSalesman: undefined,
 };
 
 export default (state = initialState, action) => {
@@ -237,12 +237,12 @@ export default (state = initialState, action) => {
     case VERIFIED_SALES_MAN:
       return {
         ...state,
-        verifiedSalesman: true
+        verifiedSalesman: action.salesman
       };
     case CLEAR_VERIFY_SALES_MAN:
       return {
         ...state,
-        verifiedSalesman: false
+        verifiedSalesman: undefined
       };
     default:
       return state;

@@ -275,7 +275,10 @@ export const doorClosed = () => {
     const verifiedSalesman = MasterappSelector.getVerifiedSalesman(getState().masterapp);
     if (verifiedSalesman) {
       try {
-        await syncSettlement();
+        await syncSettlement({
+          salesma: verifiedSalesman,
+          remainingCoinsString: PaymentSelector.getCashRemainingCoinsString(getState().payment),
+        });
       } catch (error) {
         dispatch(openAlertMessage(convertApplicationErrorToError({
           title: 'ไม่สามารถ Sync Settlement ได้',
@@ -548,9 +551,10 @@ export const receivedScannedCode = (scannedCode) => {
       // validate salesman
       try {
         dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
-        await serviceVerifySalesman(scannedCode);
+        const serviceVerifySalesmanResponse = await serviceVerifySalesman(scannedCode);
+        const responseData = extractResponseData(serviceVerifySalesmanResponse);
         dispatch(hideLoading());
-        dispatch(Actions.verifySalesmanPass());
+        dispatch(Actions.verifySalesmanPass({ salesman: responseData.SaleMan || '' }));
         // pass call api disable alarm
         const client = MasterappSelector.getTcpClient(getState().masterapp);
         client.send({
@@ -1546,7 +1550,7 @@ export const stopPlayAudio = () => {
 export const playInputMSISDNErrorAudio = () => {
   return (dispatch, getState) => {
     const fileURL = MasterappSelector.getLocalURL(getState().masterapp);
-    dispatch(Actions.setAudioSource(`${fileURL}/voice/8.2.m4a`));
+    dispatch(Actions.setAudioSource(`${fileURL}/voice/8.2.mp3`));
     dispatch(Actions.startPlayAudio());
   };
 };
