@@ -2,6 +2,10 @@ import { push, goBack } from 'react-router-redux';
 import _ from 'lodash';
 import cuid from 'cuid';
 import * as Actions from './index';
+// ======================================================
+// Analytics
+// ======================================================
+import KeenIo from '../analytics/keen';
 
 // ======================================================
 // Selectors
@@ -401,12 +405,20 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       break;
     case 'CASH_CHANGE_SUCCESS':
       dispatch(runFlowCashChangeSuccess());
+      KeenIo.recordEvent('fromHardware', {
+        machineId: MasterappSelector.getMachineId(getState().masterapp),
+        action: 'CASH_CHANGE_SUCCESS',
+      });
       break;
     case 'CASH_CHANGE_FAIL':
       dispatch(Actions.showModal('cashChangeError'));
       break;
     case 'PRODUCT_DROP_SUCCESS':
       dispatch(runFlowProductDropSuccess());
+      KeenIo.recordEvent('fromHardware', {
+        machineId: MasterappSelector.getMachineId(getState().masterapp),
+        action: 'PRODUCT_DROP_SUCCESS',
+      });
       break;
     case 'PRODUCT_DROP_FAIL':
       dispatch(runFlowProductDropFailed());
@@ -707,6 +719,11 @@ export const productDrop = () => (dispatch, getState) => {
         action: 1,
         msg: targetRowColumn || '00', // row * col
       });
+      KeenIo.recordEvent('toHardware', {
+        machineId: MasterappSelector.getMachineId(getState().masterapp),
+        action: 'productDrop',
+        target: targetRowColumn
+      });
       dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
     } else {
       console.error('Cannot Drop Product because targetRowColumn = ', targetRowColumn);
@@ -988,6 +1005,11 @@ export const sendCashChangeToServer = () => (dispatch, getState) => {
       action: 2,
       msg: `${cashChangeAmount}`,
       mode: 'coin',
+    });
+    KeenIo.recordEvent('toHardware', {
+      machineId: MasterappSelector.getMachineId(getState().masterapp),
+      action: 'changeCash',
+      amount: cashChangeAmount
     });
   }
   dispatch(clearPaymentAmount());
