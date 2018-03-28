@@ -31,7 +31,7 @@ import OrderSelector from '../../../selectors/order';
 const mapStateToProps = (state) => {
   return {
     moneyBoxActive: MasterappSelector.verifyIsMoneyBoxActive(state.masterapp),
-    baseURL: MasterappSelector.getBaseURL(state.masterapp),
+    baseURL: MasterappSelector.getLocalURL(state.masterapp),
     productPrice: OrderSelector.getSingleProductPrice(state.order),
     discountAmount: OrderSelector.getDiscountAmount(state.order),
     productBgImage: OrderSelector.getSingleProductBgImage(state.order),
@@ -105,4 +105,4 @@ class SingleProductPage extends Component {
   }
 }
 
-export default withAudio({ src: `http://localhost:${process.env.NODE_ENV !== 'production' ? '8888' : '81'}/vms/static/voice/3.m4a` }, actions)(connect(mapStateToProps, mapDispatchToProps)(SingleProductPage));
+export default withAudio({ src: `http://localhost:${process.env.NODE_ENV !== 'production' ? '8888' : '81'}/vms/static/voice/3.mp3` }, actions)(connect(mapStateToProps, mapDispatchToProps)(SingleProductPage));

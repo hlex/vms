@@ -151,4 +151,4 @@ class SelectTopupValuePage extends Component {
   }
 }
 
-export default withAudio({ src: `http://localhost:${process.env.NODE_ENV !== 'production' ? '8888' : '81'}/vms/static/voice/8.1.m4a` }, actions)(connect(mapStateToProps, mapDispatchToProps)(SelectTopupValuePage))
+export default withAudio({ src: `http://localhost:${process.env.NODE_ENV !== 'production' ? '8888' : '81'}/vms/static/voice/8.1.mp3` }, actions)(connect(mapStateToProps, mapDispatchToProps)(SelectTopupValuePage))

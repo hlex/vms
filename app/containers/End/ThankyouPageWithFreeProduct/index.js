@@ -84,4 +84,4 @@ class ThankyouPage extends Component {
   }
 }
 
-export default withAudio({ src: `http://localhost:${process.env.NODE_ENV !== 'production' ? '8888' : '81'}/vms/static/voice/11.m4a` }, actions)(connect(mapStateToProps, mapDispatchToProps)(ThankyouPage));
+export default withAudio({ src: `http://localhost:${process.env.NODE_ENV !== 'production' ? '8888' : '81'}/vms/static/voice/11.mp3` }, actions)(connect(mapStateToProps, mapDispatchToProps)(ThankyouPage));
