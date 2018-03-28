@@ -16,7 +16,6 @@ export default class TcpClient {
   }
   send(data) {
     console.log('%c App Send Data:', createLog(null, 'orange', '#fff'), data);
-    // console.log('Queue --------->', this.queue, this.busy);
     this.queue.push(data);
     if (!this.busy) {
       this.doSend();
@@ -37,6 +36,10 @@ export default class TcpClient {
           ...data,
           time: moment().format('HH:mm:ss'),
         });
+        console.log('this.histories.length', this.histories, this.histories.length);
+        if (this.histories.length === 20) {
+          this.histories = _.tail(this.histories);
+        }
       }, 1000);
     }
   }
@@ -55,6 +58,10 @@ class Queue {
   }
   push(data) {
     this.data.push(data);
+    console.log('this.data.length', this.data, this.data.length);
+    if (this.data.length > 3) {
+      this.data = _.tail(this.data);
+    }
   }
   pop() {
     const target = _.head(this.data);
