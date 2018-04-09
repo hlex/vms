@@ -28,7 +28,7 @@ const mapStateToProps = (state) => {
   return {
     mainMenus: MasterdataSelector.getMainMenus(state.masterdata),
     mobileTopupSteps: MasterdataSelector.getMobileTopupSteps(state.masterdata),
-    baseURL: MasterappSelector.getBaseURL(state.masterapp),
+    baseURL: MasterappSelector.getLocalURL(state.masterapp),
     topupProviders: MasterdataSelector.getTopupProviders(state.masterdata),
     lang: MasterappSelector.getLanguage(state.masterapp),
   };
