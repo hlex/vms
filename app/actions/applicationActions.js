@@ -280,7 +280,7 @@ export const doorClosed = () => {
     if (verifiedSalesman) {
       try {
         await syncSettlement({
-          salesma: verifiedSalesman,
+          salesman: verifiedSalesman,
           remainingCoinsString: PaymentSelector.getCashRemainingCoinsString(getState().payment),
         });
       } catch (error) {
