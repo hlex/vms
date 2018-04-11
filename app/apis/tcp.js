@@ -2,6 +2,7 @@
 import net from 'net';
 import TcpClient from '../models/TcpClient';
 import store from '../index';
+import * as Actions from '../actions'
 import * as ApplicationActions from '../actions/applicationActions';
 // ======================================================
 // Helpers
@@ -27,6 +28,10 @@ export const createTcpClient = (ip, port) => {
   });
   client.on('close', () => {
     console.log('%c Client Connection closed: ');
+  });
+  client.on('error', (ex) => {
+    console.log('handled error', ex);
+    store.dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
   });
 
   // ======================================================

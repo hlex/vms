@@ -26,7 +26,7 @@ const mapStateToProps = state => ({
   mainMenus: MasterdataSelector.getMainMenus(state.masterdata),
   eventSteps: MasterdataSelector.getEventSteps(state.masterdata),
   events: MasterdataSelector.getEvents(state.masterdata),
-  baseURL: MasterappSelector.getBaseURL(state.masterapp),
+  baseURL: MasterappSelector.getLocalURL(state.masterapp),
 });
 
 const actions = {

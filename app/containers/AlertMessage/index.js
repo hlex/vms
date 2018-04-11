@@ -62,7 +62,7 @@ class AlertMessage extends Component {
             hasTitle &&
             <div>
               <h2>{_.get(messages, 'title', '')}</h2>
-              <small>{_.get(messages, lang, '')}</small>
+              <h3>{_.get(messages, lang, '')}</h3>
               <br />
               <br />
             </div>

@@ -43,7 +43,8 @@ const mapStateToProps = state => {
     localStaticURL: MasterappSelector.getLocalStaticURL(state.masterapp),
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     appReady: MasterappSelector.verifyAppReady(state.masterapp),
-    isMaintenace: MasterappSelector.verifyIsMaintenanceMode(state.masterapp),
+    isMaintenance: MasterappSelector.verifyIsMaintenanceMode(state.masterapp),
+    isHardwareMalfunction: MasterappSelector.verifyIsHardwareMalfunction(state.masterapp),
     modal: state.modal,
     lang: MasterappSelector.getLanguage(state.masterapp),
     verifiedSalesman: MasterappSelector.getVerifiedSalesman(state.masterapp)
@@ -70,6 +71,19 @@ class App extends Component {
     const { initApplication } = this.props;
     initApplication();
   };
+
+  renderHardwareMalfunctionMode = () => {
+    return (
+      <div className='maintenance-box'>
+        <h1><i className="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
+        <h1>{'Happy is "Closed"'}</h1>
+          <div style={{ textAlign: 'center' }}>
+            <h2>ไม่สามารถเชื่อมต่อระบบ Hardware ได้</h2>
+            <h2>กรุณาติดต่อ ผู้ดูแลระบบ</h2>
+          </div>
+      </div>
+    );
+  }
 
   renderMaintenanceMode = () => {
     const { verifiedSalesman, closeDoor } = this.props
@@ -123,10 +137,35 @@ class App extends Component {
     if (this.mediaPlayer && this.mediaPlayer !== null) this.mediaPlayer.handleTouchMedia();
   };
 
+  renderApplication = () => {
+    const { lang, baseURL, appReady, isMaintenance, isHardwareMalfunction } = this.props;
+    if (appReady) {
+      return (
+        <div className="smart-vending-machine-app-connected">
+          <AlertMessage />
+          <LoadingScreen />
+          <Layout.Header
+            lang={lang}
+            switchLanguageTo={this.handleSwitchLanguage}
+            backToHome={this.handleClickHome}
+            baseURL={baseURL}
+          />
+          {this.props.children}
+          <Layout.Footer mediaRef={el => this.mediaPlayer = el} />
+          {process.env.NODE_ENV !== 'production' && <DevToolbar />}
+        </div>
+      )
+    }
+    if (isHardwareMalfunction) return this.renderHardwareMalfunctionMode()
+    if (isMaintenance)  return this.renderMaintenanceMode()
+    return this.renderApplicationStarting()
+  }
+
   render() {
     const {
       backToHome,
-      isMaintenace,
+      isMaintenance,
+      isHardwareMalfunction,
       baseURL,
       location,
       appReady,
@@ -139,23 +178,7 @@ class App extends Component {
     } = this.props;
     return (
       <div className="smart-vending-machine-app">
-        {!appReady && isMaintenace && this.renderMaintenanceMode()}
-        {!appReady && !isMaintenace && this.renderApplicationStarting()}
-        {appReady && (
-          <div className="smart-vending-machine-app-connected">
-            <AlertMessage />
-            <LoadingScreen />
-            <Layout.Header
-              lang={lang}
-              switchLanguageTo={this.handleSwitchLanguage}
-              backToHome={this.handleClickHome}
-              baseURL={baseURL}
-            />
-            {this.props.children}
-            <Layout.Footer mediaRef={el => this.mediaPlayer = el} />
-            {process.env.NODE_ENV !== 'production' && <DevToolbar />}
-          </div>
-        )}
+        {this.renderApplication()}
       </div>
     );
   }

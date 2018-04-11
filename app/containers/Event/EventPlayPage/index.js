@@ -128,7 +128,7 @@ class EventPlayPage extends Component {
         <img alt="line" src={lineId} />
         <div className="desc">
           <h2>{`${nextInputOrder} กรุณาแสกน LINE QR CODE`}</h2>
-          <p>เพื่อเพิ่มเพื่อนใน LINE ID และ ทำรายการต่อใน LINE</p>
+          <h3>เพื่อเพิ่มเพื่อนใน LINE ID และ ทำรายการต่อใน LINE</h3>
         </div>
         <a className="button blue submit-button _hidden" onClick={submitPlayEvent}>
           <p className="fade-flash">ทำรายการต่อ </p>
@@ -181,7 +181,7 @@ class EventPlayPage extends Component {
       return this.renderInputEmail();
     } else if (nextInput === 'MSISDN') {
       return this.renderInputMSISDN();
-    } else if (nextInput === 'LINE_ID') {
+    } else if (nextInput === 'BARCODE') {
       return this.renderInputLineId();
     } else if (nextInput === 'BARCODE') {
       return this.renderInputBarcode();
