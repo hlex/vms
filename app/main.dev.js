@@ -10,7 +10,7 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, session } from 'electron';
 import MenuBuilder from './menu';
 
 let mainWindow = null;
@@ -63,6 +63,11 @@ app.on('ready', async () => {
     show: false,
     width: 1024,
     height: 728
+  });
+
+  const ses = mainWindow.webContents.session;
+  ses.clearCache(() => {
+    console.log('cache cleared!');
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
