@@ -30,7 +30,7 @@ const mapStateToProps = state => ({
   productSteps: MasterdataSelector.getProductSteps(state.masterdata),
   products: MasterdataSelector.getProductsNotFree(state.masterdata),
   promotionSets: MasterdataSelector.getPromotionSets(state.masterdata),
-  baseURL: MasterappSelector.getBaseURL(state.masterapp),
+  baseURL: MasterappSelector.getLocalURL(state.masterapp),
   lang: MasterappSelector.getLanguage(state.masterapp)
 });
 
@@ -59,6 +59,11 @@ class ProductSelectionPage extends Component {
     products: [],
     promotionSets: [],
   };
+
+  componentWillMount = () => {
+    const { clearOrder } = this.props;
+    clearOrder()
+  }
 
   renderStepTitle = () => {
     const { lang } = this.props;
