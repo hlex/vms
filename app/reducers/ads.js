@@ -2,7 +2,8 @@ import _ from 'lodash';
 import {
   SET_FOOTER_ADS,
   RESET_FOOTER_ADS,
-  SET_BASE_ADS
+  SET_BASE_ADS,
+  REMEMBER_BASE_AD_PLAYING_INDEX
 } from '../actions/actionTypes';
 import {
   normalizeStripAds
@@ -213,6 +214,8 @@ const stripAds = [
 const baseAds = _.map(stripAds, ad => normalizeStripAds(ad));
 
 const initialState = {
+  footerAdType: '',
+  baseAdPlayingIndex: 0,
   baseAds: [],
   footerAds: [], // baseAds,
 };
@@ -225,7 +228,8 @@ export default (state = getInitialState(), action) => {
     case RESET_FOOTER_ADS:
       return {
         ...state,
-        footerAds: state.baseAds
+        footerAds: state.baseAds,
+        footerAdType: 'base'
       };
     case SET_BASE_ADS:
       return {
@@ -236,7 +240,13 @@ export default (state = getInitialState(), action) => {
       return {
         ...state,
         footerAds: action.ads,
+        footerAdType: action.footerAdType
       };
+    case REMEMBER_BASE_AD_PLAYING_INDEX:
+      return {
+        ...state,
+        baseAdPlayingIndex: action.baseAdPlayingIndex
+      }
     default:
       return state;
   }

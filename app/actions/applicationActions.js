@@ -223,7 +223,8 @@ export const initApplication = () => {
         return normalizeStripAds(convertToAppAd(ad), fileURL);
       });
       dispatch(Actions.setBaseAds(sanitizedBaseAds));
-      dispatch(Actions.setFooterAds(sanitizedBaseAds));
+      dispatch(Actions.resetFooterAds());
+      // dispatch(Actions.setFooterAds(sanitizedBaseAds));
       // ======================================================
       // PRODUCTS & EVENT & PROMOTION
       // ======================================================

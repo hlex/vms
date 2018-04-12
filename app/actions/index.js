@@ -61,6 +61,7 @@ import {
   CLEAR_VERIFY_SALES_MAN,
   RECEIVED_PAID_IN_FULL,
   CLEAR_RECEIVED_PAID_IN_FULL,
+  REMEMBER_BASE_AD_PLAYING_INDEX
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
@@ -244,6 +245,7 @@ export const hideLoading = () => ({
 export const setFooterAds = ads => ({
   type: SET_FOOTER_ADS,
   ads,
+  footerAdType: 'product'
 });
 
 export const resetFooterAds = () => ({
@@ -348,4 +350,9 @@ export const receivedPaidInFull = () => ({
 
 export const clearReceivedPaidInFull = () => ({
   type: CLEAR_RECEIVED_PAID_IN_FULL
+});
+
+export const rememberBaseAdPlayingIndex = (baseAdPlayingIndex) => ({
+  type: REMEMBER_BASE_AD_PLAYING_INDEX,
+  baseAdPlayingIndex
 });

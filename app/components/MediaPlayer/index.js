@@ -27,7 +27,7 @@ class MediaPlayer extends Component {
   componentWillReceiveProps = (nextProps) => {
     if (this.props.sources.length !== nextProps.sources.length) {
       this.setState({
-        index: 0
+        index: nextProps.footerAdType === 'base' ? nextProps.baseAdPlayingIndex : 0
       });
     }
   }
@@ -35,15 +35,22 @@ class MediaPlayer extends Component {
     const { playerKey, muted } = this.props;
     return playerKey === undefined;
   }
+  getNextPlayingIndex = (index) => {
+    const { sources } = this.props;
+    const nextIndex = index < sources.length - 1 ? index + 1 : 0;
+    return nextIndex;
+  }
+  setPlayingIndex = (index) => {
+    const { onEnded } = this.props;
+    this.setState({ index });
+    onEnded(index, this.getNextPlayingIndex());
+  }
   handlePlayerEnded = () => {
     const { index } = this.state;
-    const { sources, onEnded } = this.props;
+    const { sources } = this.props;
     const nextIndex = index < sources.length - 1 ? index + 1 : 0;
     // console.log('handlePlayerEnded', index, nextIndex);
-    this.setState({
-      index: nextIndex,
-    });
-    onEnded(index, nextIndex);
+    this.setPlayingIndex(nextIndex);
   }
   handleTouchMedia = () => {
     // console.log('handleTouchMedia');
@@ -54,9 +61,10 @@ class MediaPlayer extends Component {
         return sourceIndex > index && (source.adSize || '') !== 'FULLSCREEN';
       });
       if (nextNearestNotFullScreenAdIndex) {
-        this.setState({
-          index: nextNearestNotFullScreenAdIndex
-        });
+        this.setPlayingIndex(nextNearestNotFullScreenAdIndex);
+        // this.setState({
+        //   index: nextNearestNotFullScreenAdIndex
+        // });
       }
     }
   }
@@ -71,8 +79,8 @@ class MediaPlayer extends Component {
     return isFullScreen;
   }
   render = () => {
-    // console.debug('MediaPlayer:state', this.state);
-    // console.debug('MediaPlayer:props', this.props);
+    console.debug('MediaPlayer:state', this.state);
+    console.debug('MediaPlayer:props', this.props);
     const { width, height, sources, playerKey, muted } = this.props;
     // -----------------------------
     const currentMedia = this.getCurrentMedia();

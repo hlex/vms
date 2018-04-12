@@ -12,19 +12,28 @@ import { MediaPlayer } from '../../../components';
 // Selectors
 // ======================================================
 import MasterappSelector from '../../../selectors/masterapp';
+// ======================================================
+// Actions
+// ======================================================
+import { rememberBaseAdPlayingIndex } from '../../../actions';
 
 const mapStateToProps = state => ({
-  footerAds: state.ads.footerAds,
-  baseURL: MasterappSelector.getBaseURL(state.masterapp)
+  baseAdPlayingIndex: state.ads.baseAdPlayingIndex,
+  footerAdType: state.ads.footerAdType,
+  footerAds: state.ads.footerAds
 });
 
-const actions = {};
+const actions = {
+  rememberBaseAdPlayingIndex
+};
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 class Footer extends PureComponent {
   static propTypes = {
     location: PropTypes.shape({}).isRequired,
+    mediaRef: PropTypes.string.isRequired,
+    footerAdType: PropTypes.string.isRequired,
     footerAds: PropTypes.arrayOf(PropTypes.shape({})).isRequired
   };
 
@@ -61,9 +70,18 @@ class Footer extends PureComponent {
     return _.includes(blacklist, location.pathname);
   };
 
+  handleMediaEnded = (lastPlayedIndex, nextIndex) => {
+    console.log('handleMediaEnded', lastPlayedIndex, nextIndex)
+    const { footerAdType, rememberBaseAdPlayingIndex } = this.props;
+    if (footerAdType === 'base') {
+      console.log('remember index', lastPlayedIndex);
+      rememberBaseAdPlayingIndex(lastPlayedIndex);
+    }
+  }
+
   render() {
     // console.log(this);
-    const { mediaRef, footerAds } = this.props;
+    const { mediaRef, footerAds, footerAdType, baseAdPlayingIndex } = this.props;
     return (
       <div className="footer-section">
         <div className="copy">
@@ -72,11 +90,14 @@ class Footer extends PureComponent {
         {!this.shouldHideSignage() && (
           <div className="signage">
             <MediaPlayer
-              ref={this.props.mediaRef}
+              ref={mediaRef}
               width={1080}
               height={610}
+              footerAdType={footerAdType}
+              baseAdPlayingIndex={baseAdPlayingIndex}
               sources={footerAds}
               muted={this.shouldMuted()}
+              onEnded={this.handleMediaEnded}
             />
           </div>
         )}

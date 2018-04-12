@@ -55,6 +55,7 @@ export const VERIFIED_SALES_MAN = 'VERIFIED_SALES_MAN';
 export const CLEAR_VERIFY_SALES_MAN = 'CLEAR_VERIFY_SALES_MAN';
 export const RECEIVED_PAID_IN_FULL = 'RECEIVED_PAID_IN_FULL';
 export const CLEAR_RECEIVED_PAID_IN_FULL = 'CLEAR_RECEIVED_PAID_IN_FULL';
+export const REMEMBER_BASE_AD_PLAYING_INDEX = 'REMEMBER_BASE_AD_PLAYING_INDEX';
 // ======================================================
 // TCP
 // ======================================================
