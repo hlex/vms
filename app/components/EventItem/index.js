@@ -6,8 +6,8 @@ import _ from 'lodash';
 import iconPhone from '../../images/icon-phone.png';
 import iconEmail from '../../images/icon-email.png';
 import iconLineLogo from '../../images/icon-linelogo.png';
-import iconBarcode from '../../images/icon-barcode.png';
-import iconQrcode from '../../images/icon-qrcode.png';
+import iconBarcode from '../../images/icon-barcodemini.png';
+import iconQrcode from '../../images/icon-qrcodemini.png';
 
 class EventItem extends Component {
   static propTypes = {
@@ -35,11 +35,11 @@ class EventItem extends Component {
     const { baseURL } = this.props;
     const orderLabel = `${order}. `;
     const howToLowerCase = howTo.toLowerCase();
-    const shouldRenderGetReward = howTo.indexOf('รับ') >= 0 || howToLowerCase.indexOf('get') >= 0;
+    const shouldRenderGetReward = howTo.indexOf('บาท') >= 0 || howToLowerCase.indexOf('baht') >= 0 || howTo.indexOf('รับรหัส') >= 0;
     const shouldRenderIconPhone = howTo.indexOf('หมายเลข') >= 0 || howTo.indexOf('มือถือ') >= 0 || howToLowerCase.indexOf('phone') >= 0;
     const shouldRenderIconEmail = howTo.indexOf('อีเมล') >= 0 || howToLowerCase.indexOf('email') >= 0;
-    const shouldRenderIconLineId = howTo.indexOf('ไลน์') >= 0 || howToLowerCase.indexOf('line id') >= 0;
-    const shouldRenderIconBarCode = howTo.indexOf('บาร์') >= 0 || howToLowerCase.indexOf('bar') >= 0;
+    const shouldRenderIconLineId = howTo.indexOf('ไลน์') >= 0 || howToLowerCase.indexOf('line qr code') >= 0 || howToLowerCase.indexOf('line official') >= 0;
+    const shouldRenderIconBarCode = howTo.indexOf('บาร์') >= 0 || howToLowerCase.indexOf('barcode') >= 0;
     const shouldRenderIconQRCode = howTo.indexOf('คิวอาร์') >= 0 || (howToLowerCase.indexOf('qr') >= 0 && howToLowerCase.indexOf('line qr') < 0);
     if (shouldRenderGetReward) {
       return (
