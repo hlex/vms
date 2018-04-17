@@ -65,10 +65,11 @@ app.on('ready', async () => {
     height: 728
   });
 
-  const ses = mainWindow.webContents.session;
-  ses.clearCache(() => {
-    console.log('cache cleared!');
-  });
+  if (process.env.NODE_ENV !== 'development') {
+    const ses = mainWindow.webContents.session;
+    ses.clearCache(() => {
+    });
+  }
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
