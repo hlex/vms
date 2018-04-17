@@ -21,11 +21,11 @@ import MasterappSelector from '../../selectors/masterapp';
 // Actions
 // ======================================================
 
-import iconQrcode from '../../images/icon-qrcode.png';
+import iconQrcode from '../../images/icon-qrcode-scan.png';
 
 const mapStateToProps = (state) => {
   return {
-    baseURL: MasterappSelector.getBaseURL(state.masterapp),
+    baseURL: MasterappSelector.getLocalURL(state.masterapp),
   };
 };
 
@@ -49,14 +49,38 @@ class TopupProviderSelectionPage extends Component {
           <ProductTitle
             title={'Salesman'}
             baseURL={baseURL}
+            bgImage={'static/images/cover-staff.png'}
           />
         </Layout.Title>
         <Layout.Content>
-          <div className="event-box">
-            <img alt="line" src={iconQrcode} />
-            <div className="desc">
-              <h2>{'กรุณา Scan QR CODE (รหัสพนักงาน)'}</h2>
-              <h3>{'เพื่อตรวจสอบรหัส และปลดล็อคตู้'}</h3>
+          <div className="row">
+            <div className="D-8">
+              <div className="event-box" style={{ height: '500px' }}>
+                <img alt="line" src={iconQrcode} />
+                <div className="desc">
+                  <h2>{'กรุณา Scan QR CODE (รหัสพนักงาน)'}</h2>
+                  <h3>{'เพื่อตรวจสอบรหัส และปลดล็อคตู้'}</h3>
+                </div>
+              </div>
+            </div>
+            <div className="D-4">
+              <div
+                className="payment-confirmation"
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '500px'
+                }}
+              >
+                <div className="insert-cash-box">
+                  <div className="insert-cash-sign">
+                    <div className="animation-x bounce">
+                      <img src={`${baseURL}/static/images/icon-point-left.png`} alt="" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <FooterAction />
