@@ -28,7 +28,7 @@ import { isEmpty } from '../../../helpers/global';
 
 import lineId from '../../../images/line-id.png';
 import iconBarcode from '../../../images/icon-barcode.png';
-import iconLineQrcode from '../../../images/line-qrcode.jpg';
+import iconLineQrcode from '../../../images/qrcode.png';
 import iconQrcode from '../../../images/icon-qrcode.png';
 
 const mapStateToProps = state => ({
