@@ -1,7 +1,7 @@
 .event-box {
   display: flex;
   justify-content: center;
-  align-items: center;
+  // align-items: center;
   flex-direction: column;
   img {
     padding: 20px;
@@ -9,5 +9,12 @@
   .desc {
     text-align: center;
     margin-bottom: 30px;
+  }
+  .step-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 500px;
   }
 }

@@ -26,13 +26,13 @@ import OrderSelectors from '../../../selectors/order';
 // ======================================================
 import { isEmpty } from '../../../helpers/global';
 
-import lineId from '../../../images/line-id.png';
-import iconBarcode from '../../../images/icon-barcode.png';
-import iconLineQrcode from '../../../images/qrcode.png';
-import iconQrcode from '../../../images/icon-qrcode.png';
+import lineId from '../../../images/qrcode.png';
+import iconBarcode from '../../../images/icon-barcodebig.png';
+import iconLineQrcode from '../../../images/icon-qrcode-scan-line.png';
+import iconQrcode from '../../../images/icon-qrcode-scan.png';
 
 const mapStateToProps = state => ({
-  baseURL: MasterappSelector.getBaseURL(state.masterapp),
+  baseURL: MasterappSelector.getLocalURL(state.masterapp),
   selectedEvent: OrderSelectors.getSelectedEvent(state.order),
   nextInput: OrderSelectors.getEventNextInput(state.order),
   nextInputOrder: OrderSelectors.getEventNextInputOrder(state.order),
@@ -122,54 +122,128 @@ class EventPlayPage extends Component {
   }
 
   renderInputLineId = () => {
-    const { nextInputOrder, submitPlayEvent } = this.props;
+    const { nextInputOrder } = this.props;
     return (
       <div className="event-box">
-        <img alt="line" src={lineId} />
-        <div className="desc">
-          <h2>{`${nextInputOrder} กรุณาแสกน LINE QR CODE`}</h2>
-          <h3>เพื่อเพิ่มเพื่อนใน LINE ID และ ทำรายการต่อใน LINE</h3>
+        <div className="step-content">
+          <img alt="lineId" src={lineId} />
+          <div className="desc">
+            <h2>{`${nextInputOrder} กรุณาแสกน LINE QR CODE`}</h2>
+            <h3>เพื่อเพิ่มเพื่อนใน LINE ID และ ทำรายการต่อใน LINE</h3>
+          </div>
         </div>
-        <a className="button blue submit-button _hidden" onClick={submitPlayEvent}>
-          <p className="fade-flash">ทำรายการต่อ </p>
-        </a>
       </div>
     );
   };
 
   renderInputBarcode = () => {
-    const { nextInputOrder } = this.props;
+    const { baseURL, nextInputOrder } = this.props;
     return (
       <div className="event-box">
-        <img alt="line" src={iconBarcode} />
-        <div className="desc">
-          <h2>{`${nextInputOrder} กรุณาแสกน BARCODE ที่ได้รับมา`}</h2>
+        <div className="row">
+          <div className="D-8">
+            <div className="step-content">
+              <img alt="iconBarcode" src={iconBarcode} />
+              <div className="desc">
+              <h2>{`${nextInputOrder} กรุณาแสกน BARCODE ที่ได้รับมา`}</h2>
+              </div>
+            </div>
+          </div>
+          <div className="D-4">
+            <div
+              className="payment-confirmation"
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '500px'
+              }}
+            >
+              <div className="insert-cash-box">
+                <div className="insert-cash-sign">
+                  <div className="animation-x bounce">
+                    <img src={`${baseURL}/static/images/icon-point-left.png`} alt="" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
   };
 
   renderInputQrcode = () => {
-    const { nextInput, nextInputOrder } = this.props;
+    const { baseURL, nextInputOrder } = this.props;
     const message = 'กรุณาแสกน QR CODE ที่ได้รับมา';
     return (
       <div className="event-box">
-        <img alt="line" src={iconQrcode} />
-        <div className="desc">
-          <h2>{`${nextInputOrder} ${message}`}</h2>
+        <div className="row">
+          <div className="D-8">
+            <div className="step-content">
+              <img alt="line" src={iconQrcode} />
+              <div className="desc">
+                <h2>{`${nextInputOrder} ${message}`}</h2>
+              </div>
+            </div>
+          </div>
+          <div className="D-4">
+            <div
+              className="payment-confirmation"
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '500px'
+              }}
+            >
+              <div className="insert-cash-box">
+                <div className="insert-cash-sign">
+                  <div className="animation-x bounce">
+                    <img src={`${baseURL}/static/images/icon-point-left.png`} alt="" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
   };
 
   renderInputLineQrcode = () => {
-    const { nextInput, nextInputOrder } = this.props;
+    const { baseURL, nextInputOrder } = this.props;
     const message = 'กรุณาแสกน LINE QR CODE ของท่าน';
     return (
       <div className="event-box">
-        <img width="250" height="250" alt="line" src={iconLineQrcode} />
-        <div className="desc">
-          <h2>{`${nextInputOrder} ${message}`}</h2>
+        <div className="row">
+          <div className="D-8">
+            <div className="step-content">
+              <img alt="lineId" src={iconLineQrcode} />
+              <div className="desc">
+                <h2>{`${nextInputOrder} ${message}`}</h2>
+              </div>
+            </div>
+          </div>
+          <div className="D-4">
+            <div
+              className="payment-confirmation"
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '500px'
+              }}
+            >
+              <div className="insert-cash-box">
+                <div className="insert-cash-sign">
+                  <div className="animation-x bounce">
+                    <img src={`${baseURL}/static/images/icon-point-left.png`} alt="" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -181,7 +255,7 @@ class EventPlayPage extends Component {
       return this.renderInputEmail();
     } else if (nextInput === 'MSISDN') {
       return this.renderInputMSISDN();
-    } else if (nextInput === 'BARCODE') {
+    } else if (nextInput === 'LINE_ID') {
       return this.renderInputLineId();
     } else if (nextInput === 'BARCODE') {
       return this.renderInputBarcode();
