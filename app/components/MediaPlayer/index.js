@@ -40,10 +40,15 @@ class MediaPlayer extends Component {
     const nextIndex = index < sources.length - 1 ? index + 1 : 0;
     return nextIndex;
   }
-  setPlayingIndex = (index) => {
+  setPlayingIndex = (index, fullscreenIndex) => {
+    console.log('setPlayingIndex', index, fullscreenIndex)
     const { onEnded } = this.props;
     this.setState({ index });
-    onEnded(index, this.getNextPlayingIndex());
+    if (fullscreenIndex !== undefined) {
+      onEnded(fullscreenIndex);
+    } else {
+      onEnded(index, this.getNextPlayingIndex());
+    }
   }
   handlePlayerEnded = () => {
     const { index } = this.state;
@@ -61,7 +66,7 @@ class MediaPlayer extends Component {
         return sourceIndex > index && (source.adSize || '') !== 'FULLSCREEN';
       });
       if (nextNearestNotFullScreenAdIndex) {
-        this.setPlayingIndex(nextNearestNotFullScreenAdIndex);
+        this.setPlayingIndex(nextNearestNotFullScreenAdIndex, index);
         // this.setState({
         //   index: nextNearestNotFullScreenAdIndex
         // });

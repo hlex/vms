@@ -1064,6 +1064,30 @@ export const serviceGetBaseAds = () => {
   const data = {
     vtype: 'advertise',
   };
+  // return new Promise((resolve) => {
+  //   resolve({
+  //     "status": "SUCCESSFUL",
+  //     "trx-id": "20180506024538",
+  //     "response-data": [
+  //       {
+  //           "Ad_ID": "AD008",
+  //           "Ad_Type": "V",
+  //           "Ad_Point": 5,
+  //           "Ad_Second": 18,
+  //           "Ad_Display": "F",
+  //           "Ad_Url": "/uploads/images/activities-ad-20171113132520.mp4"
+  //       },
+  //       {
+  //           "Ad_ID": "AD003",
+  //           "Ad_Type": "V",
+  //           "Ad_Point": 10,
+  //           "Ad_Second": 15,
+  //           "Ad_Display": " ",
+  //           "Ad_Url": "/uploads/images/activities-ad-20171113132605.mp4"
+  //       }
+  //     ]
+  //   })
+  // })
   return fetchFacade(`${URL.getMobileTopupProviders}${convertToURLParam(data)}`, { local: true }).then((response) => {
     // handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
