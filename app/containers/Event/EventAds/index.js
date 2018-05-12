@@ -118,27 +118,26 @@ class EventAds extends Component {
     return (
       <div className="event-ads">
         <Layout.FullScreen>
+          <div
+            className="count-time"
+            style={{
+              top: '150px',
+              position: 'fixed',
+              zIndex: '99',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontSize: '48px',
+              width: '400px',
+              height: '70px'
+            }}
+          >
+            <span>
+              กำลังส่งรหัสส่วนลด
+            </span>
+          </div>
           {
-            remainingCount > 0 &&
-            <div
-              className="count-time"
-              style={{
-                position: 'fixed',
-                zIndex: '99',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '36px',
-                width: '300px',
-                height: '55px'
-              }}
-            >
-              <span>
-                กำลังส่งรหัสส่วนลด
-              </span>
-            </div>
-          }
-          {remainingCount !== 0 && (
+            remainingCount !== 0 &&
             <MediaPlayer
               playerKey={'eventAds'}
               width={1080}
@@ -147,7 +146,7 @@ class EventAds extends Component {
               onTicked={this.handleTicked}
               onEnded={this.handleAdsEnd}
             />
-          )}
+          }
           <Modal
             show={adFinished}
             options={{

@@ -25,10 +25,11 @@ export const addUrlParameter = (url, params) => {
 
 export const fetchFacade = (url, options = {}) => {
   const origin = options.local ? localURL : baseURL;
+  appLog('API:req', url, options, '#90CAF9');
   return fetchWithJarvis(`${origin}/${addUrlParameter(url, { t: Date.now() })}`, {
     ...options,
   }).then(response => {
-    appLog('API', url, response, '#90CAF9');
+    appLog('API:res', url, response, '#90CAF9');
     return response;
   });
 };

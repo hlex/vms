@@ -1418,7 +1418,7 @@ export const eventGetReward = () => {
             const eventProduct = OrderSelector.getEventProduct(getState().order);
             const serviceGetEventRewardResponse = await serviceGetEventReward(rewardToServiceItem, eventProduct.id);
             dispatch(hideLoading());
-            // console.log('serviceGetEventRewardResponse', serviceGetEventRewardResponse);
+            console.log('serviceGetEventRewardResponse', serviceGetEventRewardResponse);
             dispatch({
               type: 'EVENT_SENT_REWARD',
               rewardToServiceItem
@@ -1440,7 +1440,12 @@ export const eventGetReward = () => {
             dispatch(openAlertMessage(convertApplicationErrorToError(message)));
             dispatch(backToHome());
           } catch (error) {
-            dispatch(handleApiError(error));
+            console.error('error', error);
+            if (error.name !== 'FetchError') {
+              dispatch(handleApiError(error));
+            } else {
+              dispatch(hideLoading());
+            }
             dispatch(backToHome());
           }
         }
