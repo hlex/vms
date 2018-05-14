@@ -180,10 +180,19 @@ class ProductItems extends PureComponent {
     const promotionSetAmount = _.size(promotionSets);
     const productAmount = _.size(products);
     // ======================================================
+    // Flag
+    // ======================================================
+    const hasPromotionSet = promotionSetAmount > 0
+    // ======================================================
+    // PerPage
+    // ======================================================
+    const finalPromotionSetPerPage = promotionSetPerPage;
+    const finalProductPerPage = hasPromotionSet ? productPerPage : productPerPage + 5;
+    // ======================================================
     // Pages
     // ======================================================
-    const promotionTotalPage = Math.ceil(promotionSetAmount / promotionSetPerPage);
-    const productTotalPage = Math.ceil(productAmount / productPerPage);
+    const promotionTotalPage = Math.ceil(promotionSetAmount / finalPromotionSetPerPage);
+    const productTotalPage = Math.ceil(productAmount / finalProductPerPage);
     const productsToTalPage = _.max([0, promotionTotalPage, productTotalPage]);
     // ======================================================
     // Calculate and duplicate item to fullfill UI
@@ -194,15 +203,15 @@ class ProductItems extends PureComponent {
     const differentPage = Math.abs(productTotalPage - promotionTotalPage);
     // console.log('>>>>>>>', productTotalPage, promotionTotalPage);
     if (promotionTotalPage < productTotalPage) {
-      // console.log('promotionTotalPage < productTotalPage', differentPage, 'boost', differentPage * promotionSetPerPage);
-      const totalFullFillAmount = promotionSetAmount + (differentPage * promotionSetPerPage);
+      // console.log('promotionTotalPage < productTotalPage', differentPage, 'boost', differentPage * finalPromotionSetPerPage);
+      const totalFullFillAmount = promotionSetAmount + (differentPage * finalPromotionSetPerPage);
       fullfilledPromotionSet = _.map(_.range(totalFullFillAmount), (index) => {
         const promotionSetIndex = index % promotionSetAmount;
         return promotionSets[promotionSetIndex];
       });
     } else if (promotionTotalPage > productTotalPage) {
-      // console.log('promotionTotalPage > productTotalPage', differentPage, 'boost', differentPage * productPerPage);
-      const totalFullFillAmount = productAmount + (differentPage * productPerPage);
+      // console.log('promotionTotalPage > productTotalPage', differentPage, 'boost', differentPage * finalProductPerPage);
+      const totalFullFillAmount = productAmount + (differentPage * finalProductPerPage);
       fullfilledProduct = _.map(_.range(totalFullFillAmount), (index) => {
         const productIndex = index % productAmount;
         return products[productIndex];
@@ -210,8 +219,8 @@ class ProductItems extends PureComponent {
     }
 
     const fullfilledPromotionSetAmount = _.size(fullfilledPromotionSet);
-    if (fullfilledPromotionSetAmount < promotionSetPerPage) {
-      const totalFullFillAmount = fullfilledPromotionSetAmount + (promotionSetPerPage - fullfilledPromotionSetAmount);
+    if (fullfilledPromotionSetAmount < finalPromotionSetPerPage) {
+      const totalFullFillAmount = fullfilledPromotionSetAmount + (finalPromotionSetPerPage - fullfilledPromotionSetAmount);
       fullfilledPromotionSet = _.map(_.range(totalFullFillAmount), (index) => {
         const promotionSetIndex = index % promotionSetAmount;
         return promotionSets[promotionSetIndex];
@@ -219,8 +228,8 @@ class ProductItems extends PureComponent {
     }
 
     const fullfilledProductAmount = _.size(fullfilledProduct);
-    if (fullfilledProductAmount < productPerPage) {
-      const totalFullFillAmount = fullfilledProductAmount + (productPerPage - fullfilledProductAmount);
+    if (fullfilledProductAmount < finalProductPerPage) {
+      const totalFullFillAmount = fullfilledProductAmount + (finalProductPerPage - fullfilledProductAmount);
       fullfilledProduct = _.map(_.range(totalFullFillAmount), (index) => {
         const productIndex = index % productAmount;
         return products[productIndex];
@@ -229,20 +238,32 @@ class ProductItems extends PureComponent {
 
     const promotionItems = _.map(
       _.range(productsToTalPage),
-      index => getPaginatedItems(fullfilledPromotionSet, index + 1, promotionSetPerPage).data,
+      index => getPaginatedItems(fullfilledPromotionSet, index + 1, finalPromotionSetPerPage).data,
     );
     const productItems = _.map(
       _.range(productsToTalPage),
-      index => getPaginatedItems(fullfilledProduct, index + 1, productPerPage).data,
+      index => getPaginatedItems(fullfilledProduct, index + 1, finalProductPerPage).data,
     );
-    for (let i = 0; i < productsToTalPage; i += 1) {
-      pages.push({
-        type: 'product',
-        item: {
-          promotionItems: promotionItems[i],
-          productItems: productItems[i],
-        }
-      });
+
+    if (hasPromotionSet) {
+      for (let i = 0; i < productsToTalPage; i += 1) {
+        pages.push({
+          type: 'product',
+          item: {
+            promotionItems: promotionItems[i],
+            productItems: productItems[i],
+          }
+        });
+      }
+    } else {
+      for (let i = 0; i < productsToTalPage; i += 1) {
+        pages.push({
+          type: 'product',
+          item: {
+            productItems: productItems[i],
+          }
+        });
+      }
     }
     // ======================================================
     // Events
