@@ -31,7 +31,8 @@ const mapStateToProps = state => ({
   products: MasterdataSelector.getProductsNotFree(state.masterdata),
   promotionSets: MasterdataSelector.getPromotionSets(state.masterdata),
   baseURL: MasterappSelector.getLocalURL(state.masterapp),
-  lang: MasterappSelector.getLanguage(state.masterapp)
+  lang: MasterappSelector.getLanguage(state.masterapp),
+  autoplayTime: MasterappSelector.getAutoplayTime(state.masterapp),
 });
 
 const actions = {
@@ -51,6 +52,7 @@ class ProductSelectionPage extends Component {
     back: PropTypes.func.isRequired,
     baseURL: PropTypes.string.isRequired,
     lang: PropTypes.string.isRequired,
+    autoplayTime: PropTypes.number.isRequired
   };
 
   static defaultProps = {
@@ -63,6 +65,11 @@ class ProductSelectionPage extends Component {
   componentWillMount = () => {
     const { clearOrder } = this.props;
     clearOrder()
+  }
+
+  getProductStepByRange = (start, end) => {
+    const { productSteps } = this.props;
+    return _.slice(productSteps, start, end);
   }
 
   renderStepTitle = () => {
@@ -80,17 +87,17 @@ class ProductSelectionPage extends Component {
     return currMenu.title[lang];
   }
 
-  renderWatchingVideoText = () => {
-    const { lang } = this.props;
-    if (lang === 'th') {
-      return 'ดูวิดิโอการกดซื้อ';
-    }
-    return 'Watching Tutorial';
-  }
+  // renderWatchingVideoText = () => {
+  //   const { lang } = this.props;
+  //   if (lang === 'th') {
+  //     return 'ดูวิดิโอการกดซื้อ';
+  //   }
+  //   return 'Watching Tutorial';
+  // }
 
   render() {
     // console.log(this);
-    const { lang, productSteps, products, promotionSets, selectProduct, back, baseURL } = this.props;
+    const { lang, autoplayTime, products, promotionSets, selectProduct, back, baseURL } = this.props;
     return (
       <div>
         <Layout.Subheader>
@@ -103,20 +110,28 @@ class ProductSelectionPage extends Component {
               <h2>{this.renderStepTitle()}</h2>
               <ul className="item how-to-list">
                 {
-                  _.map(productSteps, (step, index) => {
+                  _.map(this.getProductStepByRange(0, 4), (step, index) => {
                     return (
                       <li key={`num-list-${index}`}><span className="num-list">{index + 1}</span><span>{step[lang]}</span></li>
                     );
                   })
                 }
               </ul>
-              <ul className="item">
-                <li><span>{this.renderWatchingVideoText()}</span></li>
+              <ul className="item how-to-list">
+                {
+                  _.map(this.getProductStepByRange(4, 7), (step, index) => {
+                    return (
+                      <li key={`num-list-${index}`}><span className="num-list">{index + 5}</span><span>{step[lang]}</span></li>
+                    );
+                  })
+                }
               </ul>
             </div>
           </div>
         </Layout.Subheader>
         <ProductItems
+          key={'ProductSelectionSlider'}
+          autoplayTime={autoplayTime}
           promotionSets={promotionSets}
           products={products}
           promotionSetPerPage={3}

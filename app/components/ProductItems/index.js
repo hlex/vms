@@ -23,6 +23,7 @@ const getPaginatedItems = (items, page = 1, perPage) => {
 
 class ProductItems extends PureComponent {
   static propTypes = {
+    autoplayTime: PropTypes.number.isRequired,
     promotionSets: PropTypes.arrayOf(PropTypes.shape({})),
     products: PropTypes.arrayOf(PropTypes.shape({})),
     events: PropTypes.arrayOf(PropTypes.shape({})),
@@ -48,6 +49,10 @@ class ProductItems extends PureComponent {
     height: 815,
     onClickItem: context => console.log('Please send any onClickItem function', context),
   };
+
+  componentDidMount = () => {
+    console.log('componentDidMount')
+  }
 
   handleClickItem = (context, item, module) => {
     const { onClickItem } = this.props;
@@ -190,15 +195,15 @@ class ProductItems extends PureComponent {
     // console.log('>>>>>>>', productTotalPage, promotionTotalPage);
     if (promotionTotalPage < productTotalPage) {
       // console.log('promotionTotalPage < productTotalPage', differentPage, 'boost', differentPage * promotionSetPerPage);
-      const totalFullfillAmount = promotionSetAmount + (differentPage * promotionSetPerPage);
-      fullfilledPromotionSet = _.map(_.range(totalFullfillAmount), (index) => {
+      const totalFullFillAmount = promotionSetAmount + (differentPage * promotionSetPerPage);
+      fullfilledPromotionSet = _.map(_.range(totalFullFillAmount), (index) => {
         const promotionSetIndex = index % promotionSetAmount;
         return promotionSets[promotionSetIndex];
       });
     } else if (promotionTotalPage > productTotalPage) {
       // console.log('promotionTotalPage > productTotalPage', differentPage, 'boost', differentPage * productPerPage);
-      const totalFullfillAmount = productAmount + (differentPage * productPerPage);
-      fullfilledProduct = _.map(_.range(totalFullfillAmount), (index) => {
+      const totalFullFillAmount = productAmount + (differentPage * productPerPage);
+      fullfilledProduct = _.map(_.range(totalFullFillAmount), (index) => {
         const productIndex = index % productAmount;
         return products[productIndex];
       });
@@ -206,8 +211,8 @@ class ProductItems extends PureComponent {
 
     const fullfilledPromotionSetAmount = _.size(fullfilledPromotionSet);
     if (fullfilledPromotionSetAmount < promotionSetPerPage) {
-      const totalFullfillAmount = fullfilledPromotionSetAmount + (promotionSetPerPage - fullfilledPromotionSetAmount);
-      fullfilledPromotionSet = _.map(_.range(totalFullfillAmount), (index) => {
+      const totalFullFillAmount = fullfilledPromotionSetAmount + (promotionSetPerPage - fullfilledPromotionSetAmount);
+      fullfilledPromotionSet = _.map(_.range(totalFullFillAmount), (index) => {
         const promotionSetIndex = index % promotionSetAmount;
         return promotionSets[promotionSetIndex];
       });
@@ -215,8 +220,8 @@ class ProductItems extends PureComponent {
 
     const fullfilledProductAmount = _.size(fullfilledProduct);
     if (fullfilledProductAmount < productPerPage) {
-      const totalFullfillAmount = fullfilledProductAmount + (productPerPage - fullfilledProductAmount);
-      fullfilledProduct = _.map(_.range(totalFullfillAmount), (index) => {
+      const totalFullFillAmount = fullfilledProductAmount + (productPerPage - fullfilledProductAmount);
+      fullfilledProduct = _.map(_.range(totalFullFillAmount), (index) => {
         const productIndex = index % productAmount;
         return products[productIndex];
       });
@@ -275,16 +280,18 @@ class ProductItems extends PureComponent {
     // Slick
     // ======================================================
     const productSettings = {
+      initialSlide: 0,
       dots: false,
       speed: 500,
       autoplay: true,
       infinite: true,
       slidesToShow: 1,
       slidesToScroll: 1,
-      autoplaySpeed: autoplayTime * 1000,
+      autoplaySpeed: autoplayTime * 1000 || 5000,
       nextArrow: false,
       prevArrow: false,
     };
+
     return (
       <div style={{ position: 'relative' }}>
         <Slider ref={c => (this.slider = c)} {...productSettings}>

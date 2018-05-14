@@ -153,6 +153,7 @@ class HomePage extends Component {
         </div>
         <div className="content-panel">
           <ProductItems
+            key={'HomePageSlider'}
             autoplayTime={autoplayTime}
             height={815}
             promotionSets={promotionSets}
