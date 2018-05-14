@@ -1414,10 +1414,10 @@ export const eventGetReward = () => {
             value: eventInput.value
           };
           try {
-            dispatch(showLoading('กำลังส่งรหัสส่วนลด'));
+            // dispatch(showLoading('กำลังส่งรหัสส่วนลด'));
             const eventProduct = OrderSelector.getEventProduct(getState().order);
             const serviceGetEventRewardResponse = await serviceGetEventReward(rewardToServiceItem, eventProduct.id);
-            dispatch(hideLoading());
+            // dispatch(hideLoading());
             console.log('serviceGetEventRewardResponse', serviceGetEventRewardResponse);
             dispatch({
               type: 'EVENT_SENT_REWARD',
