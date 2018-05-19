@@ -62,11 +62,11 @@ class MediaPlayer extends Component {
     const { index } = this.state;
     const { sources } = this.props;
     if (this.isFullScreen()) {
-      const nextNearestNotFullScreenAdIndex = _.findIndex(sources, (source, sourceIndex) => {
-        return sourceIndex > index && (source.adSize || '') !== 'FULLSCREEN';
+      const prevNearestNotFullScreenAdIndex = _.findIndex(sources, (source, sourceIndex) => {
+        return sourceIndex < index && (source.adSize || '') !== 'FULLSCREEN';
       });
-      if (nextNearestNotFullScreenAdIndex) {
-        this.setPlayingIndex(nextNearestNotFullScreenAdIndex, index);
+      if (prevNearestNotFullScreenAdIndex) {
+        this.setPlayingIndex(prevNearestNotFullScreenAdIndex, index);
         // this.setState({
         //   index: nextNearestNotFullScreenAdIndex
         // });
