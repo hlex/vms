@@ -327,7 +327,7 @@ export const doorOpened = () => {
 };
 
 export const runFlowProductDropFailed = () => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const isDroppingFreeProduct = MasterappSelector.verifyIsDroppingFreeProduct(getState().masterapp);
     console.log('isDroppingFreeProduct', isDroppingFreeProduct);
     if (isDroppingFreeProduct) {
@@ -367,6 +367,15 @@ export const runFlowProductDropFailed = () => {
       } else {
         // return cash eql product price
         dispatch(setNotReadyToDropProduct());
+
+        // filter any not dropped product from order
+        dispatch(Actions.removeProductFromOrder(productToDrop));
+        const isOrderHasProduct = OrderSelector.verifyOrderHasProduct(getState().order);
+        console.log('productDropProcessCompletely: isOrderHasProduct', isOrderHasProduct);
+        if (isOrderHasProduct) {
+          const submitOrderResponse = await dispatch(submitOrder());
+          console.log('productDropProcessCompletely.submitOrderResponse', submitOrderResponse);
+        }
         if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
           dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
         } else {
@@ -510,13 +519,14 @@ const verifyDiscountIsExist = (discount) => {
 
 export const receivedScannedCode = (scannedCode) => {
   return async (dispatch, getState) => {
+    const nextInputObject = OrderSelector.getEventNextInputObject(getState().order);
     const nextInput = OrderSelector.getEventNextInput(getState().order);
     const nextReward = OrderSelector.getEventNextReward(getState().order);
     const eventId = OrderSelector.getEventId(getState().order);
     console.log('receivedScannedCode', eventId, scannedCode, nextInput);
     if (eventId) {
       try {
-        if (verifyIsBarcodeOrQrCodeInput(nextInput)) {
+        if (verifyIsBarcodeOrQrCodeInput(nextInput) || (verifyIsLineQrcodeInput(nextInput) && nextInputObject.subType === 'discount')) {
           const isBarcode = verifyIsBarcode(scannedCode);
           const dataToVerify = {
             eventId,

@@ -97,6 +97,15 @@ const getEventNextInput = createSelector(
   }
 );
 
+const getEventNextInputObject = createSelector(
+  [getEventInputs],
+  (eventInputs) => {
+    if (_.size(eventInputs) <= 0) return '';
+    const nextItem = _.find(eventInputs, item => item.completed === false);
+    return nextItem;
+  }
+);
+
 const getEventNextInputOrder = createSelector(
   [getEventInputs],
   (eventInputs) => {
@@ -457,7 +466,8 @@ const toSubmitOrder = createSelector(
         break;
       case 'promotionSet':
         id = promotionSet.id;
-        saleType = 'Promotion';
+        const hasOnlyOneProduct = _.size(products) === 1;
+        saleType = hasOnlyOneProduct ? 'Normal' : 'Promotion';
         break;
       default:
         break;
@@ -511,6 +521,7 @@ export default {
   getEventNextRewardRoute,
   getEventInputs,
   getEventNextInput,
+  getEventNextInputObject,
   getEventNextInputOrder,
   getEventBarcodeOrQrcodeInput,
   getEventWatches,
