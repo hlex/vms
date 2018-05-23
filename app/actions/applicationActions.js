@@ -314,8 +314,10 @@ export const doorClosed = () => {
       console.error('[Error] @doorClosed salesman did not be veried.');
     }
     dispatch(Actions.clearVerifySalesman());
-    setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
-    dispatch(backToHome());
+    console.log('window', window)
+    window.closeApp(); // eslint-disable-line;
+    // setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
+    // dispatch(backToHome());
   };
 };
 

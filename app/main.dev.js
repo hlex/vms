@@ -10,7 +10,8 @@
  *
  * @flow
  */
-import { app, BrowserWindow, session } from 'electron';
+import { app, BrowserWindow, ipcMain, session } from 'electron';
+
 import MenuBuilder from './menu';
 
 let mainWindow = null;
@@ -90,4 +91,9 @@ app.on('ready', async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
   // if (process.env.NODE_ENV !== 'development') mainWindow.setFullScreen(true);
+});
+
+ipcMain.on('close-app', (event, args) => {
+  console.log('close-app');
+  app.quit();
 });
