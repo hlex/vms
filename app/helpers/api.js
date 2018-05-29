@@ -27,16 +27,6 @@ export const addUrlParameter = (url, params) => {
 export const fetchFacade = (url, options = {}) => {
   const origin = options.local ? localURL : baseURL;
   appLog('API:req', url, options, '#90CAF9');
-
-  connectivity((online) => {
-    if (online) {
-      console.log('connected to the internet!')
-    } else {
-      console.error('sorry, not connected!')
-      throw Error('sorry, not connected!')
-    }
-  })
-
   return fetchWithJarvis(`${origin}/${addUrlParameter(url, { t: Date.now() })}`, {
     ...options,
   }).then(response => {

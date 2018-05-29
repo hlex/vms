@@ -252,8 +252,8 @@ export const initApplication = () => {
     } catch (error) {
       console.error(error);
       dispatch(openAlertMessage(convertApplicationErrorToError({
-        title: 'ไม่สามารถเปิดโปรแกรมได้',
-        th: 'กรุณาตรวจสอบข้อมูลให้ถูกต้องและเปิดโปรแกรมอีกครั้ง',
+        title: 'Happy is "Under-Construction"',
+        th: 'กรุณาติดต่อ 02-681-5081 ต่อ 115',
         en: '',
       })));
     }

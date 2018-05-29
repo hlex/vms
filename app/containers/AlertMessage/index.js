@@ -71,9 +71,8 @@ class AlertMessage extends Component {
             !hasTitle && <h2>{_.get(messages, lang, '')}</h2>
           }
           {
-            _.get(messages, 'title', '') === 'ไม่สามารถเปิดโปรแกรมได้'
-            ? <button onClick={shutdownApplication} className="button purple">ปิดโปรแกรม</button>
-            : <button onClick={closeAlertMessage} className="button purple">ตกลง</button>
+            _.get(messages, 'title', '') !== 'Happy is "Under-Construction"' &&
+            <button onClick={closeAlertMessage} className="button purple">ตกลง</button>
           }
         </div>
       </Modal>
