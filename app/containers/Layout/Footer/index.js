@@ -85,7 +85,7 @@ class Footer extends PureComponent {
     return (
       <div className="footer-section">
         <div className="copy">
-          <p>© 2017 ใจดี มินิมาร์ท</p>
+          <p>Happy Box</p>
         </div>
         {!this.shouldHideSignage() && (
           <div className="signage">

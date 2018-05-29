@@ -106,7 +106,7 @@ class App extends Component {
           :
           <div style={{ textAlign: 'center' }}>
             <h2>ท่านกำลังเปิดตู้โดยไม่ได้รับอนุญาติ</h2>
-            <h2>กรุณาปิดตู้ให้เรียบร้อย และทำรายการใหม่ให้ถูกค้อง</h2>
+            <h2>กรุณาปิดตู้ให้เรียบร้อย และทำรายการใหม่ให้ถูกต้อง</h2>
           </div>
         }
       </div>
@@ -138,7 +138,7 @@ class App extends Component {
   };
 
   renderApplication = () => {
-    const { lang, baseURL, appReady, isMaintenance, isHardwareMalfunction } = this.props;
+    const { lang, baseURL, localStaticURL, appReady, isMaintenance, isHardwareMalfunction } = this.props;
     if (appReady) {
       return (
         <div className="smart-vending-machine-app-connected">
@@ -148,7 +148,7 @@ class App extends Component {
             lang={lang}
             switchLanguageTo={this.handleSwitchLanguage}
             backToHome={this.handleClickHome}
-            baseURL={baseURL}
+            baseURL={localStaticURL}
           />
           {this.props.children}
           <Layout.Footer mediaRef={el => this.mediaPlayer = el} />

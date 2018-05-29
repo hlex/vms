@@ -39,7 +39,7 @@ class Header extends Component {
     if (lang === 'th') {
       return (
         <h2>
-        <span>ยินดีต้อนรับ</span> ใช้นิ้วเดียวสัมผัสในการเลือก
+        <span>ยินดีต้อนรับ</span> กรุณาใช้นิ้วเดียวสัมผัสหน้าจอ
       </h2>
       );
     }
