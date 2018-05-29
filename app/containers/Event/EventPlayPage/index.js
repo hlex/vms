@@ -26,6 +26,8 @@ import OrderSelectors from '../../../selectors/order';
 // ======================================================
 import { isEmpty } from '../../../helpers/global';
 
+import iconLineLogo from '../../../images/icon-linelogo.png';
+
 import lineId from '../../../images/qrcode.png';
 import iconBarcode from '../../../images/icon-barcodebig.png';
 import iconLineQrcode from '../../../images/icon-qrcode-scan-line.png';
@@ -129,7 +131,15 @@ class EventPlayPage extends Component {
           <img alt="lineId" src={lineId} />
           <div className="desc">
             <h2>{`${nextInputOrder} กรุณาแสกน LINE QR CODE`}</h2>
-            <h3>เพื่อเพิ่มเพื่อนใน LINE ID และ ทำรายการต่อใน LINE</h3>
+            <h3 className="color-green">
+              เพื่อเพิ่มเพื่อนใน LINE ID และ ทำรายการต่อใน LINE
+              <img
+                className="icon middle-line"
+                src={iconLineLogo}
+                style={{ width: '100px', height: '100px' }}
+                height="30"
+              />
+            </h3>
           </div>
         </div>
       </div>
