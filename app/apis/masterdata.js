@@ -1098,7 +1098,7 @@ export const serviceGetProductSteps = () => {
   const data = {
     vtype: 'product_step',
   };
-  return fetchFacade(`${URL.getProductSteps}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.getProductSteps}${convertToURLParam(data)}`, { local: true }).then((response) => {
     return response;
   });
 };
@@ -1107,7 +1107,7 @@ export const serviceGetMobileTopupSteps = () => {
   const data = {
     vtype: 'topup_step',
   };
-  return fetchFacade(`${URL.getMobileTopupSteps}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.getMobileTopupSteps}${convertToURLParam(data)}`, { local: true }).then((response) => {
     return response;
   });
 };
@@ -1116,7 +1116,7 @@ export const serviceGetEventSteps = () => {
   const data = {
     vtype: 'activities_step',
   };
-  return fetchFacade(`${URL.getEventSteps}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.getEventSteps}${convertToURLParam(data)}`, { local: true }).then((response) => {
     return response;
   });
 };
@@ -1125,7 +1125,7 @@ export const serviceGetMainMenu = () => {
   const data = {
     vtype: 'mainmenu',
   };
-  return fetchFacade(`${URL.getMainMenu}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.getMainMenu}${convertToURLParam(data)}`, { local: true }).then((response) => {
     return response;
   });
 };
@@ -1147,7 +1147,7 @@ export const serviceGetSetting = () => {
   //     resolve(response);
   //   }, 100);
   // });
-  return fetchFacade(`${URL.getActivityFreeRule}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.getActivityFreeRule}${convertToURLParam(data)}`, { local: true }).then((response) => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });
