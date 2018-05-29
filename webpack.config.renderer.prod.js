@@ -10,6 +10,7 @@ import merge from 'webpack-merge';
 import BabiliPlugin from 'babili-webpack-plugin';
 import baseConfig from './webpack.config.base';
 import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 CheckNodeEnv('production');
 
@@ -164,5 +165,8 @@ export default merge.smart(baseConfig, {
       analyzerMode: process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
       openAnalyzer: process.env.OPEN_ANALYZER === 'true'
     }),
+    new CopyWebpackPlugin([
+      { from: './app/renderer.js', to: 'renderer.js' }
+    ])
   ],
 });
