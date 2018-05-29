@@ -92,6 +92,9 @@ let retryNo = 0;
 
 var resetTimer;
 
+const HIDE_POPUP_TIME = 5000;
+
+
 export const getMasterProductAndEventAndPromotions = () => {
   return (dispatch, getState) => {
     return new Promise(async (resolve, reject) => {
@@ -280,6 +283,7 @@ export const doorClosed = () => {
     console.log('doorClosed');
     const verifiedSalesman = MasterappSelector.getVerifiedSalesman(getState().masterapp);
     if (verifiedSalesman) {
+      debugger;
       try {
         await syncSettlement({
           salesman: verifiedSalesman,
@@ -314,10 +318,9 @@ export const doorClosed = () => {
       console.error('[Error] @doorClosed salesman did not be veried.');
     }
     dispatch(Actions.clearVerifySalesman());
-    console.log('window', window)
-    window.closeApp(); // eslint-disable-line;
-    // setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
-    // dispatch(backToHome());
+    // window.closeApp(); // eslint-disable-line;
+    setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
+    dispatch(backToHome());
   };
 };
 
@@ -370,13 +373,15 @@ export const runFlowProductDropFailed = () => {
         // return cash eql product price
         dispatch(setNotReadyToDropProduct());
 
-        // filter any not dropped product from order
-        dispatch(Actions.removeProductFromOrder(productToDrop));
-        const isOrderHasProduct = OrderSelector.verifyOrderHasProduct(getState().order);
-        console.log('productDropProcessCompletely: isOrderHasProduct', isOrderHasProduct);
-        if (isOrderHasProduct) {
-          const submitOrderResponse = await dispatch(submitOrder());
-          console.log('productDropProcessCompletely.submitOrderResponse', submitOrderResponse);
+        if (OrderSelector.getOrderType(getState().order) === 'promotionSet') {
+          // filter any not dropped product from order
+          dispatch(Actions.removeProductFromOrder(productToDrop));
+          const isOrderHasProduct = OrderSelector.verifyOrderHasProduct(getState().order);
+          console.log('productDropProcessCompletely: isOrderHasProduct', isOrderHasProduct);
+          if (isOrderHasProduct) {
+            const submitOrderResponse = await dispatch(submitOrder());
+            console.log('productDropProcessCompletely.submitOrderResponse', submitOrderResponse);
+          }
         }
         if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
           dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
@@ -384,6 +389,9 @@ export const runFlowProductDropFailed = () => {
           dispatch(cashChangeEqualToCurrentCashAmount());
         }
         dispatch(Actions.showModal('productDropError'));
+        setTimeout(() => {
+          dispatch(cancelPayment());
+        }, HIDE_POPUP_TIME);
       }
     }
   }
@@ -425,6 +433,9 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       break;
     case 'CASH_CHANGE_FAIL':
       dispatch(Actions.showModal('cashChangeError'));
+      setTimeout(() => {
+        dispatch(cancelPayment());
+      }, HIDE_POPUP_TIME);
       break;
     case 'PRODUCT_DROP_SUCCESS':
       dispatch(runFlowProductDropSuccess());
@@ -661,6 +672,7 @@ export const backToHome = () => (dispatch, getState) => {
   // ======================================================
   dispatch(Actions.resetPaymentReducer());
   dispatch(Actions.notReadyToDropProduct());
+  dispatch(Actions.hideAllModal());
 };
 
 export const back = () => dispatch => {
@@ -841,10 +853,12 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
       try {
         const discount = OrderSelector.getDiscount(getState().order);
         const discountCode = _.get(discount, 'code', '');
+        const discountPrice = _.get(discount, 'value', 0);
         const machineId = MasterappSelector.getMachineId(getState().masterapp);
         const serviceTopupMobileResponse = await serviceTopupMobile(
             OrderSelector.getMobileTopupToService(getState().order),
             discountCode,
+            discountPrice,
             machineId
           );
         console.log('serviceTopupMobile', serviceTopupMobileResponse);
@@ -1299,6 +1313,9 @@ export const warningSystemWillNotChangeCash = () => {
     const canChangeCash = MasterappSelector.verifyCanChangeCash(getState().masterapp);
     if (!canChangeCash) {
       dispatch(Actions.showModal('warningSystemWillNotChangeCash'));
+      setTimeout(() => {
+        dispatch(confirmWarningSystemWillNotChangeCash());
+      }, HIDE_POPUP_TIME);
     }
   };
 };

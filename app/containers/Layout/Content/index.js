@@ -57,7 +57,7 @@ class Content extends Component {
             <p>กรุณาใส่เงินให้พอดีราคาสินค้า</p>
             <button onClick={cancelPayment} className="button purple">ทำรายการใหม่</button>
             <p className="or">หรือ</p>
-            <button onClick={cancelPayment} className="button purple">ยกเลิกรายการ</button>
+            <button onClick={cancelPayment} className="button purple" style={{ width: '250px' }}>กดเพื่อเลือกสินค้าชนิดอื่น</button>
           </div>
         </Modal>
         <Modal show={modal.type.productDropError}>
@@ -68,7 +68,7 @@ class Content extends Component {
             {
               moneyBoxActive
               ? <h2>ระบบกำลังทอนเงิน</h2>
-              : <button onClick={cancelPayment} className="button purple">ยกเลิกรายการ</button>
+              : <button onClick={cancelPayment} className="button purple" style={{ width: '250px' }}>กดเพื่อเลือกสินค้าชนิดอื่น</button>
             }
           </div>
         </Modal>
