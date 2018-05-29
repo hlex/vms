@@ -10,14 +10,13 @@ import _ from 'lodash';
 const SlickSettings = {
   dots: false,
   speed: 500,
-  autoplay: false,
+  autoplay: true,
+  autoplaySpeed: 5000,
   infinite: true,
   slidesToShow: 1,
   slidesToScroll: 1,
-  autoplaySpeed: 10000,
   nextArrow: false,
   prevArrow: false,
-  arrows: false,
 };
 
 const getPaginatedItems = (items, page = 1, perPage) => {
