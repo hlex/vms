@@ -3,6 +3,12 @@ import React, { Component } from 'react';
 import type { Children } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import connectivity from 'connectivity'
+// import isOnline from 'is-online'
+// ======================================================
+// Components
+// ======================================================
+import Modal from '../components/Modal';
 // ======================================================
 // Helpers
 // ======================================================
@@ -67,10 +73,28 @@ class App extends Component {
     appReady: boolean
   };
 
+  state = {
+    isOnline: true
+  }
+
   componentWillMount = () => {
     const { initApplication } = this.props;
     initApplication();
   };
+
+  componentDidMount = () => {
+    setInterval(() => {
+      connectivity((online) => {
+        const { isOnline } = this.state
+        console.log('[connectivity] prev', isOnline, 'curr', online)
+        if (isOnline !== online) {
+          this.setState({
+            isOnline: online
+          })
+        }
+      })
+    }, 5000)
+  }
 
   renderHardwareMalfunctionMode = () => {
     return (
@@ -117,6 +141,7 @@ class App extends Component {
     const { localStaticURL } = this.props;
     return (
       <div style={{ display: 'flex', width: '1080px', height: '1920px' }}>
+        <AlertMessage />
         <img
           style={{ width: '100%' }}
           src={`${localStaticURL}/images/app-loading.gif`}
@@ -138,10 +163,33 @@ class App extends Component {
   };
 
   renderApplication = () => {
+    const { isOnline } = this.state
     const { lang, baseURL, localStaticURL, appReady, isMaintenance, isHardwareMalfunction } = this.props;
     if (appReady) {
       return (
         <div className="smart-vending-machine-app-connected">
+          <Modal
+            show={!isOnline}
+            options={{
+              overlay: false,
+              className: {
+                margin: '0 auto',
+                top: '50%',
+                marginTop: '-200px'
+              },
+            }}
+          >
+            <div className="app-error">
+              <div>
+                <h1 className='color-purple'><i className="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
+                <h2 className='color-red'>ระบบไม่ได้เชื่อมต่ออินเทอร์เน็ต</h2>
+                <h3>ไม่สามารถทำรายการได้</h3>
+                <h3>กรุณารอสักครู่ หรือ ติดต่อ 02-681-5081 ต่อ 115</h3>
+                <br />
+                <br />
+              </div>
+            </div>
+          </Modal>
           <AlertMessage />
           <LoadingScreen />
           <Layout.Header

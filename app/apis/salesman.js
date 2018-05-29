@@ -16,7 +16,7 @@ export const serviceVerifySalesman = scannedCode => {
   //     pass: false
   //   }
   // };
-  return fetchFacade(`${URL.verifySalesman}${convertToURLParam(data)}`).then((response) => {
+  return fetchFacade(`${URL.verifySalesman}${convertToURLParam(data)}`, { local: true }).then((response) => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
   });

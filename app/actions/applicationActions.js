@@ -2,6 +2,8 @@ import { push, goBack } from 'react-router-redux';
 import _ from 'lodash';
 import cuid from 'cuid';
 import * as Actions from './index';
+// import connectivity from 'connectivity'
+import isOnline from 'is-online'
 // ======================================================
 // Analytics
 // ======================================================
@@ -249,6 +251,11 @@ export const initApplication = () => {
 
     } catch (error) {
       console.error(error);
+      dispatch(openAlertMessage(convertApplicationErrorToError({
+        title: 'ไม่สามารถเปิดโปรแกรมได้',
+        th: 'กรุณาตรวจสอบข้อมูลให้ถูกต้องและเปิดโปรแกรมอีกครั้ง',
+        en: '',
+      })));
     }
   };
 };
@@ -282,45 +289,51 @@ export const doorClosed = () => {
   return async (dispatch, getState) => {
     console.log('doorClosed');
     const verifiedSalesman = MasterappSelector.getVerifiedSalesman(getState().masterapp);
-    if (verifiedSalesman) {
-      try {
-        await syncSettlement({
-          salesman: verifiedSalesman,
-          remainingCoinsString: PaymentSelector.getCashRemainingCoinsString(getState().payment),
-        });
-      } catch (error) {
-        dispatch(openAlertMessage(convertApplicationErrorToError({
-          title: 'ไม่สามารถ Sync Settlement ได้',
-          th: 'กรุณาตรวจสอบข้อมูลและทำรายการใหม่อีกครั้ง',
-          en: '',
-        })));
+    const online = await isOnline()
+    if (online) {
+      if (verifiedSalesman) {
+        try {
+          await syncSettlement({
+            salesman: verifiedSalesman,
+            remainingCoinsString: PaymentSelector.getCashRemainingCoinsString(getState().payment),
+          });
+        } catch (error) {
+          dispatch(openAlertMessage(convertApplicationErrorToError({
+            title: 'ไม่สามารถ Sync Settlement ได้',
+            th: 'กรุณาตรวจสอบข้อมูลและทำรายการใหม่อีกครั้ง',
+            en: '',
+          })));
+        }
+        // even if syncSettlement error, continue update stock.
+        try {
+          await updateStock();
+          // openAlarm
+          const client = MasterappSelector.getTcpClient(getState().masterapp);
+          client.send({
+            action: 0,
+            sensor: 'alarm',
+            msg: '1',
+          });
+          dispatch(getMasterProductAndEventAndPromotions());
+        } catch (error) {
+          dispatch(openAlertMessage(convertApplicationErrorToError({
+            title: 'ไม่สามารถ Update Stock ได้',
+            th: 'ระบบไม่สามารถทำงานต่อได้ กรุณาตรวจสอบข้อมูลและทำรายการอีกครั้ง',
+            en: '',
+          })));
+        }
+      } else {
+        console.error('[Error] @doorClosed salesman did not be veried.');
       }
-      // even if syncSettlement error, continue update stock.
-      try {
-        await updateStock();
-        // openAlarm
-        const client = MasterappSelector.getTcpClient(getState().masterapp);
-        client.send({
-          action: 0,
-          sensor: 'alarm',
-          msg: '1',
-        });
-        dispatch(getMasterProductAndEventAndPromotions());
-      } catch (error) {
-        dispatch(openAlertMessage(convertApplicationErrorToError({
-          title: 'ไม่สามารถ Update Stock ได้',
-          th: 'ระบบไม่สามารถทำงานต่อได้ กรุณาตรวจสอบข้อมูลและทำรายการอีกครั้ง',
-          en: '',
-        })));
-      }
-    } else {
-      console.error('[Error] @doorClosed salesman did not be veried.');
-    }
-    dispatch(Actions.clearVerifySalesman());
-    if (verifiedSalesman) {
-      try {
-        window.closeApp(); // eslint-disable-line;
-      } catch (error) {
+      dispatch(Actions.clearVerifySalesman());
+      if (verifiedSalesman) {
+        try {
+          dispatch(shutdownApplication())
+        } catch (error) {
+          setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
+          dispatch(backToHome());
+        }
+      } else {
         setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
         dispatch(backToHome());
       }
@@ -544,6 +557,7 @@ export const receivedScannedCode = (scannedCode) => {
     const nextReward = OrderSelector.getEventNextReward(getState().order);
     const eventId = OrderSelector.getEventId(getState().order);
     console.log('receivedScannedCode', eventId, scannedCode, nextInput);
+    const online = await isOnline()
     if (eventId) {
       try {
         if (verifyIsBarcodeOrQrCodeInput(nextInput) || (verifyIsLineQrcodeInput(nextInput) && nextInputObject.subType === 'discount')) {
@@ -591,7 +605,7 @@ export const receivedScannedCode = (scannedCode) => {
         dispatch(handleApiError(error));
       }
     }
-    if (getState().router.location.pathname === '/salesman') {
+    if (getState().router.location.pathname === '/salesman' || !online) {
       // validate salesman
       try {
         dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
@@ -658,7 +672,7 @@ export const closeAlertMessage = () => {
 };
 
 export const handleApiError = (error) => {
-  console.log('[handleApiError]', error, _.get(error, 'messages', {})
+  console.log('[handleApiError]', error, _.get(error, 'messages', {}))
   return (dispatch) => {
     dispatch(hideLoading());
     dispatch(Actions.openAlertMessage(error));
@@ -1636,3 +1650,9 @@ export const closeDoor = () => (dispatch, getState) => {
     action: 'door-close',
   });
 };
+
+export const shutdownApplication = () => {
+  return (dispatch) => {
+    window.closeApp(); // eslint-disable-line;
+  }
+}

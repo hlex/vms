@@ -44,7 +44,7 @@ class AlertMessage extends Component {
   }
 
   render() {
-    const { show, messages, lang, closeAlertMessage } = this.props;
+    const { show, messages, lang, closeAlertMessage, shutdownApplication } = this.props;
     const hasTitle = messages && messages.title && messages.title !== '';
     return (
       <Modal
@@ -70,7 +70,11 @@ class AlertMessage extends Component {
           {
             !hasTitle && <h2>{_.get(messages, lang, '')}</h2>
           }
-          <button onClick={closeAlertMessage} className="button purple">ตกลง</button>
+          {
+            _.get(messages, 'title', '') === 'ไม่สามารถเปิดโปรแกรมได้'
+            ? <button onClick={shutdownApplication} className="button purple">ปิดโปรแกรม</button>
+            : <button onClick={closeAlertMessage} className="button purple">ตกลง</button>
+          }
         </div>
       </Modal>
     );
