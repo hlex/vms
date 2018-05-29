@@ -71,7 +71,7 @@ class AlertMessage extends Component {
             !hasTitle && <h2>{_.get(messages, lang, '')}</h2>
           }
           {
-            _.get(messages, 'title', '') !== 'Happy is "Under-Construction"' &&
+            _.get(messages, 'title', '') !== 'Happy Box is "Under-Construction"' &&
             <button onClick={closeAlertMessage} className="button purple">ตกลง</button>
           }
         </div>

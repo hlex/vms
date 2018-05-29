@@ -252,7 +252,7 @@ export const initApplication = () => {
     } catch (error) {
       console.error(error);
       dispatch(openAlertMessage(convertApplicationErrorToError({
-        title: 'Happy is "Under-Construction"',
+        title: 'Happy Box is "Under-Construction"',
         th: 'กรุณาติดต่อ 02-681-5081 ต่อ 115',
         en: '',
       })));

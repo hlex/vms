@@ -100,7 +100,7 @@ class App extends Component {
     return (
       <div className='maintenance-box'>
         <h1><i className="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
-        <h1>{'Happy is "Closed"'}</h1>
+        <h1>{'Happy Box is "Closed"'}</h1>
           <div style={{ textAlign: 'center' }}>
             <h2>ไม่สามารถเชื่อมต่อระบบ Hardware ได้</h2>
             <h2>กรุณาติดต่อ ผู้ดูแลระบบ</h2>
@@ -119,7 +119,7 @@ class App extends Component {
     return (
       <div className='maintenance-box'>
         <h1><i className="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
-        <h1>{'Happy is "Under-Construction"'}</h1>
+        <h1>{'Happy Box is "Under-Construction"'}</h1>
         {
           verifiedSalesman
           ?
