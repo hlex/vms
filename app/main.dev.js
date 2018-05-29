@@ -62,11 +62,17 @@ app.on('ready', async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728
+    width: 1080,
+    height: 1920,
+    kiosk: process.env.NODE_ENV !== 'development'
   });
 
   if (process.env.NODE_ENV !== 'development') {
+    mainWindow.webContents.on('did-finish-load', () => {
+      mainWindow.webContents.setZoomFactor(1);
+      mainWindow.webContents.setVisualZoomLevelLimits(1, 1);
+      mainWindow.webContents.setLayoutZoomLevelLimits(0, 0);
+    });
     const ses = mainWindow.webContents.session;
     ses.clearCache(() => {
     });
