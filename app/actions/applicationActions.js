@@ -283,7 +283,6 @@ export const doorClosed = () => {
     console.log('doorClosed');
     const verifiedSalesman = MasterappSelector.getVerifiedSalesman(getState().masterapp);
     if (verifiedSalesman) {
-      debugger;
       try {
         await syncSettlement({
           salesman: verifiedSalesman,
@@ -318,9 +317,9 @@ export const doorClosed = () => {
       console.error('[Error] @doorClosed salesman did not be veried.');
     }
     dispatch(Actions.clearVerifySalesman());
-    // window.closeApp(); // eslint-disable-line;
-    setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
-    dispatch(backToHome());
+    window.closeApp(); // eslint-disable-line;
+    // setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
+    // dispatch(backToHome());
   };
 };
 
