@@ -479,12 +479,17 @@ const toSubmitOrder = createSelector(
       lineQrcode = _.find(eventInputs, input => input.name === 'LINE_QR_CODE').value || '';
     }
     let discountCode = '';
-    if (hasDiscount) discountCode = discount.code;
+    let discountPrice = 0;
+    if (hasDiscount) {
+      discountCode = discount.code;
+      discountPrice = discount.value;
+    }
     return {
       id,
       poId,
       saleType,
       discountCode,
+      discountPrice,
       qty,
       unitPrice,
       slotNo,

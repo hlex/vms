@@ -3,13 +3,14 @@ import { fetchFacade } from '../helpers/api';
 import { isVMSServiceError, convertVMSServiceResponseToError } from '../helpers/error';
 import URL from './url';
 
-export const serviceTopupMobile = ({ serviceCode, MSISDN, mobileTopupValue, mobileTopupFee }, discountCode = '', machineId = '') => {
+export const serviceTopupMobile = ({ serviceCode, MSISDN, mobileTopupValue, mobileTopupFee }, discountCode = '', discountPrice = 0, machineId = '') => {
   const data = {
     ServiceCode: serviceCode,
     MobileNo: MSISDN,
     TopupAmount: mobileTopupValue,
     ServiceCharge: mobileTopupFee,
     Discount_Code: discountCode,
+    Discount_Price: discountPrice,
     MachineID: machineId
   };
   return fetchFacade(`${URL.mobileTopup}${convertToURLParam(data)}`).then((response) => {

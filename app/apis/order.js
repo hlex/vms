@@ -4,7 +4,7 @@ import { fetchFacade } from '../helpers/api';
 import { isVMSServiceError, convertVMSServiceResponseToError } from '../helpers/error';
 import URL from './url';
 
-export const serviceSubmitOrder = ({ id, poId, saleType, discountCode, qty, unitPrice, slotNo, barcode, lineQrcode }) => {
+export const serviceSubmitOrder = ({ id, poId, saleType, discountCode, discountPrice, qty, unitPrice, slotNo, barcode, lineQrcode }) => {
   // return new Promise((resolve, reject) => {
   //   setTimeout(() => {
   //     resolve(true);
@@ -16,6 +16,7 @@ export const serviceSubmitOrder = ({ id, poId, saleType, discountCode, qty, unit
     po_id: poId,
     saletype: saleType,
     discountcode: discountCode,
+    discountprice: discountPrice,
     qty,
     unitprice: unitPrice,
     slotno: slotNo,
