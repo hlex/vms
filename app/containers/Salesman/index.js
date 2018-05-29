@@ -55,8 +55,8 @@ class TopupProviderSelectionPage extends Component {
         <Layout.Content>
           <div className="row">
             <div className="D-8">
-              <div className="event-box" style={{ height: '500px' }}>
-                <img alt="line" src={iconQrcode} />
+              <div className="event-box" style={{ height: '500px', alignItems: 'center' }}>
+                <img style={{ maxWidth: '150px' }} alt="line" src={iconQrcode} />
                 <div className="desc">
                   <h2>{'กรุณา Scan QR CODE (รหัสพนักงาน)'}</h2>
                   <h3>{'เพื่อตรวจสอบรหัส และปลดล็อคตู้'}</h3>
