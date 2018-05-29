@@ -92,7 +92,7 @@ let retryNo = 0;
 
 var resetTimer;
 
-const HIDE_POPUP_TIME = 5000;
+const HIDE_POPUP_TIME = 10 * 1000;
 
 
 export const getMasterProductAndEventAndPromotions = () => {
@@ -317,9 +317,17 @@ export const doorClosed = () => {
       console.error('[Error] @doorClosed salesman did not be veried.');
     }
     dispatch(Actions.clearVerifySalesman());
-    window.closeApp(); // eslint-disable-line;
-    // setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
-    // dispatch(backToHome());
+    if (verifiedSalesman) {
+      try {
+        window.closeApp(); // eslint-disable-line;
+      } catch (error) {
+        setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
+        dispatch(backToHome());
+      }
+    } else {
+      setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
+      dispatch(backToHome());
+    }
   };
 };
 
@@ -641,7 +649,7 @@ export const openAlertMessage = (data) => {
 
 export const closeAlertMessage = () => {
   return (dispatch, getState) => {
-    const messageTitle = getState().alertMessage.messages.title;
+    const messageTitle = _.get(getState(), 'alertMessage.messages.title', '');
     if (messageTitle === 'ขอบคุณที่ร่วมกิจกรรม') {
       dispatch(changePage('/'));
     }
@@ -650,6 +658,7 @@ export const closeAlertMessage = () => {
 };
 
 export const handleApiError = (error) => {
+  console.log('[handleApiError]', error, _.get(error, 'messages', {})
   return (dispatch) => {
     dispatch(hideLoading());
     dispatch(Actions.openAlertMessage(error));
