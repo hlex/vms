@@ -78,7 +78,7 @@ class InputMSISDNPage extends Component {
             <div className="input-msisdn-box">
               <div className="content _center">
                 <p>ท่านเลือกเครือข่าย {topupProviderName}</p>
-                <h2 className="fade-flash">ใส่เบอร์มือถือที่ต้องการเติมเงิน</h2>
+                <h2 className="fade-flash">ใส่เบอร์มือถือที่จะเติมเงินแล้วกด OK</h2>
                 <p className="sm"><small>กรุณาตรวจสอบหมายเลขโทรศัพท์ให้ถูกต้อง</small></p>
                 <InputWithPad
                   show
