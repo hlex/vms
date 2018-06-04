@@ -193,7 +193,9 @@ class EventPlayPage extends Component {
             <div className="step-content">
               <img alt="line" src={iconQrcode} />
               <div className="desc">
-                <h2>{`${nextInputOrder} ${message}`}</h2>
+                <h2>
+                  {`${nextInputOrder} ${message}`}
+                </h2>
               </div>
             </div>
           </div>
@@ -230,8 +232,16 @@ class EventPlayPage extends Component {
           <div className="D-8">
             <div className="step-content">
               <img alt="lineId" src={iconLineQrcode} />
-              <div className="desc">
-                <h2>{`${nextInputOrder} ${message}`}</h2>
+              <div className="color-green desc">
+                <h2>
+                  {`${nextInputOrder} ${message}`}
+                  <img
+                    className="icon middle-line"
+                    src={iconLineLogo}
+                    style={{ width: '100px', height: '100px' }}
+                    height="30"
+                  />
+                </h2>
               </div>
             </div>
           </div>
