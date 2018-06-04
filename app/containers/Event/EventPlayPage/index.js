@@ -38,6 +38,7 @@ const mapStateToProps = state => ({
   selectedEvent: OrderSelectors.getSelectedEvent(state.order),
   nextInput: OrderSelectors.getEventNextInput(state.order),
   nextInputOrder: OrderSelectors.getEventNextInputOrder(state.order),
+  nextInputObject: OrderSelectors.getEventNextInputObject(state.order)
 });
 
 const actions = {
@@ -124,11 +125,11 @@ class EventPlayPage extends Component {
   }
 
   renderInputLineId = () => {
-    const { nextInputOrder } = this.props;
+    const { nextInputObject, nextInputOrder } = this.props;
     return (
       <div className="event-box">
         <div className="step-content">
-          <img alt="lineId" src={lineId} />
+          <img alt="lineId" src={nextInputObject.value || lineId} />
           <div className="desc">
             <h2>{`${nextInputOrder} กรุณาแสกน LINE QR CODE`}</h2>
             <h3 className="color-green">
