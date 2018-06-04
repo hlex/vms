@@ -50,10 +50,6 @@ class ProductItems extends PureComponent {
     onClickItem: context => console.log('Please send any onClickItem function', context),
   };
 
-  componentDidMount = () => {
-    console.log('componentDidMount')
-  }
-
   handleClickItem = (context, item, module) => {
     const { onClickItem } = this.props;
     onClickItem(context, item, module);

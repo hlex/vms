@@ -36,7 +36,7 @@ export default class TcpClient {
           ...data,
           time: moment().format('HH:mm:ss'),
         });
-        console.log('this.histories.length', this.histories, this.histories.length);
+        // console.log('this.histories.length', this.histories, this.histories.length);
         if (this.histories.length === 20) {
           this.histories = _.tail(this.histories);
         }
@@ -58,7 +58,7 @@ class Queue {
   }
   push(data) {
     this.data.push(data);
-    console.log('this.data.length', this.data, this.data.length);
+    // console.log('this.data.length', this.data, this.data.length);
     if (this.data.length > 3) {
       this.data = _.tail(this.data);
     }

@@ -20,7 +20,8 @@ import { rememberBaseAdPlayingIndex } from '../../../actions';
 const mapStateToProps = state => ({
   baseAdPlayingIndex: state.ads.baseAdPlayingIndex,
   footerAdType: state.ads.footerAdType,
-  footerAds: state.ads.footerAds
+  footerAds: state.ads.footerAds,
+  machineId: MasterappSelector.getMachineId(state.masterapp)
 });
 
 const actions = {
@@ -71,21 +72,21 @@ class Footer extends PureComponent {
   };
 
   handleMediaEnded = (lastPlayedIndex, nextIndex) => {
-    console.log('handleMediaEnded', lastPlayedIndex, nextIndex)
+    // console.log('handleMediaEnded', lastPlayedIndex, nextIndex)
     const { footerAdType, rememberBaseAdPlayingIndex } = this.props;
     if (footerAdType === 'base') {
-      console.log('remember index', lastPlayedIndex);
+      // console.log('remember index', lastPlayedIndex);
       rememberBaseAdPlayingIndex(lastPlayedIndex);
     }
   }
 
   render() {
     // console.log(this);
-    const { mediaRef, footerAds, footerAdType, baseAdPlayingIndex } = this.props;
+    const { machineId, mediaRef, footerAds, footerAdType, baseAdPlayingIndex } = this.props;
     return (
       <div className="footer-section">
         <div className="copy">
-          <p>Happy Box</p>
+          <p>{`Happy Box (${machineId})`}</p>
         </div>
         {!this.shouldHideSignage() && (
           <div className="signage">
