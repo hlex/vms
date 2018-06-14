@@ -178,41 +178,41 @@ if (process.env.NODE_ENV !== 'production') {
       // ======================================================
       if (objectData.action === 1 && objectData.msg !== 'failed') {
         console.log('%c Server: Drop product', serverLog, data);
-        const successPercent = 11; // Math.floor(((Math.random() * 10))) + 1;
+        const successPercent = Math.floor(((Math.random() * 10))) + 1;
         console.log('successPercent', successPercent);
-        // setTimeout(() => {
-        //   socket.write(
-        //     JSON.stringify({
-        //       action: 1,
-        //       result: 'success',
-        //       description: 'Item XX delivered',
-        //     }),
-        //   );
-        // }, DROP_PRODUCT_DELAY_MS);
-        if (successPercent <= 10 && !isFirstTime) {
-          isFirstTime = true;
-          setTimeout(() => {
-            socket.write(
-              JSON.stringify({
-                action: 1,
-                result: 'success',
-                description: 'Item XX delivered',
-              }),
-            );
-          }, DROP_PRODUCT_DELAY_MS);
+        setTimeout(() => {
+          socket.write(
+            JSON.stringify({
+              action: 1,
+              result: 'success',
+              description: 'Item XX delivered',
+            }),
+          );
+        }, DROP_PRODUCT_DELAY_MS);
+        // if (successPercent <= 10 && !isFirstTime) {
+        //   isFirstTime = true;
+        //   setTimeout(() => {
+        //     socket.write(
+        //       JSON.stringify({
+        //         action: 1,
+        //         result: 'success',
+        //         description: 'Item XX delivered',
+        //       }),
+        //     );
+        //   }, DROP_PRODUCT_DELAY_MS);
+        // // }
+        // } else {
+        //   // isFirstTime = false;
+        //   setTimeout(() => {
+        //     socket.write(
+        //       JSON.stringify({
+        //         action: 1,
+        //         result: 'fail',
+        //         description: 'Item delivered failed',
+        //       }),
+        //     );
+        //   }, DROP_PRODUCT_DELAY_MS);
         // }
-        } else {
-          // isFirstTime = false;
-          setTimeout(() => {
-            socket.write(
-              JSON.stringify({
-                action: 1,
-                result: 'fail',
-                description: 'Item delivered failed',
-              }),
-            );
-          }, DROP_PRODUCT_DELAY_MS);
-        }
       }
       // ======================================================
       // CASH CHANGE
