@@ -178,7 +178,7 @@ if (process.env.NODE_ENV !== 'production') {
       // ======================================================
       if (objectData.action === 1 && objectData.msg !== 'failed') {
         console.log('%c Server: Drop product', serverLog, data);
-        const successPercent = Math.floor(((Math.random() * 10))) + 1;
+        const successPercent = 11; // Math.floor(((Math.random() * 10))) + 1;
         console.log('successPercent', successPercent);
         // setTimeout(() => {
         //   socket.write(

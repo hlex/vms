@@ -125,11 +125,11 @@ class EventPlayPage extends Component {
   }
 
   renderInputLineId = () => {
-    const { nextInputObject, nextInputOrder } = this.props;
+    const { baseURL, nextInputObject, nextInputOrder } = this.props;
     return (
       <div className="event-box">
         <div className="step-content">
-          <img alt="lineId" src={nextInputObject.value || lineId} />
+          <img alt="lineId" src={`${baseURL}${nextInputObject.value}`} />
           <div className="desc">
             <h2>{`${nextInputOrder} กรุณาแสกน LINE QR CODE`}</h2>
             <h3 className="color-green">

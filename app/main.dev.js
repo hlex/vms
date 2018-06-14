@@ -54,31 +54,47 @@ app.on('window-all-closed', () => {
   }
 });
 
+const production = true;
 
 app.on('ready', async () => {
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
     await installExtensions();
   }
 
-  mainWindow = new BrowserWindow({
-    show: false,
-    width: 1080,
-    height: 1920,
-    kiosk: process.env.NODE_ENV !== 'development'
-  });
+  if (production) {
+    mainWindow = new BrowserWindow({
+      show: false,
+      width: 1080,
+      height: 1920,
+      kiosk: process.env.NODE_ENV !== 'development'
+    });
+  } else {
+    mainWindow = new BrowserWindow({
+      show: false,
+      width: 1080,
+      height: 1920
+    });
+  }
 
   if (process.env.NODE_ENV !== 'development') {
-    mainWindow.webContents.on('did-finish-load', () => {
-      mainWindow.webContents.setZoomFactor(1);
-      mainWindow.webContents.setVisualZoomLevelLimits(1, 1);
-      mainWindow.webContents.setLayoutZoomLevelLimits(0, 0);
-    });
+    if (production) {
+      mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.setZoomFactor(1);
+        mainWindow.webContents.setVisualZoomLevelLimits(1, 1);
+        mainWindow.webContents.setLayoutZoomLevelLimits(0, 0);
+      });
+    }
     const ses = mainWindow.webContents.session;
     ses.clearCache(() => {
     });
   }
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
+
+  // Open the DevTools.
+  if (production === false) {
+    mainWindow.webContents.openDevTools();
+  }
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -94,8 +110,8 @@ app.on('ready', async () => {
     mainWindow = null;
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  // const menuBuilder = new MenuBuilder(mainWindow);
+  // menuBuilder.buildMenu();
   // if (process.env.NODE_ENV !== 'development') mainWindow.setFullScreen(true);
 });
 
