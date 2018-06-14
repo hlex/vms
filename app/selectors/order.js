@@ -460,6 +460,8 @@ const toSubmitOrder = createSelector(
     const slotNo = _.join(_.map(products, product => getPhysicalUsedSlotNo(product)), ',');
     let barcode;
     let lineQrcode;
+    let discountCode = '';
+    let discountPrice = 0;
     switch (orderType) {
       case 'singleProduct':
         saleType = 'Normal';
@@ -468,6 +470,8 @@ const toSubmitOrder = createSelector(
         id = promotionSet.id;
         const hasOnlyOneProduct = _.size(products) === 1;
         saleType = hasOnlyOneProduct ? 'Normal' : 'Promotion';
+        discountCode = promotionSet.id;
+        discountPrice = promotionSet.discountPrice;
         break;
       default:
         break;
@@ -478,8 +482,6 @@ const toSubmitOrder = createSelector(
       barcode = _.find(eventInputs, input => input.name === 'BARCODE' || input.name === 'QR_CODE').value || '';
       lineQrcode = _.find(eventInputs, input => input.name === 'LINE_QR_CODE').value || '';
     }
-    let discountCode = '';
-    let discountPrice = 0;
     if (hasDiscount) {
       discountCode = discount.code;
       discountPrice = discount.value;
