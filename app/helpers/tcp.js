@@ -151,7 +151,7 @@ export const isGetCashRemainingSuccess = ({ action, remain }) => {
 };
 
 export const isGetCashRemainingFail = ({ action, remain, result }) => {
-  if (action !== actionCode.cash || !remain || result === resultCode.unsuccess) return false;
+  if (action !== actionCode.cash || result !== resultCode.unsuccess) return false;
   return true;
 };
 
@@ -191,7 +191,6 @@ export const getServerCommand = (data) => {
   if (isResetTAIKOFail(normalizeData)) return 'RESET_TAIKO_FAIL';
   if (isLimitBanknoteSuccess(normalizeData)) return 'LIMIT_BANKNOTE_SUCCESS';
   if (isGetCashRemainingSuccess(normalizeData)) return 'CASH_REMAINING_SUCCESS';
-  // if (isGetCashRemainingFail(normalizeData)) return 'CASH_REMAINING_FAIL';
   if (isEnableMoneyBoxSuccess(normalizeData)) return 'ENABLE_MONEY_BOX_SUCCESS';
   if (isEnableMoneyBoxSuccess(normalizeData)) return 'ENABLE_MONEY_BOX_SUCCESS';
   if (isEnableMoneyBoxFail(normalizeData)) return 'ENABLE_MONEY_BOX_FAIL';
@@ -202,5 +201,6 @@ export const getServerCommand = (data) => {
   if (isCashChangeFail(normalizeData)) return 'CASH_CHANGE_FAIL';
   if (isProductDropSuccess(normalizeData)) return 'PRODUCT_DROP_SUCCESS';
   if (isProductDropFail(normalizeData)) return 'PRODUCT_DROP_FAIL';
+  if (isGetCashRemainingFail(normalizeData)) return 'CASH_REMAINING_FAIL';
   return 'NOTHING_TO_DO';
 };

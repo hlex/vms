@@ -25,7 +25,8 @@ import {
   SET_MACHINE_ID,
   FETCH_DATA_COMPLETED,
   VERIFIED_SALES_MAN,
-  CLEAR_VERIFY_SALES_MAN
+  CLEAR_VERIFY_SALES_MAN,
+  SET_DROP_PRODUCT_INTERVAL
 } from '../actions/actionTypes';
 
 const localURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:8888/vms' : 'http://localhost:81/vms';
@@ -93,6 +94,7 @@ const initialState = {
   mode: 'running',
   dataIsFetched: false,
   verifiedSalesman: undefined,
+  dropProductInterval: 2,
 };
 
 export default (state = initialState, action) => {
@@ -244,6 +246,11 @@ export default (state = initialState, action) => {
         ...state,
         verifiedSalesman: undefined
       };
+    case SET_DROP_PRODUCT_INTERVAL:
+      return {
+        ...state,
+        dropProductInterval: action.dropProductInterval
+      }
     default:
       return state;
   }

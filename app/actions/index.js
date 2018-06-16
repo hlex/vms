@@ -61,7 +61,8 @@ import {
   CLEAR_VERIFY_SALES_MAN,
   RECEIVED_PAID_IN_FULL,
   CLEAR_RECEIVED_PAID_IN_FULL,
-  REMEMBER_BASE_AD_PLAYING_INDEX
+  REMEMBER_BASE_AD_PLAYING_INDEX,
+  SET_DROP_PRODUCT_INTERVAL
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
@@ -355,4 +356,9 @@ export const clearReceivedPaidInFull = () => ({
 export const rememberBaseAdPlayingIndex = (baseAdPlayingIndex) => ({
   type: REMEMBER_BASE_AD_PLAYING_INDEX,
   baseAdPlayingIndex
+});
+
+export const setDropProductInterval = (dropProductInterval) => ({
+  type: SET_DROP_PRODUCT_INTERVAL,
+  dropProductInterval,
 });

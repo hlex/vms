@@ -22,6 +22,7 @@ const getAutoplayTime = state => state.autoplayTime;
 const getMuteAds = state => state.mutedAds;
 const getMachineId = state => state.machineId;
 const getVerifiedSalesman = state => state.verifiedSalesman;
+const getDropProductInterval = state => state.dropProductInterval;
 
 const verifyIsEnablingMoneyBox = createSelector(
   [
@@ -77,4 +78,5 @@ export default {
   getMachineId,
   verifyIsEnablingMoneyBox,
   verifyIsHardwareMalfunction,
+  getDropProductInterval
 };

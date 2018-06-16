@@ -218,8 +218,10 @@ export const initApplication = () => {
       const activityFreeRule = _.get(settingResponse, 'rule', '');
       const resetTime = _.get(settingResponse, 'resetTime', 60);
       const autoplayTime = _.get(settingResponse, 'autoplayTime', 10);
+      const dropProductInterval = Number(_.get(settingResponse, 'drop_product_interval', 2));
       dispatch(Actions.setActivityFreeRule(activityFreeRule));
       dispatch(Actions.setResetTime(resetTime));
+      dispatch(Actions.setDropProductInterval(dropProductInterval));
       dispatch(Actions.autoplayTime(autoplayTime));
       // ======================================================
       // ADS
@@ -505,9 +507,12 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       }, 1000);
       break;
     case 'CASH_REMAINING_FAIL':
-      setTimeout(() => {
-        dispatch(getCashRemaining());
-      }, 1000);
+      console.error('GET [CASH_REMAINING_FAIL] - Please contact Hardware support.');
+      dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
+      alert('GET [CASH_REMAINING_FAIL] - Please contact Hardware support.');
+      // setTimeout(() => {
+      //   dispatch(getCashRemaining());
+      // }, 1000);
       break;
     case 'LIMIT_BANKNOTE_SUCCESS':
       break;
@@ -762,17 +767,20 @@ export const productDrop = () => (dispatch, getState) => {
   if (readyToDropProduct) {
     const targetRowColumn = OrderSelector.getDropProductTargetRowColumn(getState().order);
     if (targetRowColumn) {
+      const dropProductInterval = MasterappSelector.getDropProductInterval(getState().masterapp);
       const client = MasterappSelector.getTcpClient(getState().masterapp);
-      client.send({
-        action: 1,
-        msg: targetRowColumn || '00', // row * col
-      });
-      Analytics.recordEvent('toHardware', {
-        machineId: MasterappSelector.getMachineId(getState().masterapp),
-        action: 'productDrop',
-        target: targetRowColumn
-      });
-      dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
+      setTimeout(() => {
+        client.send({
+          action: 1,
+          msg: targetRowColumn || '00', // row * col
+        });
+        Analytics.recordEvent('toHardware', {
+          machineId: MasterappSelector.getMachineId(getState().masterapp),
+          action: 'productDrop',
+          target: targetRowColumn
+        });
+        dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
+      }, dropProductInterval * 1000);
     } else {
       console.error('Cannot Drop Product because targetRowColumn = ', targetRowColumn);
     }

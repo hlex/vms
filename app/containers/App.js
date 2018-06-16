@@ -93,7 +93,7 @@ class App extends Component {
           })
         }
       })
-    }, 5000)
+    }, 5000);
   }
 
   renderHardwareMalfunctionMode = () => {
@@ -103,7 +103,7 @@ class App extends Component {
         <h1>{'Happy Box is "Closed"'}</h1>
           <div style={{ textAlign: 'center' }}>
             <h2>ไม่สามารถเชื่อมต่อระบบ Hardware ได้</h2>
-            <h2>กรุณาติดต่อ ผู้ดูแลระบบ</h2>
+            <h2>กรุณาติดต่อ 02-681-5081 ต่อ 115</h2>
           </div>
       </div>
     );
