@@ -470,7 +470,7 @@ const toSubmitOrder = createSelector(
         id = promotionSet.id;
         const hasOnlyOneProduct = _.size(products) === 1;
         saleType = hasOnlyOneProduct ? 'Normal' : 'Promotion';
-        discountCode = promotionSet.id;
+        discountCode = '';
         discountPrice = promotionSet.discountPrice;
         break;
       default:
