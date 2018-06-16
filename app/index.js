@@ -251,15 +251,22 @@ if (process.env.NODE_ENV !== 'production') {
       if (objectData.action === 2 && objectData.mode === 'remain') {
         if (!sv.getCanReceiveCoin()) {
           console.log('%c Server: Cash remaining', serverLog, sv);
+          // socket.write(
+          //   JSON.stringify({
+          //     action: 2,
+          //     result: 'success',
+          //     remain: {
+          //       baht1: sv.getCoinOneBaht(),
+          //       baht5: sv.getCoinFiveBaht(),
+          //       baht10: sv.getCoinTenBaht(),
+          //     },
+          //   }),
+          // );
           socket.write(
             JSON.stringify({
               action: 2,
-              result: 'success',
-              remain: {
-                baht1: sv.getCoinOneBaht(),
-                baht5: sv.getCoinFiveBaht(),
-                baht10: sv.getCoinTenBaht(),
-              },
+              result: 'failed',
+              remain: '',
             }),
           );
         } else {
