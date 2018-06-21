@@ -508,11 +508,25 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       break;
     case 'CASH_REMAINING_FAIL':
       console.error('GET [CASH_REMAINING_FAIL] - Please contact Hardware support.');
-      dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
-      alert('GET [CASH_REMAINING_FAIL] - Please contact Hardware support.');
+      // dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
+      // alert('GET [CASH_REMAINING_FAIL] - Please contact Hardware support.');
       // setTimeout(() => {
       //   dispatch(getCashRemaining());
       // }, 1000);
+      setTimeout(() => {
+        dispatch(receivedCashRemaining({
+          action: 2,
+          result: 'success',
+          remain: {
+            baht1: 0,
+            baht5: 0,
+            baht10: 0,
+          },
+        }));
+        if (MasterappSelector.verifyAppReady(getState().masterapp) === false) {
+          dispatch(Actions.hardwareReady());
+        }
+      }, 1000);
       break;
     case 'LIMIT_BANKNOTE_SUCCESS':
       break;
