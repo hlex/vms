@@ -30,6 +30,7 @@ export default () =>
       <Route path="/payment" component={Payment.PaymentPage} />
       <Route path="/thankyou" component={End.ThankyouPage} />
       <Route path="/thankyou-with-free-product" component={End.ThankyouPageWithFreeProduct} />
+      <Route path="/thankyou-mobile-topup" component={End.ThankyouPageWIthMobileTopup} />
       <Route path="/salesman" component={Salesman} />
       <Route path="/" component={HomePage} />
     </Switch>

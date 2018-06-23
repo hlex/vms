@@ -1022,8 +1022,11 @@ export const receivedCashRemaining = (data) => {
 };
 
 export const productDropProcessCompletely = () => async (dispatch, getState) => {
+  const isMobileTopupOrder = OrderSelector.verifyMobileTopupOrder(getState().order);
   const isOrderHasFreeProduct = OrderSelector.verifyOrderHasFreeProduct(getState().order);
-  if (isOrderHasFreeProduct) {
+  if (isMobileTopupOrder) {
+    dispatch(changePage('/thankyou-mobile-topup'));
+  } else if (isOrderHasFreeProduct) {
     dispatch(changePage('/thankyou-with-free-product'));
   } else {
     dispatch(changePage('/thankyou'));
