@@ -13,6 +13,7 @@ export const serviceTopupMobile = ({ serviceCode, MSISDN, mobileTopupValue, mobi
     Discount_Price: discountPrice,
     MachineID: machineId
   };
+  /*
   return new Promise((resolve, reject) => {
     resolve({
       'response-data': {},
@@ -20,8 +21,9 @@ export const serviceTopupMobile = ({ serviceCode, MSISDN, mobileTopupValue, mobi
       'trx-id': "20180623121628"
     })
   })
-  // return fetchFacade(`${URL.mobileTopup}${convertToURLParam(data)}`).then((response) => {
-  //   handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
-  //   return response;
-  // });
+  */
+  return fetchFacade(`${URL.mobileTopup}${convertToURLParam(data)}`).then((response) => {
+    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return response;
+  });
 };
