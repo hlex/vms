@@ -641,7 +641,7 @@ export const receivedScannedCode = (scannedCode) => {
         });
         // render under construction
         dispatch(openAlertMessage(convertApplicationErrorToError({
-          title: `รหัสพนักงาน ${scannedCode} ถูกต้อง`,
+          title: 'รหัสพนักงานถูกต้อง',
           th: 'กรุณาเปิดตู้เพื่อทำรายการต่อ',
           en: '',
         })));
