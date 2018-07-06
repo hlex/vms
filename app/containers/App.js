@@ -103,7 +103,7 @@ class App extends Component {
         <h1>{'Happy Box is "Closed"'}</h1>
           <div style={{ textAlign: 'center' }}>
             <h2>ไม่สามารถเชื่อมต่อระบบ Hardware ได้</h2>
-            <h2>กรุณาติดต่อ 02-681-5081 ต่อ 115</h2>
+            <h2>กรุณาติดต่อ 065-552-4352</h2>
           </div>
       </div>
     );
@@ -184,7 +184,7 @@ class App extends Component {
                 <h1 className='color-purple'><i className="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
                 <h2 className='color-red'>ระบบไม่ได้เชื่อมต่ออินเทอร์เน็ต</h2>
                 <h3>ไม่สามารถทำรายการได้</h3>
-                <h3>กรุณารอสักครู่ หรือ ติดต่อ 02-681-5081 ต่อ 115</h3>
+                <h3>กรุณารอสักครู่ หรือ ติดต่อ 065-552-4352</h3>
                 <br />
                 <br />
               </div>

@@ -254,8 +254,8 @@ export const initApplication = () => {
     } catch (error) {
       console.error(error);
       dispatch(openAlertMessage(convertApplicationErrorToError({
-        title: 'Happy Box is "Under-Construction"',
-        th: 'กรุณาติดต่อ 02-681-5081 ต่อ 115',
+        title: 'Happy Box is "Closed"',
+        th: 'กรุณาติดต่อ 065-552-4352',
         en: '',
       })));
     }
@@ -349,6 +349,10 @@ export const doorClosed = () => {
 export const doorOpened = () => {
   return (dispatch, getState) => {
     console.log('doorOpened');
+    const verifiedSalesman = MasterappSelector.getVerifiedSalesman(getState().masterapp);
+    if (!verifiedSalesman) {
+      // call API send email
+    }
     dispatch(Actions.setApplicationMode('maintenance'));
   };
 };
@@ -483,9 +487,14 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       retryNo = 0;
       break;
     case 'ENABLE_MONEY_BOX_FAIL':
-      setTimeout(() => {
-        dispatch(enableMoneyBox());
-      }, 1000);
+      if (retryNo === 2) {
+        dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
+      } else {
+        setTimeout(() => {
+          retryNo += 1;
+          dispatch(enableMoneyBox());
+        }, 3000);
+      }
       break;
     case 'DISABLE_MONEY_BOX_SUCCESS':
       setTimeout(() => {
