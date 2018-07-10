@@ -204,7 +204,7 @@ export const initApplication = () => async (dispatch, getState) => {
       // ======================================================
     const getMachineIdResponse = await serviceGetMachineId();
       // console.log('getMachineIdResponse', getMachineIdResponse);
-    const machineId = _.get(extractResponseData(getMachineIdResponse), 'MachineID', '');
+    const machineId = process.env.NODE_ENV !== 'production' ? 'A00023' : _.get(extractResponseData(getMachineIdResponse), 'MachineID', '');
     dispatch(Actions.setMachineId(machineId));
 
     const getSettingResponse = await serviceGetSetting();
@@ -462,7 +462,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
     case 'CASH_CHANGE_SUCCESS':
       dispatch(runFlowCashChangeSuccess());
       dispatch(
-        endRecordEvent('fromHardware', {
+        continueRecordEvent('fromHardware', {
           action: 'CASH_CHANGE_SUCCESS'
         })
       );
@@ -476,7 +476,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
     case 'PRODUCT_DROP_SUCCESS':
       dispatch(runFlowProductDropSuccess());
       dispatch(
-        endRecordEvent('fromHardware', {
+        continueRecordEvent('fromHardware', {
           action: 'PRODUCT_DROP_SUCCESS'
         })
       );
@@ -834,6 +834,10 @@ export const productFreeDrop = () => (dispatch, getState) => {
         action: 1,
         msg: targetRowColumn // row * col
       });
+      dispatch(continueRecordEvent('toHardWare', {
+        action: 'REQUEST_PRODUCT_FREE_DROP',
+        target: targetRowColumn
+      }));
       dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
     } else {
       console.error('Cannot Drop Free Product because targetRowColumn = ', targetRowColumn);
@@ -1677,7 +1681,7 @@ export const startRecordEvent = (eventType, data) => (dispatch, getState) => {
   });
 };
 
-export const endRecordEvent = (eventType, data) => (dispatch, getState) => {
+export const continueRecordEvent = (eventType, data) => (dispatch, getState) => {
   Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
     logId: MasterappSelector.getLogId(getState().masterapp),
     eventType,

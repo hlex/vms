@@ -15,7 +15,7 @@ const recordEvent = (machineId, data) => {
     machine_id: machineId,
     arrData: getArrData(data)
   };
-  console('recordEvent:', `api/main.php${convertToURLParam(urlParams)}`);
+  console.log('recordEvent:', `api/main.php${convertToURLParam(urlParams)}`);
   return fetchFacade(`api/main.php${convertToURLParam(urlParams)}`).then((response) => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;
