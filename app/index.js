@@ -251,24 +251,24 @@ if (process.env.NODE_ENV !== 'production') {
       if (objectData.action === 2 && objectData.mode === 'remain') {
         if (!sv.getCanReceiveCoin()) {
           console.log('%c Server: Cash remaining', serverLog, sv);
-          // socket.write(
-          //   JSON.stringify({
-          //     action: 2,
-          //     result: 'success',
-          //     remain: {
-          //       baht1: sv.getCoinOneBaht(),
-          //       baht5: sv.getCoinFiveBaht(),
-          //       baht10: sv.getCoinTenBaht(),
-          //     },
-          //   }),
-          // );
           socket.write(
             JSON.stringify({
               action: 2,
-              result: 'failed',
-              remain: '',
+              result: 'success',
+              remain: {
+                baht1: sv.getCoinOneBaht(),
+                baht5: sv.getCoinFiveBaht(),
+                baht10: sv.getCoinTenBaht(),
+              },
             }),
           );
+          // socket.write(
+          //   JSON.stringify({
+          //     action: 2,
+          //     result: 'failed',
+          //     remain: '',
+          //   }),
+          // );
         } else {
           console.error('Server cannot show remaining because Money Box is enable');
         }
@@ -400,6 +400,9 @@ if (process.env.NODE_ENV !== 'production') {
         );
       }
       if (objectData.action === 'door-open') {
+        // socket.write(
+        //   JSON.stringify({"action": 0, "msg": {"temp": "00nan\r"}, "sensor": "temp"}),
+        // );
         socket.write(
           JSON.stringify({
             action: 0,
