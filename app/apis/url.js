@@ -19,5 +19,6 @@ export default {
   verifySalesman: 'api/main.php',
   syncSettlement: 'api/main.php',
   updateStock: 'api/main.php',
-  getMachineId: 'api/main.php'
+  getMachineId: 'api/main.php',
+  sendMailAbnormal: 'api/main.php'
 };

@@ -70,6 +70,7 @@ import {
 } from '../apis/masterdata';
 import { serviceGetEventReward, verifyBarcodeOrQrcode, verifyLineQrcode } from '../apis/event';
 import { serviceVerifySalesman } from '../apis/salesman';
+import { serviceSendEmailAbnormal } from '../apis/email';
 
 let cmdNo = 0;
 let retryNo = 0;
@@ -358,6 +359,7 @@ export const doorOpened = () => (dispatch, getState) => {
   const verifiedSalesman = MasterappSelector.getVerifiedSalesman(getState().masterapp);
   if (!verifiedSalesman) {
       // call API send email
+    serviceSendEmailAbnormal(MasterappSelector.getMachineId(getState().masterapp));
   }
   dispatch(Actions.setApplicationMode('maintenance'));
 };
