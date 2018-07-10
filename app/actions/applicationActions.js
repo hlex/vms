@@ -21,9 +21,7 @@ import OrderSelector from '../selectors/order';
 // ======================================================
 // Helpers
 // ======================================================
-import {
-  getServerCommand
-} from '../helpers/tcp';
+import { getServerCommand } from '../helpers/tcp';
 import {
   createLog,
   verifyLessThanThreshold,
@@ -32,9 +30,7 @@ import {
   getEventInputByChannel,
   verifyThisOrderShouldDropFreeProduct
 } from '../helpers/global';
-import {
-  convertApplicationErrorToError,
-} from '../helpers/error';
+import { convertApplicationErrorToError } from '../helpers/error';
 import {
   isSoldout,
   normalizeStripAds,
@@ -44,29 +40,21 @@ import {
   convertToAppMobileTopupProvider,
   convertToAppEvent,
   convertToAppText,
-  convertToAppMainMenu,
+  convertToAppMainMenu
 } from '../helpers/masterdata';
-import {
-  extractResponseData,
-} from '../helpers/api';
+import { extractResponseData } from '../helpers/api';
 // ======================================================
 // APIs
 // ======================================================
-import {
-  serviceTopupMobile
-} from '../apis/mobileTopup';
-import {
-  serviceVerifyDiscountCode,
-} from '../apis/discount';
+import { serviceTopupMobile } from '../apis/mobileTopup';
+import { serviceVerifyDiscountCode } from '../apis/discount';
 import {
   serviceSubmitOrder,
   serviceGetSumOrderAmount,
   syncSettlement,
-  updateStock,
+  updateStock
 } from '../apis/order';
-import {
-  createTcpClient
-} from '../apis/tcp';
+import { createTcpClient } from '../apis/tcp';
 import {
   serviceGetBaseAds,
   serviceGetEvents,
@@ -78,202 +66,212 @@ import {
   serviceGetMobileTopupSteps,
   serviceGetMainMenu,
   serviceGetSetting,
-  serviceGetMachineId,
+  serviceGetMachineId
 } from '../apis/masterdata';
-import {
-  serviceGetEventReward,
-  verifyBarcodeOrQrcode,
-  verifyLineQrcode
-} from '../apis/event';
-import {
-  serviceVerifySalesman
-} from '../apis/salesman';
+import { serviceGetEventReward, verifyBarcodeOrQrcode, verifyLineQrcode } from '../apis/event';
+import { serviceVerifySalesman } from '../apis/salesman';
 
 let cmdNo = 0;
 let retryNo = 0;
 
-var resetTimer;
+let resetTimer;
 
 const HIDE_POPUP_TIME = 10 * 1000;
 
-
-export const getMasterProductAndEventAndPromotions = () => {
-  return (dispatch, getState) => {
-    return new Promise(async (resolve, reject) => {
-      const fileURL = MasterappSelector.getLocalURL(getState().masterapp);
+export const getMasterProductAndEventAndPromotions = () => (dispatch, getState) => new Promise(async (resolve, reject) => {
+  const fileURL = MasterappSelector.getLocalURL(getState().masterapp);
       // ======================================================
       // PRODUCTS
       // ======================================================
-      const serviceGetProductsResponse = await serviceGetProducts();
-      const sanitizedProducts = _.map(extractResponseData(serviceGetProductsResponse), (product) => {
-        return convertToAppProduct(product, fileURL);
-      });
+  const serviceGetProductsResponse = await serviceGetProducts();
+  const sanitizedProducts = _.map(extractResponseData(serviceGetProductsResponse), product => convertToAppProduct(product, fileURL));
       // ======================================================
       // Grouped PoId
       // ======================================================
-      const groupedByPoId = _.groupBy(sanitizedProducts, 'id');
-      const mergedPhysicalProducts = _.reduce(groupedByPoId, (result, products, poId) => {
-        const baseProduct = _.get(products, 0, {});
-        const sumQty = _.sumBy(products, 'qty');
-        const physicals = _.reduce(products, (accPhysical, product) => {
+  const groupedByPoId = _.groupBy(sanitizedProducts, 'id');
+  const mergedPhysicalProducts = _.reduce(
+        groupedByPoId,
+        (result, products, poId) => {
+          const baseProduct = _.get(products, 0, {});
+          const sumQty = _.sumBy(products, 'qty');
+          const physicals = _.reduce(
+            products,
+            (accPhysical, product) => [
+              ...accPhysical,
+              {
+                cuid: cuid(),
+                row: product.row,
+                col: product.col,
+                qty: product.qty,
+                canDrop: product.qty !== 0,
+                slotNo: product.slotNo,
+                isFree: product.isFree
+              }
+            ],
+            []
+          );
+          const everyPhysicalIsFree = _.every(physicals, physical => physical.isFree);
+          // console.log('everyPhysicalIsFree', poId, everyPhysicalIsFree, physicals);
           return [
-            ...accPhysical,
-            {
-              cuid: cuid(),
-              row: product.row,
-              col: product.col,
-              qty: product.qty,
-              canDrop: product.qty !== 0,
-              slotNo: product.slotNo,
-              isFree: product.isFree,
-            }
+            ...result,
+            _.omit(
+              {
+                ...baseProduct,
+                qty: sumQty,
+                isSoldout: isSoldout(sumQty),
+                everyPhysicalIsFree,
+                physicals
+              },
+              ['isFree', 'col', 'row', 'slotNo']
+            )
           ];
-        }, []);
-        const everyPhysicalIsFree = _.every(physicals, physical => physical.isFree);
-        // console.log('everyPhysicalIsFree', poId, everyPhysicalIsFree, physicals);
-        return [
-          ...result,
-          _.omit({
-            ...baseProduct,
-            qty: sumQty,
-            isSoldout: isSoldout(sumQty),
-            everyPhysicalIsFree,
-            physicals,
-          }, ['isFree', 'col', 'row', 'slotNo'])
-        ];
-      }, []);
-      dispatch(Actions.receivedMasterdata('products', mergedPhysicalProducts));
+        },
+        []
+      );
+  dispatch(Actions.receivedMasterdata('products', mergedPhysicalProducts));
       // ======================================================
       // EVENTS
       // ======================================================
-      const serviceGetEventsResponse = await serviceGetEvents();
-      const sanitizedEvents = _.map(extractResponseData(serviceGetEventsResponse), event => convertToAppEvent(event, fileURL));
-      const eventsWhichMorphEventProductToMasterProduct = _.map(sanitizedEvents, (event) => {
-        return {
-          ...event,
-          product: _.find(mergedPhysicalProducts, product => product.id === event.product.id),
-        };
-      });
-      dispatch(Actions.receivedMasterdata('events', eventsWhichMorphEventProductToMasterProduct));
+  const serviceGetEventsResponse = await serviceGetEvents();
+  const sanitizedEvents = _.map(extractResponseData(serviceGetEventsResponse), event =>
+        convertToAppEvent(event, fileURL)
+      );
+  const eventsWhichMorphEventProductToMasterProduct = _.map(sanitizedEvents, event => ({
+    ...event,
+    product: _.find(mergedPhysicalProducts, product => product.id === event.product.id)
+  }));
+  dispatch(Actions.receivedMasterdata('events', eventsWhichMorphEventProductToMasterProduct));
       // ======================================================
       // PROMOTION
       // ======================================================
-      const serviceGetPromotionsResponse = await serviceGetPromotions();
-      const sanitizedPromotions = _.map(extractResponseData(serviceGetPromotionsResponse), promotion => {
-        const products = _.map(promotion.Product_List, (promotionProduct) => {
-          return _.find(mergedPhysicalProducts, product => product.id === promotionProduct.Po_ID);
-        })
-        const hasSomeProductThatEveryPhysicalIsFree = _.some(products, 'everyPhysicalIsFree');
-        // console.log('promotion => ', products, hasSomeProductThatEveryPhysicalIsFree);
-        const promotionWithMorphProduct = {
-          ...promotion,
-          products,
-          hasSomeProductThatEveryPhysicalIsFree,
-        };
-        return convertToAppPromotion(promotionWithMorphProduct, fileURL);
-      });
-      dispatch(Actions.receivedMasterdata('promotionSets', sanitizedPromotions));
-      resolve(mergedPhysicalProducts);
-    });
-  };
-};
+  const serviceGetPromotionsResponse = await serviceGetPromotions();
+  const sanitizedPromotions = _.map(
+        extractResponseData(serviceGetPromotionsResponse),
+        promotion => {
+          const products = _.map(promotion.Product_List, promotionProduct => _.find(mergedPhysicalProducts, product => product.id === promotionProduct.Po_ID));
+          const hasSomeProductThatEveryPhysicalIsFree = _.some(products, 'everyPhysicalIsFree');
+          // console.log('promotion => ', products, hasSomeProductThatEveryPhysicalIsFree);
+          const promotionWithMorphProduct = {
+            ...promotion,
+            products,
+            hasSomeProductThatEveryPhysicalIsFree
+          };
+          return convertToAppPromotion(promotionWithMorphProduct, fileURL);
+        }
+      );
+  dispatch(Actions.receivedMasterdata('promotionSets', sanitizedPromotions));
+  resolve(mergedPhysicalProducts);
+});
 
-export const initApplication = () => {
-  return async (dispatch, getState) => {
-    const tcp = MasterappSelector.getTcp(getState().masterapp);
-    dispatch(initTcpClient(createTcpClient(tcp.ip, tcp.port)));
+export const initApplication = () => async (dispatch, getState) => {
+  const tcp = MasterappSelector.getTcp(getState().masterapp);
+  dispatch(initTcpClient(createTcpClient(tcp.ip, tcp.port)));
     // ======================================================
     // GET MASTER DATA
     // ======================================================
-    try {
-      const fileURL = MasterappSelector.getLocalURL(getState().masterapp);
+  try {
+    const fileURL = MasterappSelector.getLocalURL(getState().masterapp);
       // ======================================================
       // MAINMENU
       // ======================================================
-      const serviceGetMainMenuResponse = await serviceGetMainMenu();
-      const mainMenus = _.map(extractResponseData(serviceGetMainMenuResponse), (mainMenu, index) => convertToAppMainMenu(mainMenu, index));
-      dispatch(Actions.receivedMasterdata('mainMenus', mainMenus));
+    const serviceGetMainMenuResponse = await serviceGetMainMenu();
+    const mainMenus = _.map(extractResponseData(serviceGetMainMenuResponse), (mainMenu, index) =>
+        convertToAppMainMenu(mainMenu, index)
+      );
+    dispatch(Actions.receivedMasterdata('mainMenus', mainMenus));
       // ======================================================
       // STEPS
       // ======================================================
-      const serviceGetEventStepsResponse = await serviceGetEventSteps();
-      const eventSteps = _.map(extractResponseData(serviceGetEventStepsResponse), (event, index) => convertToAppText(event, index));
-      dispatch(Actions.receivedMasterdata('eventSteps', eventSteps));
-      const serviceGetProductStepsResponse = await serviceGetProductSteps();
-      const productSteps = _.map(extractResponseData(serviceGetProductStepsResponse), (event, index) => convertToAppText(event, index));
-      dispatch(Actions.receivedMasterdata('productSteps', productSteps));
-      const serviceGetMobileTopupStepsResponse = await serviceGetMobileTopupSteps();
-      const mobileTopupSteps = _.map(extractResponseData(serviceGetMobileTopupStepsResponse), (event, index) => convertToAppText(event, index));
-      dispatch(Actions.receivedMasterdata('mobileTopupSteps', mobileTopupSteps));
+    const serviceGetEventStepsResponse = await serviceGetEventSteps();
+    const eventSteps = _.map(extractResponseData(serviceGetEventStepsResponse), (event, index) =>
+        convertToAppText(event, index)
+      );
+    dispatch(Actions.receivedMasterdata('eventSteps', eventSteps));
+    const serviceGetProductStepsResponse = await serviceGetProductSteps();
+    const productSteps = _.map(
+        extractResponseData(serviceGetProductStepsResponse),
+        (event, index) => convertToAppText(event, index)
+      );
+    dispatch(Actions.receivedMasterdata('productSteps', productSteps));
+    const serviceGetMobileTopupStepsResponse = await serviceGetMobileTopupSteps();
+    const mobileTopupSteps = _.map(
+        extractResponseData(serviceGetMobileTopupStepsResponse),
+        (event, index) => convertToAppText(event, index)
+      );
+    dispatch(Actions.receivedMasterdata('mobileTopupSteps', mobileTopupSteps));
       // ======================================================
       // SETTING
       // ======================================================
-      const getMachineIdResponse = await serviceGetMachineId();
+    const getMachineIdResponse = await serviceGetMachineId();
       // console.log('getMachineIdResponse', getMachineIdResponse);
-      const machineId = _.get(extractResponseData(getMachineIdResponse), 'MachineID', '');
-      dispatch(Actions.setMachineId(machineId));
+    const machineId = _.get(extractResponseData(getMachineIdResponse), 'MachineID', '');
+    dispatch(Actions.setMachineId(machineId));
 
-      const getSettingResponse = await serviceGetSetting();
-      const settingResponse = extractResponseData(getSettingResponse);
-      const activityFreeRule = _.get(settingResponse, 'rule', '');
-      const resetTime = _.get(settingResponse, 'resetTime', 60);
-      const autoplayTime = _.get(settingResponse, 'autoplayTime', 10);
-      const dropProductInterval = Number(_.get(settingResponse, 'drop_product_interval', 2));
-      dispatch(Actions.setActivityFreeRule(activityFreeRule));
-      dispatch(Actions.setResetTime(resetTime));
-      dispatch(Actions.setDropProductInterval(dropProductInterval));
-      dispatch(Actions.autoplayTime(autoplayTime));
+    const getSettingResponse = await serviceGetSetting();
+    const settingResponse = extractResponseData(getSettingResponse);
+    const activityFreeRule = _.get(settingResponse, 'rule', '');
+    const resetTime = _.get(settingResponse, 'resetTime', 60);
+    const autoplayTime = _.get(settingResponse, 'autoplayTime', 10);
+    const dropProductInterval = Number(_.get(settingResponse, 'drop_product_interval', 2));
+    dispatch(Actions.setActivityFreeRule(activityFreeRule));
+    dispatch(Actions.setResetTime(resetTime));
+    dispatch(Actions.setDropProductInterval(dropProductInterval));
+    dispatch(Actions.autoplayTime(autoplayTime));
       // ======================================================
       // ADS
       // ======================================================
-      const serviceGetBaseAdsResponse = await serviceGetBaseAds();
-      const sanitizedBaseAds = _.map(extractResponseData(serviceGetBaseAdsResponse), (ad) => {
-        return normalizeStripAds(convertToAppAd(ad), fileURL);
-      });
-      dispatch(Actions.setBaseAds(sanitizedBaseAds));
-      dispatch(Actions.resetFooterAds());
+    const serviceGetBaseAdsResponse = await serviceGetBaseAds();
+    const sanitizedBaseAds = _.map(extractResponseData(serviceGetBaseAdsResponse), ad => normalizeStripAds(convertToAppAd(ad), fileURL));
+    dispatch(Actions.setBaseAds(sanitizedBaseAds));
+    dispatch(Actions.resetFooterAds());
       // dispatch(Actions.setFooterAds(sanitizedBaseAds));
       // ======================================================
       // PRODUCTS & EVENT & PROMOTION
       // ======================================================
-      await dispatch(getMasterProductAndEventAndPromotions());
+    await dispatch(getMasterProductAndEventAndPromotions());
       // ======================================================
       // MOBILE TOPUP PROVIDER
       // ======================================================
-      const serviceGetMobileTopupProvidersResponse = await serviceGetMobileTopupProviders();
-      const sanitizedMobileTopupProviders = _.map(extractResponseData(serviceGetMobileTopupProvidersResponse), mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider, fileURL));
-      dispatch(Actions.receivedMasterdata('topupProviders', sanitizedMobileTopupProviders));
+    const serviceGetMobileTopupProvidersResponse = await serviceGetMobileTopupProviders();
+    const sanitizedMobileTopupProviders = _.map(
+        extractResponseData(serviceGetMobileTopupProvidersResponse),
+        mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider, fileURL)
+      );
+    dispatch(Actions.receivedMasterdata('topupProviders', sanitizedMobileTopupProviders));
 
-      const resetTimeMS = resetTime * 1000;
-      setTimeout(() => {
-        dispatch(addResetTimer(resetTimeMS));
-      }, 10000);
+    const resetTimeMS = resetTime * 1000;
+    setTimeout(() => {
+      dispatch(addResetTimer(resetTimeMS));
+    }, 10000);
 
-      dispatch(Actions.dataFetchedCompletely());
-
-    } catch (error) {
-      console.error(error);
-      dispatch(startRecordEvent('localApiError', {
-        action: 'LOCAL_API_ERROR'
-      }));
-      dispatch(openAlertMessage(convertApplicationErrorToError({
-        title: 'Happy Box is "Closed"',
-        th: 'กรุณาติดต่อ 065-552-4352',
-        en: '',
-      })));
-    }
-  };
+    dispatch(Actions.dataFetchedCompletely());
+  } catch (error) {
+    console.error(error);
+    dispatch(
+        startRecordEvent('localApiError', {
+          action: 'LOCAL_API_ERROR'
+        })
+      );
+    dispatch(
+        openAlertMessage(
+          convertApplicationErrorToError({
+            title: 'Happy Box is "Closed"',
+            th: 'กรุณาติดต่อ 065-552-4352',
+            en: ''
+          })
+        )
+      );
+  }
 };
 
-const addResetTimer = (resetTimeMS) => {
-  const addResetTime = (callback) => {
+const addResetTimer = resetTimeMS => {
+  const addResetTime = callback =>
     // console.log('--- START RESET TIME ---', resetTimer);
-    return window.setInterval(() => {
+     window.setInterval(() => {
       // console.log('--- DO RESET --- ', resetTimer);
-      callback();
-    }, resetTimeMS);
-  };
-  return (dispatch) => {
+       callback();
+     }, resetTimeMS);
+  return dispatch => {
     resetTimer = addResetTime(() => {
       dispatch(closeAlertMessage());
       dispatch(backToHome());
@@ -290,55 +288,58 @@ const addResetTimer = (resetTimeMS) => {
   };
 };
 
-export const doorClosed = () => {
-  return async (dispatch, getState) => {
-    console.log('doorClosed');
-    const verifiedSalesman = MasterappSelector.getVerifiedSalesman(getState().masterapp);
-    const online = await isOnline();
-    if (online) {
-      if (verifiedSalesman) {
-        try {
-          await syncSettlement({
-            salesman: verifiedSalesman,
-            remainingCoinsString: PaymentSelector.getCashRemainingCoinsString(getState().payment),
-          });
-        } catch (error) {
-          dispatch(openAlertMessage(convertApplicationErrorToError({
-            title: 'ไม่สามารถ Sync Settlement ได้',
-            th: 'กรุณาตรวจสอบข้อมูลและทำรายการใหม่อีกครั้ง',
-            en: '',
-          })));
-        }
-        // even if syncSettlement error, continue update stock.
-        try {
-          await updateStock();
-          // openAlarm
-          const client = MasterappSelector.getTcpClient(getState().masterapp);
-          client.send({
-            action: 0,
-            sensor: 'alarm',
-            msg: '1',
-          });
-          dispatch(getMasterProductAndEventAndPromotions());
-        } catch (error) {
-          dispatch(openAlertMessage(convertApplicationErrorToError({
-            title: 'ไม่สามารถ Update Stock ได้',
-            th: 'ระบบไม่สามารถทำงานต่อได้ กรุณาตรวจสอบข้อมูลและทำรายการอีกครั้ง',
-            en: '',
-          })));
-        }
-      } else {
-        console.error('[Error] @doorClosed salesman did not be veried.');
+export const doorClosed = () => async (dispatch, getState) => {
+  console.log('doorClosed');
+  const verifiedSalesman = MasterappSelector.getVerifiedSalesman(getState().masterapp);
+  const online = await isOnline();
+  if (online) {
+    if (verifiedSalesman) {
+      try {
+        await syncSettlement({
+          salesman: verifiedSalesman,
+          remainingCoinsString: PaymentSelector.getCashRemainingCoinsString(getState().payment)
+        });
+      } catch (error) {
+        dispatch(
+            openAlertMessage(
+              convertApplicationErrorToError({
+                title: 'ไม่สามารถ Sync Settlement ได้',
+                th: 'กรุณาตรวจสอบข้อมูลและทำรายการใหม่อีกครั้ง',
+                en: ''
+              })
+            )
+          );
       }
-      dispatch(Actions.clearVerifySalesman());
-      if (verifiedSalesman) {
-        try {
-          dispatch(shutdownApplication())
-        } catch (error) {
-          setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
-          dispatch(backToHome());
-        }
-      } else {
+        // even if syncSettlement error, continue update stock.
+      try {
+        await updateStock();
+          // openAlarm
+        const client = MasterappSelector.getTcpClient(getState().masterapp);
+        client.send({
+          action: 0,
+          sensor: 'alarm',
+          msg: '1'
+        });
+        dispatch(getMasterProductAndEventAndPromotions());
+      } catch (error) {
+        dispatch(
+            openAlertMessage(
+              convertApplicationErrorToError({
+                title: 'ไม่สามารถ Update Stock ได้',
+                th: 'ระบบไม่สามารถทำงานต่อได้ กรุณาตรวจสอบข้อมูลและทำรายการอีกครั้ง',
+                en: ''
+              })
+            )
+          );
+      }
+    } else {
+      console.error('[Error] @doorClosed salesman did not be veried.');
+    }
+    dispatch(Actions.clearVerifySalesman());
+    if (verifiedSalesman) {
+      try {
+        dispatch(shutdownApplication());
+      } catch (error) {
         setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
         dispatch(backToHome());
       }
@@ -346,85 +347,90 @@ export const doorClosed = () => {
       setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
       dispatch(backToHome());
     }
-  };
+  } else {
+    setTimeout(dispatch(Actions.setApplicationMode('running')), 3000);
+    dispatch(backToHome());
+  }
 };
 
-export const doorOpened = () => {
-  return (dispatch, getState) => {
-    console.log('doorOpened');
-    const verifiedSalesman = MasterappSelector.getVerifiedSalesman(getState().masterapp);
-    if (!verifiedSalesman) {
+export const doorOpened = () => (dispatch, getState) => {
+  console.log('doorOpened');
+  const verifiedSalesman = MasterappSelector.getVerifiedSalesman(getState().masterapp);
+  if (!verifiedSalesman) {
       // call API send email
-    }
-    dispatch(Actions.setApplicationMode('maintenance'));
-  };
+  }
+  dispatch(Actions.setApplicationMode('maintenance'));
 };
 
-export const runFlowProductDropFailed = () => {
-  return async (dispatch, getState) => {
-    const isDroppingFreeProduct = MasterappSelector.verifyIsDroppingFreeProduct(getState().masterapp);
-    console.log('isDroppingFreeProduct', isDroppingFreeProduct);
-    if (isDroppingFreeProduct) {
-      const productToDrop = OrderSelector.getProductToDrop(getState().order);
-      const targetPhysical = OrderSelector.getFreeDropProductTargetPhysical(getState().order);
-      dispatch({
-        type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
-        product: productToDrop,
-        physical: targetPhysical
-      });
-      const productToFreeDropHasAvailablePhysical = OrderSelector.verifyProductToFreeDropHasAvailablePhysical(getState().order);
+export const runFlowProductDropFailed = () => async (dispatch, getState) => {
+  const isDroppingFreeProduct = MasterappSelector.verifyIsDroppingFreeProduct(
+      getState().masterapp
+    );
+  console.log('isDroppingFreeProduct', isDroppingFreeProduct);
+  if (isDroppingFreeProduct) {
+    const productToDrop = OrderSelector.getProductToDrop(getState().order);
+    const targetPhysical = OrderSelector.getFreeDropProductTargetPhysical(getState().order);
+    dispatch({
+      type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
+      product: productToDrop,
+      physical: targetPhysical
+    });
+    const productToFreeDropHasAvailablePhysical = OrderSelector.verifyProductToFreeDropHasAvailablePhysical(
+        getState().order
+      );
       // console.log('productToFreeDropHasAvailablePhysical', productToFreeDropHasAvailablePhysical);
-      if (productToFreeDropHasAvailablePhysical) {
+    if (productToFreeDropHasAvailablePhysical) {
         // retry
-        dispatch(productFreeDrop());
-      } else {
-        // filter free product from orders
-        dispatch(Actions.removeProductFromOrder(productToDrop));
-        dispatch(endProcess());
-      }
+      dispatch(productFreeDrop());
     } else {
+        // filter free product from orders
+      dispatch(Actions.removeProductFromOrder(productToDrop));
+      dispatch(endProcess());
+    }
+  } else {
       // ======================================================
       // STAMP FAIL TO PHYSICAL
       // ======================================================
-      const productToDrop = OrderSelector.getProductToDrop(getState().order);
-      const targetPhysical = OrderSelector.getDropProductTargetPhysical(getState().order);
-      dispatch({
-        type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
-        product: productToDrop,
-        physical: targetPhysical
-      });
-      const productToDropHasAvailablePhysical = OrderSelector.verifyProductToDropHasAvailablePhysical(getState().order);
+    const productToDrop = OrderSelector.getProductToDrop(getState().order);
+    const targetPhysical = OrderSelector.getDropProductTargetPhysical(getState().order);
+    dispatch({
+      type: 'PRODUCT_MARK_CANNOT_USE_PHYSICAL',
+      product: productToDrop,
+      physical: targetPhysical
+    });
+    const productToDropHasAvailablePhysical = OrderSelector.verifyProductToDropHasAvailablePhysical(
+        getState().order
+      );
       // console.log('productToDropHasAvailablePhysical', productToDropHasAvailablePhysical);
-      if (productToDropHasAvailablePhysical) {
+    if (productToDropHasAvailablePhysical) {
         // retry
-        dispatch(productDrop());
-      } else {
+      dispatch(productDrop());
+    } else {
         // return cash eql product price
-        dispatch(setNotReadyToDropProduct());
+      dispatch(setNotReadyToDropProduct());
 
-        if (OrderSelector.getOrderType(getState().order) === 'promotionSet') {
+      if (OrderSelector.getOrderType(getState().order) === 'promotionSet') {
           // filter any not dropped product from order
-          dispatch(Actions.removeProductFromOrder(productToDrop));
-          const isOrderHasProduct = OrderSelector.verifyOrderHasProduct(getState().order);
-          console.log('productDropProcessCompletely: isOrderHasProduct', isOrderHasProduct);
-          if (isOrderHasProduct) {
-            const submitOrderResponse = await dispatch(submitOrder());
-            console.log('productDropProcessCompletely.submitOrderResponse', submitOrderResponse);
-          }
+        dispatch(Actions.removeProductFromOrder(productToDrop));
+        const isOrderHasProduct = OrderSelector.verifyOrderHasProduct(getState().order);
+        console.log('productDropProcessCompletely: isOrderHasProduct', isOrderHasProduct);
+        if (isOrderHasProduct) {
+          const submitOrderResponse = await dispatch(submitOrder());
+          console.log('productDropProcessCompletely.submitOrderResponse', submitOrderResponse);
         }
-        if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
-          dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
-        } else {
-          dispatch(cashChangeEqualToCurrentCashAmount());
-        }
-        dispatch(Actions.showModal('productDropError'));
-        setTimeout(() => {
-          dispatch(cancelPayment());
-        }, HIDE_POPUP_TIME);
       }
+      if (OrderSelector.verifyHasDroppedProduct(getState().order)) {
+        dispatch(cashChangeEqualToCurrentCashAmountMinusDroppedProduct());
+      } else {
+        dispatch(cashChangeEqualToCurrentCashAmount());
+      }
+      dispatch(Actions.showModal('productDropError'));
+      setTimeout(() => {
+        dispatch(cancelPayment());
+      }, HIDE_POPUP_TIME);
     }
   }
-}
+};
 
 export const receivedDataFromServer = data => (dispatch, getState) => {
   if (data.sensor && data.sensor === 'temp') return;
@@ -455,9 +461,11 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       break;
     case 'CASH_CHANGE_SUCCESS':
       dispatch(runFlowCashChangeSuccess());
-      dispatch(endRecordEvent('fromHardware', {
-        action: 'CASH_CHANGE_SUCCESS',
-      }));
+      dispatch(
+        endRecordEvent('fromHardware', {
+          action: 'CASH_CHANGE_SUCCESS'
+        })
+      );
       break;
     case 'CASH_CHANGE_FAIL':
       dispatch(Actions.showModal('cashChangeError'));
@@ -467,9 +475,11 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       break;
     case 'PRODUCT_DROP_SUCCESS':
       dispatch(runFlowProductDropSuccess());
-      dispatch(endRecordEvent('fromHardware', {
-        action: 'PRODUCT_DROP_SUCCESS',
-      }));
+      dispatch(
+        endRecordEvent('fromHardware', {
+          action: 'PRODUCT_DROP_SUCCESS'
+        })
+      );
       break;
     case 'PRODUCT_DROP_FAIL':
       dispatch(runFlowProductDropFailed());
@@ -489,9 +499,11 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       break;
     case 'ENABLE_MONEY_BOX_FAIL':
       if (retryNo === 2) {
-        dispatch(startRecordEvent('hardwareError', {
-          action: 'ENABLE_MONEY_BOX_FAILED'
-        }));
+        dispatch(
+          startRecordEvent('hardwareError', {
+            action: 'ENABLE_MONEY_BOX_FAILED'
+          })
+        );
         dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
       } else {
         setTimeout(() => {
@@ -527,15 +539,17 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       //   dispatch(getCashRemaining());
       // }, 1000);
       setTimeout(() => {
-        dispatch(receivedCashRemaining({
-          action: 2,
-          result: 'success',
-          remain: {
-            baht1: 0,
-            baht5: 0,
-            baht10: 0,
-          },
-        }));
+        dispatch(
+          receivedCashRemaining({
+            action: 2,
+            result: 'success',
+            remain: {
+              baht1: 0,
+              baht5: 0,
+              baht10: 0
+            }
+          })
+        );
         if (MasterappSelector.verifyAppReady(getState().masterapp) === false) {
           dispatch(Actions.hardwareReady());
         }
@@ -554,121 +568,118 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
   }
 };
 
-const verifyIsBarcodeOrQrCodeInput = (inputType) => {
-  return _.includes(['BARCODE', 'QR_CODE'], inputType);
-};
+const verifyIsBarcodeOrQrCodeInput = inputType => _.includes(['BARCODE', 'QR_CODE'], inputType);
 
-const verifyIsLineQrcodeInput = (inputType) => {
-  return _.includes(['LINE_QR_CODE'], inputType);
-};
+const verifyIsLineQrcodeInput = inputType => _.includes(['LINE_QR_CODE'], inputType);
 // code is scannedCode
-const verifyIsLineQrcode = (scannedCode) => {
-  return scannedCode.indexOf('http') >= 0;
-};
+const verifyIsLineQrcode = scannedCode => scannedCode.indexOf('http') >= 0;
 
-const verifyIsBarcode = (scannedCode) => {
-  return /^\d+$/.test(scannedCode);
-};
+const verifyIsBarcode = scannedCode => /^\d+$/.test(scannedCode);
 
-const extractDiscountFromResponseData = (responseData) => {
-  return {
-    code: responseData.discountcode || 0,
-    value: responseData.discountprice || '',
-    expireDate: responseData.expiredate,
-  };
-};
+const extractDiscountFromResponseData = responseData => ({
+  code: responseData.discountcode || 0,
+  value: responseData.discountprice || '',
+  expireDate: responseData.expiredate
+});
 
-const verifyDiscountIsExist = (discount) => {
-  return discount.code !== '' && discount.value !== 0;
-}
+const verifyDiscountIsExist = discount => discount.code !== '' && discount.value !== 0;
 
-export const receivedScannedCode = (scannedCode) => {
-  return async (dispatch, getState) => {
-    const nextInputObject = OrderSelector.getEventNextInputObject(getState().order);
-    const nextInput = OrderSelector.getEventNextInput(getState().order);
-    const nextReward = OrderSelector.getEventNextReward(getState().order);
-    const eventId = OrderSelector.getEventId(getState().order);
-    console.log('receivedScannedCode', eventId, scannedCode, nextInput);
-    const online = await isOnline()
-    if (eventId) {
-      try {
-        if (verifyIsBarcodeOrQrCodeInput(nextInput) || (verifyIsLineQrcodeInput(nextInput) && nextInputObject.subType === 'discount')) {
-          const isBarcode = verifyIsBarcode(scannedCode);
+export const receivedScannedCode = scannedCode => async (dispatch, getState) => {
+  const nextInputObject = OrderSelector.getEventNextInputObject(getState().order);
+  const nextInput = OrderSelector.getEventNextInput(getState().order);
+  const nextReward = OrderSelector.getEventNextReward(getState().order);
+  const eventId = OrderSelector.getEventId(getState().order);
+  console.log('receivedScannedCode', eventId, scannedCode, nextInput);
+  const online = await isOnline();
+  if (eventId) {
+    try {
+      if (
+          verifyIsBarcodeOrQrCodeInput(nextInput) ||
+          (verifyIsLineQrcodeInput(nextInput) && nextInputObject.subType === 'discount')
+        ) {
+        const isBarcode = verifyIsBarcode(scannedCode);
+        const dataToVerify = {
+          eventId,
+          code: scannedCode,
+          discountType: isBarcode ? 'barcode' : 'qrcode'
+        };
+        dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
+        const verifyBarcodeOrQrcodeResponse = await verifyBarcodeOrQrcode(dataToVerify);
+        const responseData = extractResponseData(verifyBarcodeOrQrcodeResponse);
+        const discount = extractDiscountFromResponseData(responseData);
+        dispatch(hideLoading());
+        if (verifyDiscountIsExist(discount)) {
+          dispatch(updateEventReward(nextReward, discount));
+        }
+        dispatch(updateEventInput(nextInput, scannedCode));
+      } else if (verifyIsLineQrcodeInput) {
+        const isLineQrcode = verifyIsLineQrcode(scannedCode);
+        const exactLineId = _.last(_.split(scannedCode, '/'));
+        if (isLineQrcode) {
+          const barcodeOrQrcode = OrderSelector.getEventBarcodeOrQrcodeInput(getState().order);
           const dataToVerify = {
             eventId,
-            code: scannedCode,
-            discountType: isBarcode ? 'barcode' : 'qrcode'
+            code: exactLineId,
+            barcodeOrQrcode
           };
           dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
-          const verifyBarcodeOrQrcodeResponse = await verifyBarcodeOrQrcode(dataToVerify);
-          const responseData = extractResponseData(verifyBarcodeOrQrcodeResponse);
+          const verifyLineQrcodeResponse = await verifyLineQrcode(dataToVerify);
+          const responseData = extractResponseData(verifyLineQrcodeResponse);
           const discount = extractDiscountFromResponseData(responseData);
           dispatch(hideLoading());
           if (verifyDiscountIsExist(discount)) {
             dispatch(updateEventReward(nextReward, discount));
           }
-          dispatch(updateEventInput(nextInput, scannedCode));
-        } else if (verifyIsLineQrcodeInput) {
-          const isLineQrcode = verifyIsLineQrcode(scannedCode);
-          const exactLineId = _.last(_.split(scannedCode, '/'));
-          if (isLineQrcode) {
-            const barcodeOrQrcode = OrderSelector.getEventBarcodeOrQrcodeInput(getState().order);
-            const dataToVerify = {
-              eventId,
-              code: exactLineId,
-              barcodeOrQrcode,
-            };
-            dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
-            const verifyLineQrcodeResponse = await verifyLineQrcode(dataToVerify);
-            const responseData = extractResponseData(verifyLineQrcodeResponse);
-            const discount = extractDiscountFromResponseData(responseData);
-            dispatch(hideLoading());
-            if (verifyDiscountIsExist(discount)) {
-              dispatch(updateEventReward(nextReward, discount));
-            }
-            dispatch(updateEventInput(nextInput, exactLineId));
-          } else {
-            console.error(`${scannedCode} is not lineId`);
-          }
+          dispatch(updateEventInput(nextInput, exactLineId));
         } else {
-          console.error(`${scannedCode} is not barcode or qrcode or lineId`);
+          console.error(`${scannedCode} is not lineId`);
         }
-      } catch (error) {
-        dispatch(handleApiError(error));
+      } else {
+        console.error(`${scannedCode} is not barcode or qrcode or lineId`);
       }
+    } catch (error) {
+      dispatch(handleApiError(error));
     }
-    if (getState().router.location.pathname === '/salesman' || !online) {
+  }
+  if (getState().router.location.pathname === '/salesman' || !online) {
       // validate salesman
-      try {
-        dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
-        const serviceVerifySalesmanResponse = await serviceVerifySalesman(scannedCode);
-        const responseData = extractResponseData(serviceVerifySalesmanResponse);
-        dispatch(hideLoading());
-        dispatch(Actions.verifySalesmanPass({ salesman: responseData.SaleMan || '' }));
+    try {
+      dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
+      const serviceVerifySalesmanResponse = await serviceVerifySalesman(scannedCode);
+      const responseData = extractResponseData(serviceVerifySalesmanResponse);
+      dispatch(hideLoading());
+      dispatch(Actions.verifySalesmanPass({ salesman: responseData.SaleMan || '' }));
         // pass call api disable alarm
-        const client = MasterappSelector.getTcpClient(getState().masterapp);
-        client.send({
-          action: 0,
-          sensor: 'alarm',
-          msg: '0',
-        });
+      const client = MasterappSelector.getTcpClient(getState().masterapp);
+      client.send({
+        action: 0,
+        sensor: 'alarm',
+        msg: '0'
+      });
         // render under construction
-        dispatch(openAlertMessage(convertApplicationErrorToError({
-          title: 'รหัสพนักงานถูกต้อง',
-          th: 'กรุณาเปิดตู้เพื่อทำรายการต่อ',
-          en: '',
-        })));
-      } catch (error) {
+      dispatch(
+          openAlertMessage(
+            convertApplicationErrorToError({
+              title: 'รหัสพนักงานถูกต้อง',
+              th: 'กรุณาเปิดตู้เพื่อทำรายการต่อ',
+              en: ''
+            })
+          )
+        );
+    } catch (error) {
         // show error
-        dispatch(handleApiError(error));
-        dispatch(openAlertMessage(convertApplicationErrorToError({
-          title: `รหัสพนักงาน ${scannedCode} ไม่ถูกต้อง`,
-          th: 'กรุณาตรวจสอบใหม่อีกครั้ง',
-          en: '',
-        })));
-      }
+      dispatch(handleApiError(error));
+      dispatch(
+          openAlertMessage(
+            convertApplicationErrorToError({
+              title: `รหัสพนักงาน ${scannedCode} ไม่ถูกต้อง`,
+              th: 'กรุณาตรวจสอบใหม่อีกครั้ง',
+              en: ''
+            })
+          )
+        );
     }
-  };
+  }
 };
 
 /*
@@ -687,25 +698,21 @@ const data = {
   },
 };
 */
-export const openAlertMessage = (data) => {
-  return (dispatch) => {
-    dispatch(Actions.openAlertMessage(data));
-  };
+export const openAlertMessage = data => dispatch => {
+  dispatch(Actions.openAlertMessage(data));
 };
 
-export const closeAlertMessage = () => {
-  return (dispatch, getState) => {
-    const messageTitle = _.get(getState(), 'alertMessage.messages.title', '');
-    if (messageTitle === 'ขอบคุณที่ร่วมกิจกรรม') {
-      dispatch(changePage('/'));
-    }
-    dispatch(Actions.closeAlertMessage());
-  };
+export const closeAlertMessage = () => (dispatch, getState) => {
+  const messageTitle = _.get(getState(), 'alertMessage.messages.title', '');
+  if (messageTitle === 'ขอบคุณที่ร่วมกิจกรรม') {
+    dispatch(changePage('/'));
+  }
+  dispatch(Actions.closeAlertMessage());
 };
 
-export const handleApiError = (error) => {
-  console.log('[handleApiError]', error, _.get(error, 'messages', {}))
-  return (dispatch) => {
+export const handleApiError = error => {
+  console.log('[handleApiError]', error, _.get(error, 'messages', {}));
+  return dispatch => {
     dispatch(hideLoading());
     dispatch(Actions.openAlertMessage(error));
   };
@@ -799,12 +806,14 @@ export const productDrop = () => (dispatch, getState) => {
       setTimeout(() => {
         client.send({
           action: 1,
-          msg: targetRowColumn || '00', // row * col
+          msg: targetRowColumn || '00' // row * col
         });
-        dispatch(startRecordEvent('toHardWare', {
-          action: 'REQUEST_PRODUCT_DROP',
-          target: targetRowColumn
-        }));
+        dispatch(
+          startRecordEvent('toHardWare', {
+            action: 'REQUEST_PRODUCT_DROP',
+            target: targetRowColumn
+          })
+        );
         dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
       }, dropProductInterval * 1000);
     } else {
@@ -823,7 +832,7 @@ export const productFreeDrop = () => (dispatch, getState) => {
       const client = MasterappSelector.getTcpClient(getState().masterapp);
       client.send({
         action: 1,
-        msg: targetRowColumn, // row * col
+        msg: targetRowColumn // row * col
       });
       dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
     } else {
@@ -839,13 +848,11 @@ export const selectTopupProvider = (context, topupProvider) => dispatch => {
   dispatch(Actions.selectTopupProvider(topupProvider));
 };
 
-export const submitOrder = () => {
-  return (dispatch, getState) => {
-    return new Promise(async (resolve, reject) => {
+export const submitOrder = () => (dispatch, getState) => new Promise(async (resolve, reject) => {
       // ======================================================
       // Check has discount or not ?
       // ======================================================
-      try {
+  try {
         // const hasDiscount = OrderSelector.verifyOrderHasDiscount(getState().order);
         // if (hasDiscount) {
         //   const discounts = OrderSelector.getDiscounts(getState().order);
@@ -857,25 +864,21 @@ export const submitOrder = () => {
         //   });
         //   console.log('serviceUseDiscountCodeResponse:finish');
         // }
-        const order = OrderSelector.toSubmitOrder(getState().order);
-        const serviceSubmitOrderResponse = await serviceSubmitOrder(order);
-        console.log('serviceSubmitOrderResponse', serviceSubmitOrderResponse);
+    const order = OrderSelector.toSubmitOrder(getState().order);
+    const serviceSubmitOrderResponse = await serviceSubmitOrder(order);
+    console.log('serviceSubmitOrderResponse', serviceSubmitOrderResponse);
         // ======================================================
         // REGET PRODUCTS & EVENT
         // ======================================================
-        await dispatch(getMasterProductAndEventAndPromotions());
-        resolve(serviceSubmitOrderResponse);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  };
-};
+    await dispatch(getMasterProductAndEventAndPromotions());
+    resolve(serviceSubmitOrderResponse);
+  } catch (error) {
+    reject(error);
+  }
+});
 
-const endProcess = () => {
-  return (dispatch) => {
-    dispatch(productDropProcessCompletely());
-  };
+const endProcess = () => dispatch => {
+  dispatch(productDropProcessCompletely());
 };
 
 // ======================================================
@@ -912,11 +915,11 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
         const discountPrice = _.get(discount, 'value', 0);
         const machineId = MasterappSelector.getMachineId(getState().masterapp);
         const serviceTopupMobileResponse = await serviceTopupMobile(
-            OrderSelector.getMobileTopupToService(getState().order),
-            discountCode,
-            discountPrice,
-            machineId
-          );
+          OrderSelector.getMobileTopupToService(getState().order),
+          discountCode,
+          discountPrice,
+          machineId
+        );
         console.log('serviceTopupMobile', serviceTopupMobileResponse);
         dispatch(endProcess());
       } catch (error) {
@@ -927,24 +930,22 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
   }
 };
 
-const runFlowCashChangeSuccess = () => {
-  return (dispatch, getState) => {
-    dispatch(Actions.setCashChangeAmount(0));
-    dispatch(getCashRemaining());
-    if (getState().payment.isFinish) {
-      setTimeout(() => {
-        dispatch(backToHome());
-      }, 3000);
-    }
-  };
+const runFlowCashChangeSuccess = () => (dispatch, getState) => {
+  dispatch(Actions.setCashChangeAmount(0));
+  dispatch(getCashRemaining());
+  if (getState().payment.isFinish) {
+    setTimeout(() => {
+      dispatch(backToHome());
+    }, 3000);
+  }
 };
 
 const runFlowProductDropSuccess = () => async (dispatch, getState) => {
   const droppedProduct = MasterappSelector.getDroppingProduct(getState().masterapp);
   dispatch(productDropSuccess(droppedProduct));
-    // ======================================================
-    // check hasPromotionSet ?
-    // ======================================================
+  // ======================================================
+  // check hasPromotionSet ?
+  // ======================================================
   if (OrderSelector.verifyAllOrderDropped(getState().order)) {
     const activityFreeRule = MasterappSelector.getActivityFreeRule(getState().masterapp);
     const serviceGetSumOrderAmountResponse = await serviceGetSumOrderAmount();
@@ -953,14 +954,22 @@ const runFlowProductDropSuccess = () => async (dispatch, getState) => {
     console.log('CheckDropFreeProduct: activityFreeRule', activityFreeRule);
     console.log('CheckDropFreeProduct: sumOrderAmount', sumOrderAmount);
     console.log('CheckDropFreeProduct: isOrderHasFreeProduct', isOrderHasFreeProduct);
-    console.log('CheckDropFreeProduct: verifyThisOrderShouldDropFreeProduct', verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule));
-    if (verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule) && !isOrderHasFreeProduct) {
+    console.log(
+      'CheckDropFreeProduct: verifyThisOrderShouldDropFreeProduct',
+      verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule)
+    );
+    if (
+      verifyThisOrderShouldDropFreeProduct(sumOrderAmount, activityFreeRule) &&
+      !isOrderHasFreeProduct
+    ) {
       const freeProduct = MasterdataSelector.getActivityFreeProduct(getState().masterdata);
       if (freeProduct) {
         // add freeProduct
         console.log('selectProduct freeProduct', freeProduct);
         dispatch(Actions.selectProduct(freeProduct));
-        const freeProductDropTargetRowColumn = OrderSelector.getFreeDropProductTargetRowColumn(getState().order);
+        const freeProductDropTargetRowColumn = OrderSelector.getFreeDropProductTargetRowColumn(
+          getState().order
+        );
         if (freeProductDropTargetRowColumn) {
           dispatch(productFreeDrop());
         } else {
@@ -980,57 +989,61 @@ const runFlowProductDropSuccess = () => async (dispatch, getState) => {
   }
 };
 
-export const setLimitBanknote = (limitAmount) => {
-  return (dispatch, getState) => {
-    setTimeout(() => {
-      const client = MasterappSelector.getTcpClient(getState().masterapp);
-      client.send({
-        action: 2,
-        msg: `${limitAmount}`,
-        mode: 'limit',
-      });
-      dispatch(Actions.setLimitBanknote(limitAmount));
-    }, 500);
-  };
+export const setLimitBanknote = limitAmount => (dispatch, getState) => {
+  setTimeout(() => {
+    const client = MasterappSelector.getTcpClient(getState().masterapp);
+    client.send({
+      action: 2,
+      msg: `${limitAmount}`,
+      mode: 'limit'
+    });
+    dispatch(Actions.setLimitBanknote(limitAmount));
+  }, 500);
 };
 
-export const receivedCashRemaining = (data) => {
-  return (dispatch, getState) => {
-    dispatch(hideLoading());
+export const receivedCashRemaining = data => (dispatch, getState) => {
+  dispatch(hideLoading());
     // ======================================================
     // Check < 100 baht
     // ======================================================
-    const thresHold = 100;
-    const isLessThanThreshold = verifyLessThanThreshold(data.remain, thresHold);
-    const canChangeCash = isLessThanThreshold === false;
-    dispatch(Actions.setCanChangeCash(canChangeCash));
+  const thresHold = 100;
+  const isLessThanThreshold = verifyLessThanThreshold(data.remain, thresHold);
+  const canChangeCash = isLessThanThreshold === false;
+  dispatch(Actions.setCanChangeCash(canChangeCash));
     // ======================================================
     // Check should disable bank note
     // ======================================================
-    const cashRemainingAmount = getCashRemainingAmount(data.remain);
-    const { oneBahtCount } = getCashRemaining(data.remain);
-    const currentLimitBanknote = MasterappSelector.getLimitBanknote(getState().masterapp);
-    console.log('get', cashRemainingAmount, oneBahtCount, currentLimitBanknote);
-    if (oneBahtCount < 5) {
-      dispatch(setLimitBanknote(20));
-    } else if (cashRemainingAmount > 100 && currentLimitBanknote !== 500) {
+  const cashRemainingAmount = getCashRemainingAmount(data.remain);
+  const { oneBahtCount } = getCashRemaining(data.remain);
+  const currentLimitBanknote = MasterappSelector.getLimitBanknote(getState().masterapp);
+  console.log('get', cashRemainingAmount, oneBahtCount, currentLimitBanknote);
+  if (oneBahtCount < 5) {
+    dispatch(setLimitBanknote(20));
+  } else if (cashRemainingAmount > 100 && currentLimitBanknote !== 500) {
       // disable 500
-      dispatch(setLimitBanknote(500));
-    } else if (cashRemainingAmount <= 100 && cashRemainingAmount > 50 && currentLimitBanknote !== 100) {
+    dispatch(setLimitBanknote(500));
+  } else if (
+      cashRemainingAmount <= 100 &&
+      cashRemainingAmount > 50 &&
+      currentLimitBanknote !== 100
+    ) {
       // disable 100
-      dispatch(setLimitBanknote(100));
-    } else if (cashRemainingAmount <= 50 && cashRemainingAmount > 20 && currentLimitBanknote !== 50) {
+    dispatch(setLimitBanknote(100));
+  } else if (
+      cashRemainingAmount <= 50 &&
+      cashRemainingAmount > 20 &&
+      currentLimitBanknote !== 50
+    ) {
       // disable 50
-      dispatch(setLimitBanknote(50));
-    } else if (cashRemainingAmount < 20 && currentLimitBanknote !== 20) {
+    dispatch(setLimitBanknote(50));
+  } else if (cashRemainingAmount < 20 && currentLimitBanknote !== 20) {
       // disable 20
-      dispatch(setLimitBanknote(20));
-    } else {
+    dispatch(setLimitBanknote(20));
+  } else {
       // do nothing
-      console.log('Do not limit any banknotes');
-    }
-    dispatch(Actions.receivedCashRemaining(data));
-  };
+    console.log('Do not limit any banknotes');
+  }
+  dispatch(Actions.receivedCashRemaining(data));
 };
 
 export const productDropProcessCompletely = () => async (dispatch, getState) => {
@@ -1048,7 +1061,16 @@ export const productDropProcessCompletely = () => async (dispatch, getState) => 
   const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
   const cashChangeAmount = currentCash - grandTotalAmount;
   const isOrderHasProduct = OrderSelector.verifyOrderHasProduct(getState().order);
-  console.log('productDropProcessCompletely: currentCash', currentCash, 'grandTotalAmount', grandTotalAmount, 'cashChangeAmount', cashChangeAmount, 'isOrderHasProduct', isOrderHasProduct);
+  console.log(
+    'productDropProcessCompletely: currentCash',
+    currentCash,
+    'grandTotalAmount',
+    grandTotalAmount,
+    'cashChangeAmount',
+    cashChangeAmount,
+    'isOrderHasProduct',
+    isOrderHasProduct
+  );
   try {
     if (isOrderHasProduct) {
       const submitOrderResponse = await dispatch(submitOrder());
@@ -1080,9 +1102,9 @@ export const clearPaymentAmount = () => dispatch => {
 
 export const sendCashChangeToServer = () => (dispatch, getState) => {
   const cashChangeAmount = PaymentSelector.getCashChangeAmount(getState().payment);
-    // ======================================================
-    // if cashReturn > 0 then call api to return cash
-    // ======================================================
+  // ======================================================
+  // if cashReturn > 0 then call api to return cash
+  // ======================================================
   if (cashChangeAmount > 0) {
     console.log('=======================================');
     console.log('sendCashChangeToServer:ระบบสั่งทอนเงินจำนวน =', cashChangeAmount);
@@ -1091,12 +1113,14 @@ export const sendCashChangeToServer = () => (dispatch, getState) => {
     client.send({
       action: 2,
       msg: `${cashChangeAmount}`,
-      mode: 'coin',
+      mode: 'coin'
     });
-    dispatch(startRecordEvent('toHardWare', {
-      action: 'REQUEST_CHANGE_CASH',
-      amount: cashChangeAmount
-    }));
+    dispatch(
+      startRecordEvent('toHardWare', {
+        action: 'REQUEST_CHANGE_CASH',
+        amount: cashChangeAmount
+      })
+    );
   }
   dispatch(clearPaymentAmount());
 };
@@ -1115,36 +1139,36 @@ export const sendCashChangeToServer = () => (dispatch, getState) => {
 export const cashChangeEqualToCurrentCashAmountMinusDroppedProduct = () => (dispatch, getState) => {
   const cashChangePromotionError = RootSelector.getCashChangePromotionSetError(getState());
   dispatch(Actions.setCashChangeAmount(cashChangePromotionError));
-    // ======================================================
-    // Disable Moneybox before sendCashChange
-    // ======================================================
+  // ======================================================
+  // Disable Moneybox before sendCashChange
+  // ======================================================
   dispatch(disableMoneyBox());
 };
 
 export const cashChangeEqualToCurrentCashAmount = () => (dispatch, getState) => {
   const currentAmount = PaymentSelector.getCurrentAmount(getState().payment);
   dispatch(Actions.setCashChangeAmount(currentAmount));
-    // ======================================================
-    // Disable Moneybox before sendCashChange
-    // ======================================================
+  // ======================================================
+  // Disable Moneybox before sendCashChange
+  // ======================================================
   dispatch(disableMoneyBox());
 };
 
 export const cashChange = () => (dispatch, getState) => {
   const currentCash = RootSelector.getCashChangeAmount(getState());
   dispatch(Actions.setCashChangeAmount(currentCash));
-    // ======================================================
-    // Disable Moneybox before sendCashChange
-    // ======================================================
+  // ======================================================
+  // Disable Moneybox before sendCashChange
+  // ======================================================
   dispatch(disableMoneyBox());
 };
 
 export const returnAllInsertCash = () => (dispatch, getState) => {
   const currentCash = RootSelector.getCashChangeFromCurrentCash(getState());
   dispatch(Actions.setCashChangeAmount(currentCash));
-    // ======================================================
-    // Disable Moneybox before sendCashChange
-    // ======================================================
+  // ======================================================
+  // Disable Moneybox before sendCashChange
+  // ======================================================
   dispatch(disableMoneyBox());
 };
 
@@ -1152,7 +1176,7 @@ export const getCashRemaining = () => (dispatch, getState) => {
   const client = MasterappSelector.getTcpClient(getState().masterapp);
   client.send({
     action: 2,
-    mode: 'remain',
+    mode: 'remain'
   });
 };
 
@@ -1164,7 +1188,7 @@ export const insertCoin = value => (dispatch, getState) => {
   client.setFree();
   client.send({
     action: 999,
-    msg: value,
+    msg: value
   });
 };
 export const scanCode = value => (dispatch, getState) => {
@@ -1172,7 +1196,7 @@ export const scanCode = value => (dispatch, getState) => {
   client.setFree();
   client.send({
     action: 998,
-    msg: value,
+    msg: value
   });
 };
 
@@ -1182,7 +1206,7 @@ export const confirmWarningSystemWillNotChangeCash = () => dispatch => {
 
 export const cancelPayment = () => dispatch => {
   dispatch(backToHome());
-    // dispatch(cashChangeEqualToGrandTotalAmount()); // ปล่อยให้มันกินตังค์ไปก่อน
+  // dispatch(cashChangeEqualToGrandTotalAmount()); // ปล่อยให้มันกินตังค์ไปก่อน
   dispatch(hideAllModal());
 };
 
@@ -1216,7 +1240,7 @@ export const resetTAIKO = () => (dispatch, getState) => {
   client.send({
     action: 2,
     msg: '01',
-    mode: 'bill',
+    mode: 'bill'
   });
 };
 
@@ -1226,7 +1250,7 @@ export const enableMoneyBox = () => (dispatch, getState) => {
   client.send({
     action: 2,
     msg: '020',
-    mode: 'both',
+    mode: 'both'
   });
 };
 
@@ -1235,7 +1259,7 @@ export const disableMoneyBox = () => (dispatch, getState) => {
   client.send({
     action: 2,
     msg: '021',
-    mode: 'both',
+    mode: 'both'
   });
 };
 
@@ -1243,14 +1267,12 @@ export const clearMobileTopupMSISDN = () => dispatch => {
   dispatch(Actions.clearMobileTopupMSISDN());
 };
 
-export const selectEvent = (context, item) => {
-  return (dispatch, getState) => {
-    dispatch(changePage(context));
-    dispatch(Actions.selectEvent(item));
-  };
+export const selectEvent = (context, item) => (dispatch, getState) => {
+  dispatch(changePage(context));
+  dispatch(Actions.selectEvent(item));
 };
 
-export const verifyDiscountCode = (code) => {
+export const verifyDiscountCode = code => {
   console.log('verifyDiscountCode', code);
   return async (dispatch, getState) => {
     // ======================================================
@@ -1261,29 +1283,41 @@ export const verifyDiscountCode = (code) => {
     const isDuplicatedDiscount = verifyDuplicatedDiscount(discounts, code);
     if (isOrderHasOneDiscount) {
       dispatch(hideLoading());
-      dispatch(openAlertMessage(convertApplicationErrorToError({
-        title: `ไม่สามารถใช้รหัสส่วนลด ${code} ได้`,
-        th: 'เนื่องจากระบบไม่อนุญาตให้ใช้ส่วนลดมากกว่า 1 อัน',
-        en: '',
-      })));
+      dispatch(
+        openAlertMessage(
+          convertApplicationErrorToError({
+            title: `ไม่สามารถใช้รหัสส่วนลด ${code} ได้`,
+            th: 'เนื่องจากระบบไม่อนุญาตให้ใช้ส่วนลดมากกว่า 1 อัน',
+            en: ''
+          })
+        )
+      );
     } else if (isDuplicatedDiscount) {
       dispatch(hideLoading());
-      dispatch(openAlertMessage(convertApplicationErrorToError({
-        title: `ไม่สามารถใช้รหัสส่วนลด ${code} ได้`,
-        th: 'เนื่องจากรหัสส่วนลดถูกใช้ไปแล้ว',
-        en: '',
-      })));
+      dispatch(
+        openAlertMessage(
+          convertApplicationErrorToError({
+            title: `ไม่สามารถใช้รหัสส่วนลด ${code} ได้`,
+            th: 'เนื่องจากรหัสส่วนลดถูกใช้ไปแล้ว',
+            en: ''
+          })
+        )
+      );
     } else {
       try {
         const discountType = OrderSelector.getOrderDiscountType(getState().order);
         const poId = OrderSelector.getOrderPoId(getState().order);
         dispatch(showLoading('ระบบกำลังตรวจสอบรหัสส่วนลด'));
-        const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(code, poId, discountType);
+        const verifyDiscountCodeResponse = await serviceVerifyDiscountCode(
+          code,
+          poId,
+          discountType
+        );
         dispatch(hideLoading());
         console.log('verifyDiscountCodeResponse', verifyDiscountCodeResponse);
         const discountItem = {
           ...extractDiscountFromResponseData(verifyDiscountCodeResponse),
-          discountType,
+          discountType
         };
         dispatch(Actions.addDiscount(discountItem));
       } catch (error) {
@@ -1293,389 +1327,332 @@ export const verifyDiscountCode = (code) => {
   };
 };
 
-export const resetFooterAds = () => {
-  return (dispatch) => {
-    dispatch(Actions.resetFooterAds());
-  };
+export const resetFooterAds = () => dispatch => {
+  dispatch(Actions.resetFooterAds());
 };
 
-export const clearInstantlyDiscount = () => {
-  return (dispatch) => {
-    dispatch(Actions.clearInstantlyDiscount());
-  };
-}
-
-export const initMobileTopupProviderSelectionPage = () => {
-  return (dispatch) => {
-    dispatch(clearMobileTopupMSISDN());
-    dispatch(resetFooterAds());
-  };
+export const clearInstantlyDiscount = () => dispatch => {
+  dispatch(Actions.clearInstantlyDiscount());
 };
 
-export const initHomePage = () => {
-  return (dispatch, getState) => {
+export const initMobileTopupProviderSelectionPage = () => dispatch => {
+  dispatch(clearMobileTopupMSISDN());
+  dispatch(resetFooterAds());
+};
+
+export const initHomePage = () => (dispatch, getState) => {
     // dispatch(clearInstantlyDiscount()); // right now order is cleared.
-    dispatch(resetFooterAds());
-    dispatch(clearOrder());
+  dispatch(resetFooterAds());
+  dispatch(clearOrder());
     // const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
     // if (moneyBoxActive) {
     //   dispatch(disableMoneyBox());
     // }
-  };
 };
 
-export const processingReturningCash = () => {
-  return (dispatch, getState) => {
-    const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
+export const processingReturningCash = () => (dispatch, getState) => {
+  const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
     // const cashChangeAmountMoreThanZero = PaymentSelector.verifyCashChangeAmountMoreThanZero(getState().payment);
-    if (moneyBoxActive) {
-      dispatch(showLoading('ระบบกำลังดำเนินการ โปรดรอสักครู่'));
-      setTimeout(() => {
-        if (MasterappSelector.verifyIsLoading(getState().masterapp)) {
-          dispatch(hideLoading());
-        }
-      }, 5000);
-    }
+  if (moneyBoxActive) {
+    dispatch(showLoading('ระบบกำลังดำเนินการ โปรดรอสักครู่'));
+    setTimeout(() => {
+      if (MasterappSelector.verifyIsLoading(getState().masterapp)) {
+        dispatch(hideLoading());
+      }
+    }, 5000);
   }
-}
+};
 
-export const enableMoneyBoxWhenInitPage = () => {
-  return (dispatch, getState) => {
-    const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
+export const enableMoneyBoxWhenInitPage = () => (dispatch, getState) => {
+  const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
     // if mount with moneyBoxActive not active enable money box
-    if (!moneyBoxActive) {
-      dispatch(enableMoneyBox());
-    } else {
-      dispatch(showLoading('ระบบกำลังดำเนินการ'));
-      setTimeout(() => {
-        if (MasterappSelector.verifyIsLoading(getState().masterapp)) {
-          dispatch(hideLoading());
-        }
-      }, 5000);
-    }
-  };
+  if (!moneyBoxActive) {
+    dispatch(enableMoneyBox());
+  } else {
+    dispatch(showLoading('ระบบกำลังดำเนินการ'));
+    setTimeout(() => {
+      if (MasterappSelector.verifyIsLoading(getState().masterapp)) {
+        dispatch(hideLoading());
+      }
+    }, 5000);
+  }
 };
 
-export const willReceivePropsEnableMoneyBoxWhenInitPage = (props, nextProps) => {
-  return (dispatch, getState) => {
-    console.log('willReceivePropsEnableMoneyBoxWhenInitPage', props.moneyBoxActive, !nextProps.moneyBoxActive);
-    if (props.moneyBoxActive && !nextProps.moneyBoxActive) {
-      dispatch(hideLoading());
-      dispatch(enableMoneyBoxWhenInitPage());
-    }
-  };
+export const willReceivePropsEnableMoneyBoxWhenInitPage = (props, nextProps) => (dispatch, getState) => {
+  console.log(
+      'willReceivePropsEnableMoneyBoxWhenInitPage',
+      props.moneyBoxActive,
+      !nextProps.moneyBoxActive
+    );
+  if (props.moneyBoxActive && !nextProps.moneyBoxActive) {
+    dispatch(hideLoading());
+    dispatch(enableMoneyBoxWhenInitPage());
+  }
 };
 
-export const warningSystemWillNotChangeCash = () => {
-  return (dispatch, getState) => {
-    const canChangeCash = MasterappSelector.verifyCanChangeCash(getState().masterapp);
-    if (!canChangeCash) {
-      dispatch(Actions.showModal('warningSystemWillNotChangeCash'));
-      setTimeout(() => {
-        dispatch(confirmWarningSystemWillNotChangeCash());
-      }, HIDE_POPUP_TIME);
-    }
-  };
+export const warningSystemWillNotChangeCash = () => (dispatch, getState) => {
+  const canChangeCash = MasterappSelector.verifyCanChangeCash(getState().masterapp);
+  if (!canChangeCash) {
+    dispatch(Actions.showModal('warningSystemWillNotChangeCash'));
+    setTimeout(() => {
+      dispatch(confirmWarningSystemWillNotChangeCash());
+    }, HIDE_POPUP_TIME);
+  }
 };
 
-export const initPageThatHaveDiscountInput = () => {
-  return (dispatch) => {
-    dispatch(processingReturningCash());
-    dispatch(warningSystemWillNotChangeCash());
-  };
+export const initPageThatHaveDiscountInput = () => dispatch => {
+  dispatch(processingReturningCash());
+  dispatch(warningSystemWillNotChangeCash());
 };
 
-export const initSingleProductPage = () => {
-  return (dispatch) => {
-    dispatch(initPageThatHaveDiscountInput());
-  };
+export const initSingleProductPage = () => dispatch => {
+  dispatch(initPageThatHaveDiscountInput());
 };
 
-export const initPromotionSetPage = () => {
-  return (dispatch) => {
-    dispatch(initPageThatHaveDiscountInput());
-  };
+export const initPromotionSetPage = () => dispatch => {
+  dispatch(initPageThatHaveDiscountInput());
 };
 
-export const initMobileTopupPage = () => {
-  return (dispatch) => {
-    dispatch(initPageThatHaveDiscountInput());
-  };
+export const initMobileTopupPage = () => dispatch => {
+  dispatch(initPageThatHaveDiscountInput());
 };
 
-export const initPaymentPage = () => {
-  return (dispatch, getState) => {
-    dispatch(runFlowCashInserted());
-    const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
+export const initPaymentPage = () => (dispatch, getState) => {
+  dispatch(runFlowCashInserted());
+  const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
     // if mount with moneyBoxActive not active enable money box
-    if (!moneyBoxActive) {
-      dispatch(enableMoneyBox());
-    }
-  };
+  if (!moneyBoxActive) {
+    dispatch(enableMoneyBox());
+  }
 };
 
 // ======================================================
 // EVENTS
 // ======================================================
-export const submitPlayEvent = () => {
-  return (dispatch, getState) => {
-    const eventWatches = OrderSelector.getEventWatches(getState().order);
-    console.log('submitPlayEvent', eventWatches);
-    if (_.size(eventWatches) > 0) {
-      dispatch(changePage('/event/ads'));
-    } else {
-      dispatch(eventInitGetReward());
-    }
-  };
+export const submitPlayEvent = () => (dispatch, getState) => {
+  const eventWatches = OrderSelector.getEventWatches(getState().order);
+  console.log('submitPlayEvent', eventWatches);
+  if (_.size(eventWatches) > 0) {
+    dispatch(changePage('/event/ads'));
+  } else {
+    dispatch(eventInitGetReward());
+  }
 };
 
-export const eventInitGetReward = () => {
-  return (dispatch, getState) => {
-    const selectedEvent = OrderSelector.getSelectedEvent(getState().order);
-    const shouldSendReward = OrderSelector.verifyEventShouldSendReward(getState().order);
-    const reward = OrderSelector.getEventNextReward(getState().order);
-    console.log('eventInitGetReward', selectedEvent, shouldSendReward, reward);
-    if (shouldSendReward) {
-      dispatch(eventGetReward());
-    } else if (reward) {
-      if (reward.channel === 'VENDING_MACHINE_NOW') {
+export const eventInitGetReward = () => (dispatch, getState) => {
+  const selectedEvent = OrderSelector.getSelectedEvent(getState().order);
+  const shouldSendReward = OrderSelector.verifyEventShouldSendReward(getState().order);
+  const reward = OrderSelector.getEventNextReward(getState().order);
+  console.log('eventInitGetReward', selectedEvent, shouldSendReward, reward);
+  if (shouldSendReward) {
+    dispatch(eventGetReward());
+  } else if (reward) {
+    if (reward.channel === 'VENDING_MACHINE_NOW') {
         // add discount
-        const discountItem = {
-          code: reward.code,
-          value: reward.value,
-          instantly: true,
-        };
-        dispatch(Actions.addDiscount(discountItem));
+      const discountItem = {
+        code: reward.code,
+        value: reward.value,
+        instantly: true
+      };
+      dispatch(Actions.addDiscount(discountItem));
         // dispatch(Actions.setFlagUseDiscountInstantly(true));
-        if (reward.name === 'topup') {
-          dispatch(changePage('/topup'));
-        } else if (reward.name === 'product') {
-          dispatch(selectProduct('/product/single', selectedEvent.product, 'singleProduct'));
-        }
-      } else if (reward.channel === 'VENDING_MACHINE_CODE') {
-        const hasExpireDate = reward.expireDate;
-        const extraMessage = hasExpireDate ? `(ใช้ได้ก่อนวันที่ ${reward.expireDate})` : '';
-        const message = {
-          title: 'ขอบคุณที่ร่วมกิจกรรม',
-          th: `รหัสส่วนลด คือ ${reward.code} มูลค่า ${reward.value} บาท ${extraMessage}`,
-          en: '',
-        };
-        dispatch(openAlertMessage(convertApplicationErrorToError(message)));
+      if (reward.name === 'topup') {
+        dispatch(changePage('/topup'));
+      } else if (reward.name === 'product') {
+        dispatch(selectProduct('/product/single', selectedEvent.product, 'singleProduct'));
       }
-    } else {
-      console.log('NO_REWARD');
+    } else if (reward.channel === 'VENDING_MACHINE_CODE') {
+      const hasExpireDate = reward.expireDate;
+      const extraMessage = hasExpireDate ? `(ใช้ได้ก่อนวันที่ ${reward.expireDate})` : '';
+      const message = {
+        title: 'ขอบคุณที่ร่วมกิจกรรม',
+        th: `รหัสส่วนลด คือ ${reward.code} มูลค่า ${reward.value} บาท ${extraMessage}`,
+        en: ''
+      };
+      dispatch(openAlertMessage(convertApplicationErrorToError(message)));
     }
-  };
+  } else {
+    console.log('NO_REWARD');
+  }
 };
 
-export const updateEventInput = (inputName, inputValue) => {
-  return (dispatch) => {
-    dispatch(Actions.updateEventInput(inputName, inputValue));
-  };
+export const updateEventInput = (inputName, inputValue) => dispatch => {
+  dispatch(Actions.updateEventInput(inputName, inputValue));
 };
 
-export const updateEventReward = (reward, discount) => {
-  return (dispatch) => {
-    dispatch(Actions.updateEventReward(reward, discount));
-  };
+export const updateEventReward = (reward, discount) => dispatch => {
+  dispatch(Actions.updateEventReward(reward, discount));
 };
 
-export const eventGetReward = () => {
-  return async (dispatch, getState) => {
-    const eventId = OrderSelector.getEventId(getState().order);
-    const eventRewards = OrderSelector.getEventRewards(getState().order);
-    const eventInputs = OrderSelector.getEventInputs(getState().order);
-    try {
-      _.forEach(eventRewards, async (reward) => {
+export const eventGetReward = () => async (dispatch, getState) => {
+  const eventId = OrderSelector.getEventId(getState().order);
+  const eventRewards = OrderSelector.getEventRewards(getState().order);
+  const eventInputs = OrderSelector.getEventInputs(getState().order);
+  try {
+    _.forEach(eventRewards, async reward => {
         // ======================================================
         // Check should get reward
         // ======================================================
-        if (_.includes(['SMS', 'EMAIL'], reward.channel.toUpperCase())) {
-          console.log('eventGetReward', reward);
-          const channel = reward.channel;
-          const eventInput = getEventInputByChannel(eventInputs, channel);
-          const rewardToServiceItem = {
-            eventId,
-            discountType: reward.name,
-            amount: reward.value,
-            channel: reward.channel,
-            value: eventInput.value
-          };
-          try {
+      if (_.includes(['SMS', 'EMAIL'], reward.channel.toUpperCase())) {
+        console.log('eventGetReward', reward);
+        const channel = reward.channel;
+        const eventInput = getEventInputByChannel(eventInputs, channel);
+        const rewardToServiceItem = {
+          eventId,
+          discountType: reward.name,
+          amount: reward.value,
+          channel: reward.channel,
+          value: eventInput.value
+        };
+        try {
             // dispatch(showLoading('กำลังส่งรหัสส่วนลด'));
-            const eventProduct = OrderSelector.getEventProduct(getState().order);
-            const serviceGetEventRewardResponse = await serviceGetEventReward(rewardToServiceItem, eventProduct.id);
+          const eventProduct = OrderSelector.getEventProduct(getState().order);
+          const serviceGetEventRewardResponse = await serviceGetEventReward(
+              rewardToServiceItem,
+              eventProduct.id
+            );
             // dispatch(hideLoading());
-            console.log('serviceGetEventRewardResponse', serviceGetEventRewardResponse);
-            dispatch({
-              type: 'EVENT_SENT_REWARD',
-              rewardToServiceItem
-            });
-            let message;
-            if (channel === 'SMS') {
-              message = {
-                title: 'ขอบคุณที่ร่วมกิจกรรม',
-                th: `ตรวจสอบรหัสส่วนลดได้ที่ หมายเลข ${eventInput.value}`,
-                en: '',
-              };
-            } else if (channel === 'EMAIL') {
-              message = {
-                title: 'ขอบคุณที่ร่วมกิจกรรม',
-                th: `ตรวจสอบรหัสส่วนลดได้ที่ อีเมล ${eventInput.value}`,
-                en: '',
-              };
-            }
-            dispatch(openAlertMessage(convertApplicationErrorToError(message)));
-            dispatch(backToHome());
-          } catch (error) {
-            console.error('error', error);
-            if (error.name !== 'FetchError') {
-              dispatch(handleApiError(error));
-            } else {
-              dispatch(hideLoading());
-            }
-            dispatch(backToHome());
+          console.log('serviceGetEventRewardResponse', serviceGetEventRewardResponse);
+          dispatch({
+            type: 'EVENT_SENT_REWARD',
+            rewardToServiceItem
+          });
+          let message;
+          if (channel === 'SMS') {
+            message = {
+              title: 'ขอบคุณที่ร่วมกิจกรรม',
+              th: `ตรวจสอบรหัสส่วนลดได้ที่ หมายเลข ${eventInput.value}`,
+              en: ''
+            };
+          } else if (channel === 'EMAIL') {
+            message = {
+              title: 'ขอบคุณที่ร่วมกิจกรรม',
+              th: `ตรวจสอบรหัสส่วนลดได้ที่ อีเมล ${eventInput.value}`,
+              en: ''
+            };
           }
+          dispatch(openAlertMessage(convertApplicationErrorToError(message)));
+          dispatch(backToHome());
+        } catch (error) {
+          console.error('error', error);
+          if (error.name !== 'FetchError') {
+            dispatch(handleApiError(error));
+          } else {
+            dispatch(hideLoading());
+          }
+          dispatch(backToHome());
         }
-      });
-    } catch (error) {
-      dispatch(openAlertMessage(error));
-    }
-  };
+      }
+    });
+  } catch (error) {
+    dispatch(openAlertMessage(error));
+  }
 };
 
-export const eventUseDiscountRewardInstantly = () => {
-  return (dispatch, getState) => {
-    const eventRewardInstantly = OrderSelector.getEventRewardInstantly(getState().order);
+export const eventUseDiscountRewardInstantly = () => (dispatch, getState) => {
+  const eventRewardInstantly = OrderSelector.getEventRewardInstantly(getState().order);
     // ======================================================
     // ADD DISCOUNT
     // ======================================================
-    const discountItem = {
-      code: eventRewardInstantly.code,
-      value: eventRewardInstantly.value
-    };
-    dispatch(Actions.addDiscount(discountItem));
-    dispatch(changePage('/product/single'));
+  const discountItem = {
+    code: eventRewardInstantly.code,
+    value: eventRewardInstantly.value
   };
+  dispatch(Actions.addDiscount(discountItem));
+  dispatch(changePage('/product/single'));
 };
 
-export const eventUseMobileTopupRewardInstantly = () => {
-  return (dispatch, getState) => {
-    const eventRewardInstantly = OrderSelector.getEventRewardInstantly(getState().order);
+export const eventUseMobileTopupRewardInstantly = () => (dispatch, getState) => {
+  const eventRewardInstantly = OrderSelector.getEventRewardInstantly(getState().order);
     // ======================================================
     // ADD DISCOUNT
     // ======================================================
-    const discountItem = {
-      code: eventRewardInstantly.code,
-      value: eventRewardInstantly.value
-    };
-    dispatch(Actions.addDiscount(discountItem));
-    dispatch(changePage('/topup'));
+  const discountItem = {
+    code: eventRewardInstantly.code,
+    value: eventRewardInstantly.value
   };
+  dispatch(Actions.addDiscount(discountItem));
+  dispatch(changePage('/topup'));
 };
 
-export const eventUseProductRewardInstantly = () => {
-  return (dispatch, getState) => {
+export const eventUseProductRewardInstantly = () => (dispatch, getState) => {
     // 1) SELECT PRODUCT
-    const rewardProduct = OrderSelector.getEventProduct(getState().order);
-    dispatch(Actions.selectProduct(rewardProduct));
+  const rewardProduct = OrderSelector.getEventProduct(getState().order);
+  dispatch(Actions.selectProduct(rewardProduct));
     // 2) DROP PRODUCT
-    dispatch(productDrop());
-  };
+  dispatch(productDrop());
 };
 
-export const eventUseRewardInstantly = () => {
-  return async (dispatch, getState) => {
-    const eventRewardInstantly = OrderSelector.getEventRewardInstantly(getState().order);
-    if (eventRewardInstantly) {
+export const eventUseRewardInstantly = () => async (dispatch, getState) => {
+  const eventRewardInstantly = OrderSelector.getEventRewardInstantly(getState().order);
+  if (eventRewardInstantly) {
       // ======================================================
       // Check reward type
       // ======================================================
-      const rewardType = eventRewardInstantly.name;
-      switch (rewardType) {
-        case 'DISCOUNT':
-          dispatch(eventUseDiscountRewardInstantly());
-          break;
-        case 'MOBILE_TOPUP':
-          dispatch(eventUseMobileTopupRewardInstantly());
-          break;
-        case 'PRODUCT':
-          dispatch(eventUseProductRewardInstantly());
-          break;
-        default:
-          break;
-      }
+    const rewardType = eventRewardInstantly.name;
+    switch (rewardType) {
+      case 'DISCOUNT':
+        dispatch(eventUseDiscountRewardInstantly());
+        break;
+      case 'MOBILE_TOPUP':
+        dispatch(eventUseMobileTopupRewardInstantly());
+        break;
+      case 'PRODUCT':
+        dispatch(eventUseProductRewardInstantly());
+        break;
+      default:
+        break;
     }
-  };
+  }
 };
 
-export const activateMoneyBox = () => {
-  return (dispatch) => {
-    dispatch(Actions.activateMoneyBox());
-  };
+export const activateMoneyBox = () => dispatch => {
+  dispatch(Actions.activateMoneyBox());
 };
 
-export const deactivateMoneyBox = () => {
-  return (dispatch) => {
-    dispatch(Actions.deactivateMoneyBox());
-  };
+export const deactivateMoneyBox = () => dispatch => {
+  dispatch(Actions.deactivateMoneyBox());
 };
 
-export const showLoading = (message) => {
-  return (dispatch) => {
-    dispatch(Actions.showLoading(message));
-  };
+export const showLoading = message => dispatch => {
+  dispatch(Actions.showLoading(message));
 };
 
-export const hideLoading = () => {
-  return (dispatch) => {
-    dispatch(Actions.hideLoading());
-  };
+export const hideLoading = () => dispatch => {
+  dispatch(Actions.hideLoading());
 };
 
-export const switchLanguageTo = (lang) => {
-  return (dispatch) => {
-    dispatch(Actions.switchLanguageTo(lang));
-  };
+export const switchLanguageTo = lang => dispatch => {
+  dispatch(Actions.switchLanguageTo(lang));
 };
 
-export const endedAudio = () => {
-  return (dispatch) => {
-    dispatch(Actions.endedAudio());
-  };
+export const endedAudio = () => dispatch => {
+  dispatch(Actions.endedAudio());
 };
 
-export const startedAudio = () => {
-  return (dispatch) => {
-    dispatch(Actions.startedAudio());
-  };
+export const startedAudio = () => dispatch => {
+  dispatch(Actions.startedAudio());
 };
 
-export const startPlayAudio = () => {
-  return (dispatch) => {
-    dispatch(Actions.startPlayAudio());
-  };
+export const startPlayAudio = () => dispatch => {
+  dispatch(Actions.startPlayAudio());
 };
 
-export const stopPlayAudio = () => {
-  return (dispatch) => {
-    dispatch(Actions.stopPlayAudio());
-  };
+export const stopPlayAudio = () => dispatch => {
+  dispatch(Actions.stopPlayAudio());
 };
 
-export const playInputMSISDNErrorAudio = () => {
-  return (dispatch, getState) => {
-    const fileURL = MasterappSelector.getLocalURL(getState().masterapp);
-    dispatch(Actions.setAudioSource(`${fileURL}/voice/8.2.mp3`));
-    dispatch(Actions.startPlayAudio());
-  };
+export const playInputMSISDNErrorAudio = () => (dispatch, getState) => {
+  const fileURL = MasterappSelector.getLocalURL(getState().masterapp);
+  dispatch(Actions.setAudioSource(`${fileURL}/voice/8.2.mp3`));
+  dispatch(Actions.startPlayAudio());
 };
 
 export const openDoor = () => (dispatch, getState) => {
   const client = MasterappSelector.getTcpClient(getState().masterapp);
   client.setFree();
   client.send({
-    action: 'door-open',
+    action: 'door-open'
   });
 };
 
@@ -1683,33 +1660,27 @@ export const closeDoor = () => (dispatch, getState) => {
   const client = MasterappSelector.getTcpClient(getState().masterapp);
   client.setFree();
   client.send({
-    action: 'door-close',
+    action: 'door-close'
   });
 };
 
-export const shutdownApplication = () => {
-  return () => {
-    window.closeApp(); // eslint-disable-line;
-  };
+export const shutdownApplication = () => () => {
+  window.closeApp(); // eslint-disable-line;
 };
 
-export const startRecordEvent = (eventType, data) => {
-  return (dispatch, getState) => {
-    dispatch(Actions.generateLogId());
-    Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
-      logId: MasterappSelector.getLogId(getState().masterapp),
-      eventType,
-      ...data,
-    });
-  };
+export const startRecordEvent = (eventType, data) => (dispatch, getState) => {
+  dispatch(Actions.generateLogId());
+  Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
+    logId: MasterappSelector.getLogId(getState().masterapp),
+    eventType,
+    ...data
+  });
 };
 
-export const endRecordEvent = (eventType, data) => {
-  return (dispatch, getState) => {
-    Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
-      logId: MasterappSelector.getLogId(getState().masterapp),
-      eventType,
-      ...data,
-    });
-  };
+export const endRecordEvent = (eventType, data) => (dispatch, getState) => {
+  Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
+    logId: MasterappSelector.getLogId(getState().masterapp),
+    eventType,
+    ...data
+  });
 };
