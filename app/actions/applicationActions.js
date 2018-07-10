@@ -452,11 +452,9 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       break;
     case 'CASH_CHANGE_SUCCESS':
       dispatch(runFlowCashChangeSuccess());
-      Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
-        logId: MasterappSelector.getLogId(getState().masterapp),
-        eventType: 'fromHardware',
+      dispatch(endRecordEvent('fromHardware', {
         action: 'CASH_CHANGE_SUCCESS',
-      });
+      }));
       break;
     case 'CASH_CHANGE_FAIL':
       dispatch(Actions.showModal('cashChangeError'));
@@ -466,11 +464,9 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       break;
     case 'PRODUCT_DROP_SUCCESS':
       dispatch(runFlowProductDropSuccess());
-      Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
-        logId: MasterappSelector.getLogId(getState().masterapp),
-        eventType: 'fromHardware',
+      dispatch(endRecordEvent('fromHardware', {
         action: 'PRODUCT_DROP_SUCCESS',
-      });
+      }));
       break;
     case 'PRODUCT_DROP_FAIL':
       dispatch(runFlowProductDropFailed());
@@ -799,13 +795,10 @@ export const productDrop = () => (dispatch, getState) => {
           action: 1,
           msg: targetRowColumn || '00', // row * col
         });
-        dispatch(Actions.generateLogId());
-        Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
-          logId: MasterappSelector.getLogId(getState().masterapp),
-          eventType: 'toHardWare',
+        dispatch(startRecordEvent('toHardWare', {
           action: 'REQUEST_PRODUCT_DROP',
           target: targetRowColumn
-        });
+        }));
         dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
       }, dropProductInterval * 1000);
     } else {
@@ -1094,13 +1087,10 @@ export const sendCashChangeToServer = () => (dispatch, getState) => {
       msg: `${cashChangeAmount}`,
       mode: 'coin',
     });
-    dispatch(Actions.generateLogId());
-    Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
-      logId: MasterappSelector.getLogId(getState().masterapp),
-      eventType: 'toHardWare',
+    dispatch(startRecordEvent('toHardWare', {
       action: 'REQUEST_CHANGE_CASH',
       amount: cashChangeAmount
-    });
+    }));
   }
   dispatch(clearPaymentAmount());
 };
@@ -1692,7 +1682,28 @@ export const closeDoor = () => (dispatch, getState) => {
 };
 
 export const shutdownApplication = () => {
-  return (dispatch) => {
+  return () => {
     window.closeApp(); // eslint-disable-line;
-  }
-}
+  };
+};
+
+export const startRecordEvent = (eventType, data) => {
+  return (dispatch, getState) => {
+    dispatch(Actions.generateLogId());
+    Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
+      logId: MasterappSelector.getLogId(getState().masterapp),
+      eventType,
+      ...data,
+    });
+  };
+};
+
+export const endRecordEvent = (eventType, data) => {
+  return (dispatch, getState) => {
+    Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
+      logId: MasterappSelector.getLogId(getState().masterapp),
+      eventType,
+      ...data,
+    });
+  };
+};

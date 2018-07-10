@@ -4,7 +4,11 @@ import type { Children } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import connectivity from 'connectivity'
-// import isOnline from 'is-online'
+import moment from 'moment';
+// ======================================================
+// Analytics
+// ======================================================
+import Analytics from '../analytics/thep';
 // ======================================================
 // Components
 // ======================================================
@@ -70,7 +74,8 @@ class App extends Component {
     location: Object,
     backToHome: Function,
     initApplication: Function,
-    appReady: boolean
+    appReady: boolean,
+    startRecordEvent: Function
   };
 
   state = {
@@ -85,14 +90,19 @@ class App extends Component {
   componentDidMount = () => {
     setInterval(() => {
       connectivity((online) => {
-        const { isOnline } = this.state
-        console.log('[connectivity] prev', isOnline, 'curr', online)
+        const { isOnline } = this.state;
+        console.log('[connectivity] prev', isOnline, 'curr', online);
         if (isOnline !== online) {
+          if (isOnline === true && online === false) {
+            this.props.startRecordEvent('INTERNET_LOST', {
+              localTime: moment().format('YYYY-MM-DD HH:mm:ss')
+            });
+          }
           this.setState({
             isOnline: online
-          })
+          });
         }
-      })
+      });
     }, 5000);
   }
 
