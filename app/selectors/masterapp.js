@@ -23,6 +23,7 @@ const getMuteAds = state => state.mutedAds;
 const getMachineId = state => state.machineId;
 const getVerifiedSalesman = state => state.verifiedSalesman;
 const getDropProductInterval = state => state.dropProductInterval;
+const getLogId = state => state.logId;
 
 const verifyIsEnablingMoneyBox = createSelector(
   [
@@ -53,6 +54,7 @@ const verifyIsDroppingFreeProduct = createSelector(
 );
 
 export default {
+  getLogId,
   getLocalURL,
   getBaseURL,
   getLocalStaticURL,

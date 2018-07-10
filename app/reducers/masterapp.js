@@ -1,3 +1,4 @@
+import cuid from 'cuid';
 import {
   INIT_TCP_CLIENT,
   RECEIVED_SENSOR_INFORMATION,
@@ -26,7 +27,8 @@ import {
   FETCH_DATA_COMPLETED,
   VERIFIED_SALES_MAN,
   CLEAR_VERIFY_SALES_MAN,
-  SET_DROP_PRODUCT_INTERVAL
+  SET_DROP_PRODUCT_INTERVAL,
+  GENERATE_LOG_ID
 } from '../actions/actionTypes';
 
 const localURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:8888/vms' : 'http://localhost:81/vms';
@@ -95,7 +97,10 @@ const initialState = {
   dataIsFetched: false,
   verifiedSalesman: undefined,
   dropProductInterval: 2,
+  logId: ''
 };
+
+const generateLogId = () => cuid.slug();
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -250,7 +255,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         dropProductInterval: action.dropProductInterval
-      }
+      };
+    case GENERATE_LOG_ID:
+      return {
+        ...state,
+        logId: generateLogId()
+      };
     default:
       return state;
   }

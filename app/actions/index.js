@@ -62,7 +62,8 @@ import {
   RECEIVED_PAID_IN_FULL,
   CLEAR_RECEIVED_PAID_IN_FULL,
   REMEMBER_BASE_AD_PLAYING_INDEX,
-  SET_DROP_PRODUCT_INTERVAL
+  SET_DROP_PRODUCT_INTERVAL,
+  GENERATE_LOG_ID
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
@@ -361,4 +362,8 @@ export const rememberBaseAdPlayingIndex = (baseAdPlayingIndex) => ({
 export const setDropProductInterval = (dropProductInterval) => ({
   type: SET_DROP_PRODUCT_INTERVAL,
   dropProductInterval,
+});
+
+export const generateLogId = () => ({
+  type: GENERATE_LOG_ID
 });

@@ -168,7 +168,7 @@ export const isDoorOpened = ({ action, msg }) => {
 export const isDoorClosed = ({ action, msg }) => {
   if (action !== actionCode.sensor || msg !== 'close') return false;
   return true;
-}
+};
 
 export const getServerCommand = (data) => {
   const normalizeData = {

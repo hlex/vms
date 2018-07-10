@@ -452,8 +452,9 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       break;
     case 'CASH_CHANGE_SUCCESS':
       dispatch(runFlowCashChangeSuccess());
-      Analytics.recordEvent('fromHardware', {
-        machineId: MasterappSelector.getMachineId(getState().masterapp),
+      Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
+        logId: MasterappSelector.getLogId(getState().masterapp),
+        eventType: 'fromHardware',
         action: 'CASH_CHANGE_SUCCESS',
       });
       break;
@@ -465,8 +466,9 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       break;
     case 'PRODUCT_DROP_SUCCESS':
       dispatch(runFlowProductDropSuccess());
-      Analytics.recordEvent('fromHardware', {
-        machineId: MasterappSelector.getMachineId(getState().masterapp),
+      Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
+        logId: MasterappSelector.getLogId(getState().masterapp),
+        eventType: 'fromHardware',
         action: 'PRODUCT_DROP_SUCCESS',
       });
       break;
@@ -797,9 +799,11 @@ export const productDrop = () => (dispatch, getState) => {
           action: 1,
           msg: targetRowColumn || '00', // row * col
         });
-        Analytics.recordEvent('toHardware', {
-          machineId: MasterappSelector.getMachineId(getState().masterapp),
-          action: 'productDrop',
+        dispatch(Actions.generateLogId());
+        Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
+          logId: MasterappSelector.getLogId(getState().masterapp),
+          eventType: 'toHardWare',
+          action: 'REQUEST_PRODUCT_DROP',
           target: targetRowColumn
         });
         dispatch(Actions.droppingProduct(OrderSelector.getProductToDrop(getState().order)));
@@ -1090,9 +1094,11 @@ export const sendCashChangeToServer = () => (dispatch, getState) => {
       msg: `${cashChangeAmount}`,
       mode: 'coin',
     });
-    Analytics.recordEvent('toHardware', {
-      machineId: MasterappSelector.getMachineId(getState().masterapp),
-      action: 'changeCash',
+    dispatch(Actions.generateLogId());
+    Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
+      logId: MasterappSelector.getLogId(getState().masterapp),
+      eventType: 'toHardWare',
+      action: 'REQUEST_CHANGE_CASH',
       amount: cashChangeAmount
     });
   }
