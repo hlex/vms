@@ -253,6 +253,9 @@ export const initApplication = () => {
 
     } catch (error) {
       console.error(error);
+      dispatch(startRecordEvent('localApiError', {
+        action: 'LOCAL_API_ERROR'
+      }));
       dispatch(openAlertMessage(convertApplicationErrorToError({
         title: 'Happy Box is "Closed"',
         th: 'กรุณาติดต่อ 065-552-4352',
@@ -291,7 +294,7 @@ export const doorClosed = () => {
   return async (dispatch, getState) => {
     console.log('doorClosed');
     const verifiedSalesman = MasterappSelector.getVerifiedSalesman(getState().masterapp);
-    const online = await isOnline()
+    const online = await isOnline();
     if (online) {
       if (verifiedSalesman) {
         try {
@@ -486,6 +489,9 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       break;
     case 'ENABLE_MONEY_BOX_FAIL':
       if (retryNo === 2) {
+        dispatch(startRecordEvent('hardwareError', {
+          action: 'ENABLE_MONEY_BOX_FAILED'
+        }));
         dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
       } else {
         setTimeout(() => {
