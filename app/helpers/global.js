@@ -73,3 +73,18 @@ export const verifyThisOrderShouldDropFreeProduct = (sumOrderAmount, activityFre
       return false;
   }
 };
+
+export const escapeRegExp = (str) => {
+  return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+};
+
+export const replaceAll = (str, find, replace) => {
+  return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+};
+
+// {"action": 0, "msg": {"temp": "00nan\r"}, "sensor": "temp"}
+
+export const cleanDataChunk = (dataChunk) => {
+  const cleanStr = '{"action":0,"msg":{"temp":"00nan\\r"},"sensor":"temp"}';
+  return replaceAll(dataChunk, cleanStr, '');
+};

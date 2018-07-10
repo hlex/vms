@@ -8,7 +8,7 @@ import * as ApplicationActions from '../actions/applicationActions';
 // Helpers
 // ======================================================
 import { verifyServerResponseData } from '../helpers/tcp';
-import { createLog } from '../helpers/global';
+import { createLog, cleanDataChunk } from '../helpers/global';
 
 export const createTcpClient = (ip, port) => {
   const client = new net.Socket();
@@ -20,7 +20,9 @@ export const createTcpClient = (ip, port) => {
   // ======================================================
   client.on('data', data => {
     const dataChunk = data.toString('utf8');
-    const dataObject = JSON.parse(dataChunk);
+    console.log('dataChunk', dataChunk);
+    const sanitizedDataChuck = cleanDataChunk(dataChunk);
+    const dataObject = JSON.parse(sanitizedDataChuck);
     if (!dataObject.sensor) console.log('%c Client Received: ', createLog('client'), dataChunk);
     if (verifyServerResponseData(dataObject)) {
       store.dispatch(ApplicationActions.receivedDataFromServer(dataObject));

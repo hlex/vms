@@ -1,9 +1,9 @@
 import { push, goBack } from 'react-router-redux';
 import _ from 'lodash';
 import cuid from 'cuid';
+import isOnline from 'is-online';
 import * as Actions from './index';
 // import connectivity from 'connectivity'
-import isOnline from 'is-online'
 // ======================================================
 // Analytics
 // ======================================================
