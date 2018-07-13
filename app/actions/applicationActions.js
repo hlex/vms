@@ -877,6 +877,7 @@ export const submitOrder = () => (dispatch, getState) => new Promise(async (reso
         // REGET PRODUCTS & EVENT
         // ======================================================
     await dispatch(getMasterProductAndEventAndPromotions());
+    dispatch(disableMoneyBox());
     resolve(serviceSubmitOrderResponse);
   } catch (error) {
     reject(error);
