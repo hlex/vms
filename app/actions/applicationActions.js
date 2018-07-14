@@ -810,9 +810,11 @@ export const productDrop = () => (dispatch, getState) => {
           action: 1,
           msg: targetRowColumn || '00' // row * col
         });
+        const productToDrop = OrderSelector.getProductToDrop(getState().order);
         dispatch(
           startRecordEvent('toHardWare', {
             action: 'REQUEST_PRODUCT_DROP',
+            poId: productToDrop.id || '-',
             target: targetRowColumn
           })
         );
