@@ -38,7 +38,7 @@ const getCurrentPage = createSelector(
       case '/thankyou':
         return 'thankyou';
       case '/thankyou-with-free-product':
-        return 'thankyouWithFreeProduct'
+        return 'thankyouWithFreeProduct';
       case '/thankyou-mobile-topup':
         return 'thankyouMobileTopup';
       case '/salesman':

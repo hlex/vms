@@ -53,8 +53,8 @@ export default class TcpClient {
 
 class Queue {
   data;
-  constructor(initiatialData = []) {
-    this.data = initiatialData;
+  constructor(initialData = []) {
+    this.data = initialData;
   }
   push(data) {
     this.data.push(data);
