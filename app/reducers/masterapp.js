@@ -98,7 +98,8 @@ const getInitialState = () => ({
   dataIsFetched: false,
   verifiedSalesman: undefined,
   dropProductInterval: 2,
-  logId: ''
+  logId: '',
+  paymentSystemDown: false
 });
 
 const generateLogId = () => cuid.slug();
@@ -252,9 +253,16 @@ export default (state = getInitialState(), action) => {
         voiceInterval: action.voiceInterval
       };
     case SET_APPLICATION_MODE:
+      if (action.mode === 'paymentSystemDown') {
+        return {
+          ...state,
+          paymentSystemDown: true
+        };
+      }
       return {
         ...state,
-        mode: action.mode
+        mode: action.mode,
+        paymentSystemDown: false
       };
     case SET_MACHINE_ID:
       return {

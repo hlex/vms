@@ -13,6 +13,7 @@ const getLimitBanknote = state => state.limitBanknote;
 const verifyAppReady = state => state.hardwareReady && state.mode === 'running' && state.dataIsFetched === true;
 const verifyIsMaintenanceMode = state => state.mode === 'maintenance';
 const verifyIsHardwareMalfunction = state => state.mode === 'hardwareBoxServerDown';
+const verifyIsPaymentSystemMalfunction = state => state.paymentSystemDown === true;
 const verifyIsMoneyBoxActive = state => state.moneyBoxActive;
 const verifyIsLoading = state => state.loading.show;
 const getActivityFreeRule = state => state.activityFreeRule;
@@ -74,6 +75,7 @@ export default {
   getLanguage,
   getHardwareProcessing,
   verifyIsHardwareProcessing,
+  verifyIsPaymentSystemMalfunction,
   getAutoplayTime,
   getMuteAds,
   verifyIsMaintenanceMode,

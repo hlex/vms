@@ -248,6 +248,7 @@ export const initApplication = () => async (dispatch, getState) => {
     }, 10000);
 
     dispatch(Actions.dataFetchedCompletely());
+    dispatch(Actions.setApplicationMode('running'));
   } catch (error) {
     console.error(error);
     dispatch(
@@ -292,11 +293,24 @@ const addResetTimer = resetTimeMS => {
 };
 
 export const resetApplication = () => async (dispatch, getState) => {
-  //
-  dispatch(Actions.resetApplication());
   const client = MasterappSelector.getTcpClient(getState().masterapp);
   client.setFree();
   dispatch(changePage(''));
+  if (MasterappSelector.verifyIsHardwareProcessing(getState().masterapp) || MasterappSelector.verifyIsPaymentSystemMalfunction(getState().masterapp)) {
+    // resetBoard
+    dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
+    setTimeout(() => {
+      client.send({
+        action: 4,
+        msg: '01'
+      });
+      setTimeout(() => {
+        dispatch(initApplication());
+      }, 60 * 1000); // 1 minute
+    }, 5000);
+  }
+  dispatch(Actions.resetApplication());
+  client.setFree();
 };
 
 export const doorClosed = () => async (dispatch, getState) => {
@@ -1575,6 +1589,11 @@ export const continueRecordEvent = (eventType, data) => (dispatch, getState) => 
   });
 };
 
+export const paymentSystemDown = () => (dispatch, getState) => {
+  dispatch(changePage(''));
+  dispatch(Actions.setApplicationMode('paymentSystemDown'));
+};
+
 export const receivedDataFromServer = data => (dispatch, getState) => {
   if (data.sensor && data.sensor === 'temp') return;
   const client = MasterappSelector.getTcpClient(getState().masterapp);
@@ -1651,8 +1670,8 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
           })
         );
         retryNo = 0;
-        dispatch(Actions.hardwareFinishProcess(processConstant.ENABLE_MONEY_BOX));
-        dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
+        // dispatch(Actions.hardwareFinishProcess(processConstant.ENABLE_MONEY_BOX));
+        dispatch(paymentSystemDown());
       } else {
         setTimeout(() => {
           retryNo += 1;
@@ -1673,12 +1692,12 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       if (retryNo === 2) {
         dispatch(
           startRecordEvent('hardwareError', {
-            action: 'ENABLE_MONEY_BOX_FAILED'
+            action: 'DISABLE_MONEY_BOX_FAILED'
           })
         );
         retryNo = 0;
-        dispatch(Actions.hardwareFinishProcess(processConstant.DISABLE_MONEY_BOX));
-        dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
+        // dispatch(Actions.hardwareFinishProcess(processConstant.DISABLE_MONEY_BOX));
+        dispatch(paymentSystemDown());
       } else {
         setTimeout(() => {
           retryNo += 1;

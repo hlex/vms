@@ -55,6 +55,7 @@ const mapStateToProps = state => {
     appReady: MasterappSelector.verifyAppReady(state.masterapp),
     isMaintenance: MasterappSelector.verifyIsMaintenanceMode(state.masterapp),
     isHardwareMalfunction: MasterappSelector.verifyIsHardwareMalfunction(state.masterapp),
+    isPaymentSystemMalfunction: MasterappSelector.verifyIsPaymentSystemMalfunction(state.masterapp),
     modal: state.modal,
     lang: MasterappSelector.getLanguage(state.masterapp),
     verifiedSalesman: MasterappSelector.getVerifiedSalesman(state.masterapp)
@@ -174,7 +175,7 @@ class App extends Component {
 
   renderApplication = () => {
     const { isOnline } = this.state
-    const { lang, baseURL, localStaticURL, appReady, isMaintenance, isHardwareMalfunction } = this.props;
+    const { lang, baseURL, localStaticURL, appReady, isMaintenance, isHardwareMalfunction, isPaymentSystemMalfunction } = this.props;
     if (appReady) {
       return (
         <div className="smart-vending-machine-app-connected">
@@ -194,6 +195,27 @@ class App extends Component {
                 <h1 className='color-purple'><i className="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
                 <h2 className='color-red'>ระบบไม่ได้เชื่อมต่ออินเทอร์เน็ต</h2>
                 <h3>ไม่สามารถทำรายการได้</h3>
+                <h3>กรุณารอสักครู่ หรือ ติดต่อ 065-552-4352</h3>
+                <br />
+                <br />
+              </div>
+            </div>
+          </Modal>
+          <Modal
+            show={isPaymentSystemMalfunction}
+            options={{
+              overlay: false,
+              className: {
+                margin: '0 auto',
+                top: '50%',
+                marginTop: '-200px'
+              },
+            }}
+          >
+            <div className="app-error">
+              <div>
+                <h1 className='color-purple'><i className="fa fa-exclamation-triangle" aria-hidden="true"></i></h1>
+                <h2 className='color-red'>ระบบ ไม่สามารถ จำหน่ายสินค้าได้ชั่วคราว</h2>
                 <h3>กรุณารอสักครู่ หรือ ติดต่อ 065-552-4352</h3>
                 <br />
                 <br />
