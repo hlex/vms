@@ -12,7 +12,6 @@ import withAudio from '../../../hoc/withAudio';
 import Layout from '../../Layout';
 import { FooterAction } from '../../Utils';
 
-// ======================================================
 // Components
 // ======================================================
 import {
@@ -22,13 +21,10 @@ import {
   PaymentConfirmation,
   Loading
 } from '../../../components';
-
 // ======================================================
 // Actions
 // ======================================================
 import * as ApplicationActions from '../../../actions/applicationActions';
-import * as Actions from './actions';
-
 // ======================================================
 // Selectors
 // ======================================================
@@ -53,8 +49,7 @@ const mapStateToProps = state => ({
 });
 
 const actions = {
-  ...ApplicationActions,
-  ...Actions
+  ...ApplicationActions
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
