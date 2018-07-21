@@ -6,20 +6,32 @@ import loading from '../../images/loading.gif'
 class Loading extends Component {
 
   static propTypes = {
-    baseURL: PropTypes.string.isRequired,
     text: PropTypes.string,
+    children: PropTypes.node
   }
 
   static defaultProps = {
     text: 'กำลังดำเนินการ',
+    children: null
+  }
+
+  hasChildren = () => {
+    const { children } = this.props;
+    return children !== null;
+  }
+
+  renderText = () => {
+    if (this.hasChildren) {
+      return this.props.children;
+    }
+    return <h3>{this.props.text}</h3>;
   }
 
   render() {
-    const { text, baseURL } = this.props;
     return (
       <div className="loading">
         <img src={loading} alt="" />
-        <h3>{text}</h3>
+        {this.renderText()}
       </div>
     );
   }

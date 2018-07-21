@@ -86,12 +86,17 @@ class PaymentPage extends PureComponent {
   };
 
   renderContent = () => {
-    const { isEnablingMoneyBox, moneyBoxActive, localStaticURL, isLoading, isFinish, summaryList, canChangeCash } = this.props;
+    const { orderType, isEnablingMoneyBox, moneyBoxActive, localStaticURL, isLoading, isFinish, summaryList, canChangeCash } = this.props;
     if (isEnablingMoneyBox) {
-      return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={localStaticURL} />;
+      return (
+        <Loading>
+          <h1>กรุณา อย่า หยอดเหรียญ/ธนบัตร</h1>
+          <h1 style={{ color: 'red' }}>ระบบรับเงิน ยังไม่พร้อม</h1>
+        </Loading>
+      );
     }
     if (moneyBoxActive) {
-      if (isLoading) return <Loading baseURL={localStaticURL} />;
+      if (isLoading) return <Loading />;
       return (
         <PaymentConfirmation
           baseURL={localStaticURL}
@@ -100,7 +105,18 @@ class PaymentPage extends PureComponent {
         />
       );
     }
-    return <Loading text={'ระบบกำลังเปิดรับเงิน รอสักครู่'} baseURL={localStaticURL} />;
+    if (orderType === 'mobileTopup') {
+      return (
+        <Loading>
+          <h1>รอสักครู่ ระบบกำลังเติมเงิน</h1>
+        </Loading>
+      );
+    }
+    return (
+      <Loading>
+        <h1>รอสักครู่ สินค้ากำลังหล่น</h1>
+      </Loading>
+    );
   };
 
   renderTitle = () => {

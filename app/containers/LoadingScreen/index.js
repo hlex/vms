@@ -40,11 +40,10 @@ class LoadingScreen extends Component {
     show: PropTypes.bool.isRequired,
     messages: PropTypes.shape({}).isRequired,
     lang: PropTypes.string.isRequired,
-    baseURL: PropTypes.string.isRequired,
   }
 
   render() {
-    const { show, messages, lang, baseURL } = this.props;
+    const { show, messages, lang } = this.props;
     return (
       <Modal
         show={show}
@@ -56,7 +55,7 @@ class LoadingScreen extends Component {
           },
         }}
       >
-        <Loading text={messages[lang]} baseURL={baseURL} />
+        <Loading text={messages[lang]} />
       </Modal>
     );
   }
