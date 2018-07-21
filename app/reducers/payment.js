@@ -1,7 +1,5 @@
-import _ from 'lodash';
-import cuid from 'cuid';
-
 import {
+  RESET_APPLICATION,
   RECEIVED_CASH,
   RECEIVED_CASH_COMPLETELY,
   PRODUCT_DROP_PROCESS_COMPLETELY,
@@ -30,6 +28,7 @@ const getInitialState = () => {
 
 export default function products(state = getInitialState(), action: actionType) {
   switch (action.type) {
+    case RESET_APPLICATION:
     case RESET_PAYMENT_REDUCER:
       return {
         ...getInitialState(),

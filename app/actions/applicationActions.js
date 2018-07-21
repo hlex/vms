@@ -291,9 +291,11 @@ const addResetTimer = resetTimeMS => {
   };
 };
 
-export const resetApplication = () => async (dispatch) => {
+export const resetApplication = () => async (dispatch, getState) => {
   //
   dispatch(Actions.resetApplication());
+  const tcp = MasterappSelector.getTcp(getState().masterapp);
+  dispatch(initTcpClient(createTcpClient(tcp.ip, tcp.port)));
   dispatch(changePage(''));
 };
 
@@ -1238,7 +1240,7 @@ export const initHomePage = () => (dispatch, getState) => {
 
 export const processingReturningCash = () => (dispatch, getState) => {
   const moneyBoxActive = MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp);
-    // const cashChangeAmountMoreThanZero = PaymentSelector.verifyCashChangeAmountMoreThanZero(getState().payment);
+  // const cashChangeAmountMoreThanZero = PaymentSelector.verifyCashChangeAmountMoreThanZero(getState().payment);
   if (moneyBoxActive) {
     dispatch(showLoading('ระบบกำลังดำเนินการ โปรดรอสักครู่'));
     setTimeout(() => {

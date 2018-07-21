@@ -15,7 +15,7 @@ export default class TcpClient {
     this.histories = [];
   }
   send(data) {
-    console.log('%c App Send Data:', createLog(null, 'orange', '#fff'), data);
+    console.log('%c App Send Data:', createLog(null, 'orange', '#fff'), data, this.busy);
     this.queue.push(data);
     if (!this.busy) {
       this.doSend();
