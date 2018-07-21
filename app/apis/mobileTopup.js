@@ -3,6 +3,8 @@ import { fetchFacade } from '../helpers/api';
 import { isVMSServiceError, convertVMSServiceResponseToError } from '../helpers/error';
 import URL from './url';
 
+const FORM_CODE = '8HPyBox@1Vm';
+
 export const serviceTopupMobile = ({ serviceCode, MSISDN, mobileTopupValue, mobileTopupFee }, discountCode = '', discountPrice = 0, machineId = '') => {
   const data = {
     ServiceCode: serviceCode,
@@ -11,7 +13,8 @@ export const serviceTopupMobile = ({ serviceCode, MSISDN, mobileTopupValue, mobi
     ServiceCharge: mobileTopupFee,
     Discount_Code: discountCode,
     Discount_Price: discountPrice,
-    MachineID: machineId
+    MachineID: machineId,
+    RequestFrom: FORM_CODE
   };
   /*
   return new Promise((resolve, reject) => {
