@@ -294,8 +294,8 @@ const addResetTimer = resetTimeMS => {
 export const resetApplication = () => async (dispatch, getState) => {
   //
   dispatch(Actions.resetApplication());
-  const tcp = MasterappSelector.getTcp(getState().masterapp);
-  dispatch(initTcpClient(createTcpClient(tcp.ip, tcp.port)));
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.setFree();
   dispatch(changePage(''));
 };
 
@@ -608,6 +608,8 @@ export const backToHome = () => (dispatch, getState) => {
   // ======================================================
   // Clear many stuffs
   // ======================================================
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.setFree();
   dispatch(Actions.resetPaymentReducer());
   dispatch(Actions.notReadyToDropProduct());
   dispatch(Actions.hideAllModal());
