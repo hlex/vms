@@ -14,12 +14,12 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 class DevToolbar extends Component {
   render() {
-    const { backToHome, insertCoin, scanCode, openDoor, closeDoor } = this.props;
+    const { resetApplication, insertCoin, scanCode, openDoor, closeDoor } = this.props;
     return (
       <div className="development-toolbar">
         <ul>
           <li>
-            <a onClick={() => backToHome()}>HOME</a>
+            <a onClick={() => resetApplication()}>RESET</a>
           </li>
           <li>
             <a onClick={() => insertCoin(1)}>1B</a>
