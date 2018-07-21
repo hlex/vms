@@ -1,0 +1,548 @@
+App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action @@router/CALL_HISTORY_METHOD @ 23:16:50.310
+redux-logger.js:1  action @@router/LOCATION_CHANGE @ 23:16:50.312
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action AUDIO_START_PLAY @ 23:16:50.360
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action @@router/CALL_HISTORY_METHOD @ 23:16:50.423
+redux-logger.js:1  action @@router/LOCATION_CHANGE @ 23:16:50.423
+applicationActions.js:901  App isInsertCash: currentCash = 0 totalAmount = 22 isReceivedPaidInFull false
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action HARDWARE_START_PROCESS @ 23:16:50.458
+TcpClient.js:18  App Send Data: Object {action: 2, msg: "020", mode: "both"}
+tcp.js:23 dataChunk {"action": 2, "msg": "020", "result": "success", "description": "Disable Off."}
+tcp.js:26  Client Received:  {"action": 2, "msg": "020", "result": "success", "description": "Disable Off."}
+tcp.js:183  App getServerCommand:normalizeData Object {action: 2, sensor: "", result: "success", msg: "020", description: "disable off."…}
+applicationActions.js:445  App cmd: ENABLE_MONEY_BOX_SUCCESS trx:cmd = 6
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action ACTIVE_MONEY_BOX @ 23:16:52.611
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action HARDWARE_START_PROCESS @ 23:16:52.642
+3App.js:94 [connectivity] prev true curr true
+tcp.js:23 dataChunk {"action": 2, "msg": "10"}
+tcp.js:26  Client Received:  {"action": 2, "msg": "10"}
+tcp.js:183  App getServerCommand:normalizeData Object {action: 2, sensor: "", result: "", msg: "10", description: ""…}
+applicationActions.js:445  App cmd: INSERT_CASH trx:cmd = 7
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action RECEIVED_CASH @ 23:17:07.760
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action @@router/CALL_HISTORY_METHOD @ 23:17:07.793
+redux-logger.js:1  action @@router/LOCATION_CHANGE @ 23:17:07.794
+applicationActions.js:901  App isInsertCash: currentCash = 10 totalAmount = 22 isReceivedPaidInFull false
+App.js:94 [connectivity] prev true curr true
+tcp.js:23 dataChunk {"action": 2, "msg": "10"}
+tcp.js:26  Client Received:  {"action": 2, "msg": "10"}
+tcp.js:183  App getServerCommand:normalizeData Object {action: 2, sensor: "", result: "", msg: "10", description: ""…}
+applicationActions.js:445  App cmd: INSERT_CASH trx:cmd = 8
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action RECEIVED_CASH @ 23:17:09.964
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action @@router/CALL_HISTORY_METHOD @ 23:17:09.988
+redux-logger.js:1  action @@router/LOCATION_CHANGE @ 23:17:09.989
+applicationActions.js:901  App isInsertCash: currentCash = 20 totalAmount = 22 isReceivedPaidInFull false
+App.js:94 [connectivity] prev true curr true
+tcp.js:23 dataChunk {"action": 2, "msg": "10"}
+tcp.js:26  Client Received:  {"action": 2, "msg": "10"}
+tcp.js:183  App getServerCommand:normalizeData Object {action: 2, sensor: "", result: "", msg: "10", description: ""…}
+applicationActions.js:445  App cmd: INSERT_CASH trx:cmd = 9
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action RECEIVED_CASH @ 23:17:15.231
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action @@router/CALL_HISTORY_METHOD @ 23:17:15.266
+redux-logger.js:1  action @@router/LOCATION_CHANGE @ 23:17:15.267
+applicationActions.js:901  App isInsertCash: currentCash = 30 totalAmount = 22 isReceivedPaidInFull false
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action RECEIVED_PAID_IN_FULL @ 23:17:15.295
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action READY_TO_DROP_PRODUCT @ 23:17:15.310
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action AUDIO_STOP_PLAY @ 23:17:15.326
+global.js:25  [API:req] m Object {}
+fetchWithJarvis.js:340 Unexpected token < in JSON at position 0
+(anonymous) @ fetchWithJarvis.js:340
+_tickCallback @ internal/process/next_tick.js:103
+applicationActions.js:716 [handleApiError] Error Object {}
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action HIDE_LOADING @ 23:17:15.547
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action OPEN_ALERT_MESSAGE @ 23:17:15.569
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action @@router/CALL_HISTORY_METHOD @ 23:17:15.582
+redux-logger.js:1  action @@router/LOCATION_CHANGE @ 23:17:15.583
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action SET_CASH_CHANGE_AMOUNT @ 23:17:15.602
+TcpClient.js:18  App Send Data: Object {action: 2, msg: "021", mode: "both"}
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action RESET_FOOTER_ADS @ 23:17:15.729
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action CLEAR_ORDER @ 23:17:15.745
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action RESET_PAYMENT_REDUCER @ 23:17:15.773
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action NOT_READY_TO_DROP_PRODUCT @ 23:17:15.782
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action HIDE_ALL_MODAL @ 23:17:15.789
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action RECEIVED_CASH_COMPLETELY @ 23:17:16.371
+tcp.js:23 dataChunk {"action": 2, "msg": "1"}
+tcp.js:26  Client Received:  {"action": 2, "msg": "1"}
+tcp.js:183  App getServerCommand:normalizeData Object {action: 2, sensor: "", result: "", msg: "1", description: ""…}
+applicationActions.js:445  App cmd: INSERT_CASH trx:cmd = 10
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action RECEIVED_CASH @ 23:17:17.214
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action @@router/CALL_HISTORY_METHOD @ 23:17:17.237
+redux-logger.js:1  action @@router/LOCATION_CHANGE @ 23:17:17.240
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action AUDIO_START_PLAY @ 23:17:17.276
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action @@router/CALL_HISTORY_METHOD @ 23:17:17.319
+redux-logger.js:1  action @@router/LOCATION_CHANGE @ 23:17:17.320
+applicationActions.js:901  App isInsertCash: currentCash = 31 totalAmount = 0 isReceivedPaidInFull false
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action RECEIVED_PAID_IN_FULL @ 23:17:17.352
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action READY_TO_DROP_PRODUCT @ 23:17:17.369
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action AUDIO_STOP_PLAY @ 23:17:17.386
+applicationActions.js:901  App isInsertCash: currentCash = 31 totalAmount = 0 isReceivedPaidInFull true
+DOMLazyTree.js:61 GET http://localhost:81/vms/images/product-full.png 404 (Not Found)
+(anonymous) @ DOMLazyTree.js:61
+a @ DOMChildrenOperations.js:46
+processUpdates @ DOMChildrenOperations.js:166
+dangerouslyProcessChildrenUpdates @ ReactDOMIDOperations.js:27
+l @ ReactMultiChild.js:136
+_updateChildren @ ReactMultiChild.js:351
+updateChildren @ ReactMultiChild.js:296
+_updateDOMChildren @ ReactDOMComponent.js:946
+updateComponent @ ReactDOMComponent.js:760
+receiveComponent @ ReactDOMComponent.js:721
+receiveComponent @ ReactReconciler.js:124
+_updateRenderedComponent @ ReactCompositeComponent.js:751
+_performComponentUpdate @ ReactCompositeComponent.js:729
+updateComponent @ ReactCompositeComponent.js:646
+receiveComponent @ ReactCompositeComponent.js:545
+receiveComponent @ ReactReconciler.js:124
+updateChildren @ ReactChildReconciler.js:108
+_reconcilerUpdateChildren @ ReactMultiChild.js:209
+_updateChildren @ ReactMultiChild.js:309
+updateChildren @ ReactMultiChild.js:296
+_updateDOMChildren @ ReactDOMComponent.js:946
+updateComponent @ ReactDOMComponent.js:760
+receiveComponent @ ReactDOMComponent.js:721
+receiveComponent @ ReactReconciler.js:124
+updateChildren @ ReactChildReconciler.js:108
+_reconcilerUpdateChildren @ ReactMultiChild.js:209
+_updateChildren @ ReactMultiChild.js:309
+updateChildren @ ReactMultiChild.js:296
+_updateDOMChildren @ ReactDOMComponent.js:946
+updateComponent @ ReactDOMComponent.js:760
+receiveComponent @ ReactDOMComponent.js:721
+receiveComponent @ ReactReconciler.js:124
+_updateRenderedComponent @ ReactCompositeComponent.js:751
+_performComponentUpdate @ ReactCompositeComponent.js:729
+updateComponent @ ReactCompositeComponent.js:646
+receiveComponent @ ReactCompositeComponent.js:545
+receiveComponent @ ReactReconciler.js:124
+_updateRenderedComponent @ ReactCompositeComponent.js:751
+_performComponentUpdate @ ReactCompositeComponent.js:729
+updateComponent @ ReactCompositeComponent.js:646
+receiveComponent @ ReactCompositeComponent.js:545
+receiveComponent @ ReactReconciler.js:124
+updateChildren @ ReactChildReconciler.js:108
+_reconcilerUpdateChildren @ ReactMultiChild.js:209
+_updateChildren @ ReactMultiChild.js:309
+updateChildren @ ReactMultiChild.js:296
+_updateDOMChildren @ ReactDOMComponent.js:946
+updateComponent @ ReactDOMComponent.js:760
+receiveComponent @ ReactDOMComponent.js:721
+receiveComponent @ ReactReconciler.js:124
+updateChildren @ ReactChildReconciler.js:108
+_reconcilerUpdateChildren @ ReactMultiChild.js:209
+_updateChildren @ ReactMultiChild.js:309
+updateChildren @ ReactMultiChild.js:296
+_updateDOMChildren @ ReactDOMComponent.js:946
+updateComponent @ ReactDOMComponent.js:760
+receiveComponent @ ReactDOMComponent.js:721
+receiveComponent @ ReactReconciler.js:124
+updateChildren @ ReactChildReconciler.js:108
+_reconcilerUpdateChildren @ ReactMultiChild.js:209
+_updateChildren @ ReactMultiChild.js:309
+updateChildren @ ReactMultiChild.js:296
+_updateDOMChildren @ ReactDOMComponent.js:946
+updateComponent @ ReactDOMComponent.js:760
+receiveComponent @ ReactDOMComponent.js:721
+receiveComponent @ ReactReconciler.js:124
+_updateRenderedComponent @ ReactCompositeComponent.js:751
+_performComponentUpdate @ ReactCompositeComponent.js:729
+updateComponent @ ReactCompositeComponent.js:646
+receiveComponent @ ReactCompositeComponent.js:545
+receiveComponent @ ReactReconciler.js:124
+_updateRenderedComponent @ ReactCompositeComponent.js:751
+_performComponentUpdate @ ReactCompositeComponent.js:729
+updateComponent @ ReactCompositeComponent.js:646
+receiveComponent @ ReactCompositeComponent.js:545
+receiveComponent @ ReactReconciler.js:124
+_updateRenderedComponent @ ReactCompositeComponent.js:751
+_performComponentUpdate @ ReactCompositeComponent.js:729
+updateComponent @ ReactCompositeComponent.js:646
+receiveComponent @ ReactCompositeComponent.js:545
+receiveComponent @ ReactReconciler.js:124
+_updateRenderedComponent @ ReactCompositeComponent.js:751
+_performComponentUpdate @ ReactCompositeComponent.js:729
+updateComponent @ ReactCompositeComponent.js:646
+receiveComponent @ ReactCompositeComponent.js:545
+receiveComponent @ ReactReconciler.js:124
+updateChildren @ ReactChildReconciler.js:108
+_reconcilerUpdateChildren @ ReactMultiChild.js:209
+_updateChildren @ ReactMultiChild.js:309
+updateChildren @ ReactMultiChild.js:296
+_updateDOMChildren @ ReactDOMComponent.js:946
+updateComponent @ ReactDOMComponent.js:760
+receiveComponent @ ReactDOMComponent.js:721
+receiveComponent @ ReactReconciler.js:124
+updateChildren @ ReactChildReconciler.js:108
+_reconcilerUpdateChildren @ ReactMultiChild.js:209
+_updateChildren @ ReactMultiChild.js:309
+updateChildren @ ReactMultiChild.js:296
+_updateDOMChildren @ ReactDOMComponent.js:946
+updateComponent @ ReactDOMComponent.js:760
+receiveComponent @ ReactDOMComponent.js:721
+receiveComponent @ ReactReconciler.js:124
+_updateRenderedComponent @ ReactCompositeComponent.js:751
+_performComponentUpdate @ ReactCompositeComponent.js:729
+updateComponent @ ReactCompositeComponent.js:646
+receiveComponent @ ReactCompositeComponent.js:545
+receiveComponent @ ReactReconciler.js:124
+_updateRenderedComponent @ ReactCompositeComponent.js:751
+_performComponentUpdate @ ReactCompositeComponent.js:729
+updateComponent @ ReactCompositeComponent.js:646
+performUpdateIfNecessary @ ReactCompositeComponent.js:558
+performUpdateIfNecessary @ ReactReconciler.js:160
+s @ ReactUpdates.js:155
+perform @ Transaction.js:142
+perform @ Transaction.js:142
+perform @ ReactUpdates.js:87
+j @ ReactUpdates.js:170
+closeAll @ Transaction.js:207
+perform @ Transaction.js:154
+batchedUpdates @ ReactDefaultBatchingStrategy.js:60
+r @ ReactUpdates.js:202
+o @ ReactUpdateQueue.js:23
+enqueueSetState @ ReactUpdateQueue.js:217
+o.setState @ ReactBaseClasses.js:62
+l.onStateChange @ connectAdvanced.js:207
+u @ createStore.js:176
+(anonymous) @ middleware.js:16
+(anonymous) @ redux-logger.js:1
+(anonymous) @ index.js:15
+d.handleLocationChange @ ConnectedRouter.js:26
+o @ createTransitionManager.js:46
+(anonymous) @ createTransitionManager.js:66
+notifyListeners @ createTransitionManager.js:64
+L @ createHashHistory.js:86
+(anonymous) @ createHashHistory.js:194
+confirmTransitionTo @ createTransitionManager.js:38
+push @ createHashHistory.js:174
+(anonymous) @ middleware.js:21
+(anonymous) @ redux-logger.js:1
+(anonymous) @ index.js:15
+dispatch @ applyMiddleware.js:36
+(anonymous) @ applicationActions.js:746
+(anonymous) @ index.js:14
+dispatch @ applyMiddleware.js:36
+(anonymous) @ applicationActions.js:897
+o @ actionTypes.js:70
+(anonymous) @ actionTypes.js:70
+(anonymous) @ actionTypes.js:70
+(anonymous) @ applicationActions.js:896
+(anonymous) @ index.js:14
+dispatch @ applyMiddleware.js:36
+(anonymous) @ applicationActions.js:462
+(anonymous) @ index.js:14
+n.on @ tcp.js:28
+emitOne @ events.js:96
+emit @ events.js:188
+readableAddChunk @ _stream_readable.js:176
+Readable.push @ _stream_readable.js:134
+onread @ net.js:551
+App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action RECEIVED_CASH_COMPLETELY @ 23:17:18.411
+tcp.js:23 dataChunk {"action": 2, "msg": "021", "result": "success", "description": "Disable On."}
+tcp.js:26  Client Received:  {"action": 2, "msg": "021", "result": "success", "description": "Disable On."}
+tcp.js:183  App getServerCommand:normalizeData Object {action: 2, sensor: "", result: "success", msg: "021", description: "disable on."…}
+applicationActions.js:445  App cmd: DISABLE_MONEY_BOX_SUCCESS trx:cmd = 11
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action DEACTIVE_MONEY_BOX @ 23:17:19.344
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action HARDWARE_START_PROCESS @ 23:17:19.377
+applicationActions.js:1118 =======================================
+applicationActions.js:1119 sendCashChangeToServer:ระบบสั่งทอนเงินจำนวน = 30
+applicationActions.js:1120 =======================================
+TcpClient.js:18  App Send Data: Object {action: 2, msg: "30", mode: "coin"}
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action GENERATE_LOG_ID @ 23:17:20.353
+thep.js:18 recordEvent: api/main.php?vtype=LogReport&machine_id=A00013&arrData=logId%3Aiqc9yll3%2CeventType%3AtoHardWare%2Caction%3AREQUEST_CHANGE_CASH%2Camount%3A30
+global.js:25  [API:req] api/main.php?vtype=LogReport&machine_id=A00013&arrData=logId%3Aiqc9yll3%2CeventType%3AtoHardWare%2Caction%3AREQUEST_CHANGE_CASH%2Camount%3A30 Object {}
+global.js:25  [API:res] api/main.php?vtype=LogReport&machine_id=A00013&arrData=logId%3Aiqc9yll3%2CeventType%3AtoHardWare%2Caction%3AREQUEST_CHANGE_CASH%2Camount%3A30 Object {status: "SUCCESSFUL", trx-id: "20180717231721", response-data: Object}
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action CLEAR_PAYMENT_AMOUNT @ 23:17:21.380
+2App.js:94 [connectivity] prev true curr true
+tcp.js:23 dataChunk {"action": 2, "result": "success", "description": "cash change completed"}
+tcp.js:26  Client Received:  {"action": 2, "result": "success", "description": "cash change completed"}
+tcp.js:183  App getServerCommand:normalizeData Object {action: 2, sensor: "", result: "success", msg: "", description: "cash change completed"…}
+applicationActions.js:445  App cmd: CASH_CHANGE_SUCCESS trx:cmd = 12
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action SET_CASH_CHANGE_AMOUNT @ 23:17:31.087
+TcpClient.js:18  App Send Data: Object {action: 2, mode: "remain"}
+thep.js:18 recordEvent: api/main.php?vtype=LogReport&machine_id=A00013&arrData=logId%3Aiqc9yll3%2CeventType%3AfromHardware%2Caction%3ACASH_CHANGE_SUCCESS
+global.js:25  [API:req] api/main.php?vtype=LogReport&machine_id=A00013&arrData=logId%3Aiqc9yll3%2CeventType%3AfromHardware%2Caction%3ACASH_CHANGE_SUCCESS Object {}
+global.js:25  [API:res] api/main.php?vtype=LogReport&machine_id=A00013&arrData=logId%3Aiqc9yll3%2CeventType%3AfromHardware%2Caction%3ACASH_CHANGE_SUCCESS Object {status: "SUCCESSFUL", trx-id: "20180717231731", response-data: Object}
+tcp.js:23 dataChunk {"action": 0, "msg": {"temp": "00nan\r"}, "sensor": "temp"}
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:17:32.427
+2App.js:94 [connectivity] prev true curr true
+tcp.js:23 dataChunk {"action": 2, "remain": "", "result": "failed"}
+tcp.js:26  Client Received:  {"action": 2, "remain": "", "result": "failed"}
+tcp.js:183  App getServerCommand:normalizeData Object {action: 2, sensor: "", result: "failed", msg: "", description: ""…}
+applicationActions.js:445  App cmd: CASH_REMAINING_FAIL trx:cmd = 13
+applicationActions.js:537 GET [CASH_REMAINING_FAIL] - Please contact Hardware support.
+(anonymous) @ applicationActions.js:537
+(anonymous) @ index.js:14
+n.on @ tcp.js:28
+emitOne @ events.js:96
+emit @ events.js:188
+readableAddChunk @ _stream_readable.js:176
+Readable.push @ _stream_readable.js:134
+onread @ net.js:551
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action HIDE_LOADING @ 23:17:41.143
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 961
+redux-logger.js:1  action SET_CAN_CHANGE_CASH @ 23:17:41.169
+applicationActions.js:1028 get 0 undefined 500
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action RECEIVED_CASH_REMAINING @ 23:17:41.185
+TcpClient.js:18  App Send Data: Object {action: 2, msg: "20", mode: "limit"}
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action SET_LIMIT_BANKNOTE @ 23:17:41.688
+tcp.js:23 dataChunk {"action": 2, "result": "success", "description": "Cash is now limit to 62"}
+tcp.js:26  Client Received:  {"action": 2, "result": "success", "description": "Cash is now limit to 62"}
+tcp.js:183  App getServerCommand:normalizeData Object {action: 2, sensor: "", result: "success", msg: "", description: "cash is now limit to 62"…}
+applicationActions.js:445  App cmd: LIMIT_BANKNOTE_SUCCESS trx:cmd = 14
+App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:17:47.436
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:18:02.441
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Objectads: ObjectalertMessage: Objectaudio: Objectmasterapp: Objectmasterdata: Objectmodal: Objectorder: Objectpayment: Objectrouter: Object__proto__: Object [Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:18:17.448
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:18:32.457
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:18:47.463
+App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action CLOSE_ALERT_MESSAGE @ 23:18:50.479
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action @@router/CALL_HISTORY_METHOD @ 23:18:50.497
+redux-logger.js:1  action @@router/LOCATION_CHANGE @ 23:18:50.502
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action SET_CASH_CHANGE_AMOUNT @ 23:18:50.532
+TcpClient.js:18  App Send Data: Object {action: 2, msg: "021", mode: "both"}
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action RESET_FOOTER_ADS @ 23:18:50.643
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action CLEAR_ORDER @ 23:18:50.656
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action RESET_PAYMENT_REDUCER @ 23:18:50.680
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action NOT_READY_TO_DROP_PRODUCT @ 23:18:50.689
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action HIDE_ALL_MODAL @ 23:18:50.695
+tcp.js:23 dataChunk {"action": 2, "msg": "021", "result": "success", "description": "Disable On."}
+tcp.js:26  Client Received:  {"action": 2, "msg": "021", "result": "success", "description": "Disable On."}
+tcp.js:183  App getServerCommand:normalizeData Object {action: 2, sensor: "", result: "success", msg: "021", description: "disable on."…}
+applicationActions.js:445  App cmd: DISABLE_MONEY_BOX_SUCCESS trx:cmd = 15
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action DEACTIVE_MONEY_BOX @ 23:18:52.696
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action HARDWARE_START_PROCESS @ 23:18:52.717
+App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action CLEAR_PAYMENT_AMOUNT @ 23:18:54.701
+2App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:19:05.716
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:19:20.739
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:19:35.761
+tcp.js:23 dataChunk {"action": 0, "msg": {"temp": "00nan\r"}, "sensor": "temp"}
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:19:50.784
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:20:05.823
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:20:20.849
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:20:35.874
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action CLOSE_ALERT_MESSAGE @ 23:20:50.481
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action @@router/CALL_HISTORY_METHOD @ 23:20:50.507
+redux-logger.js:1  action @@router/LOCATION_CHANGE @ 23:20:50.513
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action RESET_PAYMENT_REDUCER @ 23:20:50.567
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action NOT_READY_TO_DROP_PRODUCT @ 23:20:50.574
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action HIDE_ALL_MODAL @ 23:20:50.581
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:21:05.604
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:21:20.622
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:21:35.636
+App.js:94 [connectivity] prev true curr true
+tcp.js:23 dataChunk {"action": 0, "msg": {"temp": "00nan\r"}, "sensor": "temp"}
+2App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:21:50.656
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:22:05.677
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:22:20.697
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:22:35.728
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action CLOSE_ALERT_MESSAGE @ 23:22:50.480
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action @@router/CALL_HISTORY_METHOD @ 23:22:50.505
+redux-logger.js:1  action @@router/LOCATION_CHANGE @ 23:22:50.507
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action RESET_PAYMENT_REDUCER @ 23:22:50.549
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action NOT_READY_TO_DROP_PRODUCT @ 23:22:50.563
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action HIDE_ALL_MODAL @ 23:22:50.571
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:23:05.599
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:23:20.611
+3App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:23:35.621
+2App.js:94 [connectivity] prev true curr true
+tcp.js:23 dataChunk {"action": 0, "msg": {"temp": "00nan\r"}, "sensor": "temp"}
+App.js:94 [connectivity] prev true curr true
+App.js:40  App@state: Object {router: Object, audio: Object, ads: Object, alertMessage: Object, masterapp: Object…} [Object, Object, Object, Object, Object, Object, Object, Object, Object]
+App.js:46  เงินทอนคงเหลือ: 0
+redux-logger.js:1  action REMEMBER_BASE_AD_PLAYING_INDEX @ 23:23:50.632
