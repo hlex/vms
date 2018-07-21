@@ -45,7 +45,7 @@ class Thankyou extends Component {
           </div>
         }
         <div className="cash-return-box">
-          <p>เชิญรับเงินทอนและสินค้าที่ช่องด้านล่าง</p>
+          <h2>เชิญรับเงินทอนและสินค้าที่ช่องด้านล่าง</h2>
           <div className="cash-return-sign">
             <img src={iconPointDown} alt="" />
           </div>
