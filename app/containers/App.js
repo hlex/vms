@@ -91,8 +91,8 @@ class App extends Component {
     setInterval(() => {
       connectivity((online) => {
         const { isOnline } = this.state;
-        console.log('[connectivity] prev', isOnline, 'curr', online);
         if (isOnline !== online) {
+          console.log('[connectivity] prev', isOnline, 'curr', online);
           if (isOnline === false && online === true) {
             this.props.startRecordEvent('INTERNET_LOST', {
               localTime: moment().format('YYYY-MM-DD HH:mm:ss')
