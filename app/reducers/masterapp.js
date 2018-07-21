@@ -28,7 +28,8 @@ import {
   VERIFIED_SALES_MAN,
   CLEAR_VERIFY_SALES_MAN,
   SET_DROP_PRODUCT_INTERVAL,
-  GENERATE_LOG_ID
+  GENERATE_LOG_ID,
+  RESET_APPLICATION
 } from '../actions/actionTypes';
 
 const localURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:8888/vms' : 'http://localhost:81/vms';
@@ -44,7 +45,7 @@ const initialTcp = process.env.NODE_ENV !== 'production'
   port: 8080,
 };
 
-const initialState = {
+const getInitialState = () => ({
   navMenus: [
     {
       title: 'ซื้อเครื่องดื่ม/ขนม',
@@ -98,12 +99,31 @@ const initialState = {
   verifiedSalesman: undefined,
   dropProductInterval: 2,
   logId: ''
-};
+});
 
 const generateLogId = () => cuid.slug();
 
-export default (state = initialState, action) => {
+export default (state = getInitialState(), action) => {
   switch (action.type) {
+    case RESET_APPLICATION:
+      return {
+        ...state,
+        readyToDropProduct: false,
+        canChangeCash: true,
+        droppingProduct: {},
+        limitBanknote: undefined,
+        moneyBoxActive: false,
+        loading: {
+          show: false,
+          messages: {
+            th: '',
+            en: ''
+          }
+        },
+        lang: 'th',
+        hardwareProcessing: '',
+        verifiedSalesman: undefined,
+      };
     case SHOW_LOADING:
       return {
         ...state,
@@ -197,9 +217,14 @@ export default (state = initialState, action) => {
         hardwareProcessing: action.key
       };
     case HARDWARE_FINISH_PROCESS:
+      if (state.hardwareProcessing === action.processNameToFinish) {
+        return {
+          ...state,
+          hardwareProcessing: ''
+        };
+      }
       return {
         ...state,
-        hardwareProcessing: ''
       };
     case SETTING_SET_AUTOPLAY_TIME:
       return {

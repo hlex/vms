@@ -72,6 +72,8 @@ import { serviceGetEventReward, verifyBarcodeOrQrcode, verifyLineQrcode } from '
 import { serviceVerifySalesman } from '../apis/salesman';
 import { serviceSendEmailAbnormal } from '../apis/email';
 
+import processConstant from '../constants/process';
+
 let cmdNo = 0;
 let retryNo = 0;
 
@@ -275,7 +277,7 @@ const addResetTimer = resetTimeMS => {
   return dispatch => {
     resetTimer = addResetTime(() => {
       dispatch(closeAlertMessage());
-      dispatch(backToHome());
+      dispatch(resetApplication());
     });
     // console.log('resetTimer', resetTimer);
     document.addEventListener('click', () => {
@@ -283,10 +285,16 @@ const addResetTimer = resetTimeMS => {
       // console.log('--- CLS RESET TIME --- ', resetTimer);
       resetTimer = addResetTime(() => {
         dispatch(closeAlertMessage());
-        dispatch(backToHome());
+        dispatch(resetApplication());
       });
     });
   };
+};
+
+export const resetApplication = () => async (dispatch) => {
+  //
+  dispatch(Actions.resetApplication());
+  dispatch(changePage(''));
 };
 
 export const doorClosed = () => async (dispatch, getState) => {
@@ -426,147 +434,12 @@ export const runFlowProductDropFailed = () => async (dispatch, getState) => {
       } else {
         dispatch(cashChangeEqualToCurrentCashAmount());
       }
+      dispatch(Actions.hardwareFinishProcess(processConstant.DROP_PRODUCT));
       dispatch(Actions.showModal('productDropError'));
       setTimeout(() => {
         dispatch(cancelPayment());
       }, HIDE_POPUP_TIME);
     }
-  }
-};
-
-export const receivedDataFromServer = data => (dispatch, getState) => {
-  if (data.sensor && data.sensor === 'temp') return;
-  const client = MasterappSelector.getTcpClient(getState().masterapp);
-  client.setFree();
-  client.doSend();
-  // classify data
-  const cmd = getServerCommand(data);
-  cmdNo += 1;
-  console.log(`%c App cmd: ${cmd}`, createLog(null, 'pink', 'red'), 'trx:cmd =', cmdNo);
-  switch (cmd) {
-    case 'CONNECTION_ESTABLISH':
-      break;
-    case 'CONNECTED':
-      setTimeout(() => {
-        dispatch(resetTAIKO());
-      }, 1000);
-      break;
-    case 'UPDATE_TEMP':
-      dispatch(Actions.receivedSensorInformation(data));
-      break;
-    case 'SCANNED_QR_CODE':
-      dispatch(receivedScannedCode(data.msg || ''));
-      break;
-    case 'INSERT_CASH':
-      dispatch(Actions.receivedCash(data));
-      dispatch(runFlowCashInserted());
-      break;
-    case 'CASH_CHANGE_SUCCESS':
-      dispatch(runFlowCashChangeSuccess());
-      dispatch(
-        continueRecordEvent('fromHardware', {
-          action: 'CASH_CHANGE_SUCCESS'
-        })
-      );
-      break;
-    case 'CASH_CHANGE_FAIL':
-      dispatch(Actions.showModal('cashChangeError'));
-      setTimeout(() => {
-        dispatch(cancelPayment());
-      }, HIDE_POPUP_TIME);
-      break;
-    case 'PRODUCT_DROP_SUCCESS':
-      dispatch(runFlowProductDropSuccess());
-      dispatch(
-        continueRecordEvent('fromHardware', {
-          action: 'PRODUCT_DROP_SUCCESS'
-        })
-      );
-      break;
-    case 'PRODUCT_DROP_FAIL':
-      dispatch(runFlowProductDropFailed());
-      break;
-    case 'RESET_TAIKO_SUCCESS':
-      setTimeout(() => {
-        dispatch(getCashRemaining());
-      }, 1000);
-      break;
-    case 'RESET_TAIKO_FAIL':
-      break;
-    case 'ENABLE_MONEY_BOX_SUCCESS':
-      // Do nothing
-      dispatch(activateMoneyBox());
-      dispatch(Actions.hardwareStartProcess(''));
-      retryNo = 0;
-      break;
-    case 'ENABLE_MONEY_BOX_FAIL':
-      if (retryNo === 2) {
-        dispatch(
-          startRecordEvent('hardwareError', {
-            action: 'ENABLE_MONEY_BOX_FAILED'
-          })
-        );
-        dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
-      } else {
-        setTimeout(() => {
-          retryNo += 1;
-          dispatch(enableMoneyBox());
-        }, 3000);
-      }
-      break;
-    case 'DISABLE_MONEY_BOX_SUCCESS':
-      setTimeout(() => {
-        dispatch(sendCashChangeToServer());
-      }, 1000);
-      dispatch(deactivateMoneyBox());
-      dispatch(Actions.hardwareStartProcess(''));
-      retryNo = 0;
-      break;
-    case 'DISABLE_MONEY_BOX_FAIL':
-      dispatch(disableMoneyBox());
-      break;
-    case 'CASH_REMAINING_SUCCESS':
-      setTimeout(() => {
-        dispatch(receivedCashRemaining(data));
-        if (MasterappSelector.verifyAppReady(getState().masterapp) === false) {
-          dispatch(Actions.hardwareReady());
-        }
-      }, 1000);
-      break;
-    case 'CASH_REMAINING_FAIL':
-      console.error('GET [CASH_REMAINING_FAIL] - Please contact Hardware support.');
-      // dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
-      // alert('GET [CASH_REMAINING_FAIL] - Please contact Hardware support.');
-      // setTimeout(() => {
-      //   dispatch(getCashRemaining());
-      // }, 1000);
-      setTimeout(() => {
-        dispatch(
-          receivedCashRemaining({
-            action: 2,
-            result: 'success',
-            remain: {
-              baht1: 0,
-              baht5: 0,
-              baht10: 0
-            }
-          })
-        );
-        if (MasterappSelector.verifyAppReady(getState().masterapp) === false) {
-          dispatch(Actions.hardwareReady());
-        }
-      }, 1000);
-      break;
-    case 'LIMIT_BANKNOTE_SUCCESS':
-      break;
-    case 'DOOR_CLOSED':
-      dispatch(doorClosed());
-      break;
-    case 'DOOR_OPENED':
-      dispatch(doorOpened());
-      break;
-    default:
-      break;
   }
 };
 
@@ -803,6 +676,7 @@ export const productDrop = () => (dispatch, getState) => {
   if (readyToDropProduct) {
     const targetRowColumn = OrderSelector.getDropProductTargetRowColumn(getState().order);
     if (targetRowColumn) {
+      dispatch(Actions.hardwareStartProcess(processConstant.DROP_PRODUCT));
       const dropProductInterval = MasterappSelector.getDropProductInterval(getState().masterapp);
       const client = MasterappSelector.getTcpClient(getState().masterapp);
       setTimeout(() => {
@@ -909,6 +783,7 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
     isReceivedPaidInFull
   );
   if (currentCash >= grandTotalAmount && !isReceivedPaidInFull) {
+    dispatch(disableMoneyBox());
     dispatch(Actions.receivedPaidInFull());
     dispatch(setReadyToDropProduct());
     dispatch(Actions.stopPlayAudio());
@@ -1114,6 +989,7 @@ export const sendCashChangeToServer = () => (dispatch, getState) => {
   // ======================================================
   // if cashReturn > 0 then call api to return cash
   // ======================================================
+  console.log('sendCashChangeToServer:cashChangeAmount', cashChangeAmount);
   if (cashChangeAmount > 0) {
     console.log('=======================================');
     console.log('sendCashChangeToServer:ระบบสั่งทอนเงินจำนวน =', cashChangeAmount);
@@ -1130,8 +1006,8 @@ export const sendCashChangeToServer = () => (dispatch, getState) => {
         amount: cashChangeAmount
       })
     );
+    dispatch(clearPaymentAmount());
   }
-  dispatch(clearPaymentAmount());
 };
 
 // export const cashChangeEqualToGrandTotalAmount = () => {
@@ -1254,7 +1130,7 @@ export const resetTAIKO = () => (dispatch, getState) => {
 };
 
 export const enableMoneyBox = () => (dispatch, getState) => {
-  dispatch(Actions.hardwareStartProcess('enableMoneyBox'));
+  dispatch(Actions.hardwareStartProcess(processConstant.ENABLE_MONEY_BOX));
   const client = MasterappSelector.getTcpClient(getState().masterapp);
   client.send({
     action: 2,
@@ -1264,6 +1140,7 @@ export const enableMoneyBox = () => (dispatch, getState) => {
 };
 
 export const disableMoneyBox = () => (dispatch, getState) => {
+  dispatch(Actions.hardwareStartProcess(processConstant.DISABLE_MONEY_BOX));
   const client = MasterappSelector.getTcpClient(getState().masterapp);
   client.send({
     action: 2,
@@ -1692,4 +1569,160 @@ export const continueRecordEvent = (eventType, data) => (dispatch, getState) => 
     eventType,
     ...data
   });
+};
+
+export const receivedDataFromServer = data => (dispatch, getState) => {
+  if (data.sensor && data.sensor === 'temp') return;
+  const client = MasterappSelector.getTcpClient(getState().masterapp);
+  client.setFree();
+  client.doSend();
+  // classify data
+  const cmd = getServerCommand(data);
+  cmdNo += 1;
+  console.log(`%c App cmd: ${cmd}`, createLog(null, 'pink', 'red'), 'trx:cmd =', cmdNo);
+  switch (cmd) {
+    case 'CONNECTION_ESTABLISH':
+      break;
+    case 'CONNECTED':
+      setTimeout(() => {
+        dispatch(resetTAIKO());
+      }, 1000);
+      break;
+    case 'UPDATE_TEMP':
+      dispatch(Actions.receivedSensorInformation(data));
+      break;
+    case 'SCANNED_QR_CODE':
+      dispatch(receivedScannedCode(data.msg || ''));
+      break;
+    case 'INSERT_CASH':
+      if (RootSelector.isCurrentPageCanReceivedCash(getState())) {
+        dispatch(Actions.receivedCash(data));
+        dispatch(runFlowCashInserted());
+      }
+      break;
+    case 'CASH_CHANGE_SUCCESS':
+      dispatch(runFlowCashChangeSuccess());
+      dispatch(
+        continueRecordEvent('fromHardware', {
+          action: 'CASH_CHANGE_SUCCESS'
+        })
+      );
+      break;
+    case 'CASH_CHANGE_FAIL':
+      dispatch(Actions.showModal('cashChangeError'));
+      setTimeout(() => {
+        dispatch(cancelPayment());
+      }, HIDE_POPUP_TIME);
+      break;
+    case 'PRODUCT_DROP_SUCCESS':
+      dispatch(runFlowProductDropSuccess());
+      dispatch(Actions.hardwareFinishProcess(processConstant.DROP_PRODUCT));
+      dispatch(
+        continueRecordEvent('fromHardware', {
+          action: 'PRODUCT_DROP_SUCCESS'
+        })
+      );
+      break;
+    case 'PRODUCT_DROP_FAIL':
+      dispatch(runFlowProductDropFailed());
+      break;
+    case 'RESET_TAIKO_SUCCESS':
+      setTimeout(() => {
+        dispatch(getCashRemaining());
+      }, 1000);
+      break;
+    case 'RESET_TAIKO_FAIL':
+      break;
+    case 'ENABLE_MONEY_BOX_SUCCESS':
+      // Do nothing
+      dispatch(activateMoneyBox());
+      dispatch(Actions.hardwareFinishProcess(processConstant.ENABLE_MONEY_BOX));
+      retryNo = 0;
+      break;
+    case 'ENABLE_MONEY_BOX_FAIL':
+      if (retryNo === 2) {
+        dispatch(
+          startRecordEvent('hardwareError', {
+            action: 'ENABLE_MONEY_BOX_FAILED'
+          })
+        );
+        retryNo = 0;
+        dispatch(Actions.hardwareFinishProcess(processConstant.ENABLE_MONEY_BOX));
+        dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
+      } else {
+        setTimeout(() => {
+          retryNo += 1;
+          dispatch(enableMoneyBox());
+        }, 3000);
+      }
+      break;
+    case 'DISABLE_MONEY_BOX_SUCCESS':
+      setTimeout(() => {
+        // won't change cash if not call dispatch(Actions.setCashChangeAmount(0));
+        dispatch(sendCashChangeToServer());
+      }, 1000);
+      dispatch(deactivateMoneyBox());
+      dispatch(Actions.hardwareFinishProcess(processConstant.DISABLE_MONEY_BOX));
+      retryNo = 0;
+      break;
+    case 'DISABLE_MONEY_BOX_FAIL':
+      if (retryNo === 2) {
+        dispatch(
+          startRecordEvent('hardwareError', {
+            action: 'ENABLE_MONEY_BOX_FAILED'
+          })
+        );
+        retryNo = 0;
+        dispatch(Actions.hardwareFinishProcess(processConstant.DISABLE_MONEY_BOX));
+        dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
+      } else {
+        setTimeout(() => {
+          retryNo += 1;
+          dispatch(disableMoneyBox());
+        }, 3000);
+      }
+      break;
+    case 'CASH_REMAINING_SUCCESS':
+      setTimeout(() => {
+        dispatch(receivedCashRemaining(data));
+        if (MasterappSelector.verifyAppReady(getState().masterapp) === false) {
+          dispatch(Actions.hardwareReady());
+        }
+      }, 1000);
+      break;
+    case 'CASH_REMAINING_FAIL':
+      console.error('GET [CASH_REMAINING_FAIL] - Please contact Hardware support.');
+      // dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
+      // alert('GET [CASH_REMAINING_FAIL] - Please contact Hardware support.');
+      // setTimeout(() => {
+      //   dispatch(getCashRemaining());
+      // }, 1000);
+      setTimeout(() => {
+        dispatch(
+          receivedCashRemaining({
+            action: 2,
+            result: 'success',
+            remain: {
+              baht1: 0,
+              baht5: 0,
+              baht10: 0
+            }
+          })
+        );
+        if (MasterappSelector.verifyAppReady(getState().masterapp) === false) {
+          dispatch(Actions.hardwareReady());
+        }
+      }, 1000);
+      break;
+    case 'LIMIT_BANKNOTE_SUCCESS':
+      break;
+    case 'DOOR_CLOSED':
+      dispatch(doorClosed());
+      break;
+    case 'DOOR_OPENED':
+      dispatch(doorOpened());
+      break;
+    default:
+      break;
+  }
 };

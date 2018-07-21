@@ -63,7 +63,8 @@ import {
   CLEAR_RECEIVED_PAID_IN_FULL,
   REMEMBER_BASE_AD_PLAYING_INDEX,
   SET_DROP_PRODUCT_INTERVAL,
-  GENERATE_LOG_ID
+  GENERATE_LOG_ID,
+  RESET_APPLICATION
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
@@ -293,8 +294,9 @@ export const hardwareStartProcess = key => ({
   key,
 });
 
-export const hardwareFinishProcess = () => ({
+export const hardwareFinishProcess = (processNameToFinish) => ({
   type: HARDWARE_FINISH_PROCESS,
+  processNameToFinish
 });
 
 export const setResetTime = (second) => ({
@@ -366,4 +368,8 @@ export const setDropProductInterval = (dropProductInterval) => ({
 
 export const generateLogId = () => ({
   type: GENERATE_LOG_ID
+});
+
+export const resetApplication = () => ({
+  type: RESET_APPLICATION
 });
