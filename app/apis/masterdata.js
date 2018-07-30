@@ -547,7 +547,7 @@ const lineIdWithProductDiscount = {
     {
       type: 'input',
       name: 'LINE_ID',
-      value: 'http://27.254.160.247:81/uploads/abc.jpg',
+      value: 'http://siamvending.dyndns.biz:81/uploads/abc.jpg',
     },
   ],
   rewards: [
@@ -609,7 +609,7 @@ const lineIdWithProductFree = {
     {
       type: 'input',
       name: 'LINE_ID',
-      value: 'http://27.254.160.247:81/uploads/abc.jpg',
+      value: 'http://siamvending.dyndns.biz:81/uploads/abc.jpg',
     },
   ],
   rewards: [],
