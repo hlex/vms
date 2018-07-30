@@ -1045,7 +1045,14 @@ export const cashChangeEqualToCurrentCashAmountMinusDroppedProduct = () => (disp
   // ======================================================
   // Disable Moneybox before sendCashChange
   // ======================================================
-  dispatch(disableMoneyBox());
+  if (MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp)) {
+    dispatch(disableMoneyBox());
+  } else {
+    setTimeout(() => {
+      // won't change cash if not call dispatch(Actions.setCashChangeAmount(0));
+      dispatch(sendCashChangeToServer());
+    }, 1000);
+  }
 };
 
 export const cashChangeEqualToCurrentCashAmount = () => (dispatch, getState) => {
@@ -1054,7 +1061,14 @@ export const cashChangeEqualToCurrentCashAmount = () => (dispatch, getState) => 
   // ======================================================
   // Disable Moneybox before sendCashChange
   // ======================================================
-  dispatch(disableMoneyBox());
+  if (MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp)) {
+    dispatch(disableMoneyBox());
+  } else {
+    setTimeout(() => {
+      // won't change cash if not call dispatch(Actions.setCashChangeAmount(0));
+      dispatch(sendCashChangeToServer());
+    }, 1000);
+  }
 };
 
 export const cashChange = () => (dispatch, getState) => {
@@ -1063,7 +1077,14 @@ export const cashChange = () => (dispatch, getState) => {
   // ======================================================
   // Disable Moneybox before sendCashChange
   // ======================================================
-  dispatch(disableMoneyBox());
+  if (MasterappSelector.verifyIsMoneyBoxActive(getState().masterapp)) {
+    dispatch(disableMoneyBox());
+  } else {
+    setTimeout(() => {
+      // won't change cash if not call dispatch(Actions.setCashChangeAmount(0));
+      dispatch(sendCashChangeToServer());
+    }, 1000);
+  }
 };
 
 export const returnAllInsertCash = () => (dispatch, getState) => {
