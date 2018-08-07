@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
+import _ from 'lodash';
 import net from 'net';
 import Root from './containers/Root';
 import { configureStore, history } from './store/configureStore';
@@ -17,7 +18,7 @@ let isFirstTime = false;
 // Variables
 // ======================================================
 const DROP_PRODUCT_DELAY_MS = 2000;
-const MONEY_BOX_DELAY_MS = 500;
+const MONEY_BOX_DELAY_MS = 100;
 const SERVER_MODE = 4;
 
 /*

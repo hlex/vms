@@ -77,7 +77,10 @@ import processConstant from '../constants/process';
 let cmdNo = 0;
 let retryNo = 0;
 
-let resetTimer;
+let setDebounce = _.debounce((callback) => {
+  if (callback) callback();
+}, 60 * 1000); // 120 sec
+
 
 const HIDE_POPUP_TIME = 10 * 1000;
 
@@ -213,11 +216,14 @@ export const initApplication = () => async (dispatch, getState) => {
     const getSettingResponse = await serviceGetSetting();
     const settingResponse = extractResponseData(getSettingResponse);
     const activityFreeRule = _.get(settingResponse, 'rule', '');
-    const resetTime = _.get(settingResponse, 'resetTime', 60);
+    const resetTime = 10 //_.get(settingResponse, 'resetTime', 60);
     const autoplayTime = _.get(settingResponse, 'autoplayTime', 10);
     const dropProductInterval = Number(_.get(settingResponse, 'drop_product_interval', 2));
     dispatch(Actions.setActivityFreeRule(activityFreeRule));
     dispatch(Actions.setResetTime(resetTime));
+    setDebounce = _.debounce((callback) => {
+      if (callback) callback();
+    }, resetTime * 1000);
     dispatch(Actions.setDropProductInterval(dropProductInterval));
     dispatch(Actions.autoplayTime(autoplayTime));
       // ======================================================
@@ -241,12 +247,6 @@ export const initApplication = () => async (dispatch, getState) => {
         mobileTopupProvider => convertToAppMobileTopupProvider(mobileTopupProvider, fileURL)
       );
     dispatch(Actions.receivedMasterdata('topupProviders', sanitizedMobileTopupProviders));
-
-    const resetTimeMS = resetTime * 1000;
-    setTimeout(() => {
-      dispatch(addResetTimer(resetTimeMS));
-    }, 10000);
-
     dispatch(Actions.dataFetchedCompletely());
     dispatch(Actions.setApplicationMode('running'));
   } catch (error) {
@@ -268,35 +268,45 @@ export const initApplication = () => async (dispatch, getState) => {
   }
 };
 
-const addResetTimer = resetTimeMS => {
-  const addResetTime = callback =>
-    // console.log('--- START RESET TIME ---', resetTimer);
-     window.setInterval(() => {
-      // console.log('--- DO RESET --- ', resetTimer);
-       callback();
-     }, resetTimeMS);
-  return dispatch => {
-    resetTimer = addResetTime(() => {
+export const setResetTimer = () => {
+  return (dispatch) => {
+    console.log('start timer !');
+    setDebounce(() => {
       dispatch(closeAlertMessage());
       dispatch(resetApplication());
     });
-    // console.log('resetTimer', resetTimer);
-    document.addEventListener('click', () => {
-      window.clearInterval(resetTimer);
-      // console.log('--- CLS RESET TIME --- ', resetTimer);
-      resetTimer = addResetTime(() => {
-        dispatch(closeAlertMessage());
-        dispatch(resetApplication());
-      });
-    });
   };
 };
+
+// const addResetTimer = resetTimeMS => {
+//   const addResetTime = callback =>
+//     // console.log('--- START RESET TIME ---', resetTimer);
+//      window.setInterval(() => {
+//       // console.log('--- DO RESET --- ', resetTimer);
+//        callback();
+//      }, resetTimeMS);
+//   return dispatch => {
+//     resetTimer = addResetTime(() => {
+//       dispatch(closeAlertMessage());
+//       dispatch(resetApplication());
+//     });
+//     // console.log('resetTimer', resetTimer);
+//     document.addEventListener('click', () => {
+//       window.clearInterval(resetTimer);
+//       // console.log('--- CLS RESET TIME --- ', resetTimer);
+//       resetTimer = addResetTime(() => {
+//         dispatch(closeAlertMessage());
+//         dispatch(resetApplication());
+//       });
+//     });
+//   };
+// };
 
 export const resetApplication = () => async (dispatch, getState) => {
   const client = MasterappSelector.getTcpClient(getState().masterapp);
   client.setFree();
   dispatch(changePage(''));
-  if (MasterappSelector.verifyIsHardwareProcessing(getState().masterapp) || MasterappSelector.verifyIsPaymentSystemMalfunction(getState().masterapp)) {
+  if (MasterappSelector.getHardwareProcessing(getState().masterapp) === processConstant.droppingProduct || MasterappSelector.verifyIsPaymentSystemMalfunction(getState().masterapp)) {
     // resetBoard
     dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
     setTimeout(() => {
@@ -786,6 +796,7 @@ const endProcess = () => dispatch => {
 // ======================================================
 const runFlowCashInserted = () => async (dispatch, getState) => {
   dispatch(changePage('/payment'));
+  dispatch(setResetTimer());
   const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
   const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
   const isReceivedPaidInFull = PaymentSelector.verifyIsReceivedPaidInFull(getState().payment);

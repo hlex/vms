@@ -243,6 +243,7 @@ class App extends Component {
 
   render() {
     const {
+      setResetTimer,
       backToHome,
       isMaintenance,
       isHardwareMalfunction,
@@ -257,7 +258,7 @@ class App extends Component {
       lang
     } = this.props;
     return (
-      <div className="smart-vending-machine-app">
+      <div className="smart-vending-machine-app" onClick={setResetTimer}>
         {this.renderApplication()}
       </div>
     );
