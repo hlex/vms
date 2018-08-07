@@ -811,6 +811,24 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
     isReceivedPaidInFull
   );
   if (currentCash >= grandTotalAmount && !isReceivedPaidInFull) {
+    // send log
+    const order = OrderSelector.toSubmitOrder(getState().order);
+    const cleanedOrder = _.reduce(order, (result, value, key) => {
+      if (_.isEmpty(value)) return result;
+      return {
+        ...result,
+        [key]: value
+      };
+    }, {});
+    dispatch(
+      startRecordEvent('requestOrder', {
+        action: 'REQUEST_ORDER',
+        ...cleanedOrder,
+        currentCash,
+        returnCash: grandTotalAmount - currentCash,
+        grandTotalAmount,
+      })
+    );
     dispatch(disableMoneyBox());
     dispatch(Actions.receivedPaidInFull());
     dispatch(setReadyToDropProduct());
