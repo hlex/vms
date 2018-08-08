@@ -216,7 +216,7 @@ export const initApplication = () => async (dispatch, getState) => {
     const getSettingResponse = await serviceGetSetting();
     const settingResponse = extractResponseData(getSettingResponse);
     const activityFreeRule = _.get(settingResponse, 'rule', '');
-    const resetTime = 10 //_.get(settingResponse, 'resetTime', 60);
+    const resetTime = _.get(settingResponse, 'resetTime', 60);
     const autoplayTime = _.get(settingResponse, 'autoplayTime', 10);
     const dropProductInterval = Number(_.get(settingResponse, 'drop_product_interval', 2));
     dispatch(Actions.setActivityFreeRule(activityFreeRule));
