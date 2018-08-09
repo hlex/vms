@@ -26,6 +26,7 @@ import {
   createLog,
   verifyLessThanThreshold,
   verifyDuplicatedDiscount,
+  getCashRemainingCount,
   getCashRemainingAmount,
   getEventInputByChannel,
   verifyThisOrderShouldDropFreeProduct
@@ -946,9 +947,10 @@ export const receivedCashRemaining = data => (dispatch, getState) => {
     // Check should disable bank note
     // ======================================================
   const cashRemainingAmount = getCashRemainingAmount(data.remain);
-  const { oneBahtCount } = getCashRemaining(data.remain);
+  const { oneBahtCount } = getCashRemainingCount(data.remain);
   const currentLimitBanknote = MasterappSelector.getLimitBanknote(getState().masterapp);
   console.log('get', cashRemainingAmount, oneBahtCount, currentLimitBanknote);
+  debugger
   if (oneBahtCount < 5) {
     dispatch(setLimitBanknote(20));
   } else if (cashRemainingAmount > 100 && currentLimitBanknote !== 500) {
@@ -1011,6 +1013,7 @@ export const productDropProcessCompletely = () => async (dispatch, getState) => 
     if (cashChangeAmount > 0) {
       dispatch(cashChange());
     } else {
+      dispatch(getCashRemaining());
       dispatch(clearPaymentAmount());
       setTimeout(() => {
         dispatch(backToHome());
@@ -1159,6 +1162,7 @@ export const confirmWarningSystemWillNotChangeCash = () => dispatch => {
 };
 
 export const cancelPayment = () => dispatch => {
+  dispatch(Actions.setCashChangeAmount(0));
   dispatch(backToHome());
   // dispatch(cashChangeEqualToGrandTotalAmount()); // ปล่อยให้มันกินตังค์ไปก่อน
   dispatch(hideAllModal());
@@ -1688,7 +1692,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
         dispatch(sendCashChangeToServer());
       } else {
         dispatch(Actions.showModal('cashChangeError'));
-        cashChangeRetryNo = 1
+        cashChangeRetryNo = 1;
         setTimeout(() => {
           dispatch(cancelPayment());
         }, HIDE_POPUP_TIME);
