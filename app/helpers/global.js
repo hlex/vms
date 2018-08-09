@@ -25,7 +25,7 @@ export const appLog = (title, message, data, bgColor = '#fff', color = '#000') =
   console.log(`%c [${title}]`, `background: ${bgColor}; color: ${color}`, message, data);
 };
 
-export const getCashRemaining = (remain) => {
+export const getCashRemainingCount = (remain) => {
   return {
     oneBahtCount: _.get(remain, 'baht1', 0),
     fiveBahtCount: _.get(remain, 'baht5', 0),
@@ -45,7 +45,7 @@ export const verifyDuplicatedDiscount = (discounts, code) => {
 };
 
 export const getCashRemainingAmount = (remain) => {
-  const { oneBahtCount, fiveBahtCount, tenBahtCount } = getCashRemaining(remain);
+  const { oneBahtCount, fiveBahtCount, tenBahtCount } = getCashRemainingCount(remain);
   return ((tenBahtCount * 10) + (fiveBahtCount * 5) + oneBahtCount);
 };
 
