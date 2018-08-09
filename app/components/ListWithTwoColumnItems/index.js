@@ -70,7 +70,7 @@ class ListWithTwoColumnItems extends Component {
     const slickTotalPage = _.max([0, itemTotalPage]);
     const pageRange = _.range(slickTotalPage);
     const renderItems = _.map(pageRange, index => getPaginatedItems(items, index + 1, itemPerPage).data);
-    // console.log('>>>>>>>', itemTotalPage, slickTotalPage, pageRange, topupProviderItems);
+    if (_.size(pageRange) <= 0) return <div style={{ height, backgroundColor: '#ffd800' }} />;
     return (
       <div style={{ position: 'relative' }}>
         <Slider ref={c => (this.slider = c)} {...SlickSettings}>
