@@ -77,7 +77,7 @@ import processConstant from '../constants/process';
 
 let cmdNo = 0;
 let retryNo = 0;
-const MAX_CASH_CHANGE_RETRY_TIMES = 3;
+const MAX_CASH_CHANGE_RETRY_TIMES = 2;
 let cashChangeRetryNo = 1;
 
 let setDebounce = _.debounce((callback) => {
