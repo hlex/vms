@@ -76,6 +76,8 @@ import processConstant from '../constants/process';
 
 let cmdNo = 0;
 let retryNo = 0;
+const MAX_CASH_CHANGE_RETRY_TIMES = 3;
+let cashChangeRetryNo = 1;
 
 let setDebounce = _.debounce((callback) => {
   if (callback) callback();
@@ -1681,10 +1683,16 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       );
       break;
     case 'CASH_CHANGE_FAIL':
-      dispatch(Actions.showModal('cashChangeError'));
-      setTimeout(() => {
-        dispatch(cancelPayment());
-      }, HIDE_POPUP_TIME);
+      if (cashChangeRetryNo < MAX_CASH_CHANGE_RETRY_TIMES) {
+        cashChangeRetryNo += 1;
+        dispatch(sendCashChangeToServer());
+      } else {
+        dispatch(Actions.showModal('cashChangeError'));
+        cashChangeRetryNo = 1
+        setTimeout(() => {
+          dispatch(cancelPayment());
+        }, HIDE_POPUP_TIME);
+      }
       break;
     case 'PRODUCT_DROP_SUCCESS':
       dispatch(runFlowProductDropSuccess());

@@ -50,16 +50,6 @@ class Content extends Component {
             <button className="button purple">ไม่สะสมแต้ม</button>
           </div>
         </Modal>
-        <Modal show={modal.type.cashChangeError}>
-          <div className="app-error">
-            <h2>ขออภัย ไม่สามารถทอนเงินได้</h2>
-            <small>เนื่องจากมีเหรียญไม่เพียงพอให้บริการ</small>
-            <p>กรุณาใส่เงินให้พอดีราคาสินค้า</p>
-            <button onClick={cancelPayment} className="button purple">ทำรายการใหม่</button>
-            <p className="or">หรือ</p>
-            <button onClick={cancelPayment} className="button purple" style={{ width: '250px' }}>กดเพื่อเลือกสินค้าชนิดอื่น</button>
-          </div>
-        </Modal>
         <Modal show={modal.type.productDropError}>
           <div className="app-error">
             <h2>ขออภัย ไม่สามารถจำหน่ายสินค้าได้</h2>

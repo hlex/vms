@@ -132,6 +132,7 @@ export default (state = getInitialState(), action) => {
           show: true,
           messages: {
             ...state.loading.messages,
+            en: action.message,
             th: action.message,
           }
         }

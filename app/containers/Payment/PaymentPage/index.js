@@ -96,7 +96,7 @@ class PaymentPage extends PureComponent {
       );
     }
     if (moneyBoxActive) {
-      if (isLoading) return <Loading />;
+      if (isLoading) return <Loading><h1>รอสักครู่ ระบบกำลังดำเนินการ</h1></Loading>
       return (
         <PaymentConfirmation
           baseURL={localStaticURL}

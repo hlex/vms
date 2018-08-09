@@ -55,7 +55,7 @@ class LoadingScreen extends Component {
           },
         }}
       >
-        <Loading text={messages[lang]} />
+        <Loading><h3>{messages[lang]}</h3></Loading>
       </Modal>
     );
   }

@@ -49,6 +49,7 @@ const mapStateToProps = state => {
     getCashRemainingAmount(state.payment.remain)
   );
   return {
+    modal: state.modal,
     location: state.router.location,
     localStaticURL: MasterappSelector.getLocalStaticURL(state.masterapp),
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
@@ -175,10 +176,29 @@ class App extends Component {
 
   renderApplication = () => {
     const { isOnline } = this.state
-    const { lang, baseURL, localStaticURL, appReady, isMaintenance, isHardwareMalfunction, isPaymentSystemMalfunction } = this.props;
+    const { modal, cancelPayment, lang, baseURL, localStaticURL, appReady, isMaintenance, isHardwareMalfunction, isPaymentSystemMalfunction } = this.props;
     if (appReady) {
       return (
         <div className="smart-vending-machine-app-connected">
+          <Modal
+            show={modal.type.cashChangeError}
+            options={{
+              className: {
+                margin: '0 auto',
+                top: '50%',
+                transform: 'translateY(-50%)'
+              },
+            }}
+          >
+            <div className="app-error">
+              <h2>ขออภัย ไม่สามารถทอนเงินได้</h2>
+              <small>เนื่องจากมีเหรียญไม่เพียงพอให้บริการ</small>
+              <p>กรุณาใส่เงินให้พอดีราคาสินค้า</p>
+              <button onClick={cancelPayment} className="button purple">ทำรายการใหม่</button>
+              <p className="or">หรือ</p>
+              <button onClick={cancelPayment} className="button purple" style={{ width: '250px' }}>กดเพื่อเลือกสินค้าชนิดอื่น</button>
+            </div>
+          </Modal>
           <Modal
             show={!isOnline}
             options={{
@@ -186,7 +206,7 @@ class App extends Component {
               className: {
                 margin: '0 auto',
                 top: '50%',
-                marginTop: '-200px'
+                transform: 'translateY(-50%)'
               },
             }}
           >
@@ -208,7 +228,7 @@ class App extends Component {
               className: {
                 margin: '0 auto',
                 top: '50%',
-                marginTop: '-200px'
+                transform: 'translateY(-50%)'
               },
             }}
           >
