@@ -950,7 +950,6 @@ export const receivedCashRemaining = data => (dispatch, getState) => {
   const { oneBahtCount } = getCashRemainingCount(data.remain);
   const currentLimitBanknote = MasterappSelector.getLimitBanknote(getState().masterapp);
   console.log('get', cashRemainingAmount, oneBahtCount, currentLimitBanknote);
-  debugger
   if (oneBahtCount < 5) {
     dispatch(setLimitBanknote(20));
   } else if (cashRemainingAmount > 100 && currentLimitBanknote !== 500) {
