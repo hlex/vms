@@ -77,8 +77,10 @@ import processConstant from '../constants/process';
 
 let cmdNo = 0;
 let retryNo = 0;
-const MAX_CASH_CHANGE_RETRY_TIMES = 2;
+const MAX_CASH_CHANGE_RETRY_TIMES = 3;
 let cashChangeRetryNo = 1;
+const MAX_CHECK_CASH_REMAINING_RETRY_TIMES = 3;
+let checkCashRemainingRetryNo = 1;
 
 let setDebounce = _.debounce((callback) => {
   if (callback) callback();
@@ -865,11 +867,13 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
 
 const runFlowCashChangeSuccess = () => (dispatch, getState) => {
   dispatch(Actions.setCashChangeAmount(0));
-  dispatch(getCashRemaining());
+  setTimeout(() => {
+    dispatch(getCashRemaining());
+  }, 3000);
   if (getState().payment.isFinish) {
     setTimeout(() => {
       dispatch(backToHome());
-    }, 3000);
+    }, 5000);
   }
 };
 
@@ -1780,22 +1784,30 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       // setTimeout(() => {
       //   dispatch(getCashRemaining());
       // }, 1000);
-      setTimeout(() => {
-        dispatch(
-          receivedCashRemaining({
-            action: 2,
-            result: 'success',
-            remain: {
-              baht1: 0,
-              baht5: 0,
-              baht10: 0
-            }
-          })
-        );
-        if (MasterappSelector.verifyAppReady(getState().masterapp) === false) {
-          dispatch(Actions.hardwareReady());
-        }
-      }, 1000);
+      if (checkCashRemainingRetryNo === MAX_CHECK_CASH_REMAINING_RETRY_TIMES) {
+        setTimeout(() => {
+          checkCashRemainingRetryNo = 1;
+          dispatch(
+            receivedCashRemaining({
+              action: 2,
+              result: 'success',
+              remain: {
+                baht1: 0,
+                baht5: 0,
+                baht10: 0
+              }
+            })
+          );
+          if (MasterappSelector.verifyAppReady(getState().masterapp) === false) {
+            dispatch(Actions.hardwareReady());
+          }
+        }, 1000);
+      } else {
+        checkCashRemainingRetryNo += 1;
+        setTimeout(() => {
+          dispatch(getCashRemaining());
+        }, 1000)
+      }
       break;
     case 'LIMIT_BANKNOTE_SUCCESS':
       break;
