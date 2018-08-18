@@ -800,7 +800,7 @@ const endProcess = () => dispatch => {
 // Server Command
 // ======================================================
 const runFlowCashInserted = () => async (dispatch, getState) => {
-  dispatch(changePage('/payment'));
+  // dispatch(changePage('/payment'));
   dispatch(setResetTimer());
   const currentCash = PaymentSelector.getCurrentAmount(getState().payment);
   const grandTotalAmount = OrderSelector.getOrderGrandTotalAmount(getState().order);
@@ -938,7 +938,7 @@ export const setLimitBanknote = limitAmount => (dispatch, getState) => {
   }, 500);
 };
 
-export const receivedCashRemaining = data => (dispatch, getState) => {
+export const receivedCashRemaining = (data, byPass = false) => (dispatch, getState) => {
   dispatch(hideLoading());
     // ======================================================
     // Check < 100 baht
@@ -951,36 +951,42 @@ export const receivedCashRemaining = data => (dispatch, getState) => {
     // Check should disable bank note
     // ======================================================
   const cashRemainingAmount = getCashRemainingAmount(data.remain);
-  const { oneBahtCount } = getCashRemainingCount(data.remain);
-  const currentLimitBanknote = MasterappSelector.getLimitBanknote(getState().masterapp);
-  console.log('get', cashRemainingAmount, oneBahtCount, currentLimitBanknote);
-  if (oneBahtCount < 5) {
-    dispatch(setLimitBanknote(20));
-  } else if (cashRemainingAmount > 100 && currentLimitBanknote !== 500) {
-      // disable 500
-    dispatch(setLimitBanknote(500));
-  } else if (
-      cashRemainingAmount <= 100 &&
-      cashRemainingAmount > 50 &&
-      currentLimitBanknote !== 100
-    ) {
-      // disable 100
-    dispatch(setLimitBanknote(100));
-  } else if (
-      cashRemainingAmount <= 50 &&
-      cashRemainingAmount > 20 &&
-      currentLimitBanknote !== 50
-    ) {
-      // disable 50
-    dispatch(setLimitBanknote(50));
-  } else if (cashRemainingAmount < 20 && currentLimitBanknote !== 20) {
-      // disable 20
-    dispatch(setLimitBanknote(20));
+  if (byPass === false && cashRemainingAmount <= 0 && checkCashRemainingRetryNo < MAX_CHECK_CASH_REMAINING_RETRY_TIMES) {
+    checkCashRemainingRetryNo += 1;
+    dispatch(getCashRemaining());
   } else {
-      // do nothing
-    console.log('Do not limit any banknotes');
+    checkCashRemainingRetryNo = 1;
+    const { oneBahtCount } = getCashRemainingCount(data.remain);
+    const currentLimitBanknote = MasterappSelector.getLimitBanknote(getState().masterapp);
+    console.log('get', cashRemainingAmount, oneBahtCount, currentLimitBanknote);
+    if (oneBahtCount < 5) {
+      dispatch(setLimitBanknote(20));
+    } else if (cashRemainingAmount > 100 && currentLimitBanknote !== 500) {
+        // disable 500
+      dispatch(setLimitBanknote(500));
+    } else if (
+        cashRemainingAmount <= 100 &&
+        cashRemainingAmount > 50 &&
+        currentLimitBanknote !== 100
+      ) {
+        // disable 100
+      dispatch(setLimitBanknote(100));
+    } else if (
+        cashRemainingAmount <= 50 &&
+        cashRemainingAmount > 20 &&
+        currentLimitBanknote !== 50
+      ) {
+        // disable 50
+      dispatch(setLimitBanknote(50));
+    } else if (cashRemainingAmount < 20 && currentLimitBanknote !== 20) {
+        // disable 20
+      dispatch(setLimitBanknote(20));
+    } else {
+        // do nothing
+      console.log('Do not limit any banknotes');
+    }
+    dispatch(Actions.receivedCashRemaining(data));
   }
-  dispatch(Actions.receivedCashRemaining(data));
 };
 
 export const productDropProcessCompletely = () => async (dispatch, getState) => {
@@ -1676,10 +1682,10 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       dispatch(receivedScannedCode(data.msg || ''));
       break;
     case 'INSERT_CASH':
-      if (RootSelector.isCurrentPageCanReceivedCash(getState())) {
-        dispatch(Actions.receivedCash(data));
-        dispatch(runFlowCashInserted());
-      }
+      // if (RootSelector.isCurrentPageCanReceivedCash(getState())) {
+      dispatch(Actions.receivedCash(data));
+      dispatch(runFlowCashInserted());
+      // }
       break;
     case 'CASH_CHANGE_SUCCESS':
       dispatch(runFlowCashChangeSuccess());
@@ -1778,15 +1784,15 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       }, 1000);
       break;
     case 'CASH_REMAINING_FAIL':
-      console.error('GET [CASH_REMAINING_FAIL] - Please contact Hardware support.');
+      console.error('GET [CASH_REMAINING_FAIL] - Please contact Hardware support.', checkCashRemainingRetryNo, MAX_CHECK_CASH_REMAINING_RETRY_TIMES, checkCashRemainingRetryNo === MAX_CHECK_CASH_REMAINING_RETRY_TIMES);
       // dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
       // alert('GET [CASH_REMAINING_FAIL] - Please contact Hardware support.');
       // setTimeout(() => {
       //   dispatch(getCashRemaining());
       // }, 1000);
       if (checkCashRemainingRetryNo === MAX_CHECK_CASH_REMAINING_RETRY_TIMES) {
+        checkCashRemainingRetryNo = 1;
         setTimeout(() => {
-          checkCashRemainingRetryNo = 1;
           dispatch(
             receivedCashRemaining({
               action: 2,
@@ -1796,7 +1802,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
                 baht5: 0,
                 baht10: 0
               }
-            })
+            }, true)
           );
           if (MasterappSelector.verifyAppReady(getState().masterapp) === false) {
             dispatch(Actions.hardwareReady());
@@ -1806,7 +1812,7 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
         checkCashRemainingRetryNo += 1;
         setTimeout(() => {
           dispatch(getCashRemaining());
-        }, 1000)
+        }, 1000);
       }
       break;
     case 'LIMIT_BANKNOTE_SUCCESS':
