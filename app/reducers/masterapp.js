@@ -29,7 +29,8 @@ import {
   CLEAR_VERIFY_SALES_MAN,
   SET_DROP_PRODUCT_INTERVAL,
   GENERATE_LOG_ID,
-  RESET_APPLICATION
+  RESET_APPLICATION,
+  SET_REQUEST_ORDER_ID
 } from '../actions/actionTypes';
 
 const localURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:8888/vms' : 'http://localhost:81/vms';
@@ -99,6 +100,7 @@ const getInitialState = () => ({
   verifiedSalesman: undefined,
   dropProductInterval: 2,
   logId: '',
+  requestOrderId: '',
   paymentSystemDown: false
 });
 
@@ -294,6 +296,11 @@ export default (state = getInitialState(), action) => {
       return {
         ...state,
         logId: generateLogId()
+      };
+    case SET_REQUEST_ORDER_ID:
+      return {
+        ...state,
+        requestOrderId: action.requestOrderId
       };
     default:
       return state;

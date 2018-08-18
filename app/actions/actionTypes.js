@@ -59,6 +59,7 @@ export const REMEMBER_BASE_AD_PLAYING_INDEX = 'REMEMBER_BASE_AD_PLAYING_INDEX';
 export const SET_DROP_PRODUCT_INTERVAL = 'SET_DROP_PRODUCT_INTERVAL';
 export const GENERATE_LOG_ID = 'GENERATE_LOG_ID';
 export const RESET_APPLICATION = 'RESET_APPLICATION';
+export const SET_REQUEST_ORDER_ID = 'SET_REQUEST_ORDER_ID';
 // ======================================================
 // TCP
 // ======================================================

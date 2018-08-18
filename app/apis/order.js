@@ -60,3 +60,13 @@ export const updateStock = () => {
     return response;
   });
 };
+
+export const getRequestOrderId = () => {
+  const data = {
+    vtype: 'getRequestOrderId'
+  };
+  return fetchFacade(`${URL.updateStock}${convertToURLParam(data)}`, { local: true }).then((response) => {
+    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return response;
+  });
+};

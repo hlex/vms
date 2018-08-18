@@ -64,7 +64,8 @@ import {
   REMEMBER_BASE_AD_PLAYING_INDEX,
   SET_DROP_PRODUCT_INTERVAL,
   GENERATE_LOG_ID,
-  RESET_APPLICATION
+  RESET_APPLICATION,
+  SET_REQUEST_ORDER_ID
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
@@ -372,4 +373,9 @@ export const generateLogId = () => ({
 
 export const resetApplication = () => ({
   type: RESET_APPLICATION
+});
+
+export const setRequestOrderId = ({ requestOrderId }) => ({
+  type: SET_REQUEST_ORDER_ID,
+  requestOrderId
 });

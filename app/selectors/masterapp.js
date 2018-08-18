@@ -25,6 +25,7 @@ const getMachineId = state => state.machineId;
 const getVerifiedSalesman = state => state.verifiedSalesman;
 const getDropProductInterval = state => state.dropProductInterval;
 const getLogId = state => state.logId;
+const getRequestOrderId = state => state.requestOrderId;
 
 const verifyIsEnablingMoneyBox = createSelector(
   [
@@ -55,6 +56,7 @@ const verifyIsDroppingFreeProduct = createSelector(
 );
 
 export default {
+  getRequestOrderId,
   getLogId,
   getLocalURL,
   getBaseURL,

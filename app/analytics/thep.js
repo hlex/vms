@@ -13,6 +13,7 @@ const recordEvent = (machineId, data) => {
   const urlParams = {
     vtype: 'LogReport',
     machine_id: machineId,
+    TID: data.requestOrderId,
     arrData: getArrData(data)
   };
   console.log('recordEvent:', `api/main.php${convertToURLParam(urlParams)}`);

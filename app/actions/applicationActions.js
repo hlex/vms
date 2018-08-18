@@ -53,7 +53,8 @@ import {
   serviceSubmitOrder,
   serviceGetSumOrderAmount,
   syncSettlement,
-  updateStock
+  updateStock,
+  getRequestOrderId
 } from '../apis/order';
 import { createTcpClient } from '../apis/tcp';
 import {
@@ -632,6 +633,7 @@ export const handleApiError = error => {
 
 export const clearOrder = () => dispatch => {
   dispatch(Actions.clearOrder());
+  dispatch(clearRequestOrderId());
 };
 
 export const backToHome = () => (dispatch, getState) => {
@@ -831,6 +833,10 @@ const runFlowCashInserted = () => async (dispatch, getState) => {
         [key]: value
       };
     }, {});
+    //
+    const getRequestOrderIdResponse = await getRequestOrderId();
+    const { TID } = extractResponseData(getRequestOrderIdResponse);
+    dispatch(Actions.setRequestOrderId({ requestOrderId: TID }));
     dispatch(
       startRecordEvent('requestOrder', {
         action: 'REQUEST_ORDER',
@@ -1644,19 +1650,24 @@ export const shutdownApplication = () => () => {
 
 export const startRecordEvent = (eventType, data) => (dispatch, getState) => {
   dispatch(Actions.generateLogId());
+  dispatch(sendLog({ eventType, data }));
+};
+
+export const continueRecordEvent = (eventType, data) => (dispatch, getState) => {
+  dispatch(sendLog({ eventType, data }));
+};
+
+export const sendLog = (eventType, data) => (dispatch, getState) => {
   Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
+    requestOrderId: MasterappSelector.getRequestOrderId(getState().masterapp),
     logId: MasterappSelector.getLogId(getState().masterapp),
     eventType,
     ...data
   });
 };
 
-export const continueRecordEvent = (eventType, data) => (dispatch, getState) => {
-  Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
-    logId: MasterappSelector.getLogId(getState().masterapp),
-    eventType,
-    ...data
-  });
+export const clearRequestOrderId = () => (dispatch) => {
+  dispatch(Actions.setRequestOrderId({ requestOrderId: '' }));
 };
 
 export const paymentSystemDown = () => (dispatch, getState) => {
