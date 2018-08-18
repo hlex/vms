@@ -35,6 +35,7 @@ const mapStateToProps = (state) => {
     productPrice: OrderSelector.getSingleProductPrice(state.order),
     discountAmount: OrderSelector.getDiscountAmount(state.order),
     productBgImage: OrderSelector.getSingleProductBgImage(state.order),
+    orderHasInstantyDiscount: OrderSelector.verifyIsOrderHasInstantyDiscount(state.order),
   };
 };
 
@@ -55,6 +56,7 @@ class SingleProductPage extends Component {
     initSingleProductPage: PropTypes.func.isRequired,
     willReceivePropsEnableMoneyBoxWhenInitPage: PropTypes.func.isRequired,
     productBgImage: PropTypes.string,
+    orderHasInstantyDiscount: PropTypes.bool.isRequired,
   }
 
   static defaultProps = {
@@ -81,6 +83,7 @@ class SingleProductPage extends Component {
       submitProduct,
       verifyDiscountCode,
       productBgImage,
+      orderHasInstantyDiscount
     } = this.props;
     return (
       <div>
@@ -98,7 +101,7 @@ class SingleProductPage extends Component {
             onSubmit={submitProduct}
             onSubmitDiscount={verifyDiscountCode}
           />
-          <FooterAction />
+          {!orderHasInstantyDiscount && <FooterAction />}
         </Layout.Content>
       </div>
     );

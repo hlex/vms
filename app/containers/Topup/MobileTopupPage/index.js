@@ -34,7 +34,8 @@ const mapStateToProps = (state) => {
     baseURL: MasterappSelector.getBaseURL(state.masterapp),
     mobileTopupTotalPrice: OrderSelector.getSelectedMobileTopupTotalPrice(state.order),
     discountAmount: OrderSelector.getDiscountAmount(state.order),
-    mobileTopupBanner: OrderSelector.getMobileTopupBanner(state.order)
+    mobileTopupBanner: OrderSelector.getMobileTopupBanner(state.order),
+    orderHasInstantyDiscount: OrderSelector.verifyIsOrderHasInstantyDiscount(state.order),
   };
 };
 
@@ -56,6 +57,7 @@ class MobileTopupPage extends Component {
     initMobileTopupPage: PropTypes.func.isRequired,
     willReceivePropsEnableMoneyBoxWhenInitPage: PropTypes.func.isRequired,
     mobileTopupBanner: PropTypes.string,
+    orderHasInstantyDiscount: PropTypes.bool.isRequired,
   }
 
   static defaultProps = {
@@ -82,6 +84,7 @@ class MobileTopupPage extends Component {
       baseURL,
       submitProduct,
       verifyDiscountCode,
+      orderHasInstantyDiscount
     } = this.props;
     return (
       <div>
@@ -99,7 +102,7 @@ class MobileTopupPage extends Component {
             onSubmit={submitProduct}
             onSubmitDiscount={verifyDiscountCode}
           />
-          <FooterAction />
+          {!orderHasInstantyDiscount && <FooterAction />}
         </Layout.Content>
       </div>
     );

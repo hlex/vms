@@ -35,6 +35,7 @@ const mapStateToProps = (state) => {
     productPrice: OrderSelector.getPromotionSetPrice(state.order),
     discountAmount: OrderSelector.getDiscountAmount(state.order),
     promotionSet: OrderSelector.getPromotionSet(state.order),
+    orderHasInstantyDiscount: OrderSelector.verifyIsOrderHasInstantyDiscount(state.order),
   };
 };
 
@@ -55,6 +56,7 @@ class PromotionSetPage extends Component {
     verifyDiscountCode: PropTypes.func.isRequired,
     initPromotionSetPage: PropTypes.func.isRequired,
     willReceivePropsEnableMoneyBoxWhenInitPage: PropTypes.func.isRequired,
+    orderHasInstantyDiscount: PropTypes.bool.isRequired,
   }
 
   static defaultProps = {
@@ -74,7 +76,7 @@ class PromotionSetPage extends Component {
 
   render() {
     // console.log('PromotionSetPage', this.props, this.props.promotionSet);
-    const { promotionSet, moneyBoxActive, baseURL, discountAmount, productPrice, submitPromotionSet, verifyDiscountCode } = this.props;
+    const { promotionSet, moneyBoxActive, baseURL, discountAmount, productPrice, submitPromotionSet, verifyDiscountCode, orderHasInstantyDiscount } = this.props;
     return (
       <div>
         <Layout.Title>
@@ -92,7 +94,7 @@ class PromotionSetPage extends Component {
             onSubmit={submitPromotionSet}
             onSubmitDiscount={verifyDiscountCode}
           />
-          <FooterAction />
+          {!orderHasInstantyDiscount && <FooterAction />}
         </Layout.Content>
       </div>
     );
