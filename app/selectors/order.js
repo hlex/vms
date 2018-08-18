@@ -163,6 +163,13 @@ const getDiscountAmount = createSelector(
   }
 );
 
+const verifyIsOrderHasInstantyDiscount = createSelector(
+  [getDiscount],
+  (discount) => {
+    return discount && discount.instantly === true;
+  }
+);
+
 const verifyOrderHasDiscount = createSelector(
   [getDiscounts],
   (discounts) => {
@@ -581,6 +588,7 @@ export default {
   verifyMobileTopupOrder,
   verifyIsEventOrder,
   verifyOrderHasFreeProduct,
+  verifyIsOrderHasInstantyDiscount,
   // ======================================================
   // Payment
   // ======================================================
