@@ -159,7 +159,13 @@ export const getMasterProductAndEventAndPromotions = () => (dispatch, getState) 
   const sanitizedPromotions = _.map(
         extractResponseData(serviceGetPromotionsResponse),
         promotion => {
-          const products = _.map(promotion.Product_List, promotionProduct => _.find(mergedPhysicalProducts, product => product.id === promotionProduct.Po_ID));
+          const products = _.map(promotion.Product_List, promotionProduct => {
+            const targetProduct = _.find(mergedPhysicalProducts, product => product.id === promotionProduct.Po_ID);
+            return {
+              ...targetProduct,
+              cuid: cuid(),
+            };
+          });
           const hasSomeProductThatEveryPhysicalIsFree = _.some(products, 'everyPhysicalIsFree');
           // console.log('promotion => ', products, hasSomeProductThatEveryPhysicalIsFree);
           const promotionWithMorphProduct = {
