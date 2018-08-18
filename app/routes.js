@@ -26,7 +26,6 @@ export default () =>
       <Route path="/topup/selectTopupValue" component={Topup.SelectTopupValuePage} />
       <Route path="/topup/confirm" component={Topup.MobileTopupPage} />
       <Route path="/topup" component={Topup.TopupProviderSelectionPage} />
-      <Route path="/confirm" component={Payment.ConfirmToPayPage} />
       <Route path="/payment" component={Payment.PaymentPage} />
       <Route path="/thankyou" component={End.ThankyouPage} />
       <Route path="/thankyou-with-free-product" component={End.ThankyouPageWithFreeProduct} />
