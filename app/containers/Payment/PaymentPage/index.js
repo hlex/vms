@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 // ======================================================
 // Hoc
 // ======================================================
@@ -45,7 +46,7 @@ const mapStateToProps = state => ({
   orderType: OrderSelector.getOrderType(state.order),
   isOrderHasFreeProduct: OrderSelector.verifyOrderHasFreeProduct(state.order),
   promotionSet: OrderSelector.getPromotionSet(state.order),
-  currentAmountMoreThanZero: PaymentSelector.verifyCurrentAmountMoreThanZero(state.payment)
+  // currentAmountMoreThanZero: PaymentSelector.verifyCurrentAmountMoreThanZero(state.payment),
 });
 
 const actions = {
@@ -67,7 +68,7 @@ class PaymentPage extends PureComponent {
     orderType: PropTypes.string.isRequired,
     paymentBgImage: PropTypes.string.isRequired,
     isEnablingMoneyBox: PropTypes.bool.isRequired,
-    currentAmountMoreThanZero: PropTypes.bool.isRequired,
+    // currentAmountMoreThanZero: PropTypes.bool.isRequired,
   };
 
   componentDidMount = () => {
