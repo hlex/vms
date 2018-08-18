@@ -14,7 +14,7 @@ const recordEvent = (machineId, data) => {
     vtype: 'LogReport',
     machine_id: machineId,
     TID: data.requestOrderId,
-    arrData: getArrData(data)
+    arrData: getArrData(_.omit(data, ['requestOrderId'])),
   };
   console.log('recordEvent:', `api/main.php${convertToURLParam(urlParams)}`);
   return fetchFacade(`api/main.php${convertToURLParam(urlParams)}`).then((response) => {

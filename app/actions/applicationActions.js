@@ -82,6 +82,7 @@ const MAX_CASH_CHANGE_RETRY_TIMES = 3;
 let cashChangeRetryNo = 1;
 const MAX_CHECK_CASH_REMAINING_RETRY_TIMES = 3;
 let checkCashRemainingRetryNo = 1;
+let canReceiveScannedCode = true;
 
 let setDebounce = _.debounce((callback) => {
   if (callback) callback();
@@ -502,9 +503,10 @@ export const receivedScannedCode = scannedCode => async (dispatch, getState) => 
   const nextInput = OrderSelector.getEventNextInput(getState().order);
   const nextReward = OrderSelector.getEventNextReward(getState().order);
   const eventId = OrderSelector.getEventId(getState().order);
-  console.log('receivedScannedCode', eventId, scannedCode, nextInput);
+  const isEventPlayPage = RootSelector.isCurrentPageInEventPlay(getState());
+  console.log('receivedScannedCode', scannedCode, 'eventId', eventId, nextInput, 'isEventPlayPage = ', isEventPlayPage);
   const online = await isOnline();
-  if (eventId) {
+  if (eventId && isEventPlayPage) {
     try {
       if (
           verifyIsBarcodeOrQrCodeInput(nextInput) ||
@@ -553,8 +555,7 @@ export const receivedScannedCode = scannedCode => async (dispatch, getState) => 
     } catch (error) {
       dispatch(handleApiError(error));
     }
-  }
-  if (getState().router.location.pathname === '/salesman' || !online) {
+  } else if (getState().router.location.pathname === '/salesman' || !online) {
       // validate salesman
     try {
       dispatch(showLoading('กำลังตรวจสอบข้อมูล'));
@@ -592,6 +593,8 @@ export const receivedScannedCode = scannedCode => async (dispatch, getState) => 
           )
         );
     }
+  } else {
+    console.error('Scanned Code is not allowed in this state');
   }
 };
 
@@ -1657,7 +1660,7 @@ export const continueRecordEvent = (eventType, data) => (dispatch, getState) => 
   dispatch(sendLog({ eventType, data }));
 };
 
-export const sendLog = (eventType, data) => (dispatch, getState) => {
+export const sendLog = ({ eventType, data }) => (dispatch, getState) => {
   Analytics.recordEvent(MasterappSelector.getMachineId(getState().masterapp), {
     requestOrderId: MasterappSelector.getRequestOrderId(getState().masterapp),
     logId: MasterappSelector.getLogId(getState().masterapp),
@@ -1696,7 +1699,15 @@ export const receivedDataFromServer = data => (dispatch, getState) => {
       dispatch(Actions.receivedSensorInformation(data));
       break;
     case 'SCANNED_QR_CODE':
-      dispatch(receivedScannedCode(data.msg || ''));
+      if (canReceiveScannedCode) {
+        canReceiveScannedCode = false;
+        setTimeout(() => {
+          canReceiveScannedCode = true;
+        }, 1000)
+        dispatch(receivedScannedCode(data.msg || ''));
+      } else {
+        console.log('Interval Break' , canReceiveScannedCode)
+      }
       break;
     case 'INSERT_CASH':
       // if (RootSelector.isCurrentPageCanReceivedCash(getState())) {

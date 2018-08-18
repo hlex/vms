@@ -47,15 +47,24 @@ const getCurrentPage = createSelector(
         return '';
     }
   }
-)
+);
 
 const isCurrentPageCanReceivedCash = createSelector(
   [getCurrentPage],
   currentPage => {
-    console.log('isCurrentPageCanReceivedCash', currentPage)
+    console.log('isCurrentPageCanReceivedCash', currentPage);
     return _.includes(['payment'], currentPage)
   }
-)
+);
+
+const isCurrentPageInEventPlay = createSelector(
+  [getCurrentPage],
+  currentPage => {
+    console.log('isCurrentPageInEventPlay', currentPage);
+    const regex = /eventPlay/ig;
+    return regex.test(currentPage);
+  }
+);
 
 const getPaymentSummaryList = (state) => {
   return [
@@ -92,6 +101,7 @@ const getCashChangePromotionSetError = (state) => {
 };
 
 export default {
+  isCurrentPageInEventPlay,
   isCurrentPageCanReceivedCash,
   getCurrentPage,
   getPaymentSummaryList,
