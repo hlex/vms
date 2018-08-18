@@ -486,8 +486,8 @@ const toSubmitOrder = createSelector(
     if (isEventOrder) {
       id = selectedEvent.eventId;
       saleType = 'Activities';
-      barcode = _.find(eventInputs, input => input.name === 'BARCODE' || input.name === 'QR_CODE').value || '';
-      lineQrcode = _.find(eventInputs, input => input.name === 'LINE_QR_CODE').value || '';
+      barcode = _.get(_.find(eventInputs, input => input.name === 'BARCODE' || input.name === 'QR_CODE'), 'value', '');
+      lineQrcode = _.get(_.find(eventInputs, input => input.name === 'LINE_QR_CODE'), 'value', '');
     }
     if (hasDiscount) {
       discountCode = discount.code;
