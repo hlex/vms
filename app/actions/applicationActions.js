@@ -73,6 +73,8 @@ import {
 import { serviceGetEventReward, verifyBarcodeOrQrcode, verifyLineQrcode } from '../apis/event';
 import { serviceVerifySalesman } from '../apis/salesman';
 import { serviceSendEmailAbnormal } from '../apis/email';
+import { serviceSaveAdvertisementRecords } from '../apis/advertisement';
+
 
 import processConstant from '../constants/process';
 
@@ -1677,6 +1679,19 @@ export const paymentSystemDown = () => (dispatch, getState) => {
   dispatch(changePage(''));
   dispatch(Actions.setApplicationMode('paymentSystemDown'));
 };
+
+export const addPlayRecord = (adId) => (dispatch, getState) => {
+  dispatch(Actions.addPlayRecord({ id: adId }));
+}
+
+export const savePlayRecord = () => async (dispatch, getState) => {
+  const playRecords = getState().ads.playRecords;
+  const machineId = MasterappSelector.getMachineId(getState().masterapp);
+  if (!_.isEmpty(playRecords)) {
+    await serviceSaveAdvertisementRecords({ machineId, records: playRecords });
+    dispatch(Actions.clearPlayRecords());
+  }
+}
 
 export const receivedDataFromServer = data => (dispatch, getState) => {
   if (data.sensor && data.sensor === 'temp') return;

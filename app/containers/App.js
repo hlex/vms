@@ -36,6 +36,9 @@ import AlertMessage from './AlertMessage';
 import LoadingScreen from './LoadingScreen';
 import DevToolbar from './DevToolbar';
 
+// const TIME_TO_SAVE_ADVERTISEMENT_RECORD = 1000 * 60 * 60 // 1 hour
+const TIME_TO_SAVE_ADVERTISEMENT_RECORD = 1000 * 10; // mins
+
 const mapStateToProps = state => {
   console.log(
     '%c App@state:',
@@ -77,7 +80,8 @@ class App extends Component {
     backToHome: Function,
     initApplication: Function,
     appReady: boolean,
-    startRecordEvent: Function
+    startRecordEvent: Function,
+    savePlayRecord: Function
   };
 
   state = {
@@ -90,6 +94,9 @@ class App extends Component {
   };
 
   componentDidMount = () => {
+    setInterval(() => {
+      this.props.savePlayRecord();
+    }, TIME_TO_SAVE_ADVERTISEMENT_RECORD);
     setInterval(() => {
       connectivity((online) => {
         const { isOnline } = this.state;

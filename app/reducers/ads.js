@@ -3,7 +3,9 @@ import {
   SET_FOOTER_ADS,
   RESET_FOOTER_ADS,
   SET_BASE_ADS,
-  REMEMBER_BASE_AD_PLAYING_INDEX
+  REMEMBER_BASE_AD_PLAYING_INDEX,
+  ADD_PLAY_RECORD,
+  CLEAR_PLAY_RECORD
 } from '../actions/actionTypes';
 import {
   normalizeStripAds
@@ -213,7 +215,15 @@ const stripAds = [
 
 const baseAds = _.map(stripAds, ad => normalizeStripAds(ad));
 
+// playRecord model
+// [id]: {
+//   id: '',
+//   name: '',
+//   times: 0
+// }
+
 const initialState = {
+  playRecords: {},
   footerAdType: '',
   baseAdPlayingIndex: 0,
   baseAds: [],
@@ -246,6 +256,28 @@ export default (state = getInitialState(), action) => {
       return {
         ...state,
         baseAdPlayingIndex: action.baseAdPlayingIndex
+      };
+    case ADD_PLAY_RECORD:
+      if (_.has(state.playRecords, action.id)) {
+        return {
+          ...state,
+          playRecords: {
+            ...state.playRecords,
+            [action.id]: state.playRecords[action.id] + 1
+          }
+        };
+      }
+      return {
+        ...state,
+        playRecords: {
+          ...state.playRecords,
+          [action.id]: 1
+        }
+      };
+    case CLEAR_PLAY_RECORD:
+      return {
+        ...state,
+        playRecords: {}
       }
     default:
       return state;
