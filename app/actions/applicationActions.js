@@ -149,9 +149,15 @@ export const getMasterProductAndEventAndPromotions = () => (dispatch, getState) 
   const sanitizedEvents = _.map(extractResponseData(serviceGetEventsResponse), event =>
         convertToAppEvent(event, fileURL)
       );
-  const eventsWhichMorphEventProductToMasterProduct = _.map(sanitizedEvents, event => ({
-    ...event,
-    product: _.find(mergedPhysicalProducts, product => product.id === event.product.id)
+  const eventsWhichMorphEventProductToMasterProduct = _.compact(_.map(sanitizedEvents, event => {
+    const eventProduct = _.find(mergedPhysicalProducts, product => product.id === event.product.id);
+    if (eventProduct && eventProduct.isSoldout === false) {
+      return {
+        ...event,
+        product: eventProduct
+      };
+    }
+    return undefined;
   }));
   dispatch(Actions.receivedMasterdata('events', eventsWhichMorphEventProductToMasterProduct));
       // ======================================================
