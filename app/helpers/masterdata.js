@@ -42,7 +42,7 @@ export const convertToAppProduct = (product, baseURL = '') => {
     slotNo: product.SlotNo || '',
     isDropped: false,
     isFree: (product.Free || '').toUpperCase() === 'YES',
-    ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),
+    ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad, product.Po_ID), baseURL)),
     qty: product.Qty || 0,
   };
 };
@@ -59,7 +59,7 @@ export const convertToAppPromotion = (promotion, baseURL) => {
     products,
     price: _.sumBy(products, product => Number(product.price)) - Number(promotion.Discount_Price),
     image: _.get(promotion, 'Pro_Imgbig', ''),
-    ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),
+    ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad, promotion.Pro_ID), baseURL)),
     hasSomeProductThatEveryPhysicalIsFree: promotion.hasSomeProductThatEveryPhysicalIsFree || false,
     discountPrice: promotion.Discount_Price
   };
@@ -89,7 +89,7 @@ export const convertToAppMobileTopupProvider = (mobileTopupProvider, baseURL) =>
     serviceCode: mobileTopupProvider.Topup_ServiceCode,
     name: mobileTopupProvider.Topup_Name.en,
     names: mobileTopupProvider.Topup_Name,
-    ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),
+    ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad, mobileTopupProvider.Topup_ID), baseURL)),
     topupValues: _.map(mobileTopupProvider.Topup_Value || [], topupValue => convertToAppMobileTopupValue(topupValue))
   };
 };
@@ -119,13 +119,13 @@ export const convertToAppMobileTopupValue = (mobileTopupValue) => {
   ]
 }
 */
-export const convertToAppAd = (ad) => {
+export const convertToAppAd = (ad, parentId = undefined) => {
   const isVideo = (ad.Ad_Url || '').indexOf('.mp4') >= 0;
   const second = ad.Ad_Second === 0 ? 10000 : (ad.Ad_Second || 1000);
   return {
     id: ad.Ad_ID || cuid(),
     type: (ad.Ad_Type || '') === 'V' && isVideo ? 'video' : 'image',
-    name: ad.Ad_ID || '',
+    name: parentId || ad.Ad_ID || '',
     path: ad.Ad_Url || '',
     filename: ad.Ad_ID || '',
     expire: '', // '2026-11-21',
@@ -191,7 +191,7 @@ export const convertToAppEvent = (event, baseURL) => {
         completed: false
       };
     }),
-    ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad), baseURL)),
+    ads: _.map(ads, ad => normalizeStripAds(convertToAppAd(ad, `ACT${event.id}`), baseURL)),
   };
 };
 
