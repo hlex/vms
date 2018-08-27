@@ -6,17 +6,18 @@ import URL from './url';
 
 export const serviceSaveAdvertisementRecords = ({ machineId, records }) => {
   const data = {
+    vtype: 'addAdvertisementRecords',
     machineId,
-    records
+    records: _.join(_.map(records, (times, adKey) => `${adKey}:${times}`), ',')
   };
-  console.log('serviceSaveAdvertisementRecords', data);
-  return new Promise((resolve, reject) => {
-    resolve(true);
-  });
-  // return fetchFacade(`${URL.saveAdvertisementRecords}${convertToURLParam(data)}`).then(response => {
-  //   handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
-  //   return extractResponseData(response);
+  console.log('serviceSaveAdvertisementRecords', data, convertToURLParam(data));
+  // return new Promise((resolve, reject) => {
+  //   resolve(true);
   // });
+  return fetchFacade(`${URL.saveAdvertisementRecords}${convertToURLParam(data)}`).then(response => {
+    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return extractResponseData(response);
+  });
 };
 
 export default {};

@@ -37,7 +37,7 @@ import LoadingScreen from './LoadingScreen';
 import DevToolbar from './DevToolbar';
 
 // const TIME_TO_SAVE_ADVERTISEMENT_RECORD = 1000 * 60 * 60 // 1 hour
-const TIME_TO_SAVE_ADVERTISEMENT_RECORD = 1000 * 10; // mins
+const TIME_TO_SAVE_ADVERTISEMENT_RECORD = 1000 * 60 * 30; // mins
 
 const mapStateToProps = state => {
   console.log(
