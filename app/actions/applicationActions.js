@@ -321,7 +321,9 @@ export const resetApplication = () => async (dispatch, getState) => {
   const client = MasterappSelector.getTcpClient(getState().masterapp);
   client.setFree();
   dispatch(changePage(''));
-  if (MasterappSelector.getHardwareProcessing(getState().masterapp) === processConstant.droppingProduct || MasterappSelector.verifyIsPaymentSystemMalfunction(getState().masterapp)) {
+  console.log(MasterappSelector.verifyIsDroppingProduct(getState().masterapp), MasterappSelector.verifyIsPaymentSystemMalfunction(getState().masterapp))
+  debugger
+  if (MasterappSelector.verifyIsDroppingProduct(getState().masterapp) || MasterappSelector.verifyIsPaymentSystemMalfunction(getState().masterapp)) {
     // resetBoard
     dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
     setTimeout(() => {

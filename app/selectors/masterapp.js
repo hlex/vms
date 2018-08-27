@@ -54,6 +54,14 @@ const verifyIsDroppingFreeProduct = createSelector(
     return droppingProduct.price === 0;
   }
 );
+const verifyIsDroppingProduct = createSelector(
+  [
+    getDroppingProduct,
+  ],
+  (droppingProduct) => {
+    return droppingProduct !== {};
+  }
+);
 
 export default {
   getRequestOrderId,
@@ -73,6 +81,7 @@ export default {
   verifyIsMoneyBoxActive,
   verifyIsLoading,
   getActivityFreeRule,
+  verifyIsDroppingProduct,
   verifyIsDroppingFreeProduct,
   getLanguage,
   getHardwareProcessing,
