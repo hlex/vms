@@ -21,5 +21,6 @@ export default {
   updateStock: 'api/main.php',
   getMachineId: 'api/main.php',
   sendMailAbnormal: 'api/main.php',
-  getRequestOrderId: 'api/main.php'
+  getRequestOrderId: 'api/main.php',
+  saveAdvertisementRecords: 'api/main.php'
 };

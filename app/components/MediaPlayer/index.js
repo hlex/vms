@@ -41,13 +41,14 @@ class MediaPlayer extends Component {
     return nextIndex;
   }
   setPlayingIndex = (index, fullscreenIndex) => {
-    // console.log('setPlayingIndex', index, fullscreenIndex)
     const { onEnded } = this.props;
+    const currentMedia = this.getCurrentMedia();
+    // console.log('setPlayingIndex', index, fullscreenIndex)
     this.setState({ index });
     if (fullscreenIndex !== undefined) {
-      onEnded(fullscreenIndex);
+      onEnded(fullscreenIndex, null, currentMedia);
     } else {
-      onEnded(index, this.getNextPlayingIndex());
+      onEnded(index, this.getNextPlayingIndex(), currentMedia);
     }
   }
   handlePlayerEnded = () => {

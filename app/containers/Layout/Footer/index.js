@@ -15,6 +15,7 @@ import MasterappSelector from '../../../selectors/masterapp';
 // ======================================================
 // Actions
 // ======================================================
+import * as ApplicationActions from '../../../actions/applicationActions';
 import { rememberBaseAdPlayingIndex } from '../../../actions';
 
 const mapStateToProps = state => ({
@@ -25,6 +26,7 @@ const mapStateToProps = state => ({
 });
 
 const actions = {
+  ...ApplicationActions,
   rememberBaseAdPlayingIndex
 };
 
@@ -71,13 +73,14 @@ class Footer extends PureComponent {
     return _.includes(blacklist, location.pathname);
   };
 
-  handleMediaEnded = (lastPlayedIndex, nextIndex) => {
-    // console.log('handleMediaEnded', lastPlayedIndex, nextIndex)
-    const { footerAdType, rememberBaseAdPlayingIndex } = this.props;
+  handleMediaEnded = (lastPlayedIndex, nextIndex = null, currentMedia) => {
+    console.log('handleMediaEnded', lastPlayedIndex, nextIndex, currentMedia);
+    const { footerAdType, rememberBaseAdPlayingIndex, addPlayRecord } = this.props;
     if (footerAdType === 'base') {
       // console.log('remember index', lastPlayedIndex);
       rememberBaseAdPlayingIndex(lastPlayedIndex);
     }
+    addPlayRecord(currentMedia.name);
   }
 
   render() {
