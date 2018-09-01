@@ -30,7 +30,8 @@ import {
   SET_DROP_PRODUCT_INTERVAL,
   GENERATE_LOG_ID,
   RESET_APPLICATION,
-  SET_REQUEST_ORDER_ID
+  SET_REQUEST_ORDER_ID,
+  PRODUCT_DROP_PROCESS_COMPLETELY,
 } from '../actions/actionTypes';
 
 const localURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:8888/vms' : 'http://localhost:81/vms';
@@ -190,6 +191,7 @@ export default (state = getInitialState(), action) => {
         ...state,
         droppingProduct: action.product
       };
+    case PRODUCT_DROP_PROCESS_COMPLETELY:
     case PRODUCT_DROP_SUCCESS:
       return {
         ...state,
