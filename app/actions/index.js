@@ -65,7 +65,9 @@ import {
   SET_DROP_PRODUCT_INTERVAL,
   GENERATE_LOG_ID,
   RESET_APPLICATION,
-  SET_REQUEST_ORDER_ID
+  SET_REQUEST_ORDER_ID,
+  ADD_PLAY_RECORD,
+  CLEAR_PLAY_RECORD
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
@@ -378,4 +380,13 @@ export const resetApplication = () => ({
 export const setRequestOrderId = ({ requestOrderId }) => ({
   type: SET_REQUEST_ORDER_ID,
   requestOrderId
+});
+
+export const addPlayRecord = ({ id }) => ({
+  type: ADD_PLAY_RECORD,
+  id
+});
+
+export const clearPlayRecords = () => ({
+  type: CLEAR_PLAY_RECORD,
 });

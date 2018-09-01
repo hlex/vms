@@ -73,6 +73,8 @@ import {
 import { serviceGetEventReward, verifyBarcodeOrQrcode, verifyLineQrcode } from '../apis/event';
 import { serviceVerifySalesman } from '../apis/salesman';
 import { serviceSendEmailAbnormal } from '../apis/email';
+import { serviceSaveAdvertisementRecords } from '../apis/advertisement';
+
 
 import processConstant from '../constants/process';
 
@@ -325,7 +327,9 @@ export const resetApplication = () => async (dispatch, getState) => {
   const client = MasterappSelector.getTcpClient(getState().masterapp);
   client.setFree();
   dispatch(changePage(''));
-  if (MasterappSelector.getHardwareProcessing(getState().masterapp) === processConstant.droppingProduct || MasterappSelector.verifyIsPaymentSystemMalfunction(getState().masterapp)) {
+  console.log(MasterappSelector.verifyIsDroppingProduct(getState().masterapp), MasterappSelector.verifyIsPaymentSystemMalfunction(getState().masterapp))
+  debugger
+  if (MasterappSelector.verifyIsDroppingProduct(getState().masterapp) || MasterappSelector.verifyIsPaymentSystemMalfunction(getState().masterapp)) {
     // resetBoard
     dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
     setTimeout(() => {
@@ -1683,6 +1687,19 @@ export const paymentSystemDown = () => (dispatch, getState) => {
   dispatch(changePage(''));
   dispatch(Actions.setApplicationMode('paymentSystemDown'));
 };
+
+export const addPlayRecord = (adId) => (dispatch, getState) => {
+  dispatch(Actions.addPlayRecord({ id: adId }));
+}
+
+export const savePlayRecord = () => async (dispatch, getState) => {
+  const playRecords = getState().ads.playRecords;
+  const machineId = MasterappSelector.getMachineId(getState().masterapp);
+  if (!_.isEmpty(playRecords)) {
+    await serviceSaveAdvertisementRecords({ machineId, records: playRecords });
+    dispatch(Actions.clearPlayRecords());
+  }
+}
 
 export const receivedDataFromServer = data => (dispatch, getState) => {
   if (data.sensor && data.sensor === 'temp') return;
