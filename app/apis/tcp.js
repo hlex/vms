@@ -37,6 +37,15 @@ export const createTcpClient = (ip, port) => {
       action: 'HARDWARE_CONNECTION_ERROR'
     }));
     store.dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
+    setTimeout(() => {
+      client.send({
+        action: 4,
+        msg: '01'
+      });
+      setTimeout(() => {
+        store.dispatch(ApplicationActions.initApplication());
+      }, 60 * 1000); // 1 minute
+    }, 5000);
   });
 
   // ======================================================
