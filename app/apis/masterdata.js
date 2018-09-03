@@ -4,6 +4,7 @@ import { fetchFacade } from '../helpers/api';
 import { isVMSServiceError, convertVMSServiceResponseToError } from '../helpers/error';
 import { convertToAppEvent } from '../helpers/masterdata';
 import URL from './url';
+import { verifyThisOrderShouldDropFreeProduct } from '../helpers/global';
 
 const rewardSMSChannel = 'SMS';
 const rewardEmailChannel = 'EMAIL';
@@ -1156,6 +1157,21 @@ export const serviceGetMachineId = () => {
   const data = {
     vtype: 'MachineID',
   };
+  return fetchFacade(`${URL.getActivityFreeRule}${convertToURLParam(data)}`, { local: true }).then((response) => {
+    handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
+    return response;
+  });
+};
+
+export const serviceSetQuantityToZero = (poId) => {
+  const data = {
+    vtype: 'setQuantityToZero',
+    Po_ID: poId
+  };
+  console.log('serviceSetQuantityToZero', `${URL.setQuantityToZero}${convertToURLParam(data)}`)
+  // return new Promise((resolve, reject) => {
+  //   resolve(verifyThisOrderShouldDropFreeProduct)
+  // })
   return fetchFacade(`${URL.getActivityFreeRule}${convertToURLParam(data)}`, { local: true }).then((response) => {
     handleResponseCatchError(response, isVMSServiceError, convertVMSServiceResponseToError);
     return response;

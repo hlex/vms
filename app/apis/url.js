@@ -22,5 +22,6 @@ export default {
   getMachineId: 'api/main.php',
   sendMailAbnormal: 'api/main.php',
   getRequestOrderId: 'api/main.php',
-  saveAdvertisementRecords: 'api/main.php'
+  saveAdvertisementRecords: 'api/main.php',
+  setQuantityToZero: 'api/main.php'
 };
