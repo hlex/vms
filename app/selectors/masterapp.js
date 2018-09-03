@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { createSelector } from 'reselect';
 
 const getLocalURL = state => state.localURL;
@@ -58,9 +59,7 @@ const verifyIsDroppingProduct = createSelector(
   [
     getDroppingProduct,
   ],
-  (droppingProduct) => {
-    return droppingProduct !== {};
-  }
+  (droppingProduct) => !_.isEmpty(droppingProduct)
 );
 
 export default {
