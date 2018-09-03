@@ -68,7 +68,8 @@ import {
   serviceGetMobileTopupSteps,
   serviceGetMainMenu,
   serviceGetSetting,
-  serviceGetMachineId
+  serviceGetMachineId,
+  serviceSetQuantityToZero
 } from '../apis/masterdata';
 import { serviceGetEventReward, verifyBarcodeOrQrcode, verifyLineQrcode } from '../apis/event';
 import { serviceVerifySalesman } from '../apis/salesman';
@@ -77,6 +78,8 @@ import { serviceSaveAdvertisementRecords } from '../apis/advertisement';
 
 
 import processConstant from '../constants/process';
+
+const canBuyAllProduct = process.env !== 'production'
 
 let cmdNo = 0;
 let retryNo = 0;
@@ -118,7 +121,7 @@ export const getMasterProductAndEventAndPromotions = () => (dispatch, getState) 
                 row: product.row,
                 col: product.col,
                 qty: product.qty,
-                canDrop: product.qty !== 0,
+                canDrop: canBuyAllProduct ? true : product.qty !== 0,
                 slotNo: product.slotNo,
                 isFree: product.isFree
               }
@@ -133,7 +136,7 @@ export const getMasterProductAndEventAndPromotions = () => (dispatch, getState) 
               {
                 ...baseProduct,
                 qty: sumQty,
-                isSoldout: isSoldout(sumQty),
+                isSoldout: canBuyAllProduct ? false : isSoldout(sumQty),
                 everyPhysicalIsFree,
                 physicals
               },
@@ -483,6 +486,10 @@ export const runFlowProductDropFailed = () => async (dispatch, getState) => {
         dispatch(cashChangeEqualToCurrentCashAmount());
       }
       dispatch(Actions.hardwareFinishProcess(processConstant.DROP_PRODUCT));
+
+      await serviceSetQuantityToZero(productToDrop.id);
+      dispatch(getMasterProductAndEventAndPromotions());
+
       dispatch(Actions.showModal('productDropError'));
       setTimeout(() => {
         dispatch(cancelPayment());
