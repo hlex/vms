@@ -43,7 +43,7 @@ class DevToolbar extends Component {
             <a onClick={() => scanCode('10RV59E')}>QR</a>
           </li>
           <li>
-            <a onClick={() => scanCode('2048486920593')}>BC</a>
+            <a onClick={() => scanCode('8850291110719')}>BC</a>
           </li>
           <li>
             <a onClick={() => scanCode(`http://line.me/th/q/_${Date.now()}`)}>LINE</a>
