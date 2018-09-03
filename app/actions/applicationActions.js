@@ -79,7 +79,7 @@ import { serviceSaveAdvertisementRecords } from '../apis/advertisement';
 
 import processConstant from '../constants/process';
 
-const canBuyAllProduct = process.env !== 'production'
+const canBuyAllProduct = process.env === 'development'
 
 let cmdNo = 0;
 let retryNo = 0;
