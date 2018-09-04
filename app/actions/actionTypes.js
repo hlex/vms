@@ -62,6 +62,7 @@ export const RESET_APPLICATION = 'RESET_APPLICATION';
 export const SET_REQUEST_ORDER_ID = 'SET_REQUEST_ORDER_ID';
 export const ADD_PLAY_RECORD = 'ADD_PLAY_RECORD';
 export const CLEAR_PLAY_RECORD = 'CLEAR_PLAY_RECORD';
+export const CLEAR_DROPPING_PRODUCT = 'CLEAR_DROPPING_PRODUCT';
 // ======================================================
 // TCP
 // ======================================================

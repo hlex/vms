@@ -67,7 +67,8 @@ import {
   RESET_APPLICATION,
   SET_REQUEST_ORDER_ID,
   ADD_PLAY_RECORD,
-  CLEAR_PLAY_RECORD
+  CLEAR_PLAY_RECORD,
+  CLEAR_DROPPING_PRODUCT
 } from './actionTypes';
 
 export const receivedSensorInformation = data => ({
@@ -389,4 +390,8 @@ export const addPlayRecord = ({ id }) => ({
 
 export const clearPlayRecords = () => ({
   type: CLEAR_PLAY_RECORD,
+});
+
+export const clearDroppingProduct = () => ({
+  type: CLEAR_DROPPING_PRODUCT,
 });

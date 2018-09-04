@@ -79,7 +79,7 @@ import { serviceSaveAdvertisementRecords } from '../apis/advertisement';
 
 import processConstant from '../constants/process';
 
-const canBuyAllProduct = process.env === 'development'
+const canBuyAllProduct = process.env.NODE_ENV === 'development';
 
 let cmdNo = 0;
 let retryNo = 0;
@@ -240,7 +240,7 @@ export const initApplication = () => async (dispatch, getState) => {
     const getSettingResponse = await serviceGetSetting();
     const settingResponse = extractResponseData(getSettingResponse);
     const activityFreeRule = _.get(settingResponse, 'rule', '');
-    const resetTime = _.get(settingResponse, 'resetTime', 60);
+    const resetTime = 20; // _.get(settingResponse, 'resetTime', 60);
     const autoplayTime = _.get(settingResponse, 'autoplayTime', 10);
     const dropProductInterval = Number(_.get(settingResponse, 'drop_product_interval', 2));
     dispatch(Actions.setActivityFreeRule(activityFreeRule));
@@ -330,7 +330,8 @@ export const resetApplication = () => async (dispatch, getState) => {
   const client = MasterappSelector.getTcpClient(getState().masterapp);
   client.setFree();
   dispatch(changePage(''));
-  console.log('resetApplication', 'verifyIsDroppingProduct', MasterappSelector.verifyIsDroppingProduct(getState().masterapp), 'verifyIsPaymentSystemMalfunction', MasterappSelector.verifyIsPaymentSystemMalfunction(getState().masterapp))
+  console.log('resetApplication', getState(), 'verifyIsDroppingProduct', MasterappSelector.verifyIsDroppingProduct(getState().masterapp), 'verifyIsPaymentSystemMalfunction', MasterappSelector.verifyIsPaymentSystemMalfunction(getState().masterapp));
+  debugger;
   if (MasterappSelector.verifyIsDroppingProduct(getState().masterapp) || MasterappSelector.verifyIsPaymentSystemMalfunction(getState().masterapp)) {
     // resetBoard
     dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
@@ -446,6 +447,12 @@ export const runFlowProductDropFailed = () => async (dispatch, getState) => {
     } else {
         // filter free product from orders
       dispatch(Actions.removeProductFromOrder(productToDrop));
+
+      dispatch(Actions.clearDroppingProduct());
+
+      await serviceSetQuantityToZero(productToDrop.id);
+      dispatch(getMasterProductAndEventAndPromotions());
+
       dispatch(endProcess());
     }
   } else {
@@ -487,8 +494,11 @@ export const runFlowProductDropFailed = () => async (dispatch, getState) => {
       }
       dispatch(Actions.hardwareFinishProcess(processConstant.DROP_PRODUCT));
 
+      dispatch(Actions.clearDroppingProduct());
+
       await serviceSetQuantityToZero(productToDrop.id);
       dispatch(getMasterProductAndEventAndPromotions());
+
 
       dispatch(Actions.showModal('productDropError'));
       setTimeout(() => {
