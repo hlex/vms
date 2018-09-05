@@ -240,7 +240,7 @@ export const initApplication = () => async (dispatch, getState) => {
     const getSettingResponse = await serviceGetSetting();
     const settingResponse = extractResponseData(getSettingResponse);
     const activityFreeRule = _.get(settingResponse, 'rule', '');
-    const resetTime = 20; // _.get(settingResponse, 'resetTime', 60);
+    const resetTime = _.get(settingResponse, 'resetTime', 60);
     const autoplayTime = _.get(settingResponse, 'autoplayTime', 10);
     const dropProductInterval = Number(_.get(settingResponse, 'drop_product_interval', 2));
     dispatch(Actions.setActivityFreeRule(activityFreeRule));
@@ -331,7 +331,6 @@ export const resetApplication = () => async (dispatch, getState) => {
   client.setFree();
   dispatch(changePage(''));
   console.log('resetApplication', getState(), 'verifyIsDroppingProduct', MasterappSelector.verifyIsDroppingProduct(getState().masterapp), 'verifyIsPaymentSystemMalfunction', MasterappSelector.verifyIsPaymentSystemMalfunction(getState().masterapp));
-  debugger;
   if (MasterappSelector.verifyIsDroppingProduct(getState().masterapp) || MasterappSelector.verifyIsPaymentSystemMalfunction(getState().masterapp)) {
     // resetBoard
     dispatch(Actions.setApplicationMode('hardwareBoxServerDown'));
