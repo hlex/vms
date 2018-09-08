@@ -79,7 +79,7 @@ import { serviceSaveAdvertisementRecords } from '../apis/advertisement';
 
 import processConstant from '../constants/process';
 
-const canBuyAllProduct = process.env.NODE_ENV === 'development';
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 let cmdNo = 0;
 let retryNo = 0;
@@ -121,7 +121,7 @@ export const getMasterProductAndEventAndPromotions = () => (dispatch, getState) 
                 row: product.row,
                 col: product.col,
                 qty: product.qty,
-                canDrop: canBuyAllProduct ? true : product.qty !== 0,
+                canDrop: isDevelopment ? true : product.qty !== 0,
                 slotNo: product.slotNo,
                 isFree: product.isFree
               }
@@ -136,7 +136,7 @@ export const getMasterProductAndEventAndPromotions = () => (dispatch, getState) 
               {
                 ...baseProduct,
                 qty: sumQty,
-                isSoldout: canBuyAllProduct ? false : isSoldout(sumQty),
+                isSoldout: isDevelopment ? false : isSoldout(sumQty),
                 everyPhysicalIsFree,
                 physicals
               },
@@ -240,7 +240,7 @@ export const initApplication = () => async (dispatch, getState) => {
     const getSettingResponse = await serviceGetSetting();
     const settingResponse = extractResponseData(getSettingResponse);
     const activityFreeRule = _.get(settingResponse, 'rule', '');
-    const resetTime = _.get(settingResponse, 'resetTime', 60);
+    const resetTime = isDevelopment ? 10 : _.get(settingResponse, 'resetTime', 60);
     const autoplayTime = _.get(settingResponse, 'autoplayTime', 10);
     const dropProductInterval = Number(_.get(settingResponse, 'drop_product_interval', 2));
     dispatch(Actions.setActivityFreeRule(activityFreeRule));
